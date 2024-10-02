@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Bosses.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Bosses.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Archipelago.Core" Version="0.1.0" />
+    <PackageReference Include="Archipelago.Core.GUI" Version="0.0.12" />
+  </ItemGroup>
+
+</Project>
