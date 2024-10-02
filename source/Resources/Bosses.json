@@ -2,139 +2,139 @@
   //Bosses
   {
     "Name": "Asylum Demon",
-    "LocationId": 690000,
+    "LocationId": 11110000,
     "Offset": "0x1",
     "AddressBit": 7
   },
   {
     "Name": "Tauros Demon",
-    "LocationId": 690001,
+    "LocationId": 11110001,
     "Offset": "0xF73",
     "AddressBit": 2
   },
   {
     "Name": "Bell Gargoyles",
-    "LocationId": 690002,
+    "LocationId": 11110002,
     "Offset": "0x3",
     "AddressBit": 4
   },
   {
     "Name": "Capra Demon",
-    "LocationId": 690003,
+    "LocationId": 11110003,
     "Offset": "0xF73",
     "AddressBit": 1
   },
   {
     "Name": "Ceaseless Discharge",
-    "LocationId": 690004,
+    "LocationId": 11110004,
     "Offset": "0xF73",
     "AddressBit": 3
   },
   {
     "Name": "Centipede Demon",
-    "LocationId": 690005,
+    "LocationId": 11110005,
     "Offset": "0x3C73",
     "AddressBit": 2
   },
   {
     "Name": "Chaos Witch Quelaag",
-    "LocationId": 690006,
+    "LocationId": 11110006,
     "Offset": "0x2",
     "AddressBit": 6
   },
   {
     "Name": "Crossbreed Priscilla",
-    "LocationId": 690007,
+    "LocationId": 11110007,
     "Offset": "0x3",
     "AddressBit": 3
   },
   {
     "Name": "Demon Firesage",
-    "LocationId": 690008,
+    "LocationId": 11110008,
     "Offset": "0x3F30",
     "AddressBit": 5
   },
   {
     "Name": "Ornstein and Smough",
-    "LocationId": 690009,
+    "LocationId": 11110009,
     "Offset": "0x2",
     "AddressBit": 3
   },
   {
     "Name": "Four Kings",
-    "LocationId": 690010,
+    "LocationId": 11110010,
     "Offset": "0x2",
     "AddressBit": 2
   },
   {
     "Name": "Gaping Dragon",
-    "LocationId": 690011,
+    "LocationId": 11110011,
     "Offset": "0x3",
     "AddressBit": 5
   },
   {
     "Name": "Gravelord Nito",
-    "LocationId": 690012,
+    "LocationId": 11110012,
     "Offset": "0x3",
     "AddressBit": 0
   },
   {
     "Name": "Great Grey Wolf Sif",
-    "LocationId": 690013,
+    "LocationId": 11110013,
     "Offset": "0x3",
     "AddressBit": 2
   },
   {
     "Name": "Gwyn, Lord of Cinder",
-    "LocationId": 690014,
+    "LocationId": 11110014,
     "Offset": "0x2",
     "AddressBit": 0
   },
   {
     "Name": "Iron Golem",
-    "LocationId": 690015,
+    "LocationId": 11110015,
     "Offset": "0x2",
     "AddressBit": 4
   },
   {
     "Name": "Moonlight Butterfly",
-    "LocationId": 690016,
+    "LocationId": 11110016,
     "Offset": "0x2173",
     "AddressBit": 3
   },
   {
     "Name": "Pinwheel",
-    "LocationId": 690017,
+    "LocationId": 11110017,
     "Offset": "0x3",
     "AddressBit": 1
   },
   {
     "Name": "Seath the Scaleless",
-    "LocationId": 690018,
+    "LocationId": 11110018,
     "Offset": "0x2",
     "AddressBit": 1
   },
   {
     "Name": "Black Dragon Kalameet",
-    "LocationId": 690019,
+    "LocationId": 11110019,
     "Offset": "0x2303",
     "AddressBit": 3
   },
   {
     "Name": "Bed of Chaos",
-    "LocationId": 690020,
+    "LocationId": 11110020,
     "Offset": "0x2",
     "AddressBit": 5
   },
   {
     "Name": "Manus, Father of the Abyss",
-    "LocationId": 690021,
+    "LocationId": 11110021,
     "Offset": "0x1",
     "AddressBit": 6
   },
   {
     "Name": "Knight Artorias",
-    "LocationId": 690022,
+    "LocationId": 11110022,
     "Offset": "0x2303",
     "AddressBit": 6
   }
