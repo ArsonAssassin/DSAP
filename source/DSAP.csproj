@@ -19,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Archipelago.Core" Version="0.1.0" />
     <PackageReference Include="Archipelago.Core.GUI" Version="0.0.12" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

@@ -54,6 +54,44 @@ namespace DSAP
             }
             return locations;
         }
+        public static List<DarkSoulsItem> GetConsumables()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Consumables.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetUpgradeMaterials()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.UpgradeMaterials.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetKeyItems()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.KeyItems.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetRings()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Rings.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetAllItems()
+        {
+            var results = new List<DarkSoulsItem>();
+
+            results.Concat(GetConsumables());
+            results.Concat(GetKeyItems());
+            results.Concat(GetRings());
+            results.Concat(GetUpgradeMaterials());
+            return results;
+        }
+        public static int ApIdToDsId(int dsId)
+        {
+            return dsId - 11110000;
+        }
         public static List<Boss> GetBosses()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Bosses.json");

@@ -1,0 +1,240 @@
+﻿[
+  {
+    "Name": "Peculiar Doll",
+    "Id": 384,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Basement Key",
+    "Id": 2001,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Crest of Artorias",
+    "Id": 2002,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Cage Key",
+    "Id": 2003,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Archive Tower Cell Key",
+    "Id": 2004,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Archive Tower Giant Door Key",
+    "Id": 2005,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Archive Tower Giant Cell Key",
+    "Id": 2006,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Blighttown Key",
+    "Id": 2007,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Key to New Londo Ruins",
+    "Id": 2008,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Annex Key",
+    "Id": 2009,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Dungeon Cell Key",
+    "Id": 2010,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Big Pilgrim's Key",
+    "Id": 2011,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Undead Asylum F2 East Key",
+    "Id": 2012,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Key to the Seal",
+    "Id": 2013,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Key to Depths",
+    "Id": 2014,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Undead Asylum F2 West Key",
+    "Id": 2016,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Mystery Key",
+    "Id": 2017,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Sewer Chamber Key",
+    "Id": 2018,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Watchtower Basement Key",
+    "Id": 2019,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Archive Prison Extra Key",
+    "Id": 2020,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Residence Key",
+    "Id": 2021,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Crest Key",
+    "Id": 2022,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Master Key",
+    "Id": 2100,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Lord Soul (Nito)",
+    "Id": 2500,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Lord Soul (Bed of Chaos)",
+    "Id": 2501,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Bequeathed Lord Soul Shard (Four Kings)",
+    "Id": 2502,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Bequeathed Lord Soul Shard (Seath)",
+    "Id": 2503,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Lordvessel",
+    "Id": 2510,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Broken Pendant",
+    "Id": 2520,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Weapon Smithbox",
+    "Id": 2600,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Armor Smithbox",
+    "Id": 2601,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Repairbox",
+    "Id": 2602,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Rite of Kindling",
+    "Id": 2607,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  },
+  {
+    "Name": "Bottomless Box",
+    "Id": 2608,
+    "StackLimit": 1,
+    "UpgradeType": "None",
+    "Category": "KeyItems"
+  }
+]

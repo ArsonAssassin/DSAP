@@ -1,0 +1,170 @@
+﻿[
+    {
+        "Name": "Large Ember",
+        "Id": 800,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Very Large Ember",
+        "Id": 801,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Crystal Ember",
+        "Id": 802,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Large Magic Ember",
+        "Id": 806,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Enchanted Ember",
+        "Id": 807,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Divine Ember",
+        "Id": 808,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Large Divine Ember",
+        "Id": 809,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Dark Ember",
+        "Id": 810,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Large Flame Ember",
+        "Id": 812,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Chaos Flame Ember",
+        "Id": 813,
+        "StackLimit": 1,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Titanite Shard",
+        "Id": 1000,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Large Titanite Shard",
+        "Id": 1010,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Green Titanite Shard",
+        "Id": 1020,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Titanite Chunk",
+        "Id": 1030,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Blue Titanite Chunk",
+        "Id": 1040,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "White Titanite Chunk",
+        "Id": 1050,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Red Titanite Chunk",
+        "Id": 1060,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Titanite Slab",
+        "Id": 1070,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Blue Titanite Slab",
+        "Id": 1080,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "White Titanite Slab",
+        "Id": 1090,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Red Titanite Slab",
+        "Id": 1100,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Dragon Scale",
+        "Id": 1110,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Demon Titanite",
+        "Id": 1120,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    },
+    {
+        "Name": "Twinkling Titanite",
+        "Id": 1130,
+        "StackLimit": 99,
+        "UpgradeType": "None",
+        "Category": "UpgradeMaterials"
+    }
+]
