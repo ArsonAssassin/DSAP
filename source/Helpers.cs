@@ -24,6 +24,18 @@ namespace DSAP
             }
             return address;
         }
+        public static ulong GetBaseCOffset()
+        {
+            var baseAddress = GetBaseAddress();
+            byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
+            string mask = "xxx????xxxxxxxxxx";
+            IntPtr getPFAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
+
+            int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getPFAddress + 3), 4), 0);
+            IntPtr progressionFlagsAddress = getPFAddress + offset + 7;
+
+            return (ulong)progressionFlagsAddress;
+        }
         public static ulong GetProgressionFlagOffset()
         {
             var baseAddress = GetBaseAddress();
@@ -35,6 +47,15 @@ namespace DSAP
             IntPtr progressionFlagsAddress = getPFAddress + offset + 7;
 
             return (ulong)progressionFlagsAddress;
+        }
+        public static bool GetIsPlayerOnline()
+        {
+            var baseCOffset = GetBaseCOffset();
+            ulong onlineFlagOffset = 0xB7D;
+
+            var isOnline = Memory.ReadByte(baseCOffset +  onlineFlagOffset) != 0;
+            return isOnline;
+
         }
         public static List<Location> GetBossLocations()
         {

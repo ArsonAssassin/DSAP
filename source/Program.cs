@@ -113,6 +113,14 @@ namespace DSAP
                 MainForm.WriteLine("Dark Souls not running, open Dark Souls before connecting!");
                 return;
             }
+
+            var isOnline = Helpers.GetIsPlayerOnline();
+            if (isOnline)
+            {
+                MainForm.WriteLine("YOU ARE PLAYING ONLINE. THIS APPLICATION WILL NOT PROCEED.");
+                return;
+            }
+
             Client = new ArchipelagoClient(client);
 
             Client.Connected += OnConnected;
