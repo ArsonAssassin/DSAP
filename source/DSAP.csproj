@@ -9,7 +9,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Bonfires.json" />
     <None Remove="Resources\Bosses.json" />
+    <None Remove="Resources\Consumables.json" />
+    <None Remove="Resources\KeyItems.json" />
+    <None Remove="Resources\Rings.json" />
+    <None Remove="Resources\UpgradeMaterials.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Bonfires.json" />
+    <EmbeddedResource Include="Resources\Consumables.json" />
+    <EmbeddedResource Include="Resources\KeyItems.json" />
+    <EmbeddedResource Include="Resources\Rings.json" />
+    <EmbeddedResource Include="Resources\UpgradeMaterials.json" />
   </ItemGroup>
 
   <ItemGroup>

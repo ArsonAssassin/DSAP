@@ -2,6 +2,7 @@ using Archipelago.Core;
 using Archipelago.Core.GUI;
 using Archipelago.Core.Models;
 using Archipelago.Core.Util;
+using DSAP.Models;
 using Newtonsoft.Json;
 
 namespace DSAP
@@ -10,7 +11,8 @@ namespace DSAP
     {
 
         public static ArchipelagoClient Client { get; set; }
-        public static MainForm MainForm { get; set; }   
+        public static MainForm MainForm { get; set; }
+        public static List<DarkSoulsItem> AllItems { get; set; }
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -121,11 +123,23 @@ namespace DSAP
             Client.ItemReceived += Client_ItemReceived;
             var locations = Helpers.GetBossLocations();
             MonitorLocations(locations);
+
+            AllItems = Helpers.GetAllItems();
         }
 
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
-            AddItem(0x40000000, 292, 1);
+            var itemId = e.Item.Id;
+            var itemToReceive = AllItems.First(x => x.Id == itemId);
+            if (itemToReceive != null)
+            {
+                AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+            }
+            else
+            {
+                var filler = AllItems.First(x => x.Id == 380);
+                AddItem((int)filler.Category, filler.Id, 1);
+            }
         }
 
         private static void OnConnected(object sender, EventArgs args)
