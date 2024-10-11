@@ -89,8 +89,10 @@ namespace DSAP
                 }
                 if (completed.Any())
                 {
+                    Console.WriteLine("A monitored object is completed");
                     foreach (var location in completed)
                     {
+                        Console.WriteLine(location.Name + " (" + location.Id + ")" );
                         batch.Remove(location);
                     }
                 }
@@ -131,6 +133,9 @@ namespace DSAP
             Client.ItemReceived += Client_ItemReceived;
             var locations = Helpers.GetBossLocations();
             MonitorLocations(locations);
+
+            var itemLocations = Helpers.GetItemLotsLocations();
+            MonitorLocations(itemLocations);
 
             AllItems = Helpers.GetAllItems();
         }

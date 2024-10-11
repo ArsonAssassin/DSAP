@@ -1,0 +1,46 @@
+﻿[
+	{
+		"Name": "Undead Asylum, Dungeon Cell Key",
+		"FlagId": 51810000,
+	},
+	{
+		"Name": "Undead Asylum, Longsword",
+		"FlagId": 51810100,
+	},
+	{
+		"Name": "Undead Asylum, Pre-Oscar Fog Gate",
+		"FlagId": 11810090,
+	},
+	{
+		"Name": "Undead Asylum, Shortcut Door",
+		"FlagId": 11810105,
+	},
+	{
+		"Name": "Undead Asylum, Defeated Asylum Demon",
+		"FlagId": 16
+	},
+	{
+		"Name": "Firelink Shrine, Well Corpse",
+		"FlagId": 51020000
+	},
+	{
+		"Name": "Undead Burg, Fog Fate",
+		"FlagId": 11010090
+	},
+	{
+		"Name": "Undead Burg, Killed Black Knight",
+		"FlagId": 11010861
+	},
+	{
+		"Name": "Undead Burg, Defeated Taurus Demon",
+		"FlagId": 11010901
+	},
+	{
+		"Name": "Undead Burg, Shortcut Ladder",
+		"FlagId": 11010100
+	},
+	{
+		"Name": "Undead Burg, Praise the Sun",
+		"FlagId": 1001
+	},
+]

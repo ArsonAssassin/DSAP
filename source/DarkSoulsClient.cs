@@ -16,7 +16,7 @@ namespace DSAP
         public DarkSoulsClient()
         {
             ProcessName = "DarkSoulsRemastered";
-            ProcId = Memory.GetProcIdFromExe(ProcessName);
+            ProcId = Helpers.Bootstrap(ProcessName);
         }
         public bool Connect()
         {
