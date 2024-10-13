@@ -12,27 +12,46 @@
     <None Remove="Resources\Bonfires.json" />
     <None Remove="Resources\Bosses.json" />
     <None Remove="Resources\Consumables.json" />
+    <None Remove="Resources\ItemLots.json" />
     <None Remove="Resources\KeyItems.json" />
     <None Remove="Resources\Rings.json" />
     <None Remove="Resources\UpgradeMaterials.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Bonfires.json" />
-    <EmbeddedResource Include="Resources\Consumables.json" />
-    <EmbeddedResource Include="Resources\KeyItems.json" />
-    <EmbeddedResource Include="Resources\Rings.json" />
-    <EmbeddedResource Include="Resources\UpgradeMaterials.json" />
+    <EmbeddedResource Include="Resources\Bonfires.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Consumables.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ItemLots.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\KeyItems.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Rings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UpgradeMaterials.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Bosses.json" />
+    <EmbeddedResource Include="Resources\Bosses.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Archipelago.Core" Version="0.1.0" />
     <PackageReference Include="Archipelago.Core.GUI" Version="0.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Archipelago.Core\Archipelago.Core.csproj" />
   </ItemGroup>
 
 </Project>

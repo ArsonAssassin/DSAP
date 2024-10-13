@@ -4,6 +4,7 @@ using Archipelago.Core.Models;
 using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
+using static DSAP.Enums;
 
 namespace DSAP
 {
@@ -84,13 +85,14 @@ namespace DSAP
                     if (isCompleted)
                     {
                         completed.Add(location);
-                        MainForm.WriteLine(JsonConvert.SerializeObject(location));
+                      //  MainForm.WriteLine(JsonConvert.SerializeObject(location));
                     }
                 }
                 if (completed.Any())
                 {
                     foreach (var location in completed)
                     {
+                        MainForm.WriteLine($"{location.Name} ({location.Id}) Completed");
                         batch.Remove(location);
                     }
                 }
@@ -99,7 +101,7 @@ namespace DSAP
             }
         }
 
-        private static void MainForm_ConnectClicked(object? sender, ConnectClickedEventArgs e)
+        private static async void MainForm_ConnectClicked(object? sender, ConnectClickedEventArgs e)
         {
             if (Client != null)
             {
@@ -114,25 +116,54 @@ namespace DSAP
                 return;
             }
 
+
+
+            Client = new ArchipelagoClient(client);
+
+            Client.Connected += OnConnected;
+            Client.Disconnected += OnDisconnected;
             var isOnline = Helpers.GetIsPlayerOnline();
             if (isOnline)
             {
                 MainForm.WriteLine("YOU ARE PLAYING ONLINE. THIS APPLICATION WILL NOT PROCEED.");
                 return;
             }
+            //await Client.Connect(e.Host, "Dark Souls Remastered");
+           // await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+           // Client.ItemReceived += Client_ItemReceived;
 
-            Client = new ArchipelagoClient(client);
-
-            Client.Connected += OnConnected;
-            Client.Disconnected += OnDisconnected;
-
-            // await Client.Connect(hostTextbox.Text, "Dark Souls Remastered");
-            // await Client.Login(slotTextbox.Text, !string.IsNullOrWhiteSpace(passwordTextbox.Text) ? passwordTextbox.Text : null);
-            Client.ItemReceived += Client_ItemReceived;
             var locations = Helpers.GetBossLocations();
-            MonitorLocations(locations);
+            var itemLocations = Helpers.GetItemLotLocations();
 
+            //MonitorLocations(locations);
+            MonitorLocations(itemLocations);
+            var bombId = itemLocations.Where(x => x.Name == "Dungeon Cell Key");
             AllItems = Helpers.GetAllItems();
+
+            var lots = Helpers.GetItemLots();
+            var bombLot = lots.First(x => x.GetItemFlagId == 51810000);
+            var replacementLot = new ItemLot() 
+            {
+                Rarity = 1,
+                GetItemFlagId = bombLot.GetItemFlagId,
+                CumulateNumFlagId = bombLot.CumulateNumFlagId,
+                CumulateNumMax = bombLot.CumulateNumMax,
+                Items = new List<ItemLotItem>
+                {
+                    new ItemLotItem
+                    {
+                        LotItemId = 501,
+                        GetItemFlagId = 0,
+                        CumulateLotPoint = 0,
+                        CumulateReset = false,
+                        EnableLuck = true,
+                        LotItemBasePoint = 100,
+                        LotItemCategory = (int)DSItemCategory.UsableItems,
+                        LotItemNum = 25
+                    }
+                }
+            };
+            Helpers.OverwriteItemLot(bombLot.GetItemFlagId, replacementLot);
         }
 
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
