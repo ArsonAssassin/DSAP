@@ -542,175 +542,175 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Elite Cleric Gauntlets", 7217, DSRItemCategory.ARMOR),
     ("Elite Cleric Leggings", 7218, DSRItemCategory.ARMOR),
 
-    ("Dagger", 8000, DSRItemCategory.WEAPON) # melee weapons
-    ("Parrying Dagger", 8001, DSRItemCategory.WEAPON)
-    ("Ghost Blade", 8002, DSRItemCategory.WEAPON)
-    ("Bandit's Knife", 8003, DSRItemCategory.WEAPON)
-    ("Priscilla's Dagger", 8004, DSRItemCategory.WEAPON)
-    ("Shortsword", 8005, DSRItemCategory.WEAPON)
-    ("Longsword", 8006, DSRItemCategory.WEAPON)
-    ("BroadSword", 8007, DSRItemCategory.WEAPON)
-    ("Broken Straight Sword", 8008, DSRItemCategory.WEAPON)
-    ("Balder Side Sword", 8009, DSRItemCategory.WEAPON)
-    ("Straight Sword", 8010, DSRItemCategory.WEAPON)
-    ("Barbed Straight Sword", 8011, DSRItemCategory.WEAPON)
-    ("Silver Knight Straight Sword", 8012, DSRItemCategory.WEAPON)
-    ("Astora's Straight Sword", 8013, DSRItemCategory.WEAPON)
-    ("Darksword", 8014, DSRItemCategory.WEAPON)
-    ("Drake Sword", 8015, DSRItemCategory.WEAPON)
-    ("Straight Sword Hilt", 8016, DSRItemCategory.WEAPON)
-    ("Bastard Sword", 8017, DSRItemCategory.WEAPON)
-    ("Claymore", 8018, DSRItemCategory.WEAPON)
-    ("Man-Serpent Greatsword", 8019, DSRItemCategory.WEAPON)
-    ("Flamberge", 8020, DSRItemCategory.WEAPON)
-    ("Crystal Greatsword", 8021, DSRItemCategory.WEAPON)
-    ("Stone Greatsword", 8022, DSRItemCategory.WEAPON)
-    ("Greatsword of Artorias", 8023, DSRItemCategory.WEAPON)
-    ("Moonlight Greatsword", 8024, DSRItemCategory.WEAPON)
-    ("Black Knight Sword", 8025, DSRItemCategory.WEAPON)
-    ("Great Lord Greatsword", 8026, DSRItemCategory.WEAPON)
-    ("Zweihander", 8027, DSRItemCategory.WEAPON)
-    ("Greatsword", 8028, DSRItemCategory.WEAPON)
-    ("Demon Great Machete", 8029, DSRItemCategory.WEAPON)
-    ("Dragon Greatsword", 8030, DSRItemCategory.WEAPON)
-    ("Black Knight Greatsword", 8031, DSRItemCategory.WEAPON)
-    ("Scimitar", 8032, DSRItemCategory.WEAPON)
-    ("Falchion", 8033, DSRItemCategory.WEAPON)
-    ("Shotel", 8034, DSRItemCategory.WEAPON)
-    ("Jagged Ghost Blade", 8035, DSRItemCategory.WEAPON)
-    ("Painting Guardian Sword", 8036, DSRItemCategory.WEAPON)
-    ("Quelaag's Furysword", 8037, DSRItemCategory.WEAPON)
-    ("Server", 8038, DSRItemCategory.WEAPON)
-    ("Murakumo", 8039, DSRItemCategory.WEAPON)
-    ("Gravelord Sword", 8040, DSRItemCategory.WEAPON)
-    ("Uchigatana", 8041, DSRItemCategory.WEAPON)
-    ("Washing Pole", 8042, DSRItemCategory.WEAPON)
-    ("Iaito", 8043, DSRItemCategory.WEAPON)
-    ("Chaos Blade", 8044, DSRItemCategory.WEAPON)
-    ("Mail Breaker", 8045, DSRItemCategory.WEAPON)
-    ("Rapier", 8046, DSRItemCategory.WEAPON)
-    ("Estoc", 8047, DSRItemCategory.WEAPON)
-    ("Velka's Rapier", 8048, DSRItemCategory.WEAPON)
-    ("Ricard's Rapier", 8049, DSRItemCategory.WEAPON)
-    ("Hand Axe", 8050, DSRItemCategory.WEAPON)
-    ("Battle Axe", 8051, DSRItemCategory.WEAPON)
-    ("Crescent Axe", 8052, DSRItemCategory.WEAPON)
-    ("Butcher Knife", 8053, DSRItemCategory.WEAPON)
-    ("Golem Axe", 8054, DSRItemCategory.WEAPON)
-    ("Gargoyle Tail Axe", 8055, DSRItemCategory.WEAPON)
-    ("Greataxe", 8056, DSRItemCategory.WEAPON)
-    ("Demon's Greataxe", 8057, DSRItemCategory.WEAPON)
-    ("Club", 8058, DSRItemCategory.WEAPON)
-    ("Mace", 8059, DSRItemCategory.WEAPON)
-    ("Morning Star", 8060, DSRItemCategory.WEAPON)
-    ("Warpick", 8061, DSRItemCategory.WEAPON)
-    ("Pickaxe", 8062, DSRItemCategory.WEAPON)
-    ("Reinforced Club", 8063, DSRItemCategory.WEAPON)
-    ("Blacksmith Hammer", 8064, DSRItemCategory.WEAPON)
-    ("Hammer of Vamos", 8065, DSRItemCategory.WEAPON)
-    ("Great Club", 8066, DSRItemCategory.WEAPON)
-    ("Grant", 8067, DSRItemCategory.WEAPON)
-    ("Demon's Great Hammer", 8068, DSRItemCategory.WEAPON)
-    ("Dragon Tooth", 8069, DSRItemCategory.WEAPON)
-    ("Large Club", 8070, DSRItemCategory.WEAPON)
-    ("Smough's Hammer", 8071, DSRItemCategory.WEAPON)
-    ("Caestus", 8072, DSRItemCategory.WEAPON)
-    ("Claw", 8073, DSRItemCategory.WEAPON)
-    ("Dragon Bone Fist", 8074, DSRItemCategory.WEAPON)
-    ("Dark Hand", 8075, DSRItemCategory.WEAPON)
-    ("Spear", 8076, DSRItemCategory.WEAPON)
-    ("Winged Spear", 8077, DSRItemCategory.WEAPON)
-    ("Partizan", 8078, DSRItemCategory.WEAPON)
-    ("Demon's Spear", 8079, DSRItemCategory.WEAPON)
-    ("Channeler's Trident", 8080, DSRItemCategory.WEAPON)
-    ("Silver Knight Spear", 8081, DSRItemCategory.WEAPON)
-    ("Pike", 8082, DSRItemCategory.WEAPON)
-    ("Dragonslayer Spear", 8083, DSRItemCategory.WEAPON)
-    ("Moonlight Butterfly Horn", 8084, DSRItemCategory.WEAPON)
-    ("Halberd", 8085, DSRItemCategory.WEAPON)
-    ("Giant's Halberd", 8086, DSRItemCategory.WEAPON)
-    ("Titanite Catch Pole", 8087, DSRItemCategory.WEAPON)
-    ("Gargoyles's Halberd", 8088, DSRItemCategory.WEAPON)
-    ("Black Knight Halberd", 8089, DSRItemCategory.WEAPON)
-    ("Lucerne", 8090, DSRItemCategory.WEAPON)
-    ("Scythe", 8091, DSRItemCategory.WEAPON)
-    ("Great Scythe", 8092, DSRItemCategory.WEAPON)
-    ("Lifehunt Scythe", 8093, DSRItemCategory.WEAPON)
-    ("Whip", 8094, DSRItemCategory.WEAPON)
-    ("Notched Whip", 8095, DSRItemCategory.WEAPON)
+    ("Dagger", 8000, DSRItemCategory.WEAPON),
+    ("Parrying Dagger", 8001, DSRItemCategory.WEAPON),
+    ("Ghost Blade", 8002, DSRItemCategory.WEAPON),
+    ("Bandit's Knife", 8003, DSRItemCategory.WEAPON),
+    ("Priscilla's Dagger", 8004, DSRItemCategory.WEAPON),
+    ("Shortsword", 8005, DSRItemCategory.WEAPON),
+    ("Longsword", 8006, DSRItemCategory.WEAPON),
+    ("BroadSword", 8007, DSRItemCategory.WEAPON),
+    ("Broken Straight Sword", 8008, DSRItemCategory.WEAPON),
+    ("Balder Side Sword", 8009, DSRItemCategory.WEAPON),
+    ("Straight Sword", 8010, DSRItemCategory.WEAPON),
+    ("Barbed Straight Sword", 8011, DSRItemCategory.WEAPON),
+    ("Silver Knight Straight Sword", 8012, DSRItemCategory.WEAPON),
+    ("Astora's Straight Sword", 8013, DSRItemCategory.WEAPON),
+    ("Darksword", 8014, DSRItemCategory.WEAPON),
+    ("Drake Sword", 8015, DSRItemCategory.WEAPON),
+    ("Straight Sword Hilt", 8016, DSRItemCategory.WEAPON),
+    ("Bastard Sword", 8017, DSRItemCategory.WEAPON),
+    ("Claymore", 8018, DSRItemCategory.WEAPON),
+    ("Man-Serpent Greatsword", 8019, DSRItemCategory.WEAPON),
+    ("Flamberge", 8020, DSRItemCategory.WEAPON),
+    ("Crystal Greatsword", 8021, DSRItemCategory.WEAPON),
+    ("Stone Greatsword", 8022, DSRItemCategory.WEAPON),
+    ("Greatsword of Artorias", 8023, DSRItemCategory.WEAPON),
+    ("Moonlight Greatsword", 8024, DSRItemCategory.WEAPON),
+    ("Black Knight Sword", 8025, DSRItemCategory.WEAPON),
+    ("Great Lord Greatsword", 8026, DSRItemCategory.WEAPON),
+    ("Zweihander", 8027, DSRItemCategory.WEAPON),
+    ("Greatsword", 8028, DSRItemCategory.WEAPON),
+    ("Demon Great Machete", 8029, DSRItemCategory.WEAPON),
+    ("Dragon Greatsword", 8030, DSRItemCategory.WEAPON),
+    ("Black Knight Greatsword", 8031, DSRItemCategory.WEAPON),
+    ("Scimitar", 8032, DSRItemCategory.WEAPON),
+    ("Falchion", 8033, DSRItemCategory.WEAPON),
+    ("Shotel", 8034, DSRItemCategory.WEAPON),
+    ("Jagged Ghost Blade", 8035, DSRItemCategory.WEAPON),
+    ("Painting Guardian Sword", 8036, DSRItemCategory.WEAPON),
+    ("Quelaag's Furysword", 8037, DSRItemCategory.WEAPON),
+    ("Server", 8038, DSRItemCategory.WEAPON),
+    ("Murakumo", 8039, DSRItemCategory.WEAPON),
+    ("Gravelord Sword", 8040, DSRItemCategory.WEAPON),
+    ("Uchigatana", 8041, DSRItemCategory.WEAPON),
+    ("Washing Pole", 8042, DSRItemCategory.WEAPON),
+    ("Iaito", 8043, DSRItemCategory.WEAPON),
+    ("Chaos Blade", 8044, DSRItemCategory.WEAPON),
+    ("Mail Breaker", 8045, DSRItemCategory.WEAPON),
+    ("Rapier", 8046, DSRItemCategory.WEAPON),
+    ("Estoc", 8047, DSRItemCategory.WEAPON),
+    ("Velka's Rapier", 8048, DSRItemCategory.WEAPON),
+    ("Ricard's Rapier", 8049, DSRItemCategory.WEAPON),
+    ("Hand Axe", 8050, DSRItemCategory.WEAPON),
+    ("Battle Axe", 8051, DSRItemCategory.WEAPON),
+    ("Crescent Axe", 8052, DSRItemCategory.WEAPON),
+    ("Butcher Knife", 8053, DSRItemCategory.WEAPON),
+    ("Golem Axe", 8054, DSRItemCategory.WEAPON),
+    ("Gargoyle Tail Axe", 8055, DSRItemCategory.WEAPON),
+    ("Greataxe", 8056, DSRItemCategory.WEAPON),
+    ("Demon's Greataxe", 8057, DSRItemCategory.WEAPON),
+    ("Club", 8058, DSRItemCategory.WEAPON),
+    ("Mace", 8059, DSRItemCategory.WEAPON),
+    ("Morning Star", 8060, DSRItemCategory.WEAPON),
+    ("Warpick", 8061, DSRItemCategory.WEAPON),
+    ("Pickaxe", 8062, DSRItemCategory.WEAPON),
+    ("Reinforced Club", 8063, DSRItemCategory.WEAPON),
+    ("Blacksmith Hammer", 8064, DSRItemCategory.WEAPON),
+    ("Hammer of Vamos", 8065, DSRItemCategory.WEAPON),
+    ("Great Club", 8066, DSRItemCategory.WEAPON),
+    ("Grant", 8067, DSRItemCategory.WEAPON),
+    ("Demon's Great Hammer", 8068, DSRItemCategory.WEAPON),
+    ("Dragon Tooth", 8069, DSRItemCategory.WEAPON),
+    ("Large Club", 8070, DSRItemCategory.WEAPON),
+    ("Smough's Hammer", 8071, DSRItemCategory.WEAPON),
+    ("Caestus", 8072, DSRItemCategory.WEAPON),
+    ("Claw", 8073, DSRItemCategory.WEAPON),
+    ("Dragon Bone Fist", 8074, DSRItemCategory.WEAPON),
+    ("Dark Hand", 8075, DSRItemCategory.WEAPON),
+    ("Spear", 8076, DSRItemCategory.WEAPON),
+    ("Winged Spear", 8077, DSRItemCategory.WEAPON),
+    ("Partizan", 8078, DSRItemCategory.WEAPON),
+    ("Demon's Spear", 8079, DSRItemCategory.WEAPON),
+    ("Channeler's Trident", 8080, DSRItemCategory.WEAPON),
+    ("Silver Knight Spear", 8081, DSRItemCategory.WEAPON),
+    ("Pike", 8082, DSRItemCategory.WEAPON),
+    ("Dragonslayer Spear", 8083, DSRItemCategory.WEAPON),
+    ("Moonlight Butterfly Horn", 8084, DSRItemCategory.WEAPON),
+    ("Halberd", 8085, DSRItemCategory.WEAPON),
+    ("Giant's Halberd", 8086, DSRItemCategory.WEAPON),
+    ("Titanite Catch Pole", 8087, DSRItemCategory.WEAPON),
+    ("Gargoyles's Halberd", 8088, DSRItemCategory.WEAPON),
+    ("Black Knight Halberd", 8089, DSRItemCategory.WEAPON),
+    ("Lucerne", 8090, DSRItemCategory.WEAPON),
+    ("Scythe", 8091, DSRItemCategory.WEAPON),
+    ("Great Scythe", 8092, DSRItemCategory.WEAPON),
+    ("Lifehunt Scythe", 8093, DSRItemCategory.WEAPON),
+    ("Whip", 8094, DSRItemCategory.WEAPON),
+    ("Notched Whip", 8095, DSRItemCategory.WEAPON),
 
-    ("Short Bow", 8096, DSRItemCategory.WEAPON) # ranged weapons
-    ("Longbow", 8097, DSRItemCategory.WEAPON)
-    ("Black Bow of Pharis", 8098, DSRItemCategory.WEAPON)
-    ("Dragonslayer Greatbow", 8099, DSRItemCategory.WEAPON)
-    ("Composite Bow", 8100, DSRItemCategory.WEAPON)
-    ("Darkmoon Bow", 8101, DSRItemCategory.WEAPON)
-    ("Light Crossbow", 8102, DSRItemCategory.WEAPON)
-    ("Heavy Crossbow", 8103, DSRItemCategory.WEAPON)
-    ("Avelyn", 8104, DSRItemCategory.WEAPON)
-    ("Sniper Crossbow", 8105, DSRItemCategory.WEAPON)
+    ("Short Bow", 8096, DSRItemCategory.WEAPON),
+    ("Longbow", 8097, DSRItemCategory.WEAPON),
+    ("Black Bow of Pharis", 8098, DSRItemCategory.WEAPON),
+    ("Dragonslayer Greatbow", 8099, DSRItemCategory.WEAPON),
+    ("Composite Bow", 8100, DSRItemCategory.WEAPON),
+    ("Darkmoon Bow", 8101, DSRItemCategory.WEAPON),
+    ("Light Crossbow", 8102, DSRItemCategory.WEAPON),
+    ("Heavy Crossbow", 8103, DSRItemCategory.WEAPON),
+    ("Avelyn", 8104, DSRItemCategory.WEAPON),
+    ("Sniper Crossbow", 8105, DSRItemCategory.WEAPON),
 
-    ("Sorcerer's Catalyst", 8106, DSRItemCategory.WEAPON) # magic weapons
-    ("Beatrice's Catalyst", 8107, DSRItemCategory.WEAPON)
-    ("Tin Banishment Catalyst", 8108, DSRItemCategory.WEAPON)
-    ("Logan's Catalyst", 8109, DSRItemCategory.WEAPON)
-    ("Tin Darkmoon Catalyst", 8110, DSRItemCategory.WEAPON)
-    ("Oolacile Ivory Catalyst", 8111, DSRItemCategory.WEAPON)
-    ("Tin Crystallization Catalyst", 8112, DSRItemCategory.WEAPON)
-    ("Demon's Catalyst", 8113, DSRItemCategory.WEAPON)
-    ("Izalith Catalyst", 8114, DSRItemCategory.WEAPON)
-    ("Pyromancy Flame", 8115, DSRItemCategory.WEAPON)
-    ("Talisman", 8116, DSRItemCategory.WEAPON)
-    ("Canvas Talisman", 8117, DSRItemCategory.WEAPON)
-    ("Thorolund Talisman", 8118, DSRItemCategory.WEAPON)
-    ("Ivory Talisman", 8119, DSRItemCategory.WEAPON)
-    ("Sunlight Talisman", 8120, DSRItemCategory.WEAPON)
-    ("Darkmoon Talisman", 8121, DSRItemCategory.WEAPON)
-    ("Velka's Talisman", 8122, DSRItemCategory.WEAPON)
+    ("Sorcerer's Catalyst", 8106, DSRItemCategory.WEAPON),
+    ("Beatrice's Catalyst", 8107, DSRItemCategory.WEAPON),
+    ("Tin Banishment Catalyst", 8108, DSRItemCategory.WEAPON),
+    ("Logan's Catalyst", 8109, DSRItemCategory.WEAPON),
+    ("Tin Darkmoon Catalyst", 8110, DSRItemCategory.WEAPON),
+    ("Oolacile Ivory Catalyst", 8111, DSRItemCategory.WEAPON),
+    ("Tin Crystallization Catalyst", 8112, DSRItemCategory.WEAPON),
+    ("Demon's Catalyst", 8113, DSRItemCategory.WEAPON),
+    ("Izalith Catalyst", 8114, DSRItemCategory.WEAPON),
+    ("Pyromancy Flame", 8115, DSRItemCategory.WEAPON),
+    ("Talisman", 8116, DSRItemCategory.WEAPON),
+    ("Canvas Talisman", 8117, DSRItemCategory.WEAPON),
+    ("Thorolund Talisman", 8118, DSRItemCategory.WEAPON),
+    ("Ivory Talisman", 8119, DSRItemCategory.WEAPON),
+    ("Sunlight Talisman", 8120, DSRItemCategory.WEAPON),
+    ("Darkmoon Talisman", 8121, DSRItemCategory.WEAPON),
+    ("Velka's Talisman", 8122, DSRItemCategory.WEAPON),
 
-    ("Skull Lantern", 9000, DSRItemCategory.SHIELD)
-    ("East-West Shield", 9001, DSRItemCategory.SHIELD)
-    ("Wooden Shield", 9002, DSRItemCategory.SHIELD)
-    ("Large Leather Shield", 9003, DSRItemCategory.SHIELD)
-    ("Small Leather Shield", 9004, DSRItemCategory.SHIELD)
-    ("Target Shield", 9005, DSRItemCategory.SHIELD)
-    ("Buckler", 9006, DSRItemCategory.SHIELD)
-    ("Cracked Round Shield", 9007, DSRItemCategory.SHIELD)
-    ("Leather Shield", 9008, DSRItemCategory.SHIELD)
-    ("Plank Shield", 9009, DSRItemCategory.SHIELD)
-    ("Caduceus Round Shield", 9010, DSRItemCategory.SHIELD)
-    ("Crystal Ring Shield", 9011, DSRItemCategory.SHIELD)
-    ("Heater Shield", 9012, DSRItemCategory.SHIELD)
-    ("Knight Shield", 9013, DSRItemCategory.SHIELD)
-    ("Tower Kite Shield", 9014, DSRItemCategory.SHIELD)
-    ("Grass Crest Shield", 9015, DSRItemCategory.SHIELD)
-    ("Hollow Soldier Shield", 9016, DSRItemCategory.SHIELD)
-    ("Balder Shield", 9017, DSRItemCategory.SHIELD)
-    ("Crest Shield", 9018, DSRItemCategory.SHIELD)
-    ("Dragon Crest Shield", 9019, DSRItemCategory.SHIELD)
-    ("Warrior's Round Shield", 9020, DSRItemCategory.SHIELD)
-    ("Iron Round Shield", 9021, DSRItemCategory.SHIELD)
-    ("Spider Shield", 9022, DSRItemCategory.SHIELD)
-    ("Spiked Shield", 9023, DSRItemCategory.SHIELD)
-    ("Crystal Shield", 9024, DSRItemCategory.SHIELD)
-    ("Sunlight Shield", 9025, DSRItemCategory.SHIELD)
-    ("Silver Knight Shield", 9026, DSRItemCategory.SHIELD)
-    ("Black Knight Shield", 9027, DSRItemCategory.SHIELD)
-    ("Pierce Shield", 9028, DSRItemCategory.SHIELD)
-    ("Red and White Round Shield", 9029, DSRItemCategory.SHIELD)
-    ("Caduceus Kite Shield", 9030, DSRItemCategory.SHIELD)
-    ("Gargoyle's Shield", 9031, DSRItemCategory.SHIELD)
-    ("Eagle Shield", 9032, DSRItemCategory.SHIELD)
-    ("Tower Shield", 9033, DSRItemCategory.SHIELD)
-    ("Giant Shield", 9034, DSRItemCategory.SHIELD)
-    ("Stone Greatshield", 9035, DSRItemCategory.SHIELD)
-    ("Havel's Greatshield", 9036, DSRItemCategory.SHIELD)
-    ("Bonewheel Shield", 9037, DSRItemCategory.SHIELD)
-    ("Greatshield of Artorias", 9038, DSRItemCategory.SHIELD)
-    ("Effigy Shield", 9039, DSRItemCategory.SHIELD)
-    ("Sanctus", 9040, DSRItemCategory.SHIELD)
-    ("Bloodshield", 9041, DSRItemCategory.SHIELD)
-    ("Black Iron Greatshield", 9042, DSRItemCategory.SHIELD)
+    ("Skull Lantern", 9000, DSRItemCategory.SHIELD),
+    ("East-West Shield", 9001, DSRItemCategory.SHIELD),
+    ("Wooden Shield", 9002, DSRItemCategory.SHIELD),
+    ("Large Leather Shield", 9003, DSRItemCategory.SHIELD),
+    ("Small Leather Shield", 9004, DSRItemCategory.SHIELD),
+    ("Target Shield", 9005, DSRItemCategory.SHIELD),
+    ("Buckler", 9006, DSRItemCategory.SHIELD),
+    ("Cracked Round Shield", 9007, DSRItemCategory.SHIELD),
+    ("Leather Shield", 9008, DSRItemCategory.SHIELD),
+    ("Plank Shield", 9009, DSRItemCategory.SHIELD),
+    ("Caduceus Round Shield", 9010, DSRItemCategory.SHIELD),
+    ("Crystal Ring Shield", 9011, DSRItemCategory.SHIELD),
+    ("Heater Shield", 9012, DSRItemCategory.SHIELD),
+    ("Knight Shield", 9013, DSRItemCategory.SHIELD),
+    ("Tower Kite Shield", 9014, DSRItemCategory.SHIELD),
+    ("Grass Crest Shield", 9015, DSRItemCategory.SHIELD),
+    ("Hollow Soldier Shield", 9016, DSRItemCategory.SHIELD),
+    ("Balder Shield", 9017, DSRItemCategory.SHIELD),
+    ("Crest Shield", 9018, DSRItemCategory.SHIELD),
+    ("Dragon Crest Shield", 9019, DSRItemCategory.SHIELD),
+    ("Warrior's Round Shield", 9020, DSRItemCategory.SHIELD),
+    ("Iron Round Shield", 9021, DSRItemCategory.SHIELD),
+    ("Spider Shield", 9022, DSRItemCategory.SHIELD),
+    ("Spiked Shield", 9023, DSRItemCategory.SHIELD),
+    ("Crystal Shield", 9024, DSRItemCategory.SHIELD),
+    ("Sunlight Shield", 9025, DSRItemCategory.SHIELD),
+    ("Silver Knight Shield", 9026, DSRItemCategory.SHIELD),
+    ("Black Knight Shield", 9027, DSRItemCategory.SHIELD),
+    ("Pierce Shield", 9028, DSRItemCategory.SHIELD),
+    ("Red and White Round Shield", 9029, DSRItemCategory.SHIELD),
+    ("Caduceus Kite Shield", 9030, DSRItemCategory.SHIELD),
+    ("Gargoyle's Shield", 9031, DSRItemCategory.SHIELD),
+    ("Eagle Shield", 9032, DSRItemCategory.SHIELD),
+    ("Tower Shield", 9033, DSRItemCategory.SHIELD),
+    ("Giant Shield", 9034, DSRItemCategory.SHIELD),
+    ("Stone Greatshield", 9035, DSRItemCategory.SHIELD),
+    ("Havel's Greatshield", 9036, DSRItemCategory.SHIELD),
+    ("Bonewheel Shield", 9037, DSRItemCategory.SHIELD),
+    ("Greatshield of Artorias", 9038, DSRItemCategory.SHIELD),
+    ("Effigy Shield", 9039, DSRItemCategory.SHIELD),
+    ("Sanctus", 9040, DSRItemCategory.SHIELD),
+    ("Bloodshield", 9041, DSRItemCategory.SHIELD),
+    ("Black Iron Greatshield", 9042, DSRItemCategory.SHIELD),
 ]]
 
 item_descriptions = {
