@@ -18,6 +18,7 @@ namespace DSAP.Models
         public ItemUpgrade UpgradeType { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public DSItemCategory Category { get; set; }
+        public int ApId { get; set; }
 
     }
 }

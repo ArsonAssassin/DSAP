@@ -8,6 +8,8 @@ class DSRLocationCategory(IntEnum):
     SKIP = 0,
     EVENT = 1,
     BOSS = 2,
+    BONFIRE = 3,
+    DOOR = 4
 
 
 class DSRLocationData(NamedTuple):
@@ -39,7 +41,7 @@ class DSRLocation(Location):
         table_offset = 1000
 
         table_order = [
-            "Bosses", "Bonfires"
+            "Bosses", "Bonfires", "Doors", "ItemLots"
          ]
 
         output = {}
@@ -81,8 +83,48 @@ location_tables = {
     DSRLocationData(f"Bed of Chaos Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(f"Manus, Father of the Abyss Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(f"Knight Artorias Defeated", f"Firebomb", DSRLocationCategory.BOSS),
+    DSRLocationData(f"Sanctuary Guardian Defeated", f"Firebomb", DSRLocationCategory.BOSS),
+    DSRLocationData(f"Gwyndolin Defeated", f"Firebomb", DSRLocationCategory.BOSS),
 ],
 "Bonfires": [
+    DSRLocationData(f"Firelink Shrine Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(f"Undead Parish Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(f"Depths Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(f"Undead Burg - Sunfire Altar Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(f"Quelaag's Domain Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(f"Anor Londo Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(f"Anor Londo Chamber of the Princess Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+],
+"Doors": [
+    DSRLocationData(f"Depths Shortcut", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Depths -> Blighttown", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Depths Bonfire room", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Burg Female Merchant shortcut", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Burg -> Lower Undead Burg", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Burg Basement", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Burg Watchtower Upper", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Burg Watchtower Lower", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Burg Sunlight Altar", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Oolacile Crest Key Door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Catacombs Door 1", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Catacombs Door 2", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Demon Ruins Shortcut", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Sen's Fortress Main Gate", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Anor Londo Main Hall Door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Anor Londo Giant Blacksmith Shortcut", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Anor Londo Bonfire Shortcut", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"New Londo Ruins Door to the Seal", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"New Londo Ruins -> Valley of the Drakes", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Duke's Archives Bookshelf door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Duke's Archives Cell door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Asylum Cell door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Asylum F2 West door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Asylum Shortcut door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Asylum F2 East door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Asylum Big Pilgrim door", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(f"Undead Asylum Boss door", f"Firebomb", DSRLocationCategory.DOOR),
+],
+"ItemLots": [
 
 ]
 

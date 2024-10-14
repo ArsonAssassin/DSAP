@@ -4,6 +4,7 @@ using Archipelago.Core.Models;
 using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
+using Serilog;
 using static DSAP.Enums;
 
 namespace DSAP
@@ -27,7 +28,9 @@ namespace DSAP
             {
                 BackgroundColor = Color.Black,
                 ButtonColor = Color.DarkRed,
-                Title = "DSAP - Dark Souls Remastered Archipelago"
+                ButtonTextColor = Color.Black,
+                Title = "DSAP - Dark Souls Remastered Archipelago",
+
             };
             MainForm = new MainForm(options);
             MainForm.ConnectClicked += MainForm_ConnectClicked;
@@ -85,14 +88,14 @@ namespace DSAP
                     if (isCompleted)
                     {
                         completed.Add(location);
-                      //  MainForm.WriteLine(JsonConvert.SerializeObject(location));
+                        //  Log.Logger.Information(JsonConvert.SerializeObject(location));
                     }
                 }
                 if (completed.Any())
                 {
                     foreach (var location in completed)
                     {
-                        MainForm.WriteLine($"{location.Name} ({location.Id}) Completed");
+                        Log.Logger.Information($"{location.Name} ({location.Id}) Completed");
                         batch.Remove(location);
                     }
                 }
@@ -112,7 +115,7 @@ namespace DSAP
             var connected = client.Connect();
             if (!connected)
             {
-                MainForm.WriteLine("Dark Souls not running, open Dark Souls before connecting!");
+                Log.Logger.Information("Dark Souls not running, open Dark Souls before connecting!");
                 return;
             }
 
@@ -125,51 +128,64 @@ namespace DSAP
             var isOnline = Helpers.GetIsPlayerOnline();
             if (isOnline)
             {
-                MainForm.WriteLine("YOU ARE PLAYING ONLINE. THIS APPLICATION WILL NOT PROCEED.");
+                Log.Logger.Information("YOU ARE PLAYING ONLINE. THIS APPLICATION WILL NOT PROCEED.");
                 return;
             }
-            //await Client.Connect(e.Host, "Dark Souls Remastered");
-           // await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
-           // Client.ItemReceived += Client_ItemReceived;
+            await Client.Connect(e.Host, "Dark Souls Remastered");
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+            Client.ItemReceived += Client_ItemReceived;
 
-            var locations = Helpers.GetBossLocations();
+            var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
+            var bonfireLocations = Helpers.GetBonfireFlagLocations();
+            var doorLocations = Helpers.GetDoorFlagLocations();
 
-            //MonitorLocations(locations);
+            MonitorLocations(bossLocations);
             MonitorLocations(itemLocations);
-            var bombId = itemLocations.Where(x => x.Name == "Dungeon Cell Key");
+            MonitorLocations(bonfireLocations);
+            MonitorLocations(doorLocations);
+
             AllItems = Helpers.GetAllItems();
 
+            RemoveItems();
+        }
+        private static void RemoveItems()
+        {
             var lots = Helpers.GetItemLots();
-            var bombLot = lots.First(x => x.GetItemFlagId == 51810000);
-            var replacementLot = new ItemLot() 
+            var replacementLot = new ItemLot()
             {
                 Rarity = 1,
-                GetItemFlagId = bombLot.GetItemFlagId,
-                CumulateNumFlagId = bombLot.CumulateNumFlagId,
-                CumulateNumMax = bombLot.CumulateNumMax,
+                GetItemFlagId = -1,
+                CumulateNumFlagId = -1,
+                CumulateNumMax = 0,
                 Items = new List<ItemLotItem>
                 {
                     new ItemLotItem
                     {
-                        LotItemId = 501,
-                        GetItemFlagId = 0,
                         CumulateLotPoint = 0,
                         CumulateReset = false,
-                        EnableLuck = true,
+                        EnableLuck = false,
+                        GetItemFlagId = -1,
                         LotItemBasePoint = 100,
-                        LotItemCategory = (int)DSItemCategory.UsableItems,
-                        LotItemNum = 25
+                        LotItemCategory = (int)DSItemCategory.Consumables,
+                        LotItemNum = 1,
+                        LotItemId = 370
                     }
                 }
             };
-            Helpers.OverwriteItemLot(bombLot.GetItemFlagId, replacementLot);
+            foreach (var lot in lots)
+            {
+                _ = Task.Run(() =>
+                {
+                    Helpers.OverwriteItemLot(lot.GetItemFlagId, replacementLot);
+                });
+            }
+            Log.Logger.Information("Finished overwriting items");
         }
-
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
             var itemId = e.Item.Id;
-            var itemToReceive = AllItems.First(x => x.Id == itemId);
+            var itemToReceive = AllItems.First(x => x.ApId == itemId);
             if (itemToReceive != null)
             {
                 AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
@@ -183,14 +199,14 @@ namespace DSAP
 
         private static void OnConnected(object sender, EventArgs args)
         {
-            MainForm.WriteLine("Connected to Archipelago");
-            MainForm.WriteLine($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
+            Log.Logger.Information("Connected to Archipelago");
+            Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
 
         }
 
         private static void OnDisconnected(object sender, EventArgs args)
         {
-            MainForm.WriteLine("Disconnected from Archipelago");
+            Log.Logger.Information("Disconnected from Archipelago");
         }
     }
 }

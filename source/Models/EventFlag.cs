@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace DSAP.Models
 {
-    public class Bonfire
+    public class EventFlag
     {
         public string Name { get; set; }
-        public int Offset { get; set; }
-        public int AddressBit { get; set; }
-        public int LocationId { get; set; }
+        public int Id { get; set; }
+        public int Flag { get; set; }
     }
 }

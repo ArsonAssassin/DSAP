@@ -65,7 +65,7 @@ class DSRWorld(World):
         regions: Dict[str, Region] = {}
         regions["Menu"] = self.create_region("Menu", [])
         regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in [
-            "Bosses",
+            "Bosses", "Bonfires", "Doors", "ItemLots"
                 ]})
         
         # Connect Regions
@@ -74,7 +74,10 @@ class DSRWorld(World):
             regions[from_region].exits.append(connection)
             connection.connect(regions[to_region], rule)
             print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name)            
-        create_connection("Menu", "Bosses")
+        create_connection("Menu", "Bosses")    
+        create_connection("Menu", "Bonfires")    
+        create_connection("Menu", "Doors")    
+        create_connection("Menu", "ItemLots")
         
         
     # For each region, add the associated locations retrieved from the corresponding location_table

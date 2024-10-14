@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace DSAP.Models
 {
-    public class ItemLotFlag : EventFlag
+    public class BossFlag : EventFlag
     {
-
     }
 }

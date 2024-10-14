@@ -61,17 +61,17 @@ namespace DSAP
             IntPtr soloParamFlagsAddress = getSPAddress + offset + 7;
             return (ulong)soloParamFlagsAddress;
         }
-        private static ulong GetItemLotFlagsOffset()
+        public static ulong GetEventFlagsOffset()
         {
             var baseAddress = GetBaseAddress();
             byte[] pattern = { 0x48, 0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x99, 0x33, 0xC2, 0x45, 0x33, 0xC0, 0x2B, 0xC2, 0x8D, 0x50, 0xF6 };
             string mask = "xxx????xxxxxxxxxxx";
-            IntPtr getILFAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
+            IntPtr getEFAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
 
-            int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getILFAddress + 3), 4), 0);
-            IntPtr itemLotFlagsAddress = getILFAddress + offset + 7;
+            int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getEFAddress + 3), 4), 0);
+            IntPtr eventFlagsAddress = getEFAddress + offset + 7;
 
-            return (ulong)(BitConverter.ToInt32(Memory.ReadFromPointer((ulong)itemLotFlagsAddress, 4, 2)));
+            return (ulong)(BitConverter.ToInt32(Memory.ReadFromPointer((ulong)eventFlagsAddress, 4, 2)));
         }
         private static ulong GetItemLotParamOffset()
         {
@@ -84,24 +84,81 @@ namespace DSAP
             var foo3 = Memory.ReadULong(next);
             return foo3;
         }
+        private static ulong GetBonfireOffset()
+        {
+            var baseAddress = GetEventFlagsOffset();
+            var baseBonfire = OffsetPointer(baseAddress, 0x5B);
+            return baseBonfire;
+        }
         public static List<Location> GetItemLotLocations()
         {
             List<Location> locations = new List<Location>();
             var lotFlags = GetItemLotFlags();
-            var baseAddress = GetItemLotFlagsOffset();
+            var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)
             {
                 locations.Add(new Location
                 {
                     Name = lot.Name,
-                    Address = baseAddress + GetEventFlagOffset(lot.Id).Item1,
-                    AddressBit = GetEventFlagOffset(lot.Id).Item2,
+                    Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
+                    AddressBit = GetEventFlagOffset(lot.Flag).Item2,
                     Id = lot.Id,                    
                 });
             }
             return locations;
         }
-        private static ulong OffsetPointer(ulong ptr, int offset)
+        public static List<Location> GetBossFlagLocations()
+        {
+            List<Location> locations = new List<Location>();
+            var lotFlags = GetBossFlags();
+            var baseAddress = GetEventFlagsOffset();
+            foreach (var lot in lotFlags)
+            {
+                locations.Add(new Location
+                {
+                    Name = lot.Name,
+                    Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
+                    AddressBit = GetEventFlagOffset(lot.Flag).Item2,
+                    Id = lot.Id,
+                });
+            }
+            return locations;
+        }
+        public static List<Location> GetBonfireFlagLocations()
+        {
+            List<Location> locations = new List<Location>();
+            var lotFlags = GetBonfireFlags();
+            var baseAddress = GetEventFlagsOffset();
+            foreach (var lot in lotFlags)
+            {
+                locations.Add(new Location
+                {
+                    Name = lot.Name,
+                    Id = lot.Id,
+                    Address = lot.Flag,
+                    AddressBit = lot.AddressBit
+                });
+            }
+            return locations;
+        }
+        public static List<Location> GetDoorFlagLocations()
+        {
+            List<Location> locations = new List<Location>();
+            var lotFlags = GetDoorFlags();
+            var baseAddress = GetEventFlagsOffset();
+            foreach (var lot in lotFlags)
+            {
+                locations.Add(new Location
+                {
+                    Name = lot.Name,
+                    Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
+                    AddressBit = GetEventFlagOffset(lot.Flag).Item2,
+                    Id = lot.Id,
+                });
+            }
+            return locations;
+        }
+        public static ulong OffsetPointer(ulong ptr, int offset)
         {
             ushort offsetWithin4GB = (ushort)(ptr & 0xFFFF);
             ushort newOffset = (ushort)(offsetWithin4GB + offset);
@@ -185,7 +242,7 @@ namespace DSAP
                             Memory.Write(currentAddress + 0x20 + (ulong)(j * 4), newItemLot.Items[j].LotItemCategory);
                             Memory.Write(currentAddress + 0x40 + (ulong)(j * 2), (ushort)newItemLot.Items[j].LotItemBasePoint);
                             Memory.Write(currentAddress + 0x50 + (ulong)(j * 2), (ushort)newItemLot.Items[j].CumulateLotPoint);
-                            Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), newItemLot.Items[j].GetItemFlagId);
+                            //Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), newItemLot.Items[j].GetItemFlagId);
                             Memory.WriteByte(currentAddress + 0x8A + (ulong)j, newItemLot.Items[j].LotItemNum);
                         }
                         else
@@ -195,12 +252,12 @@ namespace DSAP
                             Memory.Write(currentAddress + 0x20 + (ulong)(j * 4), 0);  // LotItemCategory
                             Memory.Write(currentAddress + 0x40 + (ulong)(j * 2), (ushort)0);  // LotItemBasePoint
                             Memory.Write(currentAddress + 0x50 + (ulong)(j * 2), (ushort)0);  // CumulateLotPoint
-                            Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), 0);  // GetItemFlagId
+                           // Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), 0);  // GetItemFlagId
                             Memory.WriteByte(currentAddress + 0x8A + (ulong)j, 0);  // LotItemNum
                         }
                     }
 
-                    Memory.Write(currentAddress + 0x80, newItemLot.GetItemFlagId);
+                 //   Memory.Write(currentAddress + 0x80, newItemLot.GetItemFlagId);
                     Memory.Write(currentAddress + 0x84, newItemLot.CumulateNumFlagId);
                     Memory.WriteByte(currentAddress + 0x88, newItemLot.CumulateNumMax);
                     Memory.WriteByte(currentAddress + 0x89, newItemLot.Rarity);
@@ -290,6 +347,24 @@ namespace DSAP
             var list = JsonConvert.DeserializeObject<List<ItemLotFlag>>(json);
             return list;
         }
+        public static List<BossFlag> GetBossFlags()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.BossFlags.json");
+            var list = JsonConvert.DeserializeObject<List<BossFlag>>(json);
+            return list;
+        }
+        public static List<BonfireFlag> GetBonfireFlags()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Bonfires.json");
+            var list = JsonConvert.DeserializeObject<List<BonfireFlag>>(json);
+            return list;
+        }
+        public static List<DoorFlag> GetDoorFlags()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Doors.json");
+            var list = JsonConvert.DeserializeObject<List<DoorFlag>>(json);
+            return list;
+        }
         public static List<DarkSoulsItem> GetAllItems()
         {
             var results = new List<DarkSoulsItem>();
@@ -300,13 +375,13 @@ namespace DSAP
             results.Concat(GetUpgradeMaterials());
             return results;
         }
-        public static ulong FlagToOffset(ItemLotFlag flag)
+        public static ulong FlagToOffset(EventFlag flag)
         {
-            var offset = GetEventFlagOffset(flag.Id).Item1;
+            var offset = GetEventFlagOffset(flag.Flag).Item1;
             return offset;
         }
 
-        private static (ulong, int) GetEventFlagOffset(int eventFlag)
+        public static (ulong, int) GetEventFlagOffset(int eventFlag)
         {
             string idString = eventFlag.ToString("D8");
             int tail = Int32.Parse(idString.Substring(5, 3));
@@ -367,10 +442,6 @@ namespace DSAP
                 _ => throw new ArgumentException("Cannot get secondary offset for GetItemFlagId: " + eventFlag),
             };
             return num * 1280;
-        }
-        public static int ApIdToDsId(int dsId)
-        {
-            return dsId - 11110000;
         }
         public static List<Boss> GetBosses()
         {

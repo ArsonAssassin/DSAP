@@ -11,10 +11,13 @@
   <ItemGroup>
     <None Remove="Resources\Bonfires.json" />
     <None Remove="Resources\Bosses.json" />
+    <None Remove="Resources\BossFlags.json" />
     <None Remove="Resources\Consumables.json" />
+    <None Remove="Resources\Doors.json" />
     <None Remove="Resources\ItemLots.json" />
     <None Remove="Resources\KeyItems.json" />
     <None Remove="Resources\Rings.json" />
+    <None Remove="Resources\temp.json" />
     <None Remove="Resources\UpgradeMaterials.json" />
   </ItemGroup>
 
@@ -22,9 +25,13 @@
     <EmbeddedResource Include="Resources\Bonfires.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\BossFlags.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Consumables.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Doors.json" />
     <EmbeddedResource Include="Resources\ItemLots.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -34,6 +41,7 @@
     <EmbeddedResource Include="Resources\Rings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\temp.json" />
     <EmbeddedResource Include="Resources\UpgradeMaterials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -46,12 +54,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Archipelago.Core.GUI" Version="0.0.12" />
+    <PackageReference Include="Archipelago.Core" Version="0.1.5" />
+    <PackageReference Include="Archipelago.Core.GUI" Version="0.0.14" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Archipelago.Core\Archipelago.Core.csproj" />
   </ItemGroup>
 
 </Project>

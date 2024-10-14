@@ -1,0 +1,137 @@
+﻿[
+  {
+    "Name": "Depths Shortcut",
+    "Id": 11113000,
+    "Flag": 11000100
+  },
+  {
+    "Name": "Depths -> Blighttown",
+    "Id": 11113001,
+    "Flag": 11000111
+  },
+  {
+    "Name": "Depths Bonfire room",
+    "Id": 11113002,
+    "Flag": 11000120
+  },
+  {
+    "Name": "Undead Burg Female Merchant shortcut",
+    "Id": 11113003,
+    "Flag": 11010101
+  },
+  {
+    "Name": "Undead Burg -> Lower Undead Burg",
+    "Id": 11113004,
+    "Flag": 11010160
+  },
+  {
+    "Name": "Undead Burg Basement",
+    "Id": 11113005,
+    "Flag": 11010172
+  },
+  {
+    "Name": "Undead Burg Watchtower Upper",
+    "Id": 11113006,
+    "Flag": 11010191
+  },
+  {
+    "Name": "Undead Burg Watchtower Lower",
+    "Id": 11113007,
+    "Flag": 11010192
+  },
+  {
+    "Name": "Undead Burg Sunlight Altar",
+    "Id": 11113008,
+    "Flag": 11010621
+  },
+  {
+    "Name": "Oolacile Crest Key Door",
+    "Id": 11113009,
+    "Flag": 11210650
+  },
+  {
+    "Name": "Catacombs Door 1",
+    "Id": 11113010,
+    "Flag": 11300900
+  },
+  {
+    "Name": "Catacombs Door 2",
+    "Id": 11113011,
+    "Flag": 11300901
+  },
+  {
+    "Name": "Demon Ruins Shortcut",
+    "Id": 11113012,
+    "Flag": 11410340
+  },
+  {
+    "Name": "Sen's Fortress Main Gate",
+    "Id": 11113013,
+    "Flag": 11500200
+  },
+  {
+    "Name": "Anor Londo Main Hall Door",
+    "Id": 11113014,
+    "Flag": 11510200
+  },
+  {
+    "Name": "Anor Londo Giant Blacksmith Shortcut",
+    "Id": 11113015,
+    "Flag": 11510210
+  },
+  {
+    "Name": "Anor Londo Bonfire Shortcut",
+    "Id": 111130016,
+    "Flag": 11510251
+  },
+  {
+    "Name": "New Londo Ruins Door to the Seal",
+    "Id": 11113017,
+    "Flag": 11600110
+  },
+  {
+    "Name": "New Londo Ruins -> Valley of the Drakes",
+    "Id": 11113018,
+    "Flag": 11600120
+  },
+  {
+    "Name": "Duke's Archives Bookshelf door",
+    "Id": 11113019,
+    "Flag": 11700120
+  },
+  {
+    "Name": "Duke's Archives Cell door",
+    "Id": 11113020,
+    "Flag": 11700300
+  },
+  {
+    "Name": "Undead Asylum Cell door",
+    "Id": 11113021,
+    "Flag": 11810103
+  },
+  {
+    "Name": "Undead Asylum F2 West door",
+    "Id": 11113022,
+    "Flag": 11810104
+  },
+  {
+    "Name": "Undead Asylum Shortcut door",
+    "Id": 11113023,
+    "Flag": 11810105
+  },
+  {
+    "Name": "Undead Asylum F2 East door",
+    "Id": 11113024,
+    "Flag": 11810106
+  },
+  {
+    "Name": "Undead Asylum Big Pilgrim door",
+    "Id": 11113025,
+    "Flag": 11810110
+  },
+  {
+    "Name": "Undead Asylum Boss door",
+    "Id": 11113026,
+    "Flag": 11810112
+  }
+]

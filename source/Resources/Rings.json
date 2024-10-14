@@ -4,286 +4,327 @@
     "Id": 100,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4000
   },
   {
     "Name": "Red Tearstone Ring",
     "Id": 101,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4001
   },
   {
     "Name": "Darkmoon Blade Covenant Ring",
     "Id": 102,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4002
   },
   {
     "Name": "Cat Covenant Ring",
     "Id": 103,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4003
   },
   {
     "Name": "Cloranthy Ring",
     "Id": 104,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4004
   },
   {
     "Name": "Flame Stoneplate Ring",
     "Id": 105,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4005
   },
   {
     "Name": "Thunder Stoneplate Ring",
     "Id": 106,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4006
   },
   {
     "Name": "Spell Stoneplate Ring",
     "Id": 107,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4007
   },
   {
     "Name": "Speckled Stoneplate Ring",
     "Id": 108,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4008
   },
   {
     "Name": "Bloodbite Ring",
     "Id": 109,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4009
   },
   {
     "Name": "Poisonbite Ring",
     "Id": 110,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4010
   },
   {
     "Name": "Tiny Being's Ring",
     "Id": 111,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4011
   },
   {
     "Name": "Cursebite Ring",
     "Id": 113,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4012
   },
   {
     "Name": "White Seance Ring",
     "Id": 114,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4013
   },
   {
     "Name": "Bellowing Dragoncrest Ring",
     "Id": 115,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4014
   },
   {
     "Name": "Dusk Crown Ring",
     "Id": 116,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4015
   },
   {
     "Name": "Hornet Ring",
     "Id": 117,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4016
   },
   {
     "Name": "Hawk Ring",
     "Id": 119,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4017
   },
   {
     "Name": "Ring of Steel Protection",
     "Id": 120,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4018
   },
   {
     "Name": "Covetous Gold Serpent Ring",
     "Id": 121,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4019
   },
   {
     "Name": "Covetous Silver Serpent Ring",
     "Id": 122,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4020
   },
   {
     "Name": "Slumbering Dragoncrest Ring",
     "Id": 123,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4021
   },
   {
     "Name": "Ring of Fog",
     "Id": 124,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4022
   },
   {
     "Name": "Rusted Iron Ring",
     "Id": 125,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4023
   },
   {
     "Name": "Ring of Sacrifice",
     "Id": 126,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4024
   },
   {
     "Name": "Rare Ring of Sacrifice",
     "Id": 127,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4025
   },
   {
     "Name": "Dark Wood Grain Ring",
     "Id": 128,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4026
   },
   {
     "Name": "Ring of the Sun Princess",
     "Id": 130,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4027
   },
   {
     "Name": "Old Witch's Ring",
     "Id": 137,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4028
   },
   {
     "Name": "Covenant of Artorias",
     "Id": 138,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4029
   },
   {
     "Name": "Orange Charred Ring",
     "Id": 139,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4030
   },
   {
     "Name": "Lingering Dragoncrest Ring",
     "Id": 141,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4031
   },
   {
     "Name": "Ring of the Evil Eye",
     "Id": 142,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4032
   },
   {
     "Name": "Ring of Favor and Protection",
     "Id": 143,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4033
   },
   {
     "Name": "Leo Ring",
     "Id": 144,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4034
   },
   {
     "Name": "East Wood Grain Ring",
     "Id": 145,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4035
   },
   {
     "Name": "Wolf Ring",
     "Id": 146,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4036
   },
   {
     "Name": "Blue Tearstone Ring",
     "Id": 147,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4037
   },
   {
     "Name": "Ring of the Sun's Firstborn",
     "Id": 148,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4038
   },
   {
     "Name": "Darkmoon Seance Ring",
     "Id": 149,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4039
   },
   {
     "Name": "Calamity Ring",
     "Id": 150,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "Rings"
+    "Category": "Rings",
+    "ApId": 4040
   }
 ]

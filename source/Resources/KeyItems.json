@@ -4,237 +4,271 @@
     "Id": 384,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3000
   },
   {
     "Name": "Basement Key",
     "Id": 2001,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3001
   },
   {
     "Name": "Crest of Artorias",
     "Id": 2002,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3002
   },
   {
     "Name": "Cage Key",
     "Id": 2003,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3003
   },
   {
     "Name": "Archive Tower Cell Key",
     "Id": 2004,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3004
   },
   {
     "Name": "Archive Tower Giant Door Key",
     "Id": 2005,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3005
   },
   {
     "Name": "Archive Tower Giant Cell Key",
     "Id": 2006,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3006
   },
   {
     "Name": "Blighttown Key",
     "Id": 2007,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3007
   },
   {
     "Name": "Key to New Londo Ruins",
     "Id": 2008,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3008
   },
   {
     "Name": "Annex Key",
     "Id": 2009,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3009
   },
   {
     "Name": "Dungeon Cell Key",
     "Id": 2010,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3010
   },
   {
     "Name": "Big Pilgrim's Key",
     "Id": 2011,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3011
   },
   {
     "Name": "Undead Asylum F2 East Key",
     "Id": 2012,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3012
   },
   {
     "Name": "Key to the Seal",
     "Id": 2013,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3013
   },
   {
     "Name": "Key to Depths",
     "Id": 2014,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3014
   },
   {
     "Name": "Undead Asylum F2 West Key",
     "Id": 2016,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3015
   },
   {
     "Name": "Mystery Key",
     "Id": 2017,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3016
   },
   {
     "Name": "Sewer Chamber Key",
     "Id": 2018,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3017
   },
   {
     "Name": "Watchtower Basement Key",
     "Id": 2019,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3018
   },
   {
     "Name": "Archive Prison Extra Key",
     "Id": 2020,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3019
   },
   {
     "Name": "Residence Key",
     "Id": 2021,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3020
   },
   {
     "Name": "Crest Key",
     "Id": 2022,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3021
   },
   {
     "Name": "Master Key",
     "Id": 2100,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3022
   },
   {
     "Name": "Lord Soul (Nito)",
     "Id": 2500,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3023
   },
   {
     "Name": "Lord Soul (Bed of Chaos)",
     "Id": 2501,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3024
   },
   {
     "Name": "Bequeathed Lord Soul Shard (Four Kings)",
     "Id": 2502,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3025
   },
   {
     "Name": "Bequeathed Lord Soul Shard (Seath)",
     "Id": 2503,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3026
   },
   {
     "Name": "Lordvessel",
     "Id": 2510,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3027
   },
   {
     "Name": "Broken Pendant",
     "Id": 2520,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3028
   },
   {
     "Name": "Weapon Smithbox",
     "Id": 2600,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3029
   },
   {
     "Name": "Armor Smithbox",
     "Id": 2601,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3030
   },
   {
     "Name": "Repairbox",
     "Id": 2602,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3031
   },
   {
     "Name": "Rite of Kindling",
     "Id": 2607,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3032
   },
   {
     "Name": "Bottomless Box",
     "Id": 2608,
     "StackLimit": 1,
     "UpgradeType": "None",
-    "Category": "KeyItems"
+    "Category": "KeyItems",
+    "ApId": 3033
   }
 ]
