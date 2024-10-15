@@ -890,17 +890,17 @@
     "Id": 11113177
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Parish Barrel",
     "Flag": 51010040,
     "Id": 11113178
   },
   {
-    "Name": "Fire Keeper Soul",
+    "Name": "Fire Keeper Soul - Undead Parish",
     "Flag": 51010050,
     "Id": 11113179
   },
   {
-    "Name": "Large Soul of a Lost Undead",
+    "Name": "Large Soul of a Lost Undead - Barrel Drop",
     "Flag": 51010070,
     "Id": 11113180
   },
@@ -950,7 +950,7 @@
     "Id": 11113189
   },
   {
-    "Name": "Soul of a Nameless Soldier",
+    "Name": "Soul of a Nameless Soldier - Hellkite Bridge",
     "Flag": 51010220,
     "Id": 11113190
   },
@@ -960,7 +960,7 @@
     "Id": 11113191
   },
   {
-    "Name": "Large Soul of a Lost Undead",
+    "Name": "Large Soul of a Lost Undead - Hollow Room Rafters",
     "Flag": 51010280,
     "Id": 11113192
   },
@@ -1005,7 +1005,7 @@
     "Id": 11113200
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Window Corpse",
     "Flag": 51010400,
     "Id": 11113201
   },
@@ -1025,12 +1025,12 @@
     "Id": 11113204
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Upper Burg Fogwall house",
     "Flag": 51010440,
     "Id": 11113205
   },
   {
-    "Name": "Black Firebomb",
+    "Name": "Black Firebomb - Side House Chest",
     "Flag": 51010450,
     "Id": 11113206
   },
@@ -1040,12 +1040,12 @@
     "Id": 11113207
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Firebomb Throwers",
     "Flag": 51010470,
     "Id": 11113208
   },
   {
-    "Name": "Large Soul of a Lost Undead",
+    "Name": "Large Soul of a Lost Undead - After Tauros",
     "Flag": 51010480,
     "Id": 11113209
   },
@@ -1055,7 +1055,7 @@
     "Id": 11113210
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Parish Window",
     "Flag": 51010500,
     "Id": 11113211
   },
@@ -1090,12 +1090,12 @@
     "Id": 11113217
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Firelink Well",
     "Flag": 51020000,
     "Id": 11113218
   },
   {
-    "Name": "Large Soul of a Lost Undead",
+    "Name": "Large Soul of a Lost Undead - Graveyard 1",
     "Flag": 51020010,
     "Id": 11113219
   },
@@ -1105,22 +1105,22 @@
     "Id": 11113220
   },
   {
-    "Name": "Large Soul of a Lost Undead",
+    "Name": "Large Soul of a Lost Undead - Graveyard 2",
     "Flag": 51020030,
     "Id": 11113221
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Sewer Entrance",
     "Flag": 51020040,
     "Id": 11113222
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Above Frampt",
     "Flag": 51020050,
     "Id": 11113223
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Outside Firelink Elevator",
     "Flag": 51020060,
     "Id": 11113224
   },
@@ -1130,27 +1130,27 @@
     "Id": 11113225
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Outside Frampt",
     "Flag": 51020090,
     "Id": 11113226
   },
   {
-    "Name": "Firebomb",
+    "Name": "Firebomb - Outside Petrus",
     "Flag": 51020110,
     "Id": 11113227
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Firelink Cliff",
     "Flag": 51020120,
     "Id": 11113228
   },
   {
-    "Name": "Ring of Sacrifice",
+    "Name": "Ring of Sacrifice - Domhnall Firelink",
     "Flag": 51020130,
     "Id": 11113229
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Sewer Rat",
     "Flag": 51020140,
     "Id": 11113230
   },
@@ -1180,12 +1180,12 @@
     "Id": 11113235
   },
   {
-    "Name": "Homeward Bone",
+    "Name": "Homeward Bone - Firelink Elevator Drop",
     "Flag": 51020190,
     "Id": 11113236
   },
   {
-    "Name": "Cracked Red Eye Orb",
+    "Name": "Cracked Red Eye Orb - Firelink Elevator Drop",
     "Flag": 51020200,
     "Id": 11113237
   },
@@ -2895,7 +2895,7 @@
     "Id": 11113578
   },
   {
-    "Name": "Soul of a Nameless Soldier",
+    "Name": "Soul of a Nameless Soldier - New Londo Entrance",
     "Flag": 51600000,
     "Id": 11113579
   },
@@ -2905,7 +2905,7 @@
     "Id": 11113580
   },
   {
-    "Name": "Fire Keeper Soul",
+    "Name": "Fire Keeper Soul - New Londo",
     "Flag": 51600030,
     "Id": 11113581
   },
@@ -3100,7 +3100,7 @@
     "Id": 11113619
   },
   {
-    "Name": "Transient Curse",
+    "Name": "Transient Curse - Before Ghosts",
     "Flag": 51600520,
     "Id": 11113620
   },
@@ -3330,7 +3330,7 @@
     "Id": 11113665
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead - Outside Asylum",
     "Flag": 51810070,
     "Id": 11113666
   },
