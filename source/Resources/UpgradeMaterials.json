@@ -5,7 +5,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5000
+    "ApId": 11115000
   },
   {
     "Name": "Very Large Ember",
@@ -13,7 +13,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5001
+    "ApId": 11115001
   },
   {
     "Name": "Crystal Ember",
@@ -21,7 +21,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5002
+    "ApId": 11115002
   },
   {
     "Name": "Large Magic Ember",
@@ -29,7 +29,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5003
+    "ApId": 11115003
   },
   {
     "Name": "Enchanted Ember",
@@ -37,7 +37,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5004
+    "ApId": 11115004
   },
   {
     "Name": "Divine Ember",
@@ -45,7 +45,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5005
+    "ApId": 11115005
   },
   {
     "Name": "Large Divine Ember",
@@ -53,7 +53,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5006
+    "ApId": 11115006
   },
   {
     "Name": "Dark Ember",
@@ -61,7 +61,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5007
+    "ApId": 11115007
   },
   {
     "Name": "Large Flame Ember",
@@ -69,7 +69,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5008
+    "ApId": 11115008
   },
   {
     "Name": "Chaos Flame Ember",
@@ -77,7 +77,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5009
+    "ApId": 11115009
   },
   {
     "Name": "Titanite Shard",
@@ -85,7 +85,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5010
+    "ApId": 11115010
   },
   {
     "Name": "Large Titanite Shard",
@@ -93,7 +93,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5011
+    "ApId": 11115011
   },
   {
     "Name": "Green Titanite Shard",
@@ -101,7 +101,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5012
+    "ApId": 11115012
   },
   {
     "Name": "Titanite Chunk",
@@ -109,7 +109,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5013
+    "ApId": 11115013
   },
   {
     "Name": "Blue Titanite Chunk",
@@ -117,7 +117,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5014
+    "ApId": 11115014
   },
   {
     "Name": "White Titanite Chunk",
@@ -125,7 +125,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5015
+    "ApId": 11115015
   },
   {
     "Name": "Red Titanite Chunk",
@@ -133,7 +133,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5016
+    "ApId": 11115016
   },
   {
     "Name": "Titanite Slab",
@@ -141,7 +141,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5017
+    "ApId": 11115017
   },
   {
     "Name": "Blue Titanite Slab",
@@ -149,7 +149,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5018
+    "ApId": 11115018
   },
   {
     "Name": "White Titanite Slab",
@@ -157,7 +157,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5019
+    "ApId": 11115019
   },
   {
     "Name": "Red Titanite Slab",
@@ -165,7 +165,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5020
+    "ApId": 11115020
   },
   {
     "Name": "Dragon Scale",
@@ -173,7 +173,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5021
+    "ApId": 11115021
   },
   {
     "Name": "Demon Titanite",
@@ -181,7 +181,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5022
+    "ApId": 11115022
   },
   {
     "Name": "Twinkling Titanite",
@@ -189,6 +189,6 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
-    "ApId": 5023
+    "ApId": 11115023
   }
 ]

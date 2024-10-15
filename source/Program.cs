@@ -95,6 +95,7 @@ namespace DSAP
                 {
                     foreach (var location in completed)
                     {
+                        Client.SendLocation(location);
                         Log.Logger.Information($"{location.Name} ({location.Id}) Completed");
                         batch.Remove(location);
                     }
@@ -147,7 +148,7 @@ namespace DSAP
 
             AllItems = Helpers.GetAllItems();
 
-            RemoveItems();
+            //RemoveItems();
         }
         private static void RemoveItems()
         {
@@ -188,10 +189,12 @@ namespace DSAP
             var itemToReceive = AllItems.First(x => x.ApId == itemId);
             if (itemToReceive != null)
             {
+                Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
             }
             else
             {
+                Log.Logger.Information("Couldnt find correct item");
                 var filler = AllItems.First(x => x.Id == 380);
                 AddItem((int)filler.Category, filler.Id, 1);
             }

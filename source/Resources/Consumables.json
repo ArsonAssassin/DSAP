@@ -5,7 +5,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2000
+    "ApId": 11112000
   },
   {
     "Name": "Cracked Red Eye Orb",
@@ -13,7 +13,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2001
+    "ApId": 11112001
   },
   {
     "Name": "Elizabeth's Mushroom",
@@ -21,7 +21,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2002
+    "ApId": 11112002
   },
   {
     "Name": "Divine Blessing",
@@ -29,7 +29,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2003
+    "ApId": 11112003
   },
   {
     "Name": "Green Blossom",
@@ -37,7 +37,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2004
+    "ApId": 11112004
   },
   {
     "Name": "Bloodred Moss Clump",
@@ -45,7 +45,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2005
+    "ApId": 11112005
   },
   {
     "Name": "Purple Moss Clump",
@@ -53,7 +53,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2006
+    "ApId": 11112006
   },
   {
     "Name": "Blooming Purple Moss Clump",
@@ -61,7 +61,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2007
+    "ApId": 11112007
   },
   {
     "Name": "Purging Stone",
@@ -69,7 +69,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2008
+    "ApId": 11112008
   },
   {
     "Name": "Egg Vermifuge",
@@ -77,7 +77,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2009
+    "ApId": 11112009
   },
   {
     "Name": "Repair Powder",
@@ -85,7 +85,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2010
+    "ApId": 11112010
   },
   {
     "Name": "Throwing Knife",
@@ -93,7 +93,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2011
+    "ApId": 11112011
   },
   {
     "Name": "Poison Throwing Knife",
@@ -101,7 +101,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2012
+    "ApId": 11112012
   },
   {
     "Name": "Firebomb",
@@ -109,7 +109,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2013
+    "ApId": 11112013
   },
   {
     "Name": "Dung Pie",
@@ -117,7 +117,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2014
+    "ApId": 11112014
   },
   {
     "Name": "Alluring Skull",
@@ -125,7 +125,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2015
+    "ApId": 11112015
   },
   {
     "Name": "Lloyd's Talisman",
@@ -133,7 +133,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2016
+    "ApId": 11112016
   },
   {
     "Name": "Black Firebomb",
@@ -141,7 +141,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2017
+    "ApId": 11112017
   },
   {
     "Name": "Charcoal Pine Resin",
@@ -149,7 +149,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2018
+    "ApId": 11112018
   },
   {
     "Name": "Gold Pine Resin",
@@ -157,7 +157,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2019
+    "ApId": 11112019
   },
   {
     "Name": "Transient Curse",
@@ -165,7 +165,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2020
+    "ApId": 11112020
   },
   {
     "Name": "Rotten Pine Resin",
@@ -173,7 +173,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2021
+    "ApId": 11112021
   },
   {
     "Name": "Homeward Bone",
@@ -181,7 +181,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2022
+    "ApId": 11112022
   },
   {
     "Name": "Prism Stone",
@@ -189,7 +189,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2023
+    "ApId": 11112023
   },
   {
     "Name": "Indictment",
@@ -197,7 +197,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2024
+    "ApId": 11112024
   },
   {
     "Name": "Souvenir of Reprisal",
@@ -205,7 +205,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2025
+    "ApId": 11112025
   },
   {
     "Name": "Sunlight Medal",
@@ -213,7 +213,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2026
+    "ApId": 11112026
   },
   {
     "Name": "Pendant",
@@ -221,7 +221,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2027
+    "ApId": 11112027
   },
   {
     "Name": "Rubbish",
@@ -229,7 +229,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2028
+    "ApId": 11112028
   },
   {
     "Name": "Copper Coin",
@@ -237,7 +237,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2029
+    "ApId": 11112029
   },
   {
     "Name": "Silver Coin",
@@ -245,7 +245,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2030
+    "ApId": 11112030
   },
   {
     "Name": "Gold Coin",
@@ -253,7 +253,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2031
+    "ApId": 11112031
   },
   {
     "Name": "Fire Keeper Soul (Anastacia of Astora)",
@@ -261,7 +261,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2032
+    "ApId": 11112032
   },
   {
     "Name": "Fire Keeper Soul (Darkmoon Knightess)",
@@ -269,7 +269,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2033
+    "ApId": 11112033
   },
   {
     "Name": "Fire Keeper Soul (Daughter of Chaos)",
@@ -277,7 +277,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2034
+    "ApId": 11112034
   },
   {
     "Name": "Fire Keeper Soul (New Londo)",
@@ -285,7 +285,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2035
+    "ApId": 11112035
   },
   {
     "Name": "Fire Keeper Soul (Blighttown)",
@@ -293,7 +293,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2036
+    "ApId": 11112036
   },
   {
     "Name": "Fire Keeper Soul (Duke's Archives)",
@@ -301,7 +301,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2037
+    "ApId": 11112037
   },
   {
     "Name": "Fire Keeper Soul (Undead Parish)",
@@ -309,7 +309,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2038
+    "ApId": 11112038
   },
   {
     "Name": "Soul of a Lost Undead",
@@ -317,7 +317,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2039
+    "ApId": 11112039
   },
   {
     "Name": "Large Soul of a Lost Undead",
@@ -325,7 +325,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2040
+    "ApId": 11112040
   },
   {
     "Name": "Soul of a Nameless Soldier",
@@ -333,7 +333,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2041
+    "ApId": 11112041
   },
   {
     "Name": "Large Soul of a Nameless Soldier",
@@ -341,7 +341,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2042
+    "ApId": 11112042
   },
   {
     "Name": "Soul of a Proud Knight",
@@ -349,7 +349,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2043
+    "ApId": 11112043
   },
   {
     "Name": "Large Soul of a Proud Knight",
@@ -357,7 +357,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2044
+    "ApId": 11112044
   },
   {
     "Name": "Soul of a Brave Warrior",
@@ -365,7 +365,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2045
+    "ApId": 11112045
   },
   {
     "Name": "Large Soul of a Brave Warrior",
@@ -373,7 +373,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2046
+    "ApId": 11112046
   },
   {
     "Name": "Soul of a Hero",
@@ -381,7 +381,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2047
+    "ApId": 11112047
   },
   {
     "Name": "Soul of a Great Hero",
@@ -389,7 +389,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2048
+    "ApId": 11112048
   },
   {
     "Name": "Humanity",
@@ -397,7 +397,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2049
+    "ApId": 11112049
   },
   {
     "Name": "Twin Humanities",
@@ -405,7 +405,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2050
+    "ApId": 11112050
   },
   {
     "Name": "Soul of Quelaag",
@@ -413,7 +413,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2051
+    "ApId": 11112051
   },
   {
     "Name": "Soul of Sif",
@@ -421,7 +421,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2052
+    "ApId": 11112052
   },
   {
     "Name": "Soul of Gwyn, Lord of Cinder",
@@ -429,7 +429,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2053
+    "ApId": 11112053
   },
   {
     "Name": "Core of an Iron Golem",
@@ -437,7 +437,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2054
+    "ApId": 11112054
   },
   {
     "Name": "Soul of Ornstein",
@@ -445,7 +445,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2055
+    "ApId": 11112055
   },
   {
     "Name": "Soul of the Moonlight Butterfly",
@@ -453,7 +453,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2056
+    "ApId": 11112056
   },
   {
     "Name": "Soul of Smough",
@@ -461,7 +461,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2057
+    "ApId": 11112057
   },
   {
     "Name": "Soul of Priscilla",
@@ -469,7 +469,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2058
+    "ApId": 11112058
   },
   {
     "Name": "Soul of Gwyndolin",
@@ -477,7 +477,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2059
+    "ApId": 11112059
   },
   {
     "Name": "Guardian Soul",
@@ -485,7 +485,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 260
+    "ApId": 1111260
   },
   {
     "Name": "Soul of Artorias",
@@ -493,7 +493,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2061
+    "ApId": 11112061
   },
   {
     "Name": "Soul of Manus",
@@ -501,6 +501,6 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Consumables",
-    "ApId": 2062
+    "ApId": 11112062
   }
 ]

@@ -5,7 +5,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3000
+    "ApId": 11113000
   },
   {
     "Name": "Basement Key",
@@ -13,7 +13,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3001
+    "ApId": 11113001
   },
   {
     "Name": "Crest of Artorias",
@@ -21,7 +21,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3002
+    "ApId": 11113002
   },
   {
     "Name": "Cage Key",
@@ -29,7 +29,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3003
+    "ApId": 11113003
   },
   {
     "Name": "Archive Tower Cell Key",
@@ -37,7 +37,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3004
+    "ApId": 11113004
   },
   {
     "Name": "Archive Tower Giant Door Key",
@@ -45,7 +45,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3005
+    "ApId": 11113005
   },
   {
     "Name": "Archive Tower Giant Cell Key",
@@ -53,7 +53,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3006
+    "ApId": 11113006
   },
   {
     "Name": "Blighttown Key",
@@ -61,7 +61,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3007
+    "ApId": 11113007
   },
   {
     "Name": "Key to New Londo Ruins",
@@ -69,7 +69,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3008
+    "ApId": 11113008
   },
   {
     "Name": "Annex Key",
@@ -77,7 +77,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3009
+    "ApId": 11113009
   },
   {
     "Name": "Dungeon Cell Key",
@@ -85,7 +85,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3010
+    "ApId": 11113010
   },
   {
     "Name": "Big Pilgrim's Key",
@@ -93,7 +93,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3011
+    "ApId": 11113011
   },
   {
     "Name": "Undead Asylum F2 East Key",
@@ -101,7 +101,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3012
+    "ApId": 11113012
   },
   {
     "Name": "Key to the Seal",
@@ -109,7 +109,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3013
+    "ApId": 11113013
   },
   {
     "Name": "Key to Depths",
@@ -117,7 +117,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3014
+    "ApId": 11113014
   },
   {
     "Name": "Undead Asylum F2 West Key",
@@ -125,7 +125,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3015
+    "ApId": 11113015
   },
   {
     "Name": "Mystery Key",
@@ -133,7 +133,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3016
+    "ApId": 11113016
   },
   {
     "Name": "Sewer Chamber Key",
@@ -141,7 +141,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3017
+    "ApId": 11113017
   },
   {
     "Name": "Watchtower Basement Key",
@@ -149,7 +149,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3018
+    "ApId": 11113018
   },
   {
     "Name": "Archive Prison Extra Key",
@@ -157,7 +157,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3019
+    "ApId": 11113019
   },
   {
     "Name": "Residence Key",
@@ -165,7 +165,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3020
+    "ApId": 11113020
   },
   {
     "Name": "Crest Key",
@@ -173,7 +173,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3021
+    "ApId": 11113021
   },
   {
     "Name": "Master Key",
@@ -181,7 +181,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3022
+    "ApId": 11113022
   },
   {
     "Name": "Lord Soul (Nito)",
@@ -189,7 +189,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3023
+    "ApId": 11113023
   },
   {
     "Name": "Lord Soul (Bed of Chaos)",
@@ -197,7 +197,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3024
+    "ApId": 11113024
   },
   {
     "Name": "Bequeathed Lord Soul Shard (Four Kings)",
@@ -205,7 +205,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3025
+    "ApId": 11113025
   },
   {
     "Name": "Bequeathed Lord Soul Shard (Seath)",
@@ -213,7 +213,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3026
+    "ApId": 11113026
   },
   {
     "Name": "Lordvessel",
@@ -221,7 +221,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3027
+    "ApId": 11113027
   },
   {
     "Name": "Broken Pendant",
@@ -229,7 +229,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3028
+    "ApId": 11113028
   },
   {
     "Name": "Weapon Smithbox",
@@ -237,7 +237,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3029
+    "ApId": 11113029
   },
   {
     "Name": "Armor Smithbox",
@@ -245,7 +245,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3030
+    "ApId": 11113030
   },
   {
     "Name": "Repairbox",
@@ -253,7 +253,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3031
+    "ApId": 11113031
   },
   {
     "Name": "Rite of Kindling",
@@ -261,7 +261,7 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3032
+    "ApId": 11113032
   },
   {
     "Name": "Bottomless Box",
@@ -269,6 +269,6 @@
     "StackLimit": 1,
     "UpgradeType": "None",
     "Category": "KeyItems",
-    "ApId": 3033
+    "ApId": 11113033
   }
 ]

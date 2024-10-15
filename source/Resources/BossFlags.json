@@ -1,128 +1,127 @@
 ﻿[
-  //Bosses
   {
     "Name": "Gaping Dragon",
-    "Id": 11111011,
+    "Id": 11110011,
     "Flag": 2
   },
   {
     "Name": "Bell Gargoyles",
-    "Id": 11111002,
+    "Id": 11110002,
     "Flag": 3
   },
   {
     "Name": "Crossbreed Priscilla",
-    "Id": 11111007,
+    "Id": 11110007,
     "Flag": 4
   },
   {
     "Name": "Great Grey Wolf Sif",
-    "Id": 11111013,
+    "Id": 11110013,
     "Flag": 5
   },
   {
     "Name": "Pinwheel",
-    "Id": 11111017,
+    "Id": 11110017,
     "Flag": 6
   },
   {
     "Name": "Gravelord Nito",
-    "Id": 11111012,
+    "Id": 11110012,
     "Flag": 7
   },
   {
     "Name": "Chaos Witch Quelaag",
-    "Id": 11111006,
+    "Id": 11110006,
     "Flag": 9
   },
   {
     "Name": "Bed of Chaos",
-    "Id": 11111020,
+    "Id": 11110020,
     "Flag": 10
   },
   {
     "Name": "Iron Golem",
-    "Id": 11111015,
+    "Id": 11110015,
     "Flag": 11
   },
   {
     "Name": "Ornstein and Smough",
-    "Id": 11111009,
+    "Id": 11110009,
     "Flag": 12
   },
   {
     "Name": "4 Kings",
-    "Id": 11111010,
+    "Id": 11110010,
     "Flag": 13
   },
   {
     "Name": "Seath the Scaleless",
-    "Id": 11111018,
+    "Id": 11110018,
     "Flag": 14
   },
   {
     "Name": "Gwyn, Lord of Cinder",
-    "Id": 11111014,
+    "Id": 11110014,
     "Flag": 15
   },
   {
     "Name": "Asylum Demon",
-    "Id": 11111000,
+    "Id": 11110000,
     "Flag": 16
   },
   {
     "Name": "Taurus Demon",
-    "Id": 11111001,
+    "Id": 11110001,
     "Flag": 11010901
   },
   {
     "Name": "Capra Demon",
-    "Id": 11111003,
+    "Id": 11110003,
     "Flag": 11010902
   },
   {
     "Name": "Moonlight Butterfly",
-    "Id": 11111016,
+    "Id": 11110016,
     "Flag": 11200900
   },
   {
     "Name": "Sanctuary Guardian",
-    "Id": 11111023,
+    "Id": 11110023,
     "Flag": 11210000
   },
   {
     "Name": "Knight Artorias",
-    "Id": 11111022,
+    "Id": 11110022,
     "Flag": 11210001
   },
   {
     "Name": "Manus, Father of the Abyss",
-    "Id": 11111021,
+    "Id": 11110021,
     "Flag": 11210002
   },
   {
     "Name": "Black Dragon Kalameet",
-    "Id": 11111019,
+    "Id": 11110019,
     "Flag": 11210004
   },
   {
     "Name": "Demon Firesage",
-    "Id": 11111008,
+    "Id": 11110008,
     "Flag": 11410410
   },
   {
     "Name": "Ceaseless Discharge",
-    "Id": 11111004,
+    "Id": 11110004,
     "Flag": 11410900
   },
   {
     "Name": "Centipede Demon",
-    "Id": 11111005,
+    "Id": 11110005,
     "Flag": 11410901
   },
   {
     "Name": "Gwyndolin",
-    "Id": 11111024,
+    "Id": 11110024,
     "Flag": 11510900
   }
 ]
