@@ -18,6 +18,7 @@
     <None Remove="Resources\ItemLots.json" />
     <None Remove="Resources\KeyItems.json" />
     <None Remove="Resources\Rings.json" />
+    <None Remove="Resources\Spells.json" />
     <None Remove="Resources\temp.json" />
     <None Remove="Resources\UpgradeMaterials.json" />
   </ItemGroup>
@@ -42,6 +43,7 @@
     <EmbeddedResource Include="Resources\Rings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Spells.json" />
     <EmbeddedResource Include="Resources\temp.json" />
     <EmbeddedResource Include="Resources\UpgradeMaterials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -55,8 +57,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Archipelago.Core" Version="0.1.5" />
-    <PackageReference Include="Archipelago.Core.GUI" Version="0.0.14" />
+    <PackageReference Include="Archipelago.Core" Version="0.1.8" />
+    <PackageReference Include="Archipelago.Core.GUI" Version="0.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

@@ -1,0 +1,578 @@
+﻿[
+  {
+    "Name": "Sorcery: Soul Arrow",
+    "Id": 3000,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116000
+  },
+  {
+    "Name": "Sorcery: Great Soul Arrow",
+    "Id": 3010,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116001
+  },
+  {
+    "Name": "Sorcery: Heavy Soul Arrow",
+    "Id": 3020,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116002
+  },
+  {
+    "Name": "Sorcery: Great Heavy Soul Arrow",
+    "Id": 3030,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116003
+  },
+  {
+    "Name": "Sorcery: Homing Soulmass",
+    "Id": 3040,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116004
+  },
+  {
+    "Name": "Sorcery: Homing Crystal Soulmass",
+    "Id": 3050,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116005
+  },
+  {
+    "Name": "Sorcery: Soul Spear",
+    "Id": 3060,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116006
+  },
+  {
+    "Name": "Sorcery: Crystal Soul Spear",
+    "Id": 3070,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116007
+  },
+  {
+    "Name": "Sorcery: Magic Weapon",
+    "Id": 3100,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116008
+  },
+  {
+    "Name": "Sorcery: Great Magic Weapon",
+    "Id": 3110,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116009
+  },
+  {
+    "Name": "Sorcery: Crystal Magic Weapon",
+    "Id": 3120,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116010
+  },
+  {
+    "Name": "Sorcery: Magic Shield",
+    "Id": 3300,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116011
+  },
+  {
+    "Name": "Sorcery: Strong Magic Shield",
+    "Id": 3310,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116012
+  },
+  {
+    "Name": "Sorcery: Hidden Weapon",
+    "Id": 3400,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116013
+  },
+  {
+    "Name": "Sorcery: Hidden Body",
+    "Id": 3410,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116014
+  },
+  {
+    "Name": "Cast Light",
+    "Id": 3500,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116015
+  },
+  {
+    "Name": "Sorcery: Hush",
+    "Id": 3510,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116016
+  },
+  {
+    "Name": "Sorcery: Aural Decoy",
+    "Id": 3520,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116017
+  },
+  {
+    "Name": "Sorcery: Repair",
+    "Id": 3530,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116018
+  },
+  {
+    "Name": "Sorcery: Fall Control",
+    "Id": 3540,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116019
+  },
+  {
+    "Name": "Sorcery: Chameleon",
+    "Id": 3550,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116020
+  },
+  {
+    "Name": "Sorcery: Resist Curse",
+    "Id": 3600,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116021
+  },
+  {
+    "Name": "Sorcery: Remedy",
+    "Id": 3610,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116022
+  },
+  {
+    "Name": "Sorcery: White Dragon Breath",
+    "Id": 3700,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116023
+  },
+  {
+    "Name": "Sorcery: Dark Orb",
+    "Id": 3710,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116024
+  },
+  {
+    "Name": "Sorcery: Dark Bead",
+    "Id": 3720,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116025
+  },
+  {
+    "Name": "Sorcery: Dark Fog",
+    "Id": 3730,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116026
+  },
+  {
+    "Name": "Sorcery: Pursuers",
+    "Id": 3740,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116027
+  },
+  {
+    "Name": "Pyromancy: Fireball",
+    "Id": 4000,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116028
+  },
+  {
+    "Name": "Fire Orb",
+    "Id": 4010,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116029
+  },
+  {
+    "Name": "Pyromancy: Great Fireball",
+    "Id": 4020,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116030
+  },
+  {
+    "Name": "Pyromancy: Firestorm",
+    "Id": 4030,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116031
+  },
+  {
+    "Name": "Pyromancy: Fire Tempest",
+    "Id": 4040,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116032
+  },
+  {
+    "Name": "Pyromancy: Fire Surge",
+    "Id": 4050,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116033
+  },
+  {
+    "Name": "Pyromancy: Fire Whip",
+    "Id": 4060,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116034
+  },
+  {
+    "Name": "Pyromancy: Combustion",
+    "Id": 4100,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116035
+  },
+  {
+    "Name": "Great Combustion",
+    "Id": 4110,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116036
+  },
+  {
+    "Name": "Pyromancy: Poison Mist",
+    "Id": 4200,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116037
+  },
+  {
+    "Name": "Pyromancy: Toxic Mist",
+    "Id": 4210,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116038
+  },
+  {
+    "Name": "Pyromancy: Acid Surge",
+    "Id": 4220,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116039
+  },
+  {
+    "Name": "Iron Flesh",
+    "Id": 4300,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116040
+  },
+  {
+    "Name": "Pyromancy: Flash Sweat",
+    "Id": 4310,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116041
+  },
+  {
+    "Name": "Pyromancy: Undead Rapport",
+    "Id": 4360,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116042
+  },
+  {
+    "Name": "Pyromancy: Power Within",
+    "Id": 4400,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116043
+  },
+  {
+    "Name": "Pyromancy: Great Chaos Fireball",
+    "Id": 4500,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116044
+  },
+  {
+    "Name": "Pyromancy: Chaos Storm",
+    "Id": 4510,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116045
+  },
+  {
+    "Name": "Pyromancy: Chaos Fire Whip",
+    "Id": 4520,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116046
+  },
+  {
+    "Name": "Pyromancy: Black Flame",
+    "Id": 4530,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116047
+  },
+  {
+    "Name": "Miracle: Heal",
+    "Id": 5000,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116048
+  },
+  {
+    "Name": "Miracle: Great Heal",
+    "Id": 5010,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116049
+  },
+  {
+    "Name": "Great Heal Excerpt",
+    "Id": 5020,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116050
+  },
+  {
+    "Name": "Miracle: Soothing Sunlight",
+    "Id": 5030,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116051
+  },
+  {
+    "Name": "Replenishment",
+    "Id": 5040,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116052
+  },
+  {
+    "Name": "Miracle: Bountiful Sunlight",
+    "Id": 5050,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116053
+  },
+  {
+    "Name": "Miracle: Gravelord Sword Dance",
+    "Id": 5100,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116054
+  },
+  {
+    "Name": "Miracle: Gravelord Greatsword Dance",
+    "Id": 5110,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116055
+  },
+  {
+    "Name": "Miracle: Escape Death",
+    "Id": 5200,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116056
+  },
+  {
+    "Name": "Homeward",
+    "Id": 5210,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116057
+  },
+  {
+    "Name": "Miracle: Force",
+    "Id": 5300,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116058
+  },
+  {
+    "Name": "Miracle: Wrath of the Gods",
+    "Id": 5310,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116059
+  },
+  {
+    "Name": "Miracle: Emit Force",
+    "Id": 5320,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116060
+  },
+  {
+    "Name": "Seek Guidance",
+    "Id": 5400,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116061
+  },
+  {
+    "Name": "Miracle: Lightning Spear",
+    "Id": 5500,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116062
+  },
+  {
+    "Name": "Miracle: Great Lightning Spear",
+    "Id": 5510,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116063
+  },
+  {
+    "Name": "Miracle: Sunlight Spear",
+    "Id": 5520,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116064
+  },
+  {
+    "Name": "Miracle: Magic Barrier",
+    "Id": 5600,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116065
+  },
+  {
+    "Name": "Miracle: Great Magic Barrier",
+    "Id": 5610,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116066
+  },
+  {
+    "Name": "Miracle: Karmic Justice",
+    "Id": 5700,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116067
+  },
+  {
+    "Name": "Miracle: Tranquil Walk of Peace",
+    "Id": 5800,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116068
+  },
+  {
+    "Name": "Miracle: Vow of Silence",
+    "Id": 5810,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116069
+  },
+  {
+    "Name": "Miracle: Sunlight Blade",
+    "Id": 5900,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116070
+  },
+  {
+    "Name": "Miracle: Darkmoon Blade",
+    "Id": 5910,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "Spells",
+    "ApId": 11116071
+  }
+]

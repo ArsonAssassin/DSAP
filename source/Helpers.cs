@@ -341,6 +341,12 @@ namespace DSAP
             var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
             return list;
         }
+        public static List<DarkSoulsItem> GetSpells()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Spells.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
         public static List<ItemLotFlag> GetItemLotFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.ItemLots.json");
@@ -369,10 +375,11 @@ namespace DSAP
         {
             var results = new List<DarkSoulsItem>();
 
-            results.Concat(GetConsumables());
-            results.Concat(GetKeyItems());
-            results.Concat(GetRings());
-            results.Concat(GetUpgradeMaterials());
+            results = results.Concat(GetConsumables()).ToList();
+            results = results.Concat(GetKeyItems()).ToList();
+            results = results.Concat(GetRings()).ToList();
+            results = results.Concat(GetUpgradeMaterials()).ToList();
+            results = results.Concat(GetSpells()).ToList();
             return results;
         }
         public static ulong FlagToOffset(EventFlag flag)

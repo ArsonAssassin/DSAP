@@ -451,7 +451,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Elite Knight Armor", 7126, DSRItemCategory.ARMOR),
     ("Elite Knight Gauntlets", 7127, DSRItemCategory.ARMOR),
     ("Elite Knight Leggings", 7128, DSRItemCategory.ARMOR),
-    ("Wnaderer Hood", 7129, DSRItemCategory.ARMOR),
+    ("Wanderer Hood", 7129, DSRItemCategory.ARMOR),
     ("Wanderer Coat", 7130, DSRItemCategory.ARMOR),
     ("Wanderer Manchette", 7131, DSRItemCategory.ARMOR),
     ("Wanderer Boots", 7132, DSRItemCategory.ARMOR),
@@ -729,7 +729,7 @@ def BuildItemPool(count, options):
             included_itemcount = included_itemcount + 1
     remaining_count = count - included_itemcount
     
-    filler_items = [item for item in _all_items if item.category != DSRItemCategory.EVENT]
+    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]]
 
     for i in range(remaining_count):
         itemList = [item for item in filler_items]

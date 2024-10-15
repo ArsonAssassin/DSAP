@@ -1,10 +1,13 @@
 using Archipelago.Core;
 using Archipelago.Core.GUI;
+using Archipelago.Core.GUI.Logging;
 using Archipelago.Core.Models;
 using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using static DSAP.Enums;
 
 namespace DSAP
@@ -33,6 +36,9 @@ namespace DSAP
 
             };
             MainForm = new MainForm(options);
+#if __DEBUG__
+            LoggerConfig.SetLogLevel(LogEventLevel.Verbose);
+#endif
             MainForm.ConnectClicked += MainForm_ConnectClicked;
             Application.Run(MainForm);
         }
@@ -42,7 +48,6 @@ namespace DSAP
         public static void AddItem(int category, int id, int quantity)
         {
             var command = Helpers.GetItemCommand();
-            var result = Memory.ExecuteCommand(command);
             //Set item category
             Array.Copy(BitConverter.GetBytes(category), 0, command, 0x1, 4);
             //Set item quantity
@@ -50,7 +55,7 @@ namespace DSAP
             //set item id
             Array.Copy(BitConverter.GetBytes(id), 0, command, 0xD, 4);
 
-            var result2 = Memory.ExecuteCommand(command);
+            var result = Memory.ExecuteCommand(command);
         }
 
         public static bool IsValidPointer(ulong address)
@@ -141,10 +146,10 @@ namespace DSAP
             var bonfireLocations = Helpers.GetBonfireFlagLocations();
             var doorLocations = Helpers.GetDoorFlagLocations();
 
-            MonitorLocations(bossLocations);
-            MonitorLocations(itemLocations);
-            MonitorLocations(bonfireLocations);
-            MonitorLocations(doorLocations);
+            Client.MonitorLocations(bossLocations);
+            Client.MonitorLocations(itemLocations);
+            Client.MonitorLocations(bonfireLocations);
+            Client.MonitorLocations(doorLocations);
 
             AllItems = Helpers.GetAllItems();
 
@@ -186,7 +191,7 @@ namespace DSAP
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
             var itemId = e.Item.Id;
-            var itemToReceive = AllItems.First(x => x.ApId == itemId);
+            var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
             if (itemToReceive != null)
             {
                 Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
