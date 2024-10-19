@@ -1,0 +1,162 @@
+﻿[
+  {
+    "Name": "Sorcerer's Catalyst",
+    "Id": 1300000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118106
+  },
+  {
+    "Name": "Beatrice's Catalyst",
+    "Id": 1301000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118107
+  },
+  {
+    "Name": "Tin Banishment Catalyst",
+    "Id": 1302000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118108
+  },
+  {
+    "Name": "Logan's Catalyst",
+    "Id": 1303000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118109
+  },
+  {
+    "Name": "Tin Darkmoon Catalyst",
+    "Id": 1304000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118110
+  },
+  {
+    "Name": "Oolacile Ivory Catalyst",
+    "Id": 1305000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118111
+  },
+  {
+    "Name": "Tin Crystallization Catalyst",
+    "Id": 1306000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118112
+  },
+  {
+    "Name": "Demon's Catalyst",
+    "Id": 1307000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118113
+  },
+  {
+    "Name": "Izalith Catalyst",
+    "Id": 1308000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118114
+  },
+  {
+    "Name": "Pyromancy Flame",
+    "Id": 1330000,
+    "StackSize": 1,
+    "UpgradeType": "PyroFlame",
+    "Category": "SpellTools",
+    "ApId": 11118115
+  },
+  {
+    "Name": "Pyromancy Flame (Ascended)",
+    "Id": 1332000,
+    "StackSize": 1,
+    "UpgradeType": "PyroFlameAscended",
+    "Category": "SpellTools",
+    "ApId": 11118140
+  },
+  {
+    "Name": "Talisman",
+    "Id": 1360000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118116
+  },
+  {
+    "Name": "Canvas Talisman",
+    "Id": 1361000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118117
+  },
+  {
+    "Name": "Thorolund Talisman",
+    "Id": 1362000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118118
+  },
+  {
+    "Name": "Ivory Talisman",
+    "Id": 1363000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118119
+  },
+  {
+    "Name": "Sunlight Talisman",
+    "Id": 1365000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118120
+  },
+  {
+    "Name": "Darkmoon Talisman",
+    "Id": 1366000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118121
+  },
+  {
+    "Name": "Velka's Talisman",
+    "Id": 1367000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118122
+  },
+  {
+    "Name": "Manus Catalyst",
+    "Id": 9017000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118138
+  },
+  {
+    "Name": "Oolacile Catalyst",
+    "Id": 9018000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "SpellTools",
+    "ApId": 11118139
+  }
+]

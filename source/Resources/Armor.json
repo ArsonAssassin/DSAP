@@ -1,0 +1,1858 @@
+﻿[
+  {
+    "Name": "Catarina Helm",
+    "Id": 10000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117000
+  },
+  {
+    "Name": "Catarina Armor",
+    "Id": 11000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117001
+  },
+  {
+    "Name": "Catarina Gauntlets",
+    "Id": 12000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117002
+  },
+  {
+    "Name": "Catarina Leggings",
+    "Id": 13000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117003
+  },
+  {
+    "Name": "Paladin Helm",
+    "Id": 20000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117004
+  },
+  {
+    "Name": "Paladin Armor",
+    "Id": 21000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117005
+  },
+  {
+    "Name": "Paladin Gauntlets",
+    "Id": 22000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117006
+  },
+  {
+    "Name": "Paladin Leggings",
+    "Id": 23000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117007
+  },
+  {
+    "Name": "Dark Mask",
+    "Id": 40000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117008
+  },
+  {
+    "Name": "Dark Armor",
+    "Id": 41000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117009
+  },
+  {
+    "Name": "Dark Gauntlets",
+    "Id": 42000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117010
+  },
+  {
+    "Name": "Dark Leggings",
+    "Id": 43000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117011
+  },
+  {
+    "Name": "Brigand Hood",
+    "Id": 50000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117012
+  },
+  {
+    "Name": "Brigand Armor",
+    "Id": 51000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117013
+  },
+  {
+    "Name": "Brigand Gauntlets",
+    "Id": 52000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117014
+  },
+  {
+    "Name": "Brigand Trousers",
+    "Id": 53000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117015
+  },
+  {
+    "Name": "Shadow Mask",
+    "Id": 60000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117016
+  },
+  {
+    "Name": "Shadow Garb",
+    "Id": 61000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117017
+  },
+  {
+    "Name": "Shadow Gauntlets",
+    "Id": 62000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117018
+  },
+  {
+    "Name": "Shadow Leggings",
+    "Id": 63000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117019
+  },
+  {
+    "Name": "Black Iron Helm",
+    "Id": 70000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117020
+  },
+  {
+    "Name": "Black Iron Armor",
+    "Id": 71000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117021
+  },
+  {
+    "Name": "Black Iron Gauntlets",
+    "Id": 72000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117022
+  },
+  {
+    "Name": "Black Iron Leggings",
+    "Id": 73000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117023
+  },
+  {
+    "Name": "Smough's Helm",
+    "Id": 80000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117024
+  },
+  {
+    "Name": "Smough's Armor",
+    "Id": 81000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117025
+  },
+  {
+    "Name": "Smough's Gauntlets",
+    "Id": 82000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117026
+  },
+  {
+    "Name": "Smough's Leggings",
+    "Id": 83000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117027
+  },
+  {
+    "Name": "Six-Eyed Helm of the Channelers",
+    "Id": 90000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117028
+  },
+  {
+    "Name": "Robe of the Channelers",
+    "Id": 91000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117029
+  },
+  {
+    "Name": "Gauntlets of the Channelers",
+    "Id": 92000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117030
+  },
+  {
+    "Name": "Waistcloth of the Channelers",
+    "Id": 93000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117031
+  },
+  {
+    "Name": "Helm of Favor",
+    "Id": 100000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117032
+  },
+  {
+    "Name": "Embraced Armor of Favor",
+    "Id": 101000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117033
+  },
+  {
+    "Name": "Gauntlets of Favor",
+    "Id": 102000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117034
+  },
+  {
+    "Name": "Leggings of Favor",
+    "Id": 103000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117035
+  },
+  {
+    "Name": "Helm of the Wise",
+    "Id": 110000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117036
+  },
+  {
+    "Name": "Armor of the Glorious",
+    "Id": 111000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117037
+  },
+  {
+    "Name": "Gauntlets of the Vanquisher",
+    "Id": 112000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117038
+  },
+  {
+    "Name": "Boots of the Explorer",
+    "Id": 113000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117039
+  },
+  {
+    "Name": "Stone Helm",
+    "Id": 120000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117040
+  },
+  {
+    "Name": "Stone Armor",
+    "Id": 121000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117041
+  },
+  {
+    "Name": "Stone Gauntlets",
+    "Id": 122000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117042
+  },
+  {
+    "Name": "Stone Leggings",
+    "Id": 123000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117043
+  },
+  {
+    "Name": "Crystalline Helm",
+    "Id": 130000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117044
+  },
+  {
+    "Name": "Crystalline Armor",
+    "Id": 131000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117045
+  },
+  {
+    "Name": "Crystalline Gauntlets",
+    "Id": 132000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117046
+  },
+  {
+    "Name": "Crystalline Leggings",
+    "Id": 133000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117047
+  },
+  {
+    "Name": "Mask of the Sealer",
+    "Id": 140000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117048
+  },
+  {
+    "Name": "Crimson Robe",
+    "Id": 141000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117049
+  },
+  {
+    "Name": "Crimson Gloves",
+    "Id": 142000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117050
+  },
+  {
+    "Name": "Crimson Waistcloth",
+    "Id": 143000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117051
+  },
+  {
+    "Name": "Mask of Velka",
+    "Id": 150000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117052
+  },
+  {
+    "Name": "Black Cleric Robe",
+    "Id": 151000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117053
+  },
+  {
+    "Name": "Black Manchette",
+    "Id": 152000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117054
+  },
+  {
+    "Name": "Black Tights",
+    "Id": 153000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117055
+  },
+  {
+    "Name": "Iron Helm",
+    "Id": 160000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117056
+  },
+  {
+    "Name": "Armor of the Sun",
+    "Id": 161000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117057
+  },
+  {
+    "Name": "Iron Bracelet",
+    "Id": 162000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117058
+  },
+  {
+    "Name": "Iron Leggings",
+    "Id": 163000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117059
+  },
+  {
+    "Name": "Chain Helm",
+    "Id": 170000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117060
+  },
+  {
+    "Name": "Chain Armor",
+    "Id": 171000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117061
+  },
+  {
+    "Name": "Leather Gauntlets",
+    "Id": 172000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117062
+  },
+  {
+    "Name": "Chain Leggings",
+    "Id": 173000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117063
+  },
+  {
+    "Name": "Cleric Helm",
+    "Id": 180000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117064
+  },
+  {
+    "Name": "Cleric Armor",
+    "Id": 181000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117065
+  },
+  {
+    "Name": "Cleric Gauntlets",
+    "Id": 182000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117066
+  },
+  {
+    "Name": "Cleric Leggings",
+    "Id": 183000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117067
+  },
+  {
+    "Name": "Sunlight Maggot",
+    "Id": 190000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117068
+  },
+  {
+    "Name": "Helm of Thorns",
+    "Id": 200000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117069
+  },
+  {
+    "Name": "Armor of Thorns",
+    "Id": 201000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117070
+  },
+  {
+    "Name": "Gauntlets of Thorns",
+    "Id": 202000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117071
+  },
+  {
+    "Name": "Leggings of Thorns",
+    "Id": 203000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117072
+  },
+  {
+    "Name": "Standard Helm",
+    "Id": 210000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117073
+  },
+  {
+    "Name": "Hard Leather Armor",
+    "Id": 211000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117074
+  },
+  {
+    "Name": "Hard Leather Gauntlets",
+    "Id": 212000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117075
+  },
+  {
+    "Name": "Hard Leather Boots",
+    "Id": 213000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117076
+  },
+  {
+    "Name": "Sorcerer Hat",
+    "Id": 220000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117077
+  },
+  {
+    "Name": "Sorcerer Cloak",
+    "Id": 221000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117078
+  },
+  {
+    "Name": "Sorcerer Gauntlets",
+    "Id": 222000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117079
+  },
+  {
+    "Name": "Sorcerer Boots",
+    "Id": 223000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117080
+  },
+  {
+    "Name": "Tattered Cloth Hood",
+    "Id": 230000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117081
+  },
+  {
+    "Name": "Tattered Cloth Robe",
+    "Id": 231000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117082
+  },
+  {
+    "Name": "Tattered Cloth Manchette",
+    "Id": 232000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117083
+  },
+  {
+    "Name": "Heavy Boots",
+    "Id": 233000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117084
+  },
+  {
+    "Name": "Pharis's Hat",
+    "Id": 240000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117085
+  },
+  {
+    "Name": "Leather Armor",
+    "Id": 241000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117086
+  },
+  {
+    "Name": "Leather Gloves",
+    "Id": 242000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117087
+  },
+  {
+    "Name": "Leather Boots",
+    "Id": 243000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117088
+  },
+  {
+    "Name": "Painting Guardian Hood",
+    "Id": 250000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117089
+  },
+  {
+    "Name": "Painting Guardian Robe",
+    "Id": 251000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117090
+  },
+  {
+    "Name": "Painting Guardian Gloves",
+    "Id": 252000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117091
+  },
+  {
+    "Name": "Painting Guardian Waistcloth",
+    "Id": 253000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117092
+  },
+  {
+    "Name": "Ornstein's Helm",
+    "Id": 270000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117093
+  },
+  {
+    "Name": "Ornstein's Armor",
+    "Id": 271000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117094
+  },
+  {
+    "Name": "Ornstein's Gauntlets",
+    "Id": 272000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117095
+  },
+  {
+    "Name": "Ornstein's Leggings",
+    "Id": 273000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117096
+  },
+  {
+    "Name": "Eastern Helm",
+    "Id": 280000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117097
+  },
+  {
+    "Name": "Eastern Armor",
+    "Id": 281000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117098
+  },
+  {
+    "Name": "Eastern Gauntlets",
+    "Id": 282000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117099
+  },
+  {
+    "Name": "Eastern Leggings",
+    "Id": 283000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117100
+  },
+  {
+    "Name": "Xanthous Crown",
+    "Id": 290000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117101
+  },
+  {
+    "Name": "Xanthous Overcoat",
+    "Id": 291000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117102
+  },
+  {
+    "Name": "Xanthous Gloves",
+    "Id": 292000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117103
+  },
+  {
+    "Name": "Xanthous Waistcloth",
+    "Id": 293000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117104
+  },
+  {
+    "Name": "Thief Mask",
+    "Id": 300000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117105
+  },
+  {
+    "Name": "Black Leather Armor",
+    "Id": 301000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117106
+  },
+  {
+    "Name": "Black Leather Gloves",
+    "Id": 302000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117107
+  },
+  {
+    "Name": "Black Leather Boots",
+    "Id": 303000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117108
+  },
+  {
+    "Name": "Priest's Hat",
+    "Id": 310000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117109
+  },
+  {
+    "Name": "Holy Robe",
+    "Id": 311000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117110
+  },
+  {
+    "Name": "Traveling Gloves",
+    "Id": 312000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117111
+  },
+  {
+    "Name": "Holy Trousers",
+    "Id": 313000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117112
+  },
+  {
+    "Name": "Black Knight Helm",
+    "Id": 320000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117113
+  },
+  {
+    "Name": "Black Knight Armor",
+    "Id": 321000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117114
+  },
+  {
+    "Name": "Black Knight Gauntlets",
+    "Id": 322000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117115
+  },
+  {
+    "Name": "Black Knight Leggings",
+    "Id": 323000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117116
+  },
+  {
+    "Name": "Crown of Dusk",
+    "Id": 330000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117117
+  },
+  {
+    "Name": "Antiquated Dress",
+    "Id": 331000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117118
+  },
+  {
+    "Name": "Antiquated Gloves",
+    "Id": 332000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117119
+  },
+  {
+    "Name": "Antiquated Skirt",
+    "Id": 333000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117120
+  },
+  {
+    "Name": "Witch Hat",
+    "Id": 340000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117121
+  },
+  {
+    "Name": "Witch Cloak",
+    "Id": 341000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117122
+  },
+  {
+    "Name": "Witch Gloves",
+    "Id": 342000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117123
+  },
+  {
+    "Name": "Witch Skirt",
+    "Id": 343000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117124
+  },
+  {
+    "Name": "Elite Knight Helm",
+    "Id": 350000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117125
+  },
+  {
+    "Name": "Elite Knight Armor",
+    "Id": 351000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117126
+  },
+  {
+    "Name": "Elite Knight Gauntlets",
+    "Id": 352000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117127
+  },
+  {
+    "Name": "Elite Knight Leggings",
+    "Id": 353000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117128
+  },
+  {
+    "Name": "Wanderer Hood",
+    "Id": 360000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117129
+  },
+  {
+    "Name": "Wanderer Coat",
+    "Id": 361000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117130
+  },
+  {
+    "Name": "Wanderer Manchette",
+    "Id": 362000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117131
+  },
+  {
+    "Name": "Wanderer Boots",
+    "Id": 363000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117132
+  },
+  {
+    "Name": "Big Hat",
+    "Id": 380000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117138
+  },
+  {
+    "Name": "Sage Robe",
+    "Id": 381000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117139
+  },
+  {
+    "Name": "Traveling Gloves",
+    "Id": 382000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117140
+  },
+  {
+    "Name": "Traveling Boots",
+    "Id": 383000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117141
+  },
+  {
+    "Name": "Knight Helm",
+    "Id": 390000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117142
+  },
+  {
+    "Name": "Knight Armor",
+    "Id": 391000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117143
+  },
+  {
+    "Name": "Knight Gauntlets",
+    "Id": 392000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117144
+  },
+  {
+    "Name": "Knight Leggings",
+    "Id": 393000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117145
+  },
+  {
+    "Name": "Dingy Hood",
+    "Id": 400000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117146
+  },
+  {
+    "Name": "Dingy Robe",
+    "Id": 401000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117147
+  },
+  {
+    "Name": "Dingy Gloves",
+    "Id": 402000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117148
+  },
+  {
+    "Name": "Blood-Stained Skirt",
+    "Id": 403000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117149
+  },
+  {
+    "Name": "Maiden Hood",
+    "Id": 410000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117150
+  },
+  {
+    "Name": "Maiden Robe",
+    "Id": 411000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117151
+  },
+  {
+    "Name": "Maiden Gloves",
+    "Id": 412000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117152
+  },
+  {
+    "Name": "Maiden Skirt",
+    "Id": 413000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117153
+  },
+  {
+    "Name": "Silver Knight Helm",
+    "Id": 420000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117154
+  },
+  {
+    "Name": "Silver Knight Armor",
+    "Id": 421000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117155
+  },
+  {
+    "Name": "Silver Knight Gauntlets",
+    "Id": 422000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117156
+  },
+  {
+    "Name": "Silver Knight Leggings",
+    "Id": 423000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117157
+  },
+  {
+    "Name": "Havel's Helm",
+    "Id": 440000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117158
+  },
+  {
+    "Name": "Havel's Armor",
+    "Id": 441000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117159
+  },
+  {
+    "Name": "Havel's Gauntlets",
+    "Id": 442000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117160
+  },
+  {
+    "Name": "Havel's Leggings",
+    "Id": 443000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117161
+  },
+  {
+    "Name": "Brass Helm",
+    "Id": 450000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117162
+  },
+  {
+    "Name": "Brass Armor",
+    "Id": 451000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117163
+  },
+  {
+    "Name": "Brass Gauntlets",
+    "Id": 452000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117164
+  },
+  {
+    "Name": "Brass Leggings",
+    "Id": 453000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117165
+  },
+  {
+    "Name": "Gold-Hemmed Black Hood",
+    "Id": 460000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117166
+  },
+  {
+    "Name": "Gold-Hemmed Black Cloak",
+    "Id": 461000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117167
+  },
+  {
+    "Name": "Gold-Hemmed Black Gloves",
+    "Id": 462000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117168
+  },
+  {
+    "Name": "Gold-Hemmed Black Skirt",
+    "Id": 463000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117169
+  },
+  {
+    "Name": "Golem Helm",
+    "Id": 470000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117170
+  },
+  {
+    "Name": "Golem Armor",
+    "Id": 471000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117171
+  },
+  {
+    "Name": "Golem Gauntlets",
+    "Id": 472000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117172
+  },
+  {
+    "Name": "Golem Leggings",
+    "Id": 473000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117173
+  },
+  {
+    "Name": "Hollow Soldier Helm",
+    "Id": 480000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117174
+  },
+  {
+    "Name": "Hollow Soldier Armor",
+    "Id": 481000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117175
+  },
+  {
+    "Name": "Hollow Soldier Waistcloth",
+    "Id": 483000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117176
+  },
+  {
+    "Name": "Steel Helm",
+    "Id": 490000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117177
+  },
+  {
+    "Name": "Steel Armor",
+    "Id": 491000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117178
+  },
+  {
+    "Name": "Steel Gauntlets",
+    "Id": 492000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117179
+  },
+  {
+    "Name": "Steel Leggings",
+    "Id": 493000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117180
+  },
+  {
+    "Name": "Hollow Thief's Hood",
+    "Id": 500000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117181
+  },
+  {
+    "Name": "Hollow Thief's Leather Armor",
+    "Id": 501000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117182
+  },
+  {
+    "Name": "Hollow Thief's Tights",
+    "Id": 503000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117183
+  },
+  {
+    "Name": "Balder Helm",
+    "Id": 510000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117184
+  },
+  {
+    "Name": "Balder Armor",
+    "Id": 511000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117185
+  },
+  {
+    "Name": "Balder Gauntlets",
+    "Id": 512000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117186
+  },
+  {
+    "Name": "Balder Leggings",
+    "Id": 513000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117187
+  },
+  {
+    "Name": "Hollow Warrior Helm",
+    "Id": 520000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117188
+  },
+  {
+    "Name": "Hollow Warrior Armor",
+    "Id": 521000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117189
+  },
+  {
+    "Name": "Hollow Warrior Waistcloth",
+    "Id": 523000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117190
+  },
+  {
+    "Name": "Giant Helm",
+    "Id": 530000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117191
+  },
+  {
+    "Name": "Giant Armor",
+    "Id": 531000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117192
+  },
+  {
+    "Name": "Giant Gauntlets",
+    "Id": 532000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117193
+  },
+  {
+    "Name": "Giant Leggings",
+    "Id": 533000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117194
+  },
+  {
+    "Name": "Crown of the Dark Sun",
+    "Id": 540000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117195
+  },
+  {
+    "Name": "Moonlight Robe",
+    "Id": 541000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117196
+  },
+  {
+    "Name": "Moonlight Gloves",
+    "Id": 542000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117197
+  },
+  {
+    "Name": "Moonlight Waistcloth",
+    "Id": 543000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117198
+  },
+  {
+    "Name": "Crown of the Great Lord",
+    "Id": 550000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117199
+  },
+  {
+    "Name": "Robe of the Great Lord",
+    "Id": 551000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117200
+  },
+  {
+    "Name": "Bracelet of the Great Lord",
+    "Id": 552000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117201
+  },
+  {
+    "Name": "Anklet of the Great Lord",
+    "Id": 553000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117202
+  },
+  {
+    "Name": "Sack",
+    "Id": 560000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117203
+  },
+  {
+    "Name": "Symbol of Avarice",
+    "Id": 570000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117204
+  },
+  {
+    "Name": "Royal Helm",
+    "Id": 580000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117205
+  },
+  {
+    "Name": "Mask of the Father",
+    "Id": 590000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117206
+  },
+  {
+    "Name": "Mask of the Mother",
+    "Id": 600000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117207
+  },
+  {
+    "Name": "Mask of the Child",
+    "Id": 610000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117208
+  },
+  {
+    "Name": "Fang Boar Helm",
+    "Id": 620000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117209
+  },
+  {
+    "Name": "Gargoyle Helm",
+    "Id": 630000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117210
+  },
+  {
+    "Name": "Black Sorcerer Hat",
+    "Id": 640000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117211
+  },
+  {
+    "Name": "Black Sorcerer Cloak",
+    "Id": 641000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117212
+  },
+  {
+    "Name": "Black Sorcerer Gauntlets",
+    "Id": 642000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117213
+  },
+  {
+    "Name": "Black Sorcerer Boots",
+    "Id": 643000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117214
+  },
+  {
+    "Name": "Helm of Artorias",
+    "Id": 660000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117219
+  },
+  {
+    "Name": "Armor of Artorias",
+    "Id": 661000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117220
+  },
+  {
+    "Name": "Gauntlets of Artorias",
+    "Id": 662000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117221
+  },
+  {
+    "Name": "Leggings of Artorias",
+    "Id": 663000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117222
+  },
+  {
+    "Name": "Porcelain Mask",
+    "Id": 670000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117223
+  },
+  {
+    "Name": "Lord's Blade Robe",
+    "Id": 671000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117224
+  },
+  {
+    "Name": "Lord's Blade Gloves",
+    "Id": 672000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117225
+  },
+  {
+    "Name": "Lord's Blade Waistcloth",
+    "Id": 673000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117226
+  },
+  {
+    "Name": "Gough's Helm",
+    "Id": 680000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117227
+  },
+  {
+    "Name": "Gough's Armor",
+    "Id": 681000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117228
+  },
+  {
+    "Name": "Gough's Gauntlets",
+    "Id": 682000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117229
+  },
+  {
+    "Name": "Gough's Leggings",
+    "Id": 683000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117230
+  },
+  {
+    "Name": "Guardian Helm",
+    "Id": 690000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117231
+  },
+  {
+    "Name": "Guardian Armor",
+    "Id": 691000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117232
+  },
+  {
+    "Name": "Guardian Gauntlets",
+    "Id": 692000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117233
+  },
+  {
+    "Name": "Guardian Leggings",
+    "Id": 693000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117234
+  },
+  {
+    "Name": "Snickering Top Hat",
+    "Id": 700000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117235
+  },
+  {
+    "Name": "Chester's Long Coat",
+    "Id": 701000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117236
+  },
+  {
+    "Name": "Chester's Gloves",
+    "Id": 702000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117237
+  },
+  {
+    "Name": "Chester's Trousers",
+    "Id": 703000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Armor",
+    "ApId": 11117238
+  },
+  {
+    "Name": "Bloated Head",
+    "Id": 710000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117239
+  },
+  {
+    "Name": "Bloated Sorcerer Head",
+    "Id": 720000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Armor",
+    "ApId": 11117240
+  }
+]

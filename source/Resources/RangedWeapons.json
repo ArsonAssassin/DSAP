@@ -1,0 +1,202 @@
+﻿[
+  {
+    "Name": "Short Bow",
+    "Id": 1200000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "RangedWeapons",
+    "ApId": 11118096
+  },
+  {
+    "Name": "Longbow",
+    "Id": 1201000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "RangedWeapons",
+    "ApId": 11118097
+  },
+  {
+    "Name": "Black Bow of Pharis",
+    "Id": 1202000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "RangedWeapons",
+    "ApId": 11118098
+  },
+  {
+    "Name": "Dragonslayer Greatbow",
+    "Id": 1203000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "RangedWeapons",
+    "ApId": 11118099
+  },
+  {
+    "Name": "Composite Bow",
+    "Id": 1204000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "RangedWeapons",
+    "ApId": 11118100
+  },
+  {
+    "Name": "Darkmoon Bow",
+    "Id": 1205000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "RangedWeapons",
+    "ApId": 11118101
+  },
+  {
+    "Name": "Light Crossbow",
+    "Id": 1250000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "RangedWeapons",
+    "ApId": 11118102
+  },
+  {
+    "Name": "Heavy Crossbow",
+    "Id": 1251000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "RangedWeapons",
+    "ApId": 11118103
+  },
+  {
+    "Name": "Avelyn",
+    "Id": 1252000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "RangedWeapons",
+    "ApId": 11118104
+  },
+  {
+    "Name": "Sniper Crossbow",
+    "Id": 1253000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "RangedWeapons",
+    "ApId": 11118105
+  },
+  {
+    "Name": "Gough's Greatbow",
+    "Id": 9021000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "RangedWeapons",
+    "ApId": 11118123
+  },
+  {
+    "Name": "Standard Arrow",
+    "Id": 2000000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118124
+  },
+  {
+    "Name": "Large Arrow",
+    "Id": 2001000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118125
+  },
+  {
+    "Name": "Feather Arrow",
+    "Id": 2002000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118126
+  },
+  {
+    "Name": "Fire Arrow",
+    "Id": 2003000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118127
+  },
+  {
+    "Name": "Poison Arrow",
+    "Id": 2004000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118128
+  },
+  {
+    "Name": "Moonlight Arrow",
+    "Id": 2005000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118129
+  },
+  {
+    "Name": "Wooden Arrow",
+    "Id": 2006000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118130
+  },
+  {
+    "Name": "Dragonslayer Arrow",
+    "Id": 2007000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118131
+  },
+  {
+    "Name": "Gough's Great Arrow",
+    "Id": 2008000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118132
+  },
+  {
+    "Name": "Standard Bolt",
+    "Id": 2100000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118133
+  },
+  {
+    "Name": "Heavy Bolt",
+    "Id": 2101000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118134
+  },
+  {
+    "Name": "Sniper Bolt",
+    "Id": 2102000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118135
+  },
+  {
+    "Name": "Wood Bolt",
+    "Id": 2103000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118136
+  },
+  {
+    "Name": "Lightning Bolt",
+    "Id": 2104000,
+    "StackSize": 999,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118137
+  }
+]

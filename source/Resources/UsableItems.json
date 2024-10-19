@@ -1,0 +1,178 @@
+﻿[
+  {
+    "Name": "White Sign Soapstone",
+    "Id": 100,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112063
+  },
+  {
+    "Name": "Red Sign Soapstone",
+    "Id": 101,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112064
+  },
+  {
+    "Name": "Red Eye Orb",
+    "Id": 102,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112065
+  },
+  {
+    "Name": "Black Separation Crystal",
+    "Id": 103,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112066
+  },
+  {
+    "Name": "Orange Guidance Soapstone",
+    "Id": 106,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112067
+  },
+  {
+    "Name": "Book of the Guilty",
+    "Id": 108,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112068
+  },
+  {
+    "Name": "Servant Roster",
+    "Id": 112,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112069
+  },
+  {
+    "Name": "Blue Eye Orb",
+    "Id": 113,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112070
+  },
+  {
+    "Name": "Dragon Eye",
+    "Id": 114,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112071
+  },
+  {
+    "Name": "Black Eye Orb",
+    "Id": 115,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112072
+  },
+  {
+    "Name": "Darksign",
+    "Id": 117,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112073
+  },
+  {
+    "Name": "Purple Coward's Crystal",
+    "Id": 118,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112074
+  },
+  {
+    "Name": "Silver Pendant",
+    "Id": 220,
+    "StackSize": 99,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112075
+  },
+  {
+    "Name": "Binoculars",
+    "Id": 371,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112082
+  },
+  {
+    "Name": "Dragon Head Stone",
+    "Id": 377,
+    "StackSize": 99,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112083
+  },
+  {
+    "Name": "Dragon Torso Stone",
+    "Id": 378,
+    "StackSize": 99,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112084
+  },
+  {
+    "Name": "Dried Finger",
+    "Id": 385,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112076
+  },
+  {
+    "Name": "Carving: HELLO!",
+    "Id": 510,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112077
+  },
+  {
+    "Name": "Carving: THANK YOU!",
+    "Id": 511,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112078
+  },
+  {
+    "Name": "Carving: VERY GOOD!",
+    "Id": 512,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112079
+  },
+  {
+    "Name": "Carving: I'M SORRY!",
+    "Id": 513,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112080
+  },
+  {
+    "Name": "Carving: HELP ME!",
+    "Id": 514,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "UsableItems",
+    "ApId": 11112081
+  }
+]

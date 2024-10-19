@@ -347,6 +347,42 @@ namespace DSAP
             var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
             return list;
         }
+        public static List<DarkSoulsItem> GetShields()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Shields.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetRangedWeapons()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.RangedWeapons.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetMeleeWeapons()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.MeleeWeapons.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetArmor()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Armor.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetSpellTools()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.SpellTools.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
+        public static List<DarkSoulsItem> GetUsableItems()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.UsableItems.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
         public static List<ItemLotFlag> GetItemLotFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.ItemLots.json");
@@ -380,6 +416,13 @@ namespace DSAP
             results = results.Concat(GetRings()).ToList();
             results = results.Concat(GetUpgradeMaterials()).ToList();
             results = results.Concat(GetSpells()).ToList();
+            results = results.Concat(GetShields()).ToList();
+            results = results.Concat(GetRangedWeapons()).ToList();
+            results = results.Concat(GetSpellTools()).ToList();
+            results = results.Concat(GetUsableItems()).ToList();
+            results = results.Concat(GetMeleeWeapons()).ToList();
+            results = results.Concat(GetArmor()).ToList();
+
             return results;
         }
         public static ulong FlagToOffset(EventFlag flag)

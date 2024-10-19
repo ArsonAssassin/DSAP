@@ -645,7 +645,7 @@
     "Id": 11113128
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Lautrec",
     "Flag": 50006301,
     "Id": 11113129
   },
@@ -705,7 +705,7 @@
     "Id": 11113140
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Maneater Mildred",
     "Flag": 50006531,
     "Id": 11113141
   },
@@ -720,7 +720,7 @@
     "Id": 11113143
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Paladin Leeroy",
     "Flag": 50006551,
     "Id": 11113144
   },
@@ -775,17 +775,17 @@
     "Id": 11113154
   },
   {
-    "Name": "Twin Humanities",
+    "Name": "Twin Humanities - Pharis",
     "Flag": 50008001,
     "Id": 11113155
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Depths Pitfall Jump",
     "Flag": 51000000,
     "Id": 11113156
   },
   {
-    "Name": "Soul of a Nameless Soldier",
+    "Name": "Soul of a Nameless Soldier - Depths Hallways 1",
     "Flag": 51000010,
     "Id": 11113157
   },
@@ -795,17 +795,17 @@
     "Id": 11113158
   },
   {
-    "Name": "Soul of a Nameless Soldier",
+    "Name": "Soul of a Nameless Soldier - Ooze Trap",
     "Flag": 51000030,
     "Id": 11113159
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Depths Entrance",
     "Flag": 51000040,
     "Id": 11113160
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Depths Basalisks",
     "Flag": 51000050,
     "Id": 11113161
   },
@@ -815,17 +815,17 @@
     "Id": 11113162
   },
   {
-    "Name": "Large Titanite Shard",
+    "Name": "Large Titanite Shard - Depths Channeler",
     "Flag": 51000100,
     "Id": 11113163
   },
   {
-    "Name": "Soul of a Nameless Soldier",
+    "Name": "Soul of a Nameless Soldier - Giant Rat Room Entrance",
     "Flag": 51000120,
     "Id": 11113164
   },
   {
-    "Name": "Soul of a Nameless Soldier",
+    "Name": "Soul of a Nameless Soldier - Giant Rat",
     "Flag": 51000140,
     "Id": 11113165
   },
@@ -835,7 +835,7 @@
     "Id": 11113166
   },
   {
-    "Name": "Soul of a Nameless Soldier",
+    "Name": "Soul of a Nameless Soldier - Depths Hallways 2",
     "Flag": 51000180,
     "Id": 11113167
   },
@@ -970,7 +970,7 @@
     "Id": 11113193
   },
   {
-    "Name": "Large Soul of a Lost Undead",
+    "Name": "Large Soul of a Lost Undead - Barrel outside Capra",
     "Flag": 51010370,
     "Id": 11113194
   },
@@ -1020,7 +1020,7 @@
     "Id": 11113203
   },
   {
-    "Name": "Large Soul of a Lost Undead",
+    "Name": "Large Soul of a Lost Undead - Hallway to Depths",
     "Flag": 51010430,
     "Id": 11113204
   },
@@ -1050,7 +1050,7 @@
     "Id": 11113209
   },
   {
-    "Name": "Twin Humanities",
+    "Name": "Twin Humanities - Lower Burg Torch Hollows",
     "Flag": 51010490,
     "Id": 11113210
   },
@@ -1195,7 +1195,7 @@
     "Id": 11113238
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Painted World 1",
     "Flag": 51100010,
     "Id": 11113239
   },
@@ -1205,12 +1205,12 @@
     "Id": 11113240
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Painted World Albino Rats",
     "Flag": 51100030,
     "Id": 11113241
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Painted World 1",
     "Flag": 51100040,
     "Id": 11113242
   },
@@ -1235,7 +1235,7 @@
     "Id": 11113246
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Painted World 1",
     "Flag": 51100070,
     "Id": 11113247
   },
@@ -1250,12 +1250,12 @@
     "Id": 11113249
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Painted World Bonewheels",
     "Flag": 51100120,
     "Id": 11113250
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Painted World Bonewheels",
     "Flag": 51100130,
     "Id": 11113251
   },
@@ -1285,12 +1285,12 @@
     "Id": 11113256
   },
   {
-    "Name": "Ring of Sacrifice",
+    "Name": "Ring of Sacrifice - Painted World",
     "Flag": 51100160,
     "Id": 11113257
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Painted World Courtyard",
     "Flag": 51100170,
     "Id": 11113258
   },
@@ -1305,17 +1305,17 @@
     "Id": 11113260
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Painted World Undead Dragon",
     "Flag": 51100210,
     "Id": 11113261
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Painted World Courtyard",
     "Flag": 51100230,
     "Id": 11113262
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Painted World hanging body",
     "Flag": 51100240,
     "Id": 11113263
   },
@@ -1325,27 +1325,27 @@
     "Id": 11113264
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Painted World corvid ambush",
     "Flag": 51100260,
     "Id": 11113265
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Jeremiah 1",
     "Flag": 51100280,
     "Id": 11113266
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Painted World Ambush",
     "Flag": 51100290,
     "Id": 11113267
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Jeremiah",
     "Flag": 51100300,
     "Id": 11113268
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Jeremiah 2",
     "Flag": 51100310,
     "Id": 11113269
   },
@@ -1365,7 +1365,7 @@
     "Id": 11113272
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Painted World tower",
     "Flag": 51100350,
     "Id": 11113273
   },
@@ -1425,12 +1425,12 @@
     "Id": 11113284
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Darkroot Cliff",
     "Flag": 51200030,
     "Id": 11113285
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Darkroot Hydra",
     "Flag": 51200040,
     "Id": 11113286
   },
@@ -1480,7 +1480,7 @@
     "Id": 11113295
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
+    "Name": "Large Soul of a Brave Warrior - Darkroot Garden Cats",
     "Flag": 51200120,
     "Id": 11113296
   },
@@ -1525,7 +1525,7 @@
     "Id": 11113304
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Darkroot Ambush",
     "Flag": 51200170,
     "Id": 11113305
   },
@@ -1555,7 +1555,7 @@
     "Id": 11113310
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Past Fake Trees",
     "Flag": 51200180,
     "Id": 11113311
   },
@@ -1805,12 +1805,12 @@
     "Id": 11113360
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Catacombs 1",
     "Flag": 51300000,
     "Id": 11113361
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Catacombs 3",
     "Flag": 51300010,
     "Id": 11113362
   },
@@ -1820,7 +1820,7 @@
     "Id": 11113363
   },
   {
-    "Name": "Eye of Death",
+    "Name": "Eye of Death - Catacombs Titanite Demon",
     "Flag": 51300030,
     "Id": 11113364
   },
@@ -1840,12 +1840,12 @@
     "Id": 11113367
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Catacombs 2",
     "Flag": 51300140,
     "Id": 11113368
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Catacombs 4",
     "Flag": 51300150,
     "Id": 11113369
   },
@@ -1875,12 +1875,12 @@
     "Id": 11113374
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Above Pinwheel",
     "Flag": 51300210,
     "Id": 11113375
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Catacombs Above Bonewheels",
     "Flag": 51300220,
     "Id": 11113376
   },
@@ -1890,12 +1890,12 @@
     "Id": 11113377
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Catacombs 1",
     "Flag": 51300240,
     "Id": 11113378
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Catacombs 2",
     "Flag": 51300250,
     "Id": 11113379
   },
@@ -1915,27 +1915,27 @@
     "Id": 11113382
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Patches 2",
     "Flag": 51310030,
     "Id": 11113383
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Lower Giant Coffin",
     "Flag": 51310040,
     "Id": 11113384
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Patches 2",
     "Flag": 51310050,
     "Id": 11113385
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Upper Giant Coffin",
     "Flag": 51310070,
     "Id": 11113386
   },
   {
-    "Name": "Eye of Death",
+    "Name": "Eye of Death - Upper Giant Coffin",
     "Flag": 51310080,
     "Id": 11113387
   },
@@ -1945,12 +1945,12 @@
     "Id": 11113388
   },
   {
-    "Name": "White Titanite Chunk",
+    "Name": "White Titanite Chunk - Patches Kick",
     "Flag": 51310100,
     "Id": 11113389
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Lower Tomb of the Giants 1",
     "Flag": 51310110,
     "Id": 11113390
   },
@@ -1965,12 +1965,12 @@
     "Id": 11113392
   },
   {
-    "Name": "White Titanite Chunk",
+    "Name": "White Titanite Chunk - Lower Tomb of the Giants",
     "Flag": 51310160,
     "Id": 11113393
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Lower Tomb of the Giants 2",
     "Flag": 51310180,
     "Id": 11113394
   },
@@ -1980,12 +1980,12 @@
     "Id": 11113395
   },
   {
-    "Name": "White Titanite Slab",
+    "Name": "White Titanite Slab - Outside Nito",
     "Flag": 51310220,
     "Id": 11113396
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "Soul of a Hero - Outside Nito",
     "Flag": 51310230,
     "Id": 11113397
   },
@@ -2010,12 +2010,12 @@
     "Id": 11113401
   },
   {
-    "Name": "White Titanite Chunk",
+    "Name": "White Titanite Chunk - Outside Nito",
     "Flag": 51310290,
     "Id": 11113402
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Giant Coffin Drop",
     "Flag": 51310300,
     "Id": 11113403
   },
@@ -2035,27 +2035,27 @@
     "Id": 11113406
   },
   {
-    "Name": "Titanite Chunk",
+    "Name": "Titanite Chunk - Great Hallow 1",
     "Flag": 51320040,
     "Id": 11113407
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Great Hallow",
     "Flag": 51320050,
     "Id": 11113408
   },
   {
-    "Name": "Blue Titanite Chunk",
+    "Name": "Blue Titanite Chunk - Great Hallow",
     "Flag": 51320060,
     "Id": 11113409
   },
   {
-    "Name": "White Titanite Chunk",
+    "Name": "White Titanite Chunk - Great Hallow 1",
     "Flag": 51320070,
     "Id": 11113410
   },
   {
-    "Name": "Red Titanite Chunk",
+    "Name": "Red Titanite Chunk - Great Hallow 2",
     "Flag": 51320080,
     "Id": 11113411
   },
@@ -2065,32 +2065,32 @@
     "Id": 11113412
   },
   {
-    "Name": "White Titanite Chunk",
+    "Name": "White Titanite Chunk - Great Hallow 2",
     "Flag": 51320100,
     "Id": 11113413
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Great Hallow 2",
     "Flag": 51320110,
     "Id": 11113414
   },
   {
-    "Name": "Titanite Chunk",
+    "Name": "Titanite Chunk - Great Hallow 2",
     "Flag": 51320120,
     "Id": 11113415
   },
   {
-    "Name": "Dragon Scale",
+    "Name": "Dragon Scale - Ash Lake Start",
     "Flag": 51320140,
     "Id": 11113416
   },
   {
-    "Name": "Dragon Scale",
+    "Name": "Dragon Scale - Ash Lake Log",
     "Flag": 51320150,
     "Id": 11113417
   },
   {
-    "Name": "Dragon Scale",
+    "Name": "Dragon Scale - Ash Lake Water",
     "Flag": 51320160,
     "Id": 11113418
   },
@@ -2100,17 +2100,17 @@
     "Id": 11113419
   },
   {
-    "Name": "Twin Humanities",
+    "Name": "Twin Humanities - Great Hallow Entrance",
     "Flag": 51320180,
     "Id": 11113420
   },
   {
-    "Name": "Red Titanite Chunk",
+    "Name": "Red Titanite Chunk - Great Hallow 1",
     "Flag": 51320190,
     "Id": 11113421
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Blighttown Entrance Dropoff",
     "Flag": 51400020,
     "Id": 11113422
   },
@@ -2140,7 +2140,7 @@
     "Id": 11113427
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Blighttown Swaying Bridge",
     "Flag": 51400060,
     "Id": 11113428
   },
@@ -2150,12 +2150,12 @@
     "Id": 11113429
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Upper Blighttown 1",
     "Flag": 51400090,
     "Id": 11113430
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Upper Blighttown 2",
     "Flag": 51400100,
     "Id": 11113431
   },
@@ -2165,12 +2165,12 @@
     "Id": 11113432
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - Upper Blighttown 1",
     "Flag": 51400140,
     "Id": 11113433
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Upper Blighttown 3",
     "Flag": 51400150,
     "Id": 11113434
   },
@@ -2210,12 +2210,12 @@
     "Id": 11113441
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Blighttown Fire Keeper Soul",
     "Flag": 51400210,
     "Id": 11113442
   },
   {
-    "Name": "Large Titanite Shard",
+    "Name": "Large Titanite Shard - Blighttown Swamp 2",
     "Flag": 51400230,
     "Id": 11113443
   },
@@ -2225,7 +2225,7 @@
     "Id": 11113444
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Quelana",
     "Flag": 51400260,
     "Id": 11113445
   },
@@ -2255,17 +2255,17 @@
     "Id": 11113450
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Blighttown Swamp 2",
     "Flag": 51400280,
     "Id": 11113451
   },
   {
-    "Name": "Green Titanite Shard",
+    "Name": "Green Titanite Shard - Blighttown",
     "Flag": 51400290,
     "Id": 11113452
   },
   {
-    "Name": "Large Titanite Shard",
+    "Name": "Large Titanite Shard - Blighttown Swamp 1",
     "Flag": 51400300,
     "Id": 11113453
   },
@@ -2295,7 +2295,7 @@
     "Id": 11113458
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Blighttown Swamp 1",
     "Flag": 51400320,
     "Id": 11113459
   },
@@ -2305,7 +2305,7 @@
     "Id": 11113460
   },
   {
-    "Name": "Fire Keeper Soul",
+    "Name": "Fire Keeper Soul - Blighttown",
     "Flag": 51400350,
     "Id": 11113461
   },
@@ -2340,7 +2340,7 @@
     "Id": 11113467
   },
   {
-    "Name": "Dragon Scale",
+    "Name": "Dragon Scale - Blighttown",
     "Flag": 51400510,
     "Id": 11113468
   },
@@ -2370,7 +2370,7 @@
     "Id": 11113473
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Ceased Discharge",
     "Flag": 51410050,
     "Id": 11113474
   },
@@ -2380,7 +2380,7 @@
     "Id": 11113475
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Demon Ruins bonfire",
     "Flag": 51410080,
     "Id": 11113476
   },
@@ -2395,12 +2395,12 @@
     "Id": 11113478
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Capra Outside Firesage",
     "Flag": 51410140,
     "Id": 11113479
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Chaos Door",
     "Flag": 51410160,
     "Id": 11113480
   },
@@ -2445,7 +2445,7 @@
     "Id": 11113488
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Ruins/Domain shortcut",
     "Flag": 51410230,
     "Id": 11113489
   },
@@ -2465,7 +2465,7 @@
     "Id": 11113492
   },
   {
-    "Name": "Green Titanite Shard",
+    "Name": "Green Titanite Shard - Centipede Demon",
     "Flag": 51410270,
     "Id": 11113493
   },
@@ -2485,22 +2485,22 @@
     "Id": 11113496
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Izalith Lava 2",
     "Flag": 51410310,
     "Id": 11113497
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Izalith Lave 1",
     "Flag": 51410320,
     "Id": 11113498
   },
   {
-    "Name": "Divine Blessing",
+    "Name": "Divine Blessing - Izalith Lava 1",
     "Flag": 51410330,
     "Id": 11113499
   },
   {
-    "Name": "Divine Blessing",
+    "Name": "Divine Blessing - Izalith Lava 2",
     "Flag": 51410340,
     "Id": 11113500
   },
@@ -2510,7 +2510,7 @@
     "Id": 11113501
   },
   {
-    "Name": "Twin Humanities",
+    "Name": "Twin Humanities - Lost Izalith",
     "Flag": 51410360,
     "Id": 11113502
   },
@@ -2520,17 +2520,17 @@
     "Id": 11113503
   },
   {
-    "Name": "Rare Ring of Sacrifice",
+    "Name": "Rare Ring of Sacrifice - Izalith City",
     "Flag": 51410380,
     "Id": 11113504
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
+    "Name": "Large Soul of a Brave Warrior - Izalith City",
     "Flag": 51410390,
     "Id": 11113505
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "Soul of a Hero - Izalith City",
     "Flag": 51410400,
     "Id": 11113506
   },
@@ -2540,12 +2540,12 @@
     "Id": 11113507
   },
   {
-    "Name": "Soul of a Great Hero",
+    "Name": "Soul of a Great Hero - Lost Izalith",
     "Flag": 51410500,
     "Id": 11113508
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Above Centipede Demon",
     "Flag": 51410510,
     "Id": 11113509
   },
@@ -2565,12 +2565,12 @@
     "Id": 11113512
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Sen's Fortress Entrance",
     "Flag": 51500010,
     "Id": 11113513
   },
   {
-    "Name": "Large Titanite Shard",
+    "Name": "Large Titanite Shard - Sen's Fortress Trap Chest",
     "Flag": 51500020,
     "Id": 11113514
   },
@@ -2580,7 +2580,7 @@
     "Id": 11113515
   },
   {
-    "Name": "Divine Blessing",
+    "Name": "Divine Blessing - Sen's Fortress",
     "Flag": 51500040,
     "Id": 11113516
   },
@@ -2620,7 +2620,7 @@
     "Id": 11113523
   },
   {
-    "Name": "Large Titanite Shard",
+    "Name": "Large Titanite Shard - Sen's Fortress 1",
     "Flag": 51500080,
     "Id": 11113524
   },
@@ -2630,7 +2630,7 @@
     "Id": 11113525
   },
   {
-    "Name": "Rare Ring of Sacrifice",
+    "Name": "Rare Ring of Sacrifice - Sen's Fortress",
     "Flag": 51500100,
     "Id": 11113526
   },
@@ -2645,7 +2645,7 @@
     "Id": 11113528
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Sen's Fortress Ball Dropdown",
     "Flag": 51500310,
     "Id": 11113529
   },
@@ -2655,12 +2655,12 @@
     "Id": 11113530
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - Sen's Fortress Illusary Wall",
     "Flag": 51500330,
     "Id": 11113531
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Sen's Fortress Pit",
     "Flag": 51500350,
     "Id": 11113532
   },
@@ -2670,17 +2670,17 @@
     "Id": 11113533
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
+    "Name": "Large Soul of a Brave Warrior - Sen's Fortress above Bonfire",
     "Flag": 51500400,
     "Id": 11113534
   },
   {
-    "Name": "Large Titanite Shard",
+    "Name": "Large Titanite Shard - Sen's Fortress 2",
     "Flag": 51500410,
     "Id": 11113535
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "Soul of a Hero - Sen's Fortress Cage",
     "Flag": 51500420,
     "Id": 11113536
   },
@@ -2710,12 +2710,12 @@
     "Id": 11113541
   },
   {
-    "Name": "Titanite Chunk",
+    "Name": "Titanite Chunk - Giant Blacksmith",
     "Flag": 51510040,
     "Id": 11113542
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "Soul of a Hero - Silver Archers",
     "Flag": 51510050,
     "Id": 11113543
   },
@@ -2780,12 +2780,12 @@
     "Id": 11113555
   },
   {
-    "Name": "Demon Titanite",
+    "Name": "Demon Titanite - Anor Londo Elevator",
     "Flag": 51510510,
     "Id": 11113556
   },
   {
-    "Name": "Divine Blessing",
+    "Name": "Divine Blessing - Anor Londo Rafters",
     "Flag": 51510520,
     "Id": 11113557
   },
@@ -2840,7 +2840,7 @@
     "Id": 11113567
   },
   {
-    "Name": "Demon Titanite",
+    "Name": "Demon Titanite - Anor Londo Bedroom",
     "Flag": 51510600,
     "Id": 11113568
   },
@@ -2875,22 +2875,22 @@
     "Id": 11113574
   },
   {
-    "Name": "Twinkling Titanite",
+    "Name": "Twinkling Titanite - Anor Londo",
     "Flag": 51510670,
     "Id": 11113575
   },
   {
-    "Name": "Demon Titanite",
+    "Name": "Demon Titanite - Anor Londo Giants",
     "Flag": 51510680,
     "Id": 11113576
   },
   {
-    "Name": "Sunlight Medal",
+    "Name": "Sunlight Medal - Anor Londo",
     "Flag": 51510690,
     "Id": 11113577
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "Soul of a Hero - Anor Londo Rooms",
     "Flag": 51510700,
     "Id": 11113578
   },
@@ -2920,12 +2920,12 @@
     "Id": 11113583
   },
   {
-    "Name": "Transient Curse",
+    "Name": "Transient Curse - Mother Ghost",
     "Flag": 51600070,
     "Id": 11113584
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - New Londo 1",
     "Flag": 51600090,
     "Id": 11113585
   },
@@ -2935,17 +2935,17 @@
     "Id": 11113586
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - New Londo Back Corridor",
     "Flag": 51600110,
     "Id": 11113587
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - New Londo 2",
     "Flag": 51600120,
     "Id": 11113588
   },
   {
-    "Name": "Rare Ring of Sacrifice",
+    "Name": "Rare Ring of Sacrifice - New Londo Roof",
     "Flag": 51600130,
     "Id": 11113589
   },
@@ -2955,7 +2955,7 @@
     "Id": 11113590
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - New Londo 1",
     "Flag": 51600150,
     "Id": 11113591
   },
@@ -2970,7 +2970,7 @@
     "Id": 11113593
   },
   {
-    "Name": "Large Soul of a Nameless Soldier",
+    "Name": "Large Soul of a Nameless Soldier - New Londo Door",
     "Flag": 51600170,
     "Id": 11113594
   },
@@ -2980,7 +2980,7 @@
     "Id": 11113595
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "Soul of a Proud Knight - Undead Dragon",
     "Flag": 51600190,
     "Id": 11113596
   },
@@ -2990,7 +2990,7 @@
     "Id": 11113597
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Valley of Drakes",
     "Flag": 51600210,
     "Id": 11113598
   },
@@ -3020,37 +3020,37 @@
     "Id": 11113603
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - New Londo 1",
     "Flag": 51600250,
     "Id": 11113604
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - New Londo 2",
     "Flag": 51600260,
     "Id": 11113605
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - New Londo 1",
     "Flag": 51600270,
     "Id": 11113606
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - New Londo 2",
     "Flag": 51600280,
     "Id": 11113607
   },
   {
-    "Name": "Titanite Chunk",
+    "Name": "Titanite Chunk - New Londo 2",
     "Flag": 51600290,
     "Id": 11113608
   },
   {
-    "Name": "Cracked Red Eye Orb",
+    "Name": "Cracked Red Eye Orb - New Londo",
     "Flag": 51600310,
     "Id": 11113609
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - New Londo 4",
     "Flag": 51600330,
     "Id": 11113610
   },
@@ -3080,7 +3080,7 @@
     "Id": 11113615
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "Large Soul of a Proud Knight - New Londo 3",
     "Flag": 51600370,
     "Id": 11113616
   },
@@ -3095,7 +3095,7 @@
     "Id": 11113618
   },
   {
-    "Name": "Titanite Chunk",
+    "Name": "Titanite Chunk - New Londo 1",
     "Flag": 51600510,
     "Id": 11113619
   },
@@ -3105,12 +3105,12 @@
     "Id": 11113620
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Archives Under Stairs",
     "Flag": 51700000,
     "Id": 11113621
   },
   {
-    "Name": "Twinkling Titanite",
+    "Name": "Twinkling Titanite - Archives balcony",
     "Flag": 51700010,
     "Id": 11113622
   },
@@ -3120,7 +3120,7 @@
     "Id": 11113623
   },
   {
-    "Name": "Soul of a Great Hero",
+    "Name": "Soul of a Great Hero - Seath Room",
     "Flag": 51700040,
     "Id": 11113624
   },
@@ -3130,7 +3130,7 @@
     "Id": 11113625
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "Soul of a Brave Warrior - Archives Cell Scafolding",
     "Flag": 51700060,
     "Id": 11113626
   },
@@ -3160,37 +3160,37 @@
     "Id": 11113631
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
+    "Name": "Large Soul of a Brave Warrior - Archives Cell",
     "Flag": 51700080,
     "Id": 11113632
   },
   {
-    "Name": "Blue Titanite Chunk",
+    "Name": "Blue Titanite Chunk - Archives Courtyard",
     "Flag": 51700120,
     "Id": 11113633
   },
   {
-    "Name": "Humanity",
+    "Name": "Humanity - Crystal Caverns",
     "Flag": 51700150,
     "Id": 11113634
   },
   {
-    "Name": "Blue Titanite Slab",
+    "Name": "Blue Titanite Slab - Crystal Caverns",
     "Flag": 51700160,
     "Id": 11113635
   },
   {
-    "Name": "Blue Titanite Chunk",
+    "Name": "Blue Titanite Chunk - Crystal Caverns",
     "Flag": 51700170,
     "Id": 11113636
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "Soul of a Hero - Crystal Caverns",
     "Flag": 51700180,
     "Id": 11113637
   },
   {
-    "Name": "Fire Keeper Soul",
+    "Name": "Fire Keeper Soul - Archives Gaint Cell",
     "Flag": 51700200,
     "Id": 11113638
   },
@@ -3200,7 +3200,7 @@
     "Id": 11113639
   },
   {
-    "Name": "Twinkling Titanite",
+    "Name": "Twinkling Titanite - Archives Chest",
     "Flag": 51700510,
     "Id": 11113640
   },
@@ -3220,7 +3220,7 @@
     "Id": 11113643
   },
   {
-    "Name": "Blue Titanite Chunk",
+    "Name": "Blue Titanite Chunk - Archives Chest",
     "Flag": 51700560,
     "Id": 11113644
   },

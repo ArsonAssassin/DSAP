@@ -1,0 +1,354 @@
+﻿[
+  {
+    "Name": "Skull Lantern",
+    "Id": 1396000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Shields",
+    "ApId": 11119000
+  },
+  {
+    "Name": "East-West Shield",
+    "Id": 1400000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119001
+  },
+  {
+    "Name": "Wooden Shield",
+    "Id": 1401000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119002
+  },
+  {
+    "Name": "Large Leather Shield",
+    "Id": 1402000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119003
+  },
+  {
+    "Name": "Small Leather Shield",
+    "Id": 1403000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119004
+  },
+  {
+    "Name": "Target Shield",
+    "Id": 1404000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119005
+  },
+  {
+    "Name": "Buckler",
+    "Id": 1405000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119006
+  },
+  {
+    "Name": "Cracked Round Shield",
+    "Id": 1406000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119007
+  },
+  {
+    "Name": "Leather Shield",
+    "Id": 1408000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119008
+  },
+  {
+    "Name": "Plank Shield",
+    "Id": 1409000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119009
+  },
+  {
+    "Name": "Caduceus Round Shield",
+    "Id": 1410000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119010
+  },
+  {
+    "Name": "Crystal Ring Shield",
+    "Id": 1411000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119011
+  },
+  {
+    "Name": "Heater Shield",
+    "Id": 1450000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119012
+  },
+  {
+    "Name": "Knight Shield",
+    "Id": 1451000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119013
+  },
+  {
+    "Name": "Tower Kite Shield",
+    "Id": 1452000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119014
+  },
+  {
+    "Name": "Grass Crest Shield",
+    "Id": 1453000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119015
+  },
+  {
+    "Name": "Hollow Soldier Shield",
+    "Id": 1454000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119016
+  },
+  {
+    "Name": "Balder Shield",
+    "Id": 1455000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119017
+  },
+  {
+    "Name": "Crest Shield",
+    "Id": 1456000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119018
+  },
+  {
+    "Name": "Dragon Crest Shield",
+    "Id": 1457000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119019
+  },
+  {
+    "Name": "Warrior's Round Shield",
+    "Id": 1460000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119020
+  },
+  {
+    "Name": "Iron Round Shield",
+    "Id": 1461000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119021
+  },
+  {
+    "Name": "Spider Shield",
+    "Id": 1462000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119022
+  },
+  {
+    "Name": "Spiked Shield",
+    "Id": 1470000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "Shields",
+    "ApId": 11119023
+  },
+  {
+    "Name": "Crystal Shield",
+    "Id": 1471000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Shields",
+    "ApId": 11119024
+  },
+  {
+    "Name": "Sunlight Shield",
+    "Id": 1472000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119025
+  },
+  {
+    "Name": "Silver Knight Shield",
+    "Id": 1473000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119026
+  },
+  {
+    "Name": "Black Knight Shield",
+    "Id": 1474000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119027
+  },
+  {
+    "Name": "Pierce Shield",
+    "Id": 1475000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "Shields",
+    "ApId": 11119028
+  },
+  {
+    "Name": "Red and White Round Shield",
+    "Id": 1476000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119029
+  },
+  {
+    "Name": "Caduceus Kite Shield",
+    "Id": 1477000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119030
+  },
+  {
+    "Name": "Gargoyle's Shield",
+    "Id": 1478000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119031
+  },
+  {
+    "Name": "Eagle Shield",
+    "Id": 1500000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119032
+  },
+  {
+    "Name": "Tower Shield",
+    "Id": 1501000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119033
+  },
+  {
+    "Name": "Giant Shield",
+    "Id": 1502000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119034
+  },
+  {
+    "Name": "Stone Greatshield",
+    "Id": 1503000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119035
+  },
+  {
+    "Name": "Havel's Greatshield",
+    "Id": 1505000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119036
+  },
+  {
+    "Name": "Bonewheel Shield",
+    "Id": 1506000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "Shields",
+    "ApId": 11119037
+  },
+  {
+    "Name": "Greatshield of Artorias",
+    "Id": 1507000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119038
+  },
+  {
+    "Name": "Effigy Shield",
+    "Id": 9000000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119039
+  },
+  {
+    "Name": "Sanctus",
+    "Id": 9001000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119040
+  },
+  {
+    "Name": "Bloodshield",
+    "Id": 9002000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119041
+  },
+  {
+    "Name": "Black Iron Greatshield",
+    "Id": 9003000,
+    "StackSize": 1,
+    "UpgradeType": "InfusableRestricted",
+    "Category": "Shields",
+    "ApId": 11119042
+  },
+  {
+    "Name": "Cleansing Greatshield",
+    "Id": 9014000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "Shields",
+    "ApId": 11119043
+  }
+]

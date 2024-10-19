@@ -123,5 +123,11 @@
     "Name": "Gwyndolin",
     "Id": 11110024,
     "Flag": 11510900
+  },
+  {
+	"Name": "Stray Demon",
+	"Id": 11110025,
+	"Flag": 11810900
   }
+  
 ]
