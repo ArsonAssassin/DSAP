@@ -1,2 +1,2 @@
 # DSAP
-Archipelago implementation for Dark Souls Remastered
+Archipelago implementation for Dark Souls Remastered by ArsonAssassin
