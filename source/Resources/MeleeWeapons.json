@@ -93,7 +93,7 @@
         "StackSize": 1,
         "UpgradeType": "Infusable",
         "Category": "MeleeWeapons",
-        "ApId": 11118010
+        "ApId": 11118123
     },
     {
         "Name": "Barbed Straight Sword",
@@ -221,7 +221,7 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118023
+        "ApId": 11118124
     },
     {
         "Name": "Great Lord Greatsword",
@@ -485,7 +485,7 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118057
+        "ApId": 11118125
     },
     {
         "Name": "Black Knight Greataxe",
@@ -493,7 +493,7 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118057
+        "ApId": 11118126
     },
     {
         "Name": "Club",
@@ -557,7 +557,7 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118064
+        "ApId": 11118127
     },
     {
         "Name": "Hammer of Vamos",
@@ -808,52 +808,12 @@
         "ApId": 11118095
     },
     {
-        "Name": "Sunlight Straight Sword",
-        "Id": 206000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118141
-    },
-    {
-        "Name": "Greatsword of Artorias (Cursed)",
-        "Id": 311000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118142
-    },
-    {
-        "Name": "Dragon King Greataxe",
-        "Id": 752000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118143
-    },
-    {
-        "Name": "Black Knight Greataxe",
-        "Id": 753000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118144
-    },
-    {
-        "Name": "Blacksmith Giant Hammer",
-        "Id": 811000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118145
-    },
-    {
         "Name": "Gold Tracer",
         "Id": 9010000,
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118146
+        "ApId": 11118128
     },
     {
         "Name": "Dark Silver Tracer",
@@ -861,7 +821,7 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118147
+        "ApId": 11118129
     },
     {
         "Name": "Abyss Greatsword",
@@ -869,7 +829,7 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118148
+        "ApId": 11118130
     },
     {
         "Name": "Stone Greataxe",
@@ -877,7 +837,7 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118149
+        "ApId": 11118131
     },
     {
         "Name": "Four-pronged Plow",
@@ -885,7 +845,7 @@
         "StackSize": 1,
         "UpgradeType": "Infusable",
         "Category": "MeleeWeapons",
-        "ApId": 11118150
+        "ApId": 11118132
     },
     {
         "Name": "Guardian Tail",
@@ -893,7 +853,7 @@
         "StackSize": 1,
         "UpgradeType": "Infusable",
         "Category": "MeleeWeapons",
-        "ApId": 11118151
+        "ApId": 11118133
     },
     {
         "Name": "Obsidian Greatsword",
@@ -901,6 +861,6 @@
         "StackSize": 1,
         "UpgradeType": "Unique",
         "Category": "MeleeWeapons",
-        "ApId": 11118152
+        "ApId": 11118134
     }
 ]
