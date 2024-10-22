@@ -85,7 +85,7 @@
     "StackSize": 1,
     "UpgradeType": "PyroFlameAscended",
     "Category": "SpellTools",
-    "ApId": 11118140
+    "ApId": 11118150
   },
   {
     "Name": "Talisman",
@@ -149,7 +149,7 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "SpellTools",
-    "ApId": 11118138
+    "ApId": 11118151
   },
   {
     "Name": "Oolacile Catalyst",
@@ -157,6 +157,6 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "SpellTools",
-    "ApId": 11118139
+    "ApId": 11118152
   }
 ]

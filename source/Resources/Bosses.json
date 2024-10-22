@@ -137,5 +137,23 @@
     "LocationId": 11110022,
     "Offset": "0x2303",
     "AddressBit": 6
+  },
+  {
+    "Name": "Sanctuary Guardian",
+    "LocationId": 11110023,
+    "Offset": "",
+    "AddressBit": 0
+  },
+  {
+    "Name": "Gwyndolin",
+    "LocationId": 11110024,
+    "Offset": "",
+    "AddressBit": 0
+  },
+  {
+    "Name": "Stray Demon",
+    "LocationId": 11110025,
+    "Offset": "",
+    "AddressBit": 0
   }
 ]

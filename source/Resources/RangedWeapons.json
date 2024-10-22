@@ -85,7 +85,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "RangedWeapons",
-    "ApId": 11118123
+    "ApId": 11118135
   },
   {
     "Name": "Standard Arrow",
@@ -93,7 +93,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118124
+    "ApId": 11118136
   },
   {
     "Name": "Large Arrow",
@@ -101,7 +101,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118125
+    "ApId": 11118137
   },
   {
     "Name": "Feather Arrow",
@@ -109,7 +109,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118126
+    "ApId": 11118138
   },
   {
     "Name": "Fire Arrow",
@@ -117,7 +117,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118127
+    "ApId": 11118139
   },
   {
     "Name": "Poison Arrow",
@@ -125,7 +125,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118128
+    "ApId": 11118140
   },
   {
     "Name": "Moonlight Arrow",
@@ -133,7 +133,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118129
+    "ApId": 11118141
   },
   {
     "Name": "Wooden Arrow",
@@ -141,7 +141,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118130
+    "ApId": 11118142
   },
   {
     "Name": "Dragonslayer Arrow",
@@ -149,7 +149,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118131
+    "ApId": 11118143
   },
   {
     "Name": "Gough's Great Arrow",
@@ -157,7 +157,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118132
+    "ApId": 11118144
   },
   {
     "Name": "Standard Bolt",
@@ -165,7 +165,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118133
+    "ApId": 11118145
   },
   {
     "Name": "Heavy Bolt",
@@ -173,7 +173,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118134
+    "ApId": 11118146
   },
   {
     "Name": "Sniper Bolt",
@@ -181,7 +181,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118135
+    "ApId": 11118147
   },
   {
     "Name": "Wood Bolt",
@@ -189,7 +189,7 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118136
+    "ApId": 11118148
   },
   {
     "Name": "Lightning Bolt",
@@ -197,6 +197,6 @@
     "StackSize": 999,
     "UpgradeType": "None",
     "Category": "RangedWeapons",
-    "ApId": 11118137
+    "ApId": 11118149
   }
 ]
