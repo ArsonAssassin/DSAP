@@ -356,7 +356,7 @@ namespace DSAP
         public static List<DarkSoulsItem> GetRangedWeapons()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.RangedWeapons.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);            
             return list;
         }
         public static List<DarkSoulsItem> GetMeleeWeapons()

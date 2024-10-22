@@ -24,9 +24,6 @@ namespace DSAP
             if (ProcId == 0)
             {
                 Console.WriteLine($"{ProcessName} not found.");
-                Console.WriteLine("Press any key to exit.");
-                Console.Read();
-                System.Environment.Exit(0);
                 return false;
             }
             return true;

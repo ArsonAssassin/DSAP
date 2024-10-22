@@ -85,7 +85,8 @@ location_tables = {
     DSRLocationData(f"Manus, Father of the Abyss Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(f"Knight Artorias Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(f"Sanctuary Guardian Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(f"Gwyndolin Defeated", f"Firebomb", DSRLocationCategory.BOSS),
+    DSRLocationData(f"Gwyndolin Defeated", f"Firebomb", DSRLocationCategory.BOSS),    
+    DSRLocationData(f"Stray Demon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
 ],
 "Bonfires": [
     DSRLocationData(f"Firelink Shrine Bonfire Lit", f"Firebomb", DSRLocationCategory.BONFIRE),
