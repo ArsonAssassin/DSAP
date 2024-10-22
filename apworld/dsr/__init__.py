@@ -1,4 +1,4 @@
-# world/dc2/__init__.py
+# world/dsr/__init__.py
 from typing import Dict, Set, List
 
 from BaseClasses import MultiWorld, Region, Item, Entrance, Tutorial, ItemClassification
@@ -192,14 +192,11 @@ class DSRWorld(World):
         print("Setting rules")   
         for region in self.multiworld.get_regions(self.player):
             for location in region.locations:
-                    set_rule(location, lambda state: True)
+                    set_rule(location, lambda state: True)        
         
-      
-            
+
     def fill_slot_data(self) -> Dict[str, object]:
         slot_data: Dict[str, object] = {}
-
-
         name_to_dsr_code = {item.name: item.dsr_code for item in item_dictionary.values()}
         # Create the mandatory lists to generate the player's output file
         items_id = []
@@ -208,8 +205,6 @@ class DSRWorld(World):
         locations_address = []
         locations_target = []
         for location in self.multiworld.get_filled_locations():
-
-
             if location.item.player == self.player:
                 #we are the receiver of the item
                 items_id.append(location.item.code)

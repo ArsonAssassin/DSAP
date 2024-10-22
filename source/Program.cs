@@ -54,7 +54,7 @@ namespace DSAP
             Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x7, 4);
             //set item id
             Array.Copy(BitConverter.GetBytes(id), 0, command, 0xD, 4);
-
+            
             var result = Memory.ExecuteCommand(command);
         }
 
@@ -209,7 +209,6 @@ namespace DSAP
         {
             Log.Logger.Information("Connected to Archipelago");
             Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
-
         }
 
         private static void OnDisconnected(object sender, EventArgs args)
