@@ -14,7 +14,8 @@ class DSRItemCategory(IntEnum):
     SPELL = 6
     ARMOR = 7
     WEAPON = 8
-    SHIELD = 9
+    SHIELD = 9,
+    TRAP = 10
 
 
 class DSRItemData(NamedTuple):
@@ -871,6 +872,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Black Iron Greatshield", 9042, DSRItemCategory.SHIELD),
     
     
+    ("Lag Trap", 10000, DSRItemCategory.TRAP),
 ]]
 
 item_descriptions = {
