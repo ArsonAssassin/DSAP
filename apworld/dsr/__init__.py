@@ -20,7 +20,7 @@ class DSRWeb(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["ArsonAssassin"]
+        ["ArsonAssassin, dank_santa"]
     )
 
 
