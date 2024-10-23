@@ -175,7 +175,7 @@ class DSRWorld(World):
         }
         data = self.item_name_to_id[name]
 
-        if name in key_item_names or item_dictionary[name].category == DSRItemCategory.EVENT:
+        if name in key_item_names or item_dictionary[name].category in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]:
             item_classification = ItemClassification.progression
         elif item_dictionary[name].category in useful_categories:
             item_classification = ItemClassification.useful
