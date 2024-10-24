@@ -42,7 +42,47 @@ class DSRLocation(Location):
         table_offset = 1000
 
         table_order = [
-            "Bosses", "Bonfires", "Doors", "ItemLots"
+            "Northern Undead Asylum", 
+            "Firelink Shrine", 
+            "Upper Undead Burg", 
+            "Undead Parish", 
+            "Firelink Shrine - After Undead Parish Elevator", 
+            "Northern Undead Asylum - Second Visit", 
+            "Snuggly", 
+            "Lower Undead Burg", 
+            "Depths", 
+            "Blighttown", 
+            "Valley of the Drakes", 
+            "Valley of the Drakes - After Defeating Four Kings", 
+            "Darkroot Basin", 
+            "Darkroot Garden", 
+            "Darkroot Garden - Behind Artorias Door", 
+            "The Great Hollow", 
+            "Ash Lake", 
+            "Sen's Fortress", 
+            "Anor Londo", 
+            "Painted World of Ariamis", 
+            "Upper New Londo Ruins", 
+            "Lower New Londo Ruins", 
+            "The Abyss", 
+            "The Duke's Archives", 
+            "Crystal Cave", 
+            "Duke's Archives - First Arena After Seath's Death", 
+            "Demon Ruins", 
+            "Lost Izalith", 
+            "The Catacombs", 
+            "Tomb of the Giants", 
+            "Kiln of the First Flame", 
+            "Sanctuary Garden", 
+            "Oolacile Sanctuary", 
+            "Royal Wood", 
+            "Oolacile Township", 
+            "Chasm of the Abyss",
+            
+            "Bosses",
+            "Bonfires",
+            "Doors",
+            "ItemLots"
          ]
 
         output = {}
@@ -266,7 +306,7 @@ location_tables = {
     DSRLocationData(f"Spider Shield - Corpse with Brigand Armor Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(f"Red Tearstone Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Valley of the Drakes - After defeating Four Kings": [
+"Valley of the Drakes - After Defeating Four Kings": [
     DSRLocationData(f"Witch Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(f"Beatrice's Catalyst", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
@@ -513,7 +553,7 @@ location_tables = {
     DSRLocationData(f"Bequeathed Lord Soul Shard", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(f"Crystal Cave lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
-"Duke's Archives - First Arena after Seath's Death": [
+"Duke's Archives - First Arena After Seath's Death": [
     DSRLocationData(f"Large Magic Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(f"Soul of a Great Hero - Near Large Magic Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
