@@ -781,7 +781,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Demon's Catalyst", 8113, DSRItemCategory.WEAPON),
     ("Izalith Catalyst", 8114, DSRItemCategory.WEAPON),
     ("Pyromancy Flame", 8115, DSRItemCategory.WEAPON),
-    ("Pyromancy Flame (Ascended)", 8150, DSRItemCategory.WEAPON)
+    ("Pyromancy Flame (Ascended)", 8150, DSRItemCategory.WEAPON),
     ("Talisman", 8116, DSRItemCategory.WEAPON),
     ("Canvas Talisman", 8117, DSRItemCategory.WEAPON),
     ("Thorolund Talisman", 8118, DSRItemCategory.WEAPON),
