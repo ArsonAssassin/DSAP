@@ -26,6 +26,7 @@ namespace DSAP
                 Console.WriteLine($"{ProcessName} not found.");
                 return false;
             }
+			IsConnected = true;
             return true;
         }
 
