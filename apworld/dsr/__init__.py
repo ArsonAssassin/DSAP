@@ -105,11 +105,6 @@ class DSRWorld(World):
             "Royal Wood", 
             "Oolacile Township", 
             "Chasm of the Abyss",
-
-            "Bosses",
-            "Bonfires",
-            "Doors",
-            "ItemLots"
                 ]})
         
         # Connect Regions
@@ -118,6 +113,8 @@ class DSRWorld(World):
             regions[from_region].exits.append(connection)
             connection.connect(regions[to_region], rule)
             print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
+        create_connection("Menu", "Undead Asylum Cell")    
+        
         create_connection("Undead Asylum Cell", "Northern Undead Asylum")    
         
         create_connection("Northern Undead Asylum", "Firelink Shrine")
@@ -125,7 +122,7 @@ class DSRWorld(World):
         create_connection("Firelink Shrine", "Upper Undead Burg")
         create_connection("Firelink Shrine", "The Catacombs")
         create_connection("Firelink Shrine", "Upper New Londo Ruins")
-        create_connection("Firelink Shrine - After Undead Parish Elevator", "Norther Undead Asylum - Second Visit")
+        create_connection("Firelink Shrine - After Undead Parish Elevator", "Northern Undead Asylum - Second Visit")
         create_connection("Firelink Shrine", "Firelink Altar")
 
         create_connection("Upper Undead Burg", "Lower Undead Burg")
@@ -179,11 +176,7 @@ class DSRWorld(World):
         create_connection("Oolacile Sanctuary", "Royal Wood")
         create_connection("Royal Wood", "Oolacile Township")
         create_connection("Oolacile Township", "Chasm of the Abyss")
-
-        create_connection("Menu", "Bosses")    
-        create_connection("Menu", "Bonfires")    
-        create_connection("Menu", "Doors")    
-        create_connection("Menu", "ItemLots")        
+      
         
     # For each region, add the associated locations retrieved from the corresponding location_table
     def create_region(self, region_name, location_table) -> Region:
