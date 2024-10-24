@@ -163,8 +163,8 @@ location_tables = {
     DSRLocationData(11110055, f"White Sign Soapstone", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110056, f"Claymore", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110057, f"Soul of a Nameless Soldier - On Dragon Bridge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110058, f"Undead Burg - Sunlight Altar lit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110059, f"Undead Burg Sunlight Altar opened", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110058, f"Undead Burg - Sunlight Altar lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110059, f"Undead Burg Sunlight Altar opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "Undead Parish": [
     DSRLocationData(11110060, f"Titanite Chunk - Drop from Black Knight in Tower", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -248,7 +248,7 @@ location_tables = {
     DSRLocationData(11110128, f"Gaping Dragon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(11110129, f"Blighttown Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110130, f"Warrior Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110131, f"Depths -> Blighttown opened", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110131, f"Depths -> Blighttown opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "Blighttown": [
     DSRLocationData(11110132, f"Soul of a Proud Knight - End of Wooden Structure", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -669,7 +669,7 @@ location_tables = {
 ],
 "Oolacile Sanctuary": [
     DSRLocationData(11110503, f"Humanity - Corpse", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110504, f"Oolacile - Sanctuary lit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110504, f"Oolacile - Sanctuary lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "Royal Wood": [
     DSRLocationData(11110505, f"Guardian Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
