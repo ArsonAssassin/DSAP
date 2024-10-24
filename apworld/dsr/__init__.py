@@ -68,7 +68,47 @@ class DSRWorld(World):
         regions: Dict[str, Region] = {}
         regions["Menu"] = self.create_region("Menu", [])
         regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in [
-            "Bosses", "Bonfires", "Doors", "ItemLots"
+            "Northern Undead Asylum", 
+            "Firelink Shrine", 
+            "Upper Undead Burg", 
+            "Undead Parish", 
+            "Firelink Shrine - After Undead Parish Elevator", 
+            "Northern Undead Asylum - Second Visit", 
+            "Snuggly", 
+            "Lower Undead Burg", 
+            "Depths", 
+            "Blighttown", 
+            "Valley of the Drakes", 
+            "Valley of the Drakes - After Defeating Four Kings", 
+            "Darkroot Basin", 
+            "Darkroot Garden", 
+            "Darkroot Garden - Behind Artorias Door", 
+            "The Great Hollow", 
+            "Ash Lake", 
+            "Sen's Fortress", 
+            "Anor Londo", 
+            "Painted World of Ariamis", 
+            "Upper New Londo Ruins", 
+            "Lower New Londo Ruins", 
+            "The Abyss", 
+            "The Duke's Archives", 
+            "Crystal Cave", 
+            "Duke's Archives - First Arena After Seath's Death", 
+            "Demon Ruins", 
+            "Lost Izalith", 
+            "The Catacombs", 
+            "Tomb of the Giants", 
+            "Kiln of the First Flame", 
+            "Sanctuary Garden", 
+            "Oolacile Sanctuary", 
+            "Royal Wood", 
+            "Oolacile Township", 
+            "Chasm of the Abyss",
+
+            "Bosses",
+            "Bonfires",
+            "Doors",
+            "ItemLots"
                 ]})
         
         # Connect Regions
@@ -76,7 +116,67 @@ class DSRWorld(World):
             connection = Entrance(self.player, f"{to_region}", regions[from_region])
             regions[from_region].exits.append(connection)
             connection.connect(regions[to_region], rule)
-            print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name)            
+            print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
+        create_connection("Northern Undead Asylum", "Firelink Shrine")
+
+        create_connection("Firelink Shrine", "Upper Undead Burg")
+        create_connection("Firelink Shrine", "The Catacombs")
+        create_connection("Firelink Shrine", "Upper New Londo Ruins")
+        create_connection("Firelink Shrine - After Undead Parish Elevator", "Norther Undead Asylum - Second Visit")
+        create_connection("Firelink Shrine", "Firelink Altar")
+
+        create_connection("Upper Undead Burg", "Lower Undead Burg")
+        create_connection("Upper Undead Burg", "Undead Parish")
+        create_connection("Upper Undead Burg", "Darkroot Basin")
+
+        create_connection("Undead Parish", "Firelink Shrine - After Undead Parish Elevator")
+        create_connection("Undead Parish", "Darkroot Garden")
+        create_connection("Undead Parish", "Sen's Fortress")
+
+        create_connection("Darkroot Garden", "Darkroot Basin")
+        create_connection("Darkroot Garden", "Darkroot Garden - Behind Artorias Door")
+
+        create_connection("Lower Undead Burg", "Depths")
+
+        create_connection("Upper New Londo Ruins", "Valley of the Drakes")
+        create_connection("Upper New Londo Ruins", "Lower New Londo Ruins")
+
+        create_connection("Lower New Londo Ruins", "Valley of the Drakes")
+
+        create_connection("Depths", "Blighttown")
+
+        create_connection("Valley of the Drakes", "Blighttown")
+        create_connection("Valley of the Drakes", "Darkroot Basin")
+
+        create_connection("Blighttown", "Demon Ruins")
+        create_connection("Blighttown", "The Great Hollow")
+
+        create_connection("The Great Hollow", "Ash Lake")
+
+        create_connection("Sen's Fortress", "Anor Londo")
+
+        create_connection("Anor Londo", "The Duke's Archives")
+        create_connection("Anor Londo", "Painted World of Ariamis")
+
+        create_connection("The Duke's Archives", "Crystal Cave")
+
+        create_connection("Crystal Cave", "Duke's Archives - First Arena After Seath's Death")
+
+        create_connection("The Catacombs", "Tomb of the Giants")
+
+        create_connection("Lower New Londo Ruins", "The Abyss")
+
+        create_connection("Demon Ruins", "Lost Izalith")
+
+        create_connection("Firelink Altar", "Kiln of the First Flame")
+
+        # DLC Entrances
+        create_connection("Darkroot Basin", "Sanctuary Garden")
+        create_connection("Sanctuary Garden", "Oolacile Sanctuary")
+        create_connection("Oolacile Sanctuary", "Royal Wood")
+        create_connection("Royal Wood", "Oolacile Township")
+        create_connection("Oolacile Township", "Chasm of the Abyss")
+
         create_connection("Menu", "Bosses")    
         create_connection("Menu", "Bonfires")    
         create_connection("Menu", "Doors")    
