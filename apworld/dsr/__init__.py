@@ -68,19 +68,21 @@ class DSRWorld(World):
         regions: Dict[str, Region] = {}
         regions["Menu"] = self.create_region("Menu", [])
         regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in [
-            "Bosses", "Bonfires", "Doors", "ItemLots"
+        "Undead Asylum Cell", "Northern Undead Asylum", "Firelink Shrine", "Upper Undead Burg"
+           # "Bosses", "Bonfires", "Doors", "ItemLots"
                 ]})
         
         # Connect Regions
         def create_connection(from_region: str, to_region: str, rule = None):
-            connection = Entrance(self.player, f"{to_region}", regions[from_region])
+            connection = Entrance(self.player, f"{from_region} -> {to_region}", regions[from_region])
             regions[from_region].exits.append(connection)
             connection.connect(regions[to_region], rule)
             print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name)            
-        create_connection("Menu", "Bosses")    
-        create_connection("Menu", "Bonfires")    
-        create_connection("Menu", "Doors")    
-        create_connection("Menu", "ItemLots")
+            
+        create_connection("Menu", "Undead Asylum Cell")
+        create_connection("Undead Asylum Cell", "Northern Undead Asylum")
+        create_connection("Northern Undead Asylum", "Firelink Shrine")
+        create_connection("Firelink Shrine", "Upper Undead Burg")
         
         
     # For each region, add the associated locations retrieved from the corresponding location_table
@@ -193,7 +195,12 @@ class DSRWorld(World):
         for region in self.multiworld.get_regions(self.player):
             for location in region.locations:
                     set_rule(location, lambda state: True)        
+        self.multiworld.completion_condition[self.player] = lambda state: state.has("Firelink Shrine lit", self.player)
         
+        set_rule(self.multiworld.get_location("Undead Asylum Cell Door opened", self.player), lambda state: state.has("Dungeon Cell Key", self.player))    
+        set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Northern Undead Asylum", self.player), lambda state: state.has("Undead Asylum Cell Door opened", self.player))      
+        set_rule(self.multiworld.get_location("Undead Asylum Big Pilgrim Door opened", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))  
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Firelink Shrine", self.player), lambda state: state.has("Undead Asylum Big Pilgrim Door opened", self.player))
 
     def fill_slot_data(self) -> Dict[str, object]:
         slot_data: Dict[str, object] = {}
