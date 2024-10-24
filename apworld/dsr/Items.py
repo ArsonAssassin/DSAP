@@ -34,6 +34,7 @@ class DSRItem(Item):
 
 
 key_item_names = {
+"Dungeon Cell Key", "Big Pilgrim's Key", "Undead Asylum Cell Door opened", "Undead Asylum Big Pilgrim Door opened"
 }
 
 
@@ -65,6 +66,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Sanctuary Guardian Defeated", 1023, DSRItemCategory.EVENT),    
     ("Gwyndolin Defeated", 1024, DSRItemCategory.EVENT),    
     ("Stray Demon Defeated", 1025, DSRItemCategory.EVENT),
+    
     ("Firelink Shrine lit", 1026, DSRItemCategory.EVENT),
     ("Undead Parish lit", 1027, DSRItemCategory.EVENT),
     ("Depths lit", 1028, DSRItemCategory.EVENT),
@@ -781,7 +783,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Demon's Catalyst", 8113, DSRItemCategory.WEAPON),
     ("Izalith Catalyst", 8114, DSRItemCategory.WEAPON),
     ("Pyromancy Flame", 8115, DSRItemCategory.WEAPON),
-    ("Pyromancy Flame (Ascended)", 8150, DSRItemCategory.WEAPON)
+    ("Pyromancy Flame (Ascended)", 8150, DSRItemCategory.WEAPON),
     ("Talisman", 8116, DSRItemCategory.WEAPON),
     ("Canvas Talisman", 8117, DSRItemCategory.WEAPON),
     ("Thorolund Talisman", 8118, DSRItemCategory.WEAPON),
@@ -890,6 +892,11 @@ def BuildItemPool(count, options):
             item_pool.append(item)
             included_itemcount = included_itemcount + 1
     remaining_count = count - included_itemcount
+    
+    key_items = [item for item in _all_items if item.name in key_item_names]# or item.category == DSRItemCategory.KEY_ITEM]
+    for item in key_items:
+        item_pool.append(item)
+        remaining_count = remaining_count - 1
     
     filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]]
 
