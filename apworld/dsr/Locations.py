@@ -14,13 +14,13 @@ class DSRLocationCategory(IntEnum):
 
 
 class DSRLocationData(NamedTuple):
+    id: int
     name: str
     default_item: str
     category: DSRLocationCategory
 
 
 class DSRLocation(Location):
-    id: int
     game: str = "Dark Souls Remastered"
     category: DSRLocationCategory
     default_item_name: str
@@ -31,7 +31,6 @@ class DSRLocation(Location):
             name: str,
             category: DSRLocationCategory,
             default_item_name: str,
-            id: int,
             address: Optional[int] = None,
             parent: Optional[Region] = None):
         super().__init__(player, name, address, parent)
@@ -45,7 +44,7 @@ class DSRLocation(Location):
         table_offset = 1000
 
         table_order = [
-            "Undead Asylum Cell"
+            "Undead Asylum Cell",
             "Northern Undead Asylum", 
             "Firelink Shrine", 
             "Upper Undead Burg", 
@@ -80,7 +79,7 @@ class DSRLocation(Location):
             "The Duke's Archives - After Archive Tower Giant Door Key", 
             "The Duke's Archives - Giant Cell",
             "Crystal Cave", 
-            "The Duke's Archives - First Arena After Seath's Death", 
+            "The Duke's Archives - First Arena after Seath's Death", 
             "Demon Ruins", 
             "Lost Izalith", 
             "The Catacombs", 
@@ -99,9 +98,7 @@ class DSRLocation(Location):
         for i, region_name in enumerate(table_order):
             if len(location_tables[region_name]) > table_offset:
                 raise Exception("A location table has {} entries, that is more than {} entries (table #{})".format(len(location_tables[region_name]), table_offset, i))
-
-            output.update({location_data.name: id for id, location_data in enumerate(location_tables[region_name], base_id + (table_offset * i))})
-
+            output.update({location_data.name: location_data.id for location_data in location_tables[region_name]})
         return output
 
     def place_locked_item(self, item: DSRItem):
@@ -333,7 +330,7 @@ location_tables = {
     DSRLocationData(11110187, f"Grass Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110188, f"Blue Titanite Chunk - Drop from Black Knight near Bonfire", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110189, f"Darkroot Basin lit", f"Firebomb", DSRLocationCategory.BONFIRE),
-    DSRLocationData(11110190, f"Undead Burg Watchtower Lower opened", f"Firebomb", DSRLocationCategory.DOOR),
+    #DSRLocationData(11110190, f"Undead Burg Watchtower Lower opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110191, f"Knight Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110192, f"Antiquated Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
@@ -398,7 +395,7 @@ location_tables = {
     DSRLocationData(11110242, f"Shotel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110243, f"Covetous Gold Serpent Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110244, f"Lightning Spear", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110245, f"Soul of a Hero - Inside Cage", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    #DSRLocationData(11110245, f"Soul of a Hero - Inside Cage", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110246, f"Large Soul of a Proud Knight - Near Man-Serpent Mage", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110247, f"Black Sorcerer Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110248, f"Sorcery: Hush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -494,7 +491,7 @@ location_tables = {
     DSRLocationData(11110330, f"Gold Coin - Hidden behind Barrels across Gap", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Upper New Londo Ruins": [
-    DSRLocationData(11110331, f"New Londo Ruins -> Valley of the Drakes opened", f"Firebomb", DSRLocationCategory.DOOR),
+    #DSRLocationData(11110331, f"New Londo Ruins -> Valley of the Drakes opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110332, f"Soul of a Nameless Soldier - Behind first Flight of Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110333, f"Estoc", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110334, f"Transient Curse - 2x Transient Curses from Corpse inside large Pot", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -580,7 +577,7 @@ location_tables = {
     DSRLocationData(11110398, f"Blue Titanite Slab - On Crystal Beam", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110399, f"Soul of a Hero - Left of Cave", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110400, f"Seath the Scaleless Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(11110401, f"Bequeathed Lord Soul Shard", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    #DSRLocationData(11110401, f"Bequeathed Lord Soul Shard", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110402, f"Crystal Cave lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "The Duke's Archives - First Arena after Seath's Death": [
@@ -624,14 +621,14 @@ location_tables = {
     DSRLocationData(11110436, f"Rare Ring of Sacrifice - On the Ledge near Soul of a Hero", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110437, f"Demon Titanite - 2x Demon Titanite Drop from Titanite Demon near Shortcut", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110438, f"Twinkling Titanite - Drop from Twinkling Titanite near Titanite Demon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110439, f"Demon Ruins Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
+    #DSRLocationData(11110439, f"Demon Ruins Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110440, f"Red Titanite Chunk - Inside Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110441, f"Green Titanite Shard - 2x Green Titanite Shards Inside Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110442, f"Soul of a Brave Warrior - Inside Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110443, f"Red Titanite Slab - In Chest at Dead-End of Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110444, f"Pyromancy: Chaos Fire Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110445, f"Bed of Chaos Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(11110446, f"Lord Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+   # DSRLocationData(11110446, f"Lord Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110447, f"Lost Izalith - Heart of Chaos lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "The Catacombs": [
@@ -671,7 +668,7 @@ location_tables = {
     DSRLocationData(11110479, f"Eye of Death - 3x Eye of Death through Square Hole", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110480, f"Large Divine Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110481, f"Soul of a Brave Warrior - Corpse Near Dead Blacksmith", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110481, f"Soul of a Brave Warrior - ", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+  #  DSRLocationData(11110481, f"Soul of a Brave Warrior - ", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110482, f"Effigy Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110483, f"Tomb of the Giants lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110484, f"Covetous Silver Serpent Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
