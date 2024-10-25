@@ -146,8 +146,6 @@ class DSRWorld(World):
         
         create_connection("Upper Undead Burg", "Watchtower Basement"),
         create_connection("Darkroot Basin", "Watchtower Basement"),
-        create_connection("Watchtower Basement", "Upper Undead Burg"), 
-        create_connection("Watchtower Basement", "Darkroot Basin"),
 
         create_connection("Undead Parish", "Firelink Shrine - After Undead Parish Elevator")
         create_connection("Undead Parish", "Darkroot Garden")
@@ -334,8 +332,6 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_location("Undead Burg Watchtower Lower opened", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Undead Burg Watchtower Lower opened", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Undead Burg Watchtower Lower opened", self.player))
-        set_rule(self.multiworld.get_entrance("Watchtower Basement -> Upper Undead Burg", self.player), lambda state: state.has("Undead Burg Watchtower Lower opened", self.player))
-        set_rule(self.multiworld.get_entrance("Watchtower Basement -> Darkroot Basin", self.player), lambda state: state.has("Undead Burg Watchtower Lower opened", self.player))
         set_rule(self.multiworld.get_location("Undead Asylum F2 West Door opened", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit Behind F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Door opened", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
