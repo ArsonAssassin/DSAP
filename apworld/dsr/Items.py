@@ -34,7 +34,6 @@ class DSRItem(Item):
 
 
 key_item_names = {
-"Dungeon Cell Key", "Big Pilgrim's Key", "Undead Asylum Cell Door opened", "Undead Asylum Big Pilgrim Door opened"
 }
 
 
@@ -135,7 +134,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Undead Asylum Shortcut Door opened", 1091, DSRItemCategory.EVENT),
     ("Undead Asylum F2 East Door opened", 1092, DSRItemCategory.EVENT),
     ("Undead Asylum Big Pilgrim Door opened", 1093, DSRItemCategory.EVENT),
-    ("Undead Asylum Boss Door opened", 1094, DSRItemCategory.EVENT),
+    ("Undead Asylum - Boss Door opened", 1094, DSRItemCategory.EVENT),
 
     ("Eye of Death", 2000, DSRItemCategory.CONSUMABLE),
     ("Cracked Red Eye Orb", 2001, DSRItemCategory.CONSUMABLE),
@@ -893,7 +892,7 @@ def BuildItemPool(count, options):
             included_itemcount = included_itemcount + 1
     remaining_count = count - included_itemcount
     
-    key_items = [item for item in _all_items if item.name in key_item_names]# or item.category == DSRItemCategory.KEY_ITEM]
+    key_items = [item for item in _all_items if item.name in key_item_names or item.category == DSRItemCategory.KEY_ITEM]
     for item in key_items:
         item_pool.append(item)
         remaining_count = remaining_count - 1

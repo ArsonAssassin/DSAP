@@ -8,7 +8,7 @@ from worlds.AutoWorld import World, WebWorld
 from worlds.generic.Rules import set_rule, add_rule, add_item_rule
 
 from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildItemPool
-from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary
+from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories
 from .Options import DSROption
 
 class DSRWeb(WebWorld):
@@ -208,7 +208,7 @@ class DSRWorld(World):
         #print("location table size: " + str(len(location_table)))
         for location in location_table:
             #print("Creating location: " + location.name)
-            if location.category in self.enabled_location_categories and location.category != DSRLocationCategory.EVENT:
+            if location.category in self.enabled_location_categories and location.category not in location_skip_categories:# [DSRLocationCategory.EVENT, DSRLocationCategory.DOOR]:
                 #print("Adding location: " + location.name + " with default item " + location.default_item)
                 new_location = DSRLocation(
                     self.player,
@@ -234,7 +234,7 @@ class DSRWorld(World):
                 )
                 event_item.code = None
                 new_location.place_locked_item(event_item)
-                #print("Placing event: " + event_item.name + " in location: " + location.name)
+                print("Placing event: " + event_item.name + " in location: " + location.name)
 
             new_region.locations.append(new_location)
         print("created " + str(len(new_region.locations)) + " locations")
@@ -253,7 +253,7 @@ class DSRWorld(World):
             
                 #print("found item in category: " + str(location.category))
                 item_data = item_dictionary[location.default_item_name]
-                if item_data.category in [DSRItemCategory.SKIP] or location.category in [DSRLocationCategory.EVENT]:
+                if item_data.category in [DSRItemCategory.SKIP] or location.category in location_skip_categories:# [DSRLocationCategory.EVENT]:
                     #print("Adding skip item: " + location.default_item_name)
                     skip_items.append(self.create_item(location.default_item_name))
                 elif location.category in self.enabled_location_categories:
@@ -315,9 +315,9 @@ class DSRWorld(World):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Firelink Shrine lit", self.player)
         
         set_rule(self.multiworld.get_location("Undead Asylum Cell Door opened", self.player), lambda state: state.has("Dungeon Cell Key", self.player))    
-        set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Northern Undead Asylum", self.player), lambda state: state.has("Undead Asylum Cell Door opened", self.player))      
+        set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
         set_rule(self.multiworld.get_location("Undead Asylum Big Pilgrim Door opened", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))  
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Firelink Shrine", self.player), lambda state: state.has("Undead Asylum Big Pilgrim Door opened", self.player))
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Firelink Shrine", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
         #set_rule(self.multiworld.get_entrance("Firelink Shrine -> Firelink Altar", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_location("Undead Burg Basement opened", self.player), lambda state: state.has("Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Lower Undead Burg", self.player), lambda state: state.has("Undead Burg Basement opened", self.player))
