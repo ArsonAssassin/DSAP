@@ -69,19 +69,24 @@ class DSRWorld(World):
         regions["Menu"] = self.create_region("Menu", [])
         regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in [
             "Undead Asylum Cell",
+            "Undead Asylum Cell Door",
             "Northern Undead Asylum", 
+            "Undead Asylum Big Pilgrim Door",
             "Firelink Shrine", 
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Undead Parish", 
-            "Firelink Shrine - After Undead Parish Elevator", 
+            "Firelink Shrine - After Undead Parish Elevator",
+            "Northern Undead Asylum - Second Visit F2 West Door",
             "Northern Undead Asylum - Second Visit Snuggly Trades",
             "Northern Undead Asylum - Second Visit Behind F2 West Door",
+            "Undead Burg Basement Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
             "Watchtower Basement",
             "Depths", 
             "Depths - After Sewer Chamber Key",
+            "Depths to Blighttown Door",
             "Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
@@ -96,10 +101,12 @@ class DSRWorld(World):
             "Anor Londo", 
             "Painted World of Ariamis",
             "Painted World of Ariamis - After Annex Key",
-            "Upper New Londo Ruins", 
+            "Upper New Londo Ruins",
+            "New Londo Ruins Door to the Seal",
             "Lower New Londo Ruins", 
             "The Abyss", 
             "The Duke's Archives", 
+            "The Duke's Archives Cell Door",
             "The Duke's Archives - Getting out of Cell",
             "The Duke's Archives - After Archive Prison Extra Key",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
@@ -116,7 +123,8 @@ class DSRWorld(World):
             "Royal Wood", 
             "Royal Wood - After Hawkeye Gough",
             "Oolacile Township", 
-            "Chasm of the Abyss",
+            "Oolacile Crest Key Door",
+            "Chasm of the Abyss", 
                 ]})
         
         # Connect Regions
@@ -127,9 +135,10 @@ class DSRWorld(World):
             print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
         create_connection("Menu", "Undead Asylum Cell")    
         
-        create_connection("Undead Asylum Cell", "Northern Undead Asylum")    
-        
-        create_connection("Northern Undead Asylum", "Firelink Shrine")
+        create_connection("Undead Asylum Cell", "Undead Asylum Cell Door") 
+        create_connection("Undead Asylum Cell Door", "Northern Undead Asylum")
+        create_connection("Northern Undead Asylum", "Undead Asylum Big Pilgrim Door")
+        create_connection("Undead Asylum Big Pilgrim Door", "Firelink Shrine")
 
         create_connection("Firelink Shrine", "Upper Undead Burg")
         create_connection("Firelink Shrine", "The Catacombs")
@@ -137,9 +146,10 @@ class DSRWorld(World):
         create_connection("Firelink Shrine - After Undead Parish Elevator", "Northern Undead Asylum - Second Visit Snuggly Trades")
         create_connection("Firelink Shrine", "Kiln of the First Flame")
         
-        create_connection("Northern Undead Asylum - Second Visit Snuggly Trades", "Northern Undead Asylum - Second Visit Behind F2 West Door")
-
-        create_connection("Upper Undead Burg", "Lower Undead Burg")
+        create_connection("Northern Undead Asylum - Second Visit Snuggly Trades", "Northern Undead Asylum - Second Visit F2 West Door")
+        create_connection("Northern Undead Asylum - Second Visit F2 West Door", "Northern Undead Asylum - Second Visit Behind F2 West Door")
+        
+        create_connection("Upper Undead Burg", "Undead Burg Basement Door")
         create_connection("Upper Undead Burg", "Undead Parish")
         create_connection("Upper Undead Burg", "Darkroot Basin")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Pine Resin Chest")
@@ -154,10 +164,12 @@ class DSRWorld(World):
         create_connection("Darkroot Garden", "Darkroot Basin")
         create_connection("Darkroot Garden", "Darkroot Garden - Behind Artorias Door")
 
+        create_connection("Undead Burg Basement Door", "Lower Undead Burg")
         create_connection("Lower Undead Burg", "Depths")
         create_connection("Lower Undead Burg", "Lower Undead Burg - After Residence Key")
 
-        create_connection("Upper New Londo Ruins", "Lower New Londo Ruins")
+        create_connection("Upper New Londo Ruins", "New Londo Ruins Door to the Seal")
+        create_connection("New Londo Ruins Door to the Seal", "Lower New Londo Ruins")
         
         create_connection("Upper New Londo Ruins", "Door between Upper New Londo and Valley of the Drakes")
         create_connection("Valley of the Drakes", "Door between Upper New Londo and Valley of the Drakes")
@@ -165,12 +177,13 @@ class DSRWorld(World):
         create_connection("Lower New Londo Ruins", "Valley of the Drakes")
 
         create_connection("Depths", "Depths - After Sewer Chamber Key")
-        create_connection("Depths", "Blighttown")
+        create_connection("Depths", "Depths to Blighttown Door")
 
         create_connection("Valley of the Drakes", "Blighttown")
         create_connection("Valley of the Drakes", "Darkroot Basin")
         create_connection("Valley of the Drakes", "Valley of the Drakes - After Defeating Four Kings")
 
+        create_connection("Depths to Blighttown Door", "Blighttown")
         create_connection("Blighttown", "Demon Ruins")
         create_connection("Blighttown", "The Great Hollow")
 
@@ -183,7 +196,8 @@ class DSRWorld(World):
         create_connection("Anor Londo", "Painted World of Ariamis")
         create_connection("Painted World of Ariamis", "Painted World of Ariamis - After Annex Key")
 
-        create_connection("The Duke's Archives", "The Duke's Archives - Getting out of Cell")
+        create_connection("The Duke's Archives", "The Duke's Archives Cell Door")
+        create_connection("The Duke's Archives Cell Door", "The Duke's Archives - Getting out of Cell")
         create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - After Archive Prison Extra Key")
         create_connection("The Duke's Archives - After Archive Prison Extra Key", "The Duke's Archives - After Archive Tower Giant Door Key")
         create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - Giant Cell")
@@ -203,7 +217,8 @@ class DSRWorld(World):
         create_connection("Sanctuary Garden", "Oolacile Sanctuary")
         create_connection("Oolacile Sanctuary", "Royal Wood")
         create_connection("Royal Wood", "Oolacile Township")
-        create_connection("Oolacile Township", "Royal Wood - After Hawkeye Gough")
+        create_connection("Oolacile Township", "Oolacile Crest Key Door")
+        create_connection("Oolacile Crest Key Door", "Royal Wood - After Hawkeye Gough")
         create_connection("Oolacile Township", "Chasm of the Abyss")
       
         
@@ -318,41 +333,32 @@ class DSRWorld(World):
             for location in region.locations:
                     set_rule(location, lambda state: True)        
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Firelink Shrine lit", self.player)
-        
-        set_rule(self.multiworld.get_location("Undead Asylum Cell Door opened", self.player), lambda state: state.has("Dungeon Cell Key", self.player))    
-        set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
-        set_rule(self.multiworld.get_location("Undead Asylum Big Pilgrim Door opened", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))  
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Firelink Shrine", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
-        set_rule(self.multiworld.get_location("Undead Burg Basement opened", self.player), lambda state: state.has("Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Lower Undead Burg", self.player), lambda state: state.has("Basement Key", self.player))
+          
+        set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Undead Asylum Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
+        set_rule(self.multiworld.get_entrance("Undead Asylum Big Pilgrim Door -> Firelink Shrine", self.player), lambda state: state.has("Asylum Demon Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Burg Basement Door", self.player), lambda state: state.has("Tauros Demon Defeated", self.player) and state.has ("Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))
-        set_rule(self.multiworld.get_location("New Londo Ruins -> Valley of the Drakes opened", self.player), lambda state: state.has("Master Key", self.player) or state.has("Key to New Londo Ruins", self.player))
         set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: state.has("Four Kings Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Parish", self.player), lambda state: (state.has("Tauros Demon Defeated", self.player) or state.has("Master Key", self.player) or state.has("Key to New Londo Ruins", self.player))
-        set_rule(self.multiworld.get_location("Undead Burg Watchtower Lower opened", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Parish", self.player), lambda state: (state.has("Tauros Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
-        set_rule(self.multiworld.get_location("Undead Asylum F2 West Door opened", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit Behind F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Depths", self.player), lambda state: state.has("Key to Depths", self.player))
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - After Residence Key", self.player), lambda state: state.has("Residence Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player))
-        set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player))
-        set_rule(self.multiworld.get_location("New Londo Ruins Door to the Seal opened", self.player), lambda state: state.has("Key to the Seal", self.player))
-        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Lower New Londo Ruins", self.player), lambda state: state.has("Key to the Seal", self.player) and state.has("Ornstein and Smough Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> Valley of the Drakes", self.player), lambda state: state.has("Key to the Seal", self.player))
+        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
+        set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
+        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> New Londo Ruins Door to the Seal", self player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
         set_rule(self.multiworld.get_entrance("Depths -> Depths - After Sewer Chamber Key", self.player), lambda state: state.has("Sewer Chamber Key", self.player))
-        set_rule(self.multiworld.get_location("Depths -> Blighttown opened", self.player), lambda state: state.has("Blighttown Key", self.player))
-        set_rule(self.multiworld.get_entrance("Depths -> Blighttown", self.player), lambda state: state.has("Blighttown Key", self.player))
+        set_rule(self.multiworld.get_entrance("Depths -> Depths to Blighttown Door", self.player), lambda state: state.has("Blighttown Key", self.player))
         set_rule(self.multiworld.get_entrance("Blighttown -> Demon Ruins", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Undead Parish -> Sen's Fortress", self.player), lambda state: state.has("Bell Gargoyles Defeated", self.player) and state.has("Chaos Witch Quelaag Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress -> Sen's Fortress - After Cage Key", self.player), lambda state: state.has("Cage Key", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress -> Anor Londo", self.player), lambda state: state.has("Iron Golem Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Anor Londo -> The Duke's Archives", self.player), lambda state: state.has("Lordvessel", self.player))
-        set_rule(self.multiworld.get_location("Duke's Archives Cell Door opened", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - Getting out of Cell", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Prison Extra Key -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
@@ -366,8 +372,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
         set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
-        set_rule(self.multiworld.get_location("Oolacile Crest Key Door opened", self.player), lambda state: state.has("Crest Key", self.player))
-        set_rule(self.multiworld.get_entrance("Oolacile Township -> Royal Wood - After Hawkeye Gough", self.player), lambda state: state.has("Crest Key", self.player))
+        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Crest Key Door", self.player), lambda state: state.has("Crest Key", self.player))
         
     def fill_slot_data(self) -> Dict[str, object]:
         slot_data: Dict[str, object] = {}

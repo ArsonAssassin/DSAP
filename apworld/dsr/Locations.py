@@ -45,19 +45,24 @@ class DSRLocation(Location):
 
         table_order = [
             "Undead Asylum Cell",
+            "Undead Asylum Cell Door",
             "Northern Undead Asylum", 
+            "Undead Asylum Big Pilgrim Door",
             "Firelink Shrine", 
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Undead Parish", 
-            "Firelink Shrine - After Undead Parish Elevator", 
+            "Firelink Shrine - After Undead Parish Elevator",
+            "Northern Undead Asylum - Second Visit F2 West Door",
             "Northern Undead Asylum - Second Visit Snuggly Trades",
             "Northern Undead Asylum - Second Visit Behind F2 West Door",
+            "Undead Burg Basement Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
             "Watchtower Basement",
             "Depths", 
             "Depths - After Sewer Chamber Key",
+            "Depths to Blighttown Door",
             "Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
@@ -72,10 +77,12 @@ class DSRLocation(Location):
             "Anor Londo", 
             "Painted World of Ariamis",
             "Painted World of Ariamis - After Annex Key",
-            "Upper New Londo Ruins", 
+            "Upper New Londo Ruins",
+            "New Londo Ruins Door to the Seal",
             "Lower New Londo Ruins", 
             "The Abyss", 
             "The Duke's Archives", 
+            "The Duke's Archives Cell Door",
             "The Duke's Archives - Getting out of Cell",
             "The Duke's Archives - After Archive Prison Extra Key",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
@@ -92,6 +99,7 @@ class DSRLocation(Location):
             "Royal Wood", 
             "Royal Wood - After Hawkeye Gough",
             "Oolacile Township", 
+            "Oolacile Crest Key Door",
             "Chasm of the Abyss", 
          ]
 
@@ -113,6 +121,8 @@ DSRLocationCategory.EVENT, DSRLocationCategory.DOOR, DSRLocationCategory.SKIP
 location_tables = {
 "Undead Asylum Cell": [
     DSRLocationData(11110000, f"Dungeon Cell Key", f"Dungeon Cell Key", DSRLocationCategory.SKIP),
+],
+"Undead Asylum Cell Door": [
     DSRLocationData(11110001, f"Undead Asylum Cell Door opened", f"Undead Asylum Cell Door opened", DSRLocationCategory.DOOR),
 ],
 "Northern Undead Asylum": [
@@ -125,9 +135,11 @@ location_tables = {
     DSRLocationData(11110008, f"Undead Asylum F2 East Door opened", f"Undead Asylum F2 East Door opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110009, f"Asylum Demon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(11110010, f"Big Pilgrim's Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110011, f"Undead Asylum Big Pilgrim Door opened", f"Undead Asylum Big Pilgrim Door opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110012, f"Soul of a Lost Undead - Corpse after Big Pilgrim Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-],     
+],   
+"Undead Asylum Big Pilgrim Door": [
+    DSRLocationData(11110011, f"Undead Asylum Big Pilgrim Door opened", f"Undead Asylum Big Pilgrim Door opened", DSRLocationCategory.DOOR),  
+],
 "Firelink Shrine": [
     DSRLocationData(11110013, f"Firelink Shrine lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110014, f"Firebomb - 6x Firebombs on Corpse", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -177,7 +189,6 @@ location_tables = {
     DSRLocationData(11110057, f"Soul of a Nameless Soldier - On Dragon Bridge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110058, f"Undead Burg - Sunlight Altar lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110059, f"Undead Burg Sunlight Altar opened", f"Undead Burg Sunlight Altar opened", DSRLocationCategory.DOOR),
-    DSRLocationData(11110101, f"Undead Burg Basement opened", f"Undead Burg Basement opened", DSRLocationCategory.DOOR),
 ],
 "Upper Undead Burg - Pine Resin Chest": [
     DSRLocationData(11110060, f"Gold Pine Resin - 3x Gold Pine Resin in Chest behind Locked Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -201,6 +212,9 @@ location_tables = {
 "Firelink Shrine - After Undead Parish Elevator": [
     DSRLocationData(11110075, f"Undead Asylum F2 West Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
+"Northern Undead Asylum - Second Visit F2 West Door": [
+    DSRLocationData(11110076, f"Undead Asylum F2 West Door opened", f"Undead Asylum F2 West Door opened", DSRLocationCategory.DOOR),    
+],
 "Northern Undead Asylum - Second Visit Behind F2 West Door": [    
     DSRLocationData(11110077, f"Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110078, f"Rusted Iron Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -208,7 +222,6 @@ location_tables = {
     DSRLocationData(11110080, f"Stray Demon Defeated", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Northern Undead Asylum - Second Visit Snuggly Trades": [
-    DSRLocationData(11110076, f"Undead Asylum F2 West Door opened", f"Undead Asylum F2 West Door opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110081, f"Souvenir of Reprisal - Trade in Pendant", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110082, f"Titanite Chunk - Trade in Rubbish", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110083, f"White Titanite Chunk - Trade in Sunlight Medal", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -230,6 +243,9 @@ location_tables = {
     DSRLocationData(11110099, f"Ring of Favor and Protection - Trade in Xanthous Crown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110100, f"Sorcery: Pursuers - Trade in Soul of Manus", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],  
+"Undead Burg Basement Door": [
+    DSRLocationData(11110101, f"Undead Burg Basement opened", f"Undead Burg Basement opened", DSRLocationCategory.DOOR),
+],
 "Lower Undead Burg": [
     DSRLocationData(11110102, f"Undead Burg -> Lower Undead Burg opened", f"Undead Burg -> Lower Undead Burg opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110103, f"Twin Humanities - Corpse to the Right of Torch Hollows", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -266,11 +282,13 @@ location_tables = {
     DSRLocationData(11110127, f"Gaping Dragon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(11110128, f"Blighttown Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110129, f"Warrior Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110130, f"Depths -> Blighttown opened", f"Depths -> Blighttown opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110131, f"Depths Bonfire Room opened", f"Depths Bonfire Room opened", DSRLocationCategory.DOOR),
 ],
 "Depths - After Sewer Chamber Key": [
     DSRLocationData(11110132, f"Depths lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+],
+"Depths to Blighttown Door": [
+    DSRLocationData(11110130, f"Depths -> Blighttown opened", f"Depths -> Blighttown opened", DSRLocationCategory.DOOR),
 ],
 "Blighttown": [
     DSRLocationData(11110133, f"Soul of a Proud Knight - End of Wooden Structure", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -513,6 +531,8 @@ location_tables = {
     DSRLocationData(11110345, f"Humanity - At the End of the Ledge up the Second Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110346, f"Rare Ring of Sacrifice", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110347, f"Composite Bow and Large Arrows", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"New Londo Ruins Door to the Seal": [
     DSRLocationData(11110348, f"New Londo Ruins Door to the Seal opened", f"New Londo Ruins Door to the Seal opened", DSRLocationCategory.DOOR),
 ],
 "Lower New Londo Ruins": [
@@ -539,6 +559,8 @@ location_tables = {
     DSRLocationData(11110365, f"Crstal Knight Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110366, f"Twinkling Titanite - Drop from Crystal Lizard in Tunnel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110367, f"Duke's Archives Cell lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+],
+"The Duke's Archives Cell Door": [
     DSRLocationData(11110368, f"Duke's Archives Cell Door opened", f"Duke's Archives Cell Door opened", DSRLocationCategory.DOOR),
 ],
 "The Duke's Archives - Getting out of Cell": [
@@ -741,8 +763,10 @@ location_tables = {
     DSRLocationData(11110536, f"Twin Humanities - Drop onto Roof", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110537, f"Soul of a Brave Warrior - Corpse in left Corner", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110538, f"Oolacile - Township Dungeon lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+],          
+"Oolacile Crest Key Door": [
     DSRLocationData(11110539, f"Oolacile Crest Key Door opened", f"Oolacile Crest Key Door opened", DSRLocationCategory.DOOR),
-],                        
+],
 "Chasm of the Abyss": [   
     DSRLocationData(11110540, f"Twinkling Titanite - Drop from Crystal Lizard near Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110541, f"Sorcery: Dark Bead", f"Firebomb", DSRLocationCategory.ITEM_LOT),
