@@ -55,11 +55,13 @@ class DSRLocation(Location):
             "Northern Undead Asylum - Second Visit Behind F2 West Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
+            "Watchtower Basement",
             "Depths", 
             "Depths - After Sewer Chamber Key",
             "Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
+            "Door between Upper New Londo and Valley of the Drakes",
             "Darkroot Basin", 
             "Darkroot Garden", 
             "Darkroot Garden - Behind Artorias Door", 
@@ -90,7 +92,6 @@ class DSRLocation(Location):
             "Royal Wood", 
             "Royal Wood - After Hawkeye Gough",
             "Oolacile Township", 
-            "Oolacile Township - After Crest Key",
             "Chasm of the Abyss", 
          ]
 

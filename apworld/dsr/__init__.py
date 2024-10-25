@@ -85,6 +85,7 @@ class DSRWorld(World):
             "Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
+            "Door between Upper New Londo and Valley of the Drakes",
             "Darkroot Basin", 
             "Darkroot Garden", 
             "Darkroot Garden - Behind Artorias Door", 
