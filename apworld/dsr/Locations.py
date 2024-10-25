@@ -46,7 +46,9 @@ class DSRLocation(Location):
         table_order = [
             "Undead Asylum Cell",
             "Undead Asylum Cell Door",
+            "Northern Undead Asylum F2 East Door",
             "Northern Undead Asylum", 
+            "Northern Undead Asylum - After F2 East Door",
             "Undead Asylum Big Pilgrim Door",
             "Firelink Shrine", 
             "Upper Undead Burg", 
@@ -90,6 +92,7 @@ class DSRLocation(Location):
             "Crystal Cave", 
             "The Duke's Archives - First Arena after Seath's Death", 
             "Demon Ruins", 
+            "Demon Ruins Shortcut",
             "Lost Izalith", 
             "The Catacombs", 
             "Tomb of the Giants", 
@@ -132,12 +135,15 @@ location_tables = {
     DSRLocationData(11110005, f"Undead Asylum - Interior lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110006, f"Estus Flask", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110007, f"Undead Asylum F2 East Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],     
+"Northern Undead Asylum F2 East Door": [
     DSRLocationData(11110008, f"Undead Asylum F2 East Door opened", f"Undead Asylum F2 East Door opened", DSRLocationCategory.DOOR),
+],   
+"Northern Undead Asylum - After F2 East Door": [
     DSRLocationData(11110009, f"Asylum Demon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(11110010, f"Big Pilgrim's Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110012, f"Soul of a Lost Undead - Outside Asylum", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-],     
-],   
+],
 "Undead Asylum Big Pilgrim Door": [
     DSRLocationData(11110011, f"Undead Asylum Big Pilgrim Door opened", f"Undead Asylum Big Pilgrim Door opened", DSRLocationCategory.DOOR),  
 ],
@@ -638,6 +644,9 @@ location_tables = {
     DSRLocationData(11110423, f"Orange Charred Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110424, f"Green Titanite Shard - Centipede Demon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
+"Demon Ruins Shortcut": [
+    DSRLocationData(11110439, f"Demon Ruins Shortcut opened", f"Demon Ruins Shortcut opened", DSRLocationCategory.DOOR),
+],
 "Lost Izalith": [
     DSRLocationData(11110426, f"Lost Izalith - Lava Pits lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110427, f"Soul of a Brave Warrior - Izalith Lava 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -652,7 +661,6 @@ location_tables = {
     DSRLocationData(11110436, f"Rare Ring of Sacrifice - Izalith City", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110437, f"Titanite Demon near Shortcut", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
     DSRLocationData(11110438, f"Twinkling Titanite - Drop from Twinkling Titanite near Titanite Demon", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
-    DSRLocationData(11110439, f"Demon Ruins Shortcut opened", f"Demon Ruins Shortcut opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110440, f"Red Titanite Chunk - Inside Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110441, f"Green Titanite Shard - Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110442, f"Soul of a Brave Warrior - Inside Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
