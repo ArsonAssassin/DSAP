@@ -79,11 +79,13 @@ class DSRWorld(World):
             "Northern Undead Asylum - Second Visit Behind F2 West Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
+            "Watchtower Basement",
             "Depths", 
             "Depths - After Sewer Chamber Key",
             "Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
+            "Door between Upper New Londo and Valley of the Drakes",
             "Darkroot Basin", 
             "Darkroot Garden", 
             "Darkroot Garden - Behind Artorias Door", 
@@ -114,7 +116,6 @@ class DSRWorld(World):
             "Royal Wood", 
             "Royal Wood - After Hawkeye Gough",
             "Oolacile Township", 
-            "Oolacile Township - After Crest Key",
             "Chasm of the Abyss",
                 ]})
         
@@ -142,6 +143,9 @@ class DSRWorld(World):
         create_connection("Upper Undead Burg", "Undead Parish")
         create_connection("Upper Undead Burg", "Darkroot Basin")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Pine Resin Chest")
+        
+        create_connection("Upper Undead Burg", "Watchtower Basement"),
+        create_connection("Darkroot Basin", "Watchtower Basement"),
 
         create_connection("Undead Parish", "Firelink Shrine - After Undead Parish Elevator")
         create_connection("Undead Parish", "Darkroot Garden")
@@ -153,8 +157,10 @@ class DSRWorld(World):
         create_connection("Lower Undead Burg", "Depths")
         create_connection("Lower Undead Burg", "Lower Undead Burg - After Residence Key")
 
-        create_connection("Upper New Londo Ruins", "Valley of the Drakes")
         create_connection("Upper New Londo Ruins", "Lower New Londo Ruins")
+        
+        create_connection("Upper New Londo Ruins", "Door between Upper New Londo and Valley of the Drakes")
+        create_connection("Valley of the Drakes", "Door between Upper New Londo and Valley of the Drakes")
 
         create_connection("Lower New Londo Ruins", "Valley of the Drakes")
 
@@ -197,8 +203,7 @@ class DSRWorld(World):
         create_connection("Sanctuary Garden", "Oolacile Sanctuary")
         create_connection("Oolacile Sanctuary", "Royal Wood")
         create_connection("Royal Wood", "Oolacile Township")
-        create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
-        create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
+        create_connection("Oolacile Township", "Royal Wood - After Hawkeye Gough")
         create_connection("Oolacile Township", "Chasm of the Abyss")
       
         
@@ -318,21 +323,22 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
         set_rule(self.multiworld.get_location("Undead Asylum Big Pilgrim Door opened", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))  
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Firelink Shrine", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
-        #set_rule(self.multiworld.get_entrance("Firelink Shrine -> Firelink Altar", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_location("Undead Burg Basement opened", self.player), lambda state: state.has("Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Lower Undead Burg", self.player), lambda state: state.has("Undead Burg Basement opened", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))
         set_rule(self.multiworld.get_location("New Londo Ruins -> Valley of the Drakes opened", self.player), lambda state: state.has("Master Key", self.player) or state.has("Key to New Londo Ruins", self.player))
         set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: state.has("Four Kings Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Parish", self.player), lambda state: (state.has("Tauros Demon Defeated", self.player) or state.has("New Londo Ruins -> Valley of the Drakes opened", self.player)))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Parish", self.player), lambda state: (state.has("Tauros Demon Defeated", self.player) or state.has("New Londo Ruins -> Valley of the Drakes opened", self.player))
         set_rule(self.multiworld.get_location("Undead Burg Watchtower Lower opened", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Darkroot Basin", self.player), lambda state: state.has("Undead Burg Watchtower Lower opened", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Undead Burg Watchtower Lower opened", self.player))
+        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Undead Burg Watchtower Lower opened", self.player))
         set_rule(self.multiworld.get_location("Undead Asylum F2 West Door opened", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit Behind F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Door opened", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Depths", self.player), lambda state: state.has("Key to Depths", self.player))
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - After Residence Key", self.player), lambda state: state.has("Residence Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Valley of the Drakes", self.player), lambda state: state.has("New Londo Ruins -> Valley of the Drakes opened", self.player))
+        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("New Londo Ruins -> Valley of the Drakes opened", self.player))
+        set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("New Londo Ruins -> Valley of the Drakes opened", self.player))
         set_rule(self.multiworld.get_location("New Londo Ruins Door to the Seal opened", self.player), lambda state: state.has("Key to the Seal", self.player))
         set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Lower New Londo Ruins", self.player), lambda state: state.has("New Londo Ruins Door to the Seal opened", self.player) and state.has("Ornstein and Smough Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> Valley of the Drakes", self.player), lambda state: state.has("New Londo Ruins Door to the Seal opened", self.player))
@@ -356,12 +362,12 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias Ring", self.player))
         set_rule(self.multiworld.get_entrance("Demon Ruins -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and state.has("Centipede Demon Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard(Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard(Seath)", self.player))
+        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard(Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard(Seath)", self.player) and state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
         set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
         set_rule(self.multiworld.get_location("Oolacile Crest Key Door opened", self.player), lambda state: state.has("Crest Key", self.player))
-        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Oolacile Crest Key Door opened", self.player))
+        set_rule(self.multiworld.get_entrance("Oolacile Township -> Royal Wood - After Hawkeye Gough", self.player), lambda state: state.has("Oolacile Crest Key Door opened", self.player))
         
     def fill_slot_data(self) -> Dict[str, object]:
         slot_data: Dict[str, object] = {}
