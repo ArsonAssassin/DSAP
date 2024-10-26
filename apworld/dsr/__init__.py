@@ -120,6 +120,8 @@ class DSRWorld(World):
             "Demon Ruins Shortcut",
             "Lost Izalith", 
             "The Catacombs", 
+            "The Catacombs - Door 1",
+            "The Catacombs - After Door 1",
             "Tomb of the Giants", 
             "Tomb of the Giants - Behind Golden Fog Gate",
             "Kiln of the First Flame", 
@@ -212,7 +214,9 @@ class DSRWorld(World):
         create_connection("The Duke's Archives", "The Duke's Archives - First Arena after Seath's Death")
         create_connection("Crystal Cave", "The Duke's Archives - First Arena after Seath's Death")
 
-        create_connection("The Catacombs", "Tomb of the Giants")
+        create_connection("The Catacombs", "The Catacombs - Door 1")
+        create_connection("The Catacombs - Door 1", "The Catacombs - After Door 1")
+        create_connection("The Catacombs - After Door 1", "Tomb of the Giants")
         create_connection("Tomb of the Giants", "Tomb of the Giants - Behind Golden Fog Wall")
 
         create_connection("Lower New Londo Ruins", "The Abyss")
@@ -377,12 +381,13 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: self.multiworld.get_location("Seath the Scaleless Defeated", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Anor Londo -> Painted World of Ariamis", self.player), lambda state: state.has("Peculiar Doll", self.player))
         set_rule(self.multiworld.get_entrance("Painted World of Ariamis -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
-        set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
+        #set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias Ring", self.player))
         set_rule(self.multiworld.get_entrance("Demon Ruins" -> "Demon Ruins - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
         #set_rule(self.multiworld.get_entrance("Demon Ruins Shortcut -> Lost Izalith", self.player), lambda state: self.multiworld.get_location("Bed of Chaos Defeated", self.player).can_reach(state))
         #set_rule(self.multiworld.get_entrance("Demon Ruins - Behind Golden Fog Wall -> Demon Ruins Shortcut", self.player), lambda state: self.multiworld.get_location("Demon Ruins Shortcut opened", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Demon Ruins -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and self.multiworld.get_location("Centipede Demon Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("The Catacombs - After Door 1" -> "Tomb of the Giants", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Tomb of the Giants" -> "Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) and state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))

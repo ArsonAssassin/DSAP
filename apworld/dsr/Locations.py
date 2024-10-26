@@ -97,6 +97,8 @@ class DSRLocation(Location):
             "Demon Ruins Shortcut",
             "Lost Izalith", 
             "The Catacombs", 
+            "The Catacombs - Door 1",
+            "The Catacombs - After Door 1",
             "Tomb of the Giants", 
             "Tomb of the Giants - Behind Golden Fog Gate",
             "Kiln of the First Flame", 
@@ -675,7 +677,10 @@ location_tables = {
 ],
 "The Catacombs": [
     DSRLocationData(11110448, f"Catacombs - Necromancer Cave lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+"The Catacombs - Door 1": [
     DSRLocationData(11110449, f"Catacombs Door 1 opened", f"Catacombs Door 1 opened", DSRLocationCategory.DOOR),
+],
+"The Catacombs - After Door 1": [    
     DSRLocationData(11110450, f"Lucerne", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110451, f"Large Soul of a Nameless Soldier - Catacombs 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110452, f"Soul of a Proud Knight - Catacombs 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
