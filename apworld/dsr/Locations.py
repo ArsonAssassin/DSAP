@@ -131,7 +131,6 @@ location_tables = {
 "Northern Undead Asylum": [
     DSRLocationData(11110002, f"Undead Asylum - Courtyard lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110003, f"Undead Asylum - Boss Door opened", f"Undead Asylum - Boss Door opened", DSRLocationCategory.DOOR),
-    DSRLocationData(11110004, f"Demon's Great Hammer", f"Firebomb", DSRLocationCategory.ITEM_LOT), #needs to be removed
     DSRLocationData(11110005, f"Undead Asylum - Interior lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110006, f"Estus Flask", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110007, f"Undead Asylum F2 East Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -184,10 +183,10 @@ location_tables = {
     DSRLocationData(11110044, f"Light Crossbow and Standard Bolts", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110045, f"Black Firebomb - Side House Chest", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110046, f"Soul of a Lost Undead - Firebomb Throwers", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110047, f"Black Knight guarding Blue Tearstone Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110047, f"Black Knight guarding Blue Tearstone Ring", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110048, f"Blue Tearstone Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110049, f"Havel's Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110050, f"Crystal Lizard hidden in Barrel", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110050, f"Crystal Lizard hidden in Barrel", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110051, f"Undead Burg Watchtower Upper opened", f"Undead Burg Watchtower Upper opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110053, f"Tauros Demon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(11110054, f"Large Soul of a Lost Undead - After Tauros", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -201,7 +200,7 @@ location_tables = {
     DSRLocationData(11110060, f"Gold Pine Resin - 3x Gold Pine Resin in Chest behind Locked Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Undead Parish": [
-    DSRLocationData(11110061, f"Black Knight in Tower", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110061, f"Black Knight in Tower", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110062, f"Alluring Skull", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110063, f"Mystery Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110064, f"Large Soul of a Lost Undead - Hollow Room Rafters", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -209,12 +208,12 @@ location_tables = {
     DSRLocationData(11110066, f"Undead Parish lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110067, f"Halberd", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110068, f"Basement Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110069, f"Berenike Knight", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110069, f"Berenike Knight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110070, f"Fire Keeper Soul - Undead Parish", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110071, f"Large Soul of a Nameless Soldier - Parish Window", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110072, f"Humanity - Parish Barrel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110073, f"Bell Gargoyles Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(11110074, f"Homeward Bone - After First Bell", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Bell Event not item
+    #DSRLocationData(11110074, f"Homeward Bone - Ringing First Bell", f"Firebomb", DSRLocationCategory.EVENT),
 ],
 "Firelink Shrine - After Undead Parish Elevator": [
     DSRLocationData(11110075, f"Undead Asylum F2 West Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -343,7 +342,7 @@ location_tables = {
     DSRLocationData(11110174, f"Astora's Straight Sword", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110175, f"Dragon Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110176, f"Soul of a Proud Knight - Undead Dragon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110177, f"Undead Dragon in Valley of the Drakes", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110177, f"Undead Dragon in Valley of the Drakes", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110178, f"Humanity - Corpse in Small Cave", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110179, f"Brigand Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110180, f"Spider Shield - Brigand Armor Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -357,17 +356,17 @@ location_tables = {
     DSRLocationData(11110331, f"New Londo Ruins -> Valley of the Drakes opened", f"New Londo Ruins -> Valley of the Drakes opened", DSRLocationCategory.DOOR),
 ],
 "Darkroot Basin": [
-    DSRLocationData(11110184, f"Crystal Lizard near Hunter Set", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110184, f"Crystal Lizard near Hunter Set", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110185, f"Hunter Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110186, f"Longbow and Feather Arrows", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110187, f"Grass Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110188, f"Black Knight near Bonfire", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110188, f"Black Knight near Bonfire", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110189, f"Darkroot Basin lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110190, f"Knight Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110191, f"Dusk Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Darkroot Garden": [
-    DSRLocationData(11110192, f"Titanite Demon below Andre", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110192, f"Titanite Demon below Andre", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110193, f"Large Soul of a Nameless Soldier - Darkroot Cliff", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110194, f"Darkroot Garden lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110195, f"Large Soul of a Nameless Soldier - Darkroot Ambush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -382,7 +381,7 @@ location_tables = {
 ],
 "Darkroot Garden - Behind Artorias Door": [
     DSRLocationData(11110204, f"Stone Knight Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110205, f"Shiva Loot", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Eastern Set?
+    DSRLocationData(11110205, f"Shiva Loot", f"Firebomb", DSRLocationCategory.ITEM_LOT), 
     DSRLocationData(11110206, f"Humanity - Shiva", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110207, f"Pharis Loot", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110208, f"Twin Humanities - Pharis", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -394,15 +393,15 @@ location_tables = {
 ],
 "The Great Hollow": [
     DSRLocationData(11110214, f"The Great Hollow lit", f"Firebomb", DSRLocationCategory.BONFIRE),
-    DSRLocationData(11110215, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 1)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #All
-    DSRLocationData(11110216, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 2)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Of
-    DSRLocationData(11110217, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 3)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #These
-    DSRLocationData(11110218, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 4)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Are
-    DSRLocationData(11110219, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 5)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemies
-    DSRLocationData(11110220, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 6)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Instead
-    DSRLocationData(11110221, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 7)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Of
-    DSRLocationData(11110222, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 8)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Items
-    DSRLocationData(11110223, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 9)", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Fuck the Great Hollow
+    DSRLocationData(11110215, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 1)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110216, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 2)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110217, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 3)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110218, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 4)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110219, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 5)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110220, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 6)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110221, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 7)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110222, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 8)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110223, f"Twinkling Titanite - Drop from Crystal Lizard (Random Spawn 9)", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110224, f"Chloranthy Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110225, f"Large Soul of a Nameless Soldier - Great Hallow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
@@ -417,10 +416,10 @@ location_tables = {
 "Sen's Fortress": [
     DSRLocationData(11110232, f"Sen's Fortress Main Gate opened", f"Sen's Fortress Main Gate opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110233, f"Soul of a Brave Warrior - Sen's Fortress Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110234, f"Demon Titanite - Drop from Titanite Demon in Pit 1", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
-    DSRLocationData(11110235, f"Demon Titanite - Drop from Titanite Demon in Pit 2", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
-    DSRLocationData(11110236, f"Demon Titanite - Drop from Titanite Demon in Pit 3", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
-    DSRLocationData(11110237, f"Demon Titanite - Drop from Titanite Demon in Pit 4", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Take a wild guess, buddy
+    DSRLocationData(11110234, f"Demon Titanite - Drop from Titanite Demon in Pit 1", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110235, f"Demon Titanite - Drop from Titanite Demon in Pit 2", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110236, f"Demon Titanite - Drop from Titanite Demon in Pit 3", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110237, f"Demon Titanite - Drop from Titanite Demon in Pit 4", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110238, f"Soul of a Brave Warrior - Sen's Fortress Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110239, f"Scythe", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110240, f"Large Titanite Shard - Sen's Fortress Trap Chest", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -428,7 +427,6 @@ location_tables = {
     DSRLocationData(11110242, f"Shotel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110243, f"Covetous Gold Serpent Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110244, f"Lightning Spear", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110245, f"Soul of a Hero - Inside Cage", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Is this the same as the new one after cage key?
     DSRLocationData(11110246, f"Large Soul of a Proud Knight - Sen's Fortress Ball Dropdown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110247, f"Black Sorcerer Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110248, f"Sorcery: Hush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -469,7 +467,7 @@ location_tables = {
     DSRLocationData(11110278, f"Havel's Greatshield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110279, f"Occult Club", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110280, f"Soul of a Hero - Anor Londo Rooms", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110281, f"Titanite Demon below Balcony", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110281, f"Titanite Demon below Balcony", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110282, f"Gold Coin - Anor Londo Mimic", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110283, f"Silver Coin - Anor Londo Mimic", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110284, f"Demon Titanite - Anor Londo Bedroom", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -492,17 +490,16 @@ location_tables = {
     DSRLocationData(11110299, f"Painted World lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110300, f"Humanity - Painted World hanging body", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110301, f"Soul of a Proud Knight - Painted World corvid ambush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110302, f"Twin Humanities", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Doesn't have Flag Id. Apparently might be the old dried finger?
+    #DSRLocationData(11110302, f"Twin Humanities", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Doesn't have Flag Id. Apparently might be the old dried finger?
     DSRLocationData(11110303, f"Soul of a Brave Warrior - Painted World 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110304, f"Soul of a Brave Warrior - Painted World Albino Rats", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110305, f"Painting Guardian Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110306, f"Egg Vermifuge - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110307, f"Velka's Rapier", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110308, f"Large Soul of a Proud Knight - Painted World 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110309, f"Dark Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Should be behind annex key
     DSRLocationData(11110310, f"Red Sign Soapstone", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110311, f"Soul of a Brave Warrior - Painted World tower", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110312, f"Undead Dragon in Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110312, f"Undead Dragon in Painted World", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110313, f"Bloodshield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110314, f"Large Soul of a Proud Knight - Painted World Undead Dragon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110315, f"Soul of a Proud Knight - Jeremiah 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -514,12 +511,13 @@ location_tables = {
     DSRLocationData(11110321, f"Pyromancy: Fire Surge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110322, f"Annex Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110323, f"Humanity - Painted World Courtyard", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110324, f"Large Titanite Shard", f"Firebomb", DSRLocationCategory.ITEM_LOT), #?????? Not a thing?
+    #DSRLocationData(11110324, f"Large Titanite Shard", f"Firebomb", DSRLocationCategory.ENEMY_DROP), #Drop from Tower Knight, No flag
     DSRLocationData(11110325, f"Crossbreed Priscilla Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(11110326, f"Soul of Priscilla", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110327, f"Xanthous Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Painted World of Ariamis - After Annex Key": [
+    DSRLocationData(11110309, f"Dark Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110328, f"Miracle: Vow of Silence", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110329, f"Velka's Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110330, f"Gold Coin - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -563,12 +561,12 @@ location_tables = {
 ],
 "The Duke's Archives": [
     DSRLocationData(11110360, f"Duke's Archives - Entrance lit", f"Firebomb", DSRLocationCategory.BONFIRE),
-    DSRLocationData(11110361, f"Broken Pendant", f"Firebomb", DSRLocationCategory.ITEM_LOT), #No Item flag, so should be a check for the golem....Enemy not Item
+    #DSRLocationData(11110361, f"Broken Pendant", f"Firebomb", DSRLocationCategory.ENEMY_DROP), #No Item flag, so should be a check for the golem....Enemy not Item
     DSRLocationData(11110362, f"Soul of a Brave Warrior - Archives Under Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110363, f"Twinkling Titanite - Archives Chest", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110364, f"Twinkling Titanite - Archives balcony", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110365, f"Crstal Knight Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT), #I think this drops from the crystal guy? No flag, so Enemy not Item
-    DSRLocationData(11110366, f"Twinkling Titanite - Drop from Crystal Lizard in Tunnel", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110364, f"Twinkling Titanite - Archives Balcony", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110365, f"Crstal Knight Shield", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110366, f"Twinkling Titanite - Drop from Crystal Lizard in Tunnel", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110367, f"Duke's Archives Cell lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "The Duke's Archives Cell Door": [
@@ -579,14 +577,14 @@ location_tables = {
     DSRLocationData(11110370, f"Archive Prison Extra Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "The Duke's Archives - After Archive Prison Extra Key": [    
-    DSRLocationData(11110371, f"Large Soul of a Proud Knight - In Reah's Cell", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Doesn't exist? Or not proud knight
+    DSRLocationData(11110371, f"Large Soul of a Brave Warrior - In Reah's Cell", f"Firebomb", DSRLocationCategory.ITEM_LOT), 
     DSRLocationData(11110372, f"Maiden Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110373, f"White Seance Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110374, f"Large Soul of a Brave Warrior - Archives Cell", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110375, f"Soul of a Brave Warrior - Archives Cell Scafolding", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110376, f"Archive Tower Giant Door Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110377, f"Miracle: Soothing Sunlight", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
-    DSRLocationData(11110378, f"Miracle: Bountiful Sunlight", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110377, f"Miracle: Soothing Sunlight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110378, f"Miracle: Bountiful Sunlight", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],
 "The Duke's Archives - After Archive Tower Giant Door Key": [    
     DSRLocationData(11110379, f"Avelyn", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -609,9 +607,9 @@ location_tables = {
 "Crystal Cave": [
     DSRLocationData(11110393, f"Humanity - Crystal Caverns", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110394, f"Blue Titanite Chunk - Crystal Caverns", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110395, f"Twinkling Titanite - Drop from first Crystal Lizard", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy
-    DSRLocationData(11110396, f"Twinkling Titanite - Drop from second Crystal Lizard", f"Firebomb", DSRLocationCategory.ITEM_LOT), #not
-    DSRLocationData(11110397, f"Twinkling Titanite - Drop from third Crystal Lizard", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Item
+    DSRLocationData(11110395, f"Twinkling Titanite - Drop from first Crystal Lizard", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110396, f"Twinkling Titanite - Drop from second Crystal Lizard", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+    DSRLocationData(11110397, f"Twinkling Titanite - Drop from third Crystal Lizard", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110398, f"Blue Titanite Slab - Crystal Caverns", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110399, f"Soul of a Hero - Crystal Caverns", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110400, f"Seath the Scaleless Defeated", f"Firebomb", DSRLocationCategory.BOSS),
@@ -629,14 +627,13 @@ location_tables = {
     DSRLocationData(11110408, f"Large Soul of a Proud Knight - First Jump over the Lava", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110409, f"Chaos Flame Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110410, f"Soul of a Proud Knight - Ceased Discharge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110411, f"Thorns Set", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Should be in Lost Izalith since you need to kill him there for the third time for it to spawn
     DSRLocationData(11110412, f"Demon Ruins - Staircase lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110413, f"Green Titanite Shard - 2x Green Titanite Shards under the Staircase", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110414, f"Soul of a Proud Knight - Demon Ruins bonfire", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110415, f"Large Flame Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110416, f"Soul of a Brave Warrior - Capra Outside Firesage", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110417, f"Demon Firesage Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(11110418, f"Demon's Catalyst", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Isn't this a non-guarenteed drop by him? No Flag in the Json, shouldn't be here
+    #DSRLocationData(11110418, f"Demon's Catalyst", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Isn't this a non-guarenteed drop by him? No Flag in the Json, shouldn't be here
     DSRLocationData(11110419, f"Soul of a Brave Warrior - Ruins/Domain shortcut", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110420, f"Soul of a Brave Warrior - Chaos Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110421, f"Demon Ruins - Catacombs lit", f"Firebomb", DSRLocationCategory.BONFIRE),
@@ -648,6 +645,7 @@ location_tables = {
     DSRLocationData(11110439, f"Demon Ruins Shortcut opened", f"Demon Ruins Shortcut opened", DSRLocationCategory.DOOR),
 ],
 "Lost Izalith": [
+    DSRLocationData(11110411, f"Thorns Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110426, f"Lost Izalith - Lava Pits lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110427, f"Soul of a Brave Warrior - Izalith Lava 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110428, f"Soul of a Brave Warrior - Izalith Lava 2", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -659,8 +657,8 @@ location_tables = {
     DSRLocationData(11110434, f"Large Soul of a Brave Warrior - Izalith City", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110435, f"Soul of a Hero - Izalith City", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110436, f"Rare Ring of Sacrifice - Izalith City", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110437, f"Titanite Demon near Shortcut", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
-    DSRLocationData(11110438, f"Twinkling Titanite - Drop from Twinkling Titanite near Titanite Demon", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110437, f"Titanite Demon near Shortcut", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110438, f"Twinkling Titanite - Drop from Twinkling Titanite near Titanite Demon", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110440, f"Red Titanite Chunk - Inside Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110441, f"Green Titanite Shard - Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110442, f"Soul of a Brave Warrior - Inside Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -676,8 +674,8 @@ location_tables = {
     DSRLocationData(11110450, f"Lucerne", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110451, f"Large Soul of a Nameless Soldier - Catacombs 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110452, f"Soul of a Proud Knight - Catacombs 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110453, f"Twinkling Titanite - Drop from Crystal Lizard further up the Staircase", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
-    DSRLocationData(11110454, f"Twinkling Titanite - Drop from Crystal Lizard further down the Staircase", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110453, f"Twinkling Titanite - Drop from Crystal Lizard further up the Staircase", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110454, f"Twinkling Titanite - Drop from Crystal Lizard further down the Staircase", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110455, f"Soul of a Proud Knight - Catacombs 2", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110456, f"Soul of a Proud Knight - Catacombs 3", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110457, f"Great Scythe", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -686,13 +684,14 @@ location_tables = {
     DSRLocationData(11110460, f"Green Titanite Shard - On Platform near Vamos", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110461, f"Catacombs - Vamos lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110462, f"Miracle: Tranquil Walk of Peace", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110463, f"Titanite Demon near Tomb", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110463, f"Titanite Demon near Tomb", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110464, f"Eye of Death - Catacombs Titanite Demon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110465, f"Large Soul of a Nameless Soldier - Catacombs 2", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110466, f"Soul of a Proud Knight - Catacombs 4", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110467, f"White Titanite Chunk - Drop from Axe-wielding Black Knight", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110467, f"White Titanite Chunk - Drop from Axe-wielding Black Knight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110468, f"Large Soul of a Nameless Soldier - Catacombs Above Bonewheels", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110469, f"Holy Set", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Does the mace come with this? Flag is directly after so needs to be added if yes.
+    DSRLocationData(11110469, f"Holy Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110552, f"Mace", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110470, f"Pinwheel Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     DSRLocationData(11110471, f"Rite of Kindling", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110472, f"Soul of a Proud Knight - Above Pinwheel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -710,9 +709,9 @@ location_tables = {
     DSRLocationData(11110482, f"Effigy Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110483, f"Tomb of the Giants lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110484, f"Covetous Silver Serpent Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110485, f"White Titanite Chunk - Drop from Halberd-wielding Black Knight", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110485, f"White Titanite Chunk - Drop from Halberd-wielding Black Knight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110486, f"Soul of a Brave Warrior - Lower Tomb of the Giants 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110487, f"Twinkling Titanite - Drop from Crystal Lizard near Paladin", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Enemy not Item
+    DSRLocationData(11110487, f"Twinkling Titanite - Drop from Crystal Lizard near Paladin", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110488, f"Paladin Leeroy Loot", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110489, f"Humanity - Paladin Leeroy", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110490, f"White Titanite Slab - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
