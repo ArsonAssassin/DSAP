@@ -116,14 +116,14 @@ class DSRWorld(World):
             "Crystal Cave", 
             "The Duke's Archives - First Arena after Seath's Death", 
             "Demon Ruins", 
-            "Demon Ruins - Behind Golden Fog Gate",
+            "Demon Ruins - Behind Golden Fog Wall",
             "Demon Ruins Shortcut",
             "Lost Izalith", 
             "The Catacombs", 
             "The Catacombs - Door 1",
             "The Catacombs - After Door 1",
             "Tomb of the Giants", 
-            "Tomb of the Giants - Behind Golden Fog Gate",
+            "Tomb of the Giants - Behind Golden Fog Wall",
             "Kiln of the First Flame", 
             "Sanctuary Garden", 
             "Oolacile Sanctuary", 
@@ -133,7 +133,7 @@ class DSRWorld(World):
             "Oolacile Township - After Crest Key",
             "Chasm of the Abyss", 
                 ]})
-        
+       
         # Connect Regions
         def create_connection(from_region: str, to_region: str, rule = None):
             connection = Entrance(self.player, f"{from_region} -> {to_region}", regions[from_region])
@@ -163,8 +163,8 @@ class DSRWorld(World):
         create_connection("Upper Undead Burg", "Darkroot Basin")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Pine Resin Chest")
         
-        create_connection("Upper Undead Burg", "Watchtower Basement"),
-        create_connection("Darkroot Basin", "Watchtower Basement"),
+        create_connection("Upper Undead Burg", "Watchtower Basement")
+        create_connection("Darkroot Basin", "Watchtower Basement")
 
         create_connection("Undead Parish", "Firelink Shrine - After Undead Parish Elevator")
         create_connection("Undead Parish", "Darkroot Garden")
@@ -181,7 +181,7 @@ class DSRWorld(World):
         create_connection("New Londo Ruins Door to the Seal", "Lower New Londo Ruins")
         
         create_connection("Upper New Londo Ruins", "Door between Upper New Londo and Valley of the Drakes")
-        create_connection("Valley of the Drakes", "Door between Upper New Londo and Valley of the Drakes")
+        create_connection("Door between Upper New Londo and Valley of the Drakes", "Valley of the Drakes")
 
         create_connection("Lower New Londo Ruins", "Valley of the Drakes")
 
@@ -224,7 +224,7 @@ class DSRWorld(World):
         create_connection("Demon Ruins", "Demon Ruins - Behind Golden Fog Wall")
         create_connection("Demon Ruins - Behind Golden Fog Wall", "Lost Izalith")
         create_connection("Demon Ruins - Behind Golden Fog Wall", "Demon Ruins Shortcut")
-        create_connection("Demon Ruins Shortcut", "Lost Izalith")
+        create_connection("Lost Izalith", "Demon Ruins Shortcut")
 
 
         # DLC Entrances
@@ -354,46 +354,9 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Undead Asylum Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
 
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Burg Basement Door", self.player), lambda state: self.multiworld.get_location("Tauros Demon Defeated", self.player).can_reach(state) and state.has ("Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))
-        set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: self.multiworld.get_location("Four Kings Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))        
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Parish", self.player), lambda state: self.multiworld.get_location("Tauros Demon Defeated", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
-        set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
-        set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Depths", self.player), lambda state: state.has("Key to Depths", self.player))
-        set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - After Residence Key", self.player), lambda state: state.has("Residence Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
-        set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> New Londo Ruins Door to the Seal", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state) and state.has("Key to the Seal", self.player))
-        set_rule(self.multiworld.get_entrance("Depths -> Depths - After Sewer Chamber Key", self.player), lambda state: state.has("Sewer Chamber Key", self.player))
-        set_rule(self.multiworld.get_entrance("Depths -> Depths to Blighttown Door", self.player), lambda state: state.has("Blighttown Key", self.player))
-        set_rule(self.multiworld.get_entrance("Blighttown -> Demon Ruins", self.player), lambda state: self.multiworld.get_location("Chaos Witch Quelaag Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
-        set_rule(self.multiworld.get_entrance("Undead Parish -> Sen's Fortress", self.player), lambda state: self.multiworld.get_location("Bell Gargoyles Defeated", self.player).can_reach(state) and self.multiworld.get_location("Chaos Witch Quelaag Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Sen's Fortress -> Sen's Fortress - After Cage Key", self.player), lambda state: state.has("Cage Key", self.player))
-        set_rule(self.multiworld.get_entrance("Sen's Fortress -> Anor Londo", self.player), lambda state: self.multiworld.get_location("Iron Golem Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Anor Londo -> The Duke's Archives", self.player), lambda state: state.has("Lordvessel", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Prison Extra Key -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: self.multiworld.get_location("Seath the Scaleless Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Anor Londo -> Painted World of Ariamis", self.player), lambda state: state.has("Peculiar Doll", self.player))
-        set_rule(self.multiworld.get_entrance("Painted World of Ariamis -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
-        #set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias Ring", self.player))
-        set_rule(self.multiworld.get_entrance("Demon Ruins" -> "Demon Ruins - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
-        #set_rule(self.multiworld.get_entrance("Demon Ruins Shortcut -> Lost Izalith", self.player), lambda state: self.multiworld.get_location("Bed of Chaos Defeated", self.player).can_reach(state))
-        #set_rule(self.multiworld.get_entrance("Demon Ruins - Behind Golden Fog Wall -> Demon Ruins Shortcut", self.player), lambda state: self.multiworld.get_location("Demon Ruins Shortcut opened", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Demon Ruins -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and self.multiworld.get_location("Centipede Demon Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("The Catacombs - After Door 1" -> "Tomb of the Giants", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Tomb of the Giants" -> "Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
-        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) and state.has("Lordvessel", self.player))
-        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
-        set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: self.multiworld.get_location("Sanctuary Guardian Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: self.multiworld.get_location("Artorias the Abysswalker Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         
         set_rule(self.multiworld.get_location("Souvenir of Reprisal - Snuggly Trade", self.player), lambda state: state.has("Pendant", self.player))
         set_rule(self.multiworld.get_location("Titanite Chunk - Snuggly Trade", self.player), lambda state: state.has("Rubbish", self.player))
@@ -415,6 +378,50 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_location("Divine Blessing - Snuggly Trade", self.player), lambda state: state.has("Ring of the Sun Princess", self.player))
         set_rule(self.multiworld.get_location("Ring of Favor and Protection - Snuggly Trade", self.player), lambda state: state.has("Xanthous Crown", self.player))
         set_rule(self.multiworld.get_location("Sorcery: Pursuers - Snuggly Trade", self.player), lambda state: state.has("Soul of Manus", self.player))
+        
+        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
+        set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
+        set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Depths", self.player), lambda state: state.has("Key to Depths", self.player))
+        set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - After Residence Key", self.player), lambda state: state.has("Residence Key", self.player))
+        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
+        set_rule(self.multiworld.get_entrance("Door between Upper New Londo and Valley of the Drakes -> Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
+
+        set_rule(self.multiworld.get_entrance("Depths -> Depths - After Sewer Chamber Key", self.player), lambda state: state.has("Sewer Chamber Key", self.player))
+        set_rule(self.multiworld.get_entrance("Depths -> Depths to Blighttown Door", self.player), lambda state: state.has("Blighttown Key", self.player))
+        set_rule(self.multiworld.get_entrance("Blighttown -> Demon Ruins", self.player), lambda state: self.multiworld.get_location("Chaos Witch Quelaag Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
+        
+        set_rule(self.multiworld.get_entrance("Undead Parish -> Sen's Fortress", self.player), lambda state: self.multiworld.get_location("Bell Gargoyles Defeated", self.player).can_reach(state) and self.multiworld.get_location("Chaos Witch Quelaag Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Sen's Fortress -> Sen's Fortress - After Cage Key", self.player), lambda state: state.has("Cage Key", self.player))
+        set_rule(self.multiworld.get_entrance("Sen's Fortress -> Anor Londo", self.player), lambda state: self.multiworld.get_location("Iron Golem Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Anor Londo -> The Duke's Archives", self.player), lambda state: state.has("Lordvessel", self.player))
+        
+        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> New Londo Ruins Door to the Seal", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state) and state.has("Key to the Seal", self.player))
+        set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: self.multiworld.get_location("Four Kings Defeated", self.player).can_reach(state))
+                
+        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Prison Extra Key -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: self.multiworld.get_location("Seath the Scaleless Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Anor Londo -> Painted World of Ariamis", self.player), lambda state: state.has("Peculiar Doll", self.player))
+        set_rule(self.multiworld.get_entrance("Painted World of Ariamis -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
+        #set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias", self.player))
+        set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Lost Izalith -> Demon Ruins Shortcut", self.player), lambda state: self.multiworld.get_location("Bed of Chaos Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Demon Ruins - Behind Golden Fog Wall -> Demon Ruins Shortcut", self.player), lambda state: self.multiworld.get_location("Demon Ruins Shortcut opened", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Demon Ruins - Behind Golden Fog Wall -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and self.multiworld.get_location("Centipede Demon Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("The Catacombs - After Door 1 -> Tomb of the Giants", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Tomb of the Giants -> Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) and state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
+        set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: self.multiworld.get_location("Sanctuary Guardian Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: self.multiworld.get_location("Artorias the Abysswalker Defeated", self.player).can_reach(state))
+        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
+        
+ 
         
     def fill_slot_data(self) -> Dict[str, object]:
         slot_data: Dict[str, object] = {}
