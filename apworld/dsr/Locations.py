@@ -10,7 +10,8 @@ class DSRLocationCategory(IntEnum):
     BOSS = 2,
     BONFIRE = 3,
     DOOR = 4,
-    ITEM_LOT = 5
+    ITEM_LOT = 5,
+    ENEMY_DROP = 6
 
 
 class DSRLocationData(NamedTuple):
@@ -102,7 +103,7 @@ class DSRLocation(Location):
             "Royal Wood", 
             "Royal Wood - After Hawkeye Gough",
             "Oolacile Township", 
-            "Oolacile Crest Key Door",
+            "Oolacile Township - After Crest Key",
             "Chasm of the Abyss", 
          ]
 
@@ -524,7 +525,6 @@ location_tables = {
     DSRLocationData(11110330, f"Gold Coin - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Upper New Londo Ruins": [
-    DSRLocationData(11110331, f"New Londo Ruins -> Valley of the Drakes opened", f"New Londo Ruins -> Valley of the Drakes opened", DSRLocationCategory.DOOR),
     DSRLocationData(11110332, f"Soul of a Nameless Soldier - New Londo Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110333, f"Estoc", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110334, f"Transient Curse - Before Ghosts", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -557,7 +557,7 @@ location_tables = {
 ],
 "The Abyss": [
     DSRLocationData(11110357, f"Four Kings Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(11110358, f"Bequeathed Lord Soul Shard", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110358, f"Bequeathed Lord Soul Shard (Four Kings)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110359, f"The Abyss lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "The Duke's Archives": [
@@ -614,7 +614,7 @@ location_tables = {
     DSRLocationData(11110398, f"Blue Titanite Slab - Crystal Caverns", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110399, f"Soul of a Hero - Crystal Caverns", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110400, f"Seath the Scaleless Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(11110401, f"Bequeathed Lord Soul Shard", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110401, f"Bequeathed Lord Soul Shard (Seath)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110402, f"Crystal Cave lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "The Duke's Archives - First Arena after Seath's Death": [
@@ -666,7 +666,7 @@ location_tables = {
     DSRLocationData(11110443, f"Red Titanite Slab - Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110444, f"Pyromancy: Chaos Fire Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110445, f"Bed of Chaos Defeated", f"Firebomb", DSRLocationCategory.BOSS),
-    DSRLocationData(11110446, f"Lord Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110446, f"Lord Soul (Bed of Chaos)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110447, f"Lost Izalith - Heart of Chaos lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "The Catacombs": [
@@ -716,11 +716,11 @@ location_tables = {
     DSRLocationData(11110488, f"Paladin Leeroy Loot", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110489, f"Humanity - Paladin Leeroy", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110490, f"White Titanite Slab - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110491, f"WWhite Titanite Chunk - Patches Kick", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110491, f"White Titanite Chunk - Patches Kick", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110492, f"White Titanite Chunk - Lower Tomb of the Giants", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110493, f"Soul of a Hero - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110494, f"Gravelord Nito Defeated", f"Firebomb", DSRLocationCategory.BONFIRE),
-    DSRLocationData(11110495, f"Lord Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110495, f"Lord Soul (Nito)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110496, f"Tomb of the Giants - Altar of the Gravelord lit", f"Firebomb", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110497, f"Paladin Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],                         

@@ -126,7 +126,7 @@ class DSRWorld(World):
             "Royal Wood", 
             "Royal Wood - After Hawkeye Gough",
             "Oolacile Township", 
-            "Oolacile Crest Key Door",
+            "Oolacile Township - After Crest Key",
             "Chasm of the Abyss", 
                 ]})
         
@@ -135,7 +135,7 @@ class DSRWorld(World):
             connection = Entrance(self.player, f"{from_region} -> {to_region}", regions[from_region])
             regions[from_region].exits.append(connection)
             connection.connect(regions[to_region], rule)
-            print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
+            #print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
         create_connection("Menu", "Undead Asylum Cell")    
         
         create_connection("Undead Asylum Cell", "Undead Asylum Cell Door") 
@@ -224,8 +224,8 @@ class DSRWorld(World):
         create_connection("Sanctuary Garden", "Oolacile Sanctuary")
         create_connection("Oolacile Sanctuary", "Royal Wood")
         create_connection("Royal Wood", "Oolacile Township")
-        create_connection("Oolacile Township", "Oolacile Crest Key Door")
-        create_connection("Oolacile Crest Key Door", "Royal Wood - After Hawkeye Gough")
+        create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
+        create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
         create_connection("Oolacile Township", "Chasm of the Abyss")
       
         
@@ -261,12 +261,12 @@ class DSRWorld(World):
                 )
                 event_item.code = None
                 new_location.place_locked_item(event_item)
-                print("Placing event: " + event_item.name + " in location: " + location.name)
+                #print("Placing event: " + event_item.name + " in location: " + location.name)
 
             new_region.locations.append(new_location)
-        print("created " + str(len(new_region.locations)) + " locations")
+        #print("created " + str(len(new_region.locations)) + " locations")
         self.multiworld.regions.append(new_region)
-        print("adding region: " + region_name)
+        #print("adding region: " + region_name)
         return new_region
 
 
@@ -288,15 +288,15 @@ class DSRWorld(World):
                     itempoolSize += 1
                     itempool.append(self.create_item(location.default_item_name))
         
-        print("Requesting itempool size: " + str(itempoolSize))
+        #print("Requesting itempool size: " + str(itempoolSize))
         foo = BuildItemPool(itempoolSize, self.options)
-        print("Created item pool size: " + str(len(foo)))
+        #print("Created item pool size: " + str(len(foo)))
 
         removable_items = [item for item in itempool if item.classification != ItemClassification.progression]
-        print("marked " + str(len(removable_items)) + " items as removable")
+        #print("marked " + str(len(removable_items)) + " items as removable")
         
         for item in removable_items:
-            print("removable item: " + item.name)
+            #print("removable item: " + item.name)
             itempool.remove(item)
             itempool.append(self.create_item(foo.pop().name))
 
@@ -311,9 +311,9 @@ class DSRWorld(World):
             #self.multiworld.itempool.append(skip_item)
             #print("Placing skip item: " + skip_item.name + " in location: " + location.name)
         
-        print("Final Item pool: ")
-        for item in self.multiworld.itempool:
-            print(item.name)
+        #print("Final Item pool: ")
+        #for item in self.multiworld.itempool:
+            #print(item.name)
 
 
     def create_item(self, name: str) -> Item:
@@ -335,14 +335,14 @@ class DSRWorld(World):
         return "1000 Souls"
     
     def set_rules(self) -> None:           
-        print("Setting rules")   
+        #print("Setting rules")   
         for region in self.multiworld.get_regions(self.player):
             for location in region.locations:
                     set_rule(location, lambda state: True)        
-        self.multiworld.completion_condition[self.player] = lambda state: self.multiworld.get_location("Firelink Shrine lit", self.player).can_reach(state)
+        self.multiworld.completion_condition[self.player] = lambda state: self.multiworld.get_location("Gwyn, Lord of Cinder Defeated", self.player).can_reach(state)
           
         set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Undead Asylum Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
+        #set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Undead Asylum Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Northern Undead Asylum F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Undead Asylum Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
 
@@ -376,14 +376,14 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Painted World of Ariamis -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
         set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: self.multiworld.get_location("Ornstein and Smough Defeated", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias Ring", self.player))
-        set_rule(self.multiworld.get_entrance("Lost Izalith -> Demon Ruins Shortcut", self.player), lambda state: self.multiworld.get_location("Bed of Chaos Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins Shortcut", self.player), lambda state: self.multiworld.get_location("Demon Ruins Shortcut opened", self.player).can_reach(state))
+        #set_rule(self.multiworld.get_entrance("Demon Ruins Shortcut -> Lost Izalith", self.player), lambda state: self.multiworld.get_location("Bed of Chaos Defeated", self.player).can_reach(state))
+        #set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins Shortcut", self.player), lambda state: self.multiworld.get_location("Demon Ruins Shortcut opened", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Demon Ruins -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and self.multiworld.get_location("Centipede Demon Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard(Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard(Seath)", self.player) and state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) and state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
         set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: self.multiworld.get_location("Sanctuary Guardian Defeated", self.player).can_reach(state))
         set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: self.multiworld.get_location("Artorias the Abysswalker Defeated", self.player).can_reach(state))
-        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Crest Key Door", self.player), lambda state: state.has("Crest Key", self.player))
+        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         
     def fill_slot_data(self) -> Dict[str, object]:
         slot_data: Dict[str, object] = {}
