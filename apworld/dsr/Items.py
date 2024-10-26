@@ -894,8 +894,9 @@ def BuildItemPool(count, options):
     
     key_items = [item for item in _all_items if item.name in key_item_names or item.category == DSRItemCategory.KEY_ITEM]
     for item in key_items:
-        item_pool.append(item)
-        remaining_count = remaining_count - 1
+        if item.name != "Dungeon Cell Key":
+            item_pool.append(item)
+            remaining_count = remaining_count - 1
     
     filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]]
 
