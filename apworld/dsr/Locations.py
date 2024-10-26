@@ -380,6 +380,7 @@ location_tables = {
     DSRLocationData(11110203, f"Divine Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Darkroot Garden - Behind Artorias Door": [
+    DSRLocationData(11110553, f"Eastern Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110204, f"Stone Knight Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110205, f"Shiva Loot", f"Firebomb", DSRLocationCategory.ITEM_LOT), 
     DSRLocationData(11110206, f"Humanity - Shiva", f"Firebomb", DSRLocationCategory.ITEM_LOT),
