@@ -34,6 +34,7 @@ class DSRItem(Item):
 
 
 key_item_names = {
+"Covenant of Artorias","Orange Charred Ring",
 }
 
 
@@ -61,7 +62,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Black Dragon Kalameet Defeated", 1019, DSRItemCategory.EVENT),
     ("Bed of Chaos Defeated", 1020, DSRItemCategory.EVENT),
     ("Manus, Father of the Abyss Defeated", 1021, DSRItemCategory.EVENT),
-    ("Knight Artorias Defeated", 1022, DSRItemCategory.EVENT),    
+    ("Artorias the Abysswalker Defeated", 1022, DSRItemCategory.EVENT),    
     ("Sanctuary Guardian Defeated", 1023, DSRItemCategory.EVENT),    
     ("Gwyndolin Defeated", 1024, DSRItemCategory.EVENT),    
     ("Stray Demon Defeated", 1025, DSRItemCategory.EVENT),
@@ -259,6 +260,8 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Repairbox", 3031, DSRItemCategory.KEY_ITEM),
     ("Rite of Kindling", 3032, DSRItemCategory.KEY_ITEM),
     ("Bottomless Box", 3033, DSRItemCategory.KEY_ITEM),
+    ("Estus Flask", 3034, DSRItemCategory.KEY_ITEM),
+    
 
     ("Havel's Ring", 4000, DSRItemCategory.RING),
     ("Red Tearstone Ring", 4001, DSRItemCategory.RING),
