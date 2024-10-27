@@ -639,7 +639,7 @@ location_tables = {
     DSRLocationData(11110416, f"Soul of a Brave Warrior - Capra Outside Firesage", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Demon Ruins - Behind Golden Fog Wall": [
-    DSRLocationData(11110417, f"Demon Firesage Defeated", f"Firebomb", DSRLocationCategory.BOSS),
+    DSRLocationData(11110417, f"Demon Firesage Defeated", f"Demon Firesage Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110418, f"Demon's Catalyst", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110419, f"Soul of a Brave Warrior - Ruins/Domain shortcut", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110420, f"Soul of a Brave Warrior - Chaos Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),

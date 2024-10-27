@@ -284,17 +284,15 @@ class DSRWorld(World):
         itempoolSize = 0
         
         #print("Creating items")
-        for location in self.multiworld.get_locations(self.player):
-            
-                #print("found item in category: " + str(location.category))
-                item_data = item_dictionary[location.default_item_name]
-                if item_data.category in [DSRItemCategory.SKIP] or location.category in location_skip_categories:# [DSRLocationCategory.EVENT]:
-                    #print("Adding skip item: " + location.default_item_name)
-                    skip_items.append(self.create_item(location.default_item_name))
-                elif location.category in self.enabled_location_categories:
-                    #print("Adding item: " + location.default_item_name)
-                    itempoolSize += 1
-                    itempool.append(self.create_item(location.default_item_name))
+        for location in self.multiworld.get_locations(self.player):            
+            item_data = item_dictionary[location.default_item_name]
+            if item_data.category in [DSRItemCategory.SKIP] or location.category in location_skip_categories:# [DSRLocationCategory.EVENT]:                
+                #print("Adding skip item: " + location.default_item_name)
+                skip_items.append(self.create_item(location.default_item_name))
+            elif location.category in self.enabled_location_categories:
+                #print("Adding item: " + location.default_item_name)
+                itempoolSize += 1
+                itempool.append(self.create_item(location.default_item_name))
         
         #print("Requesting itempool size: " + str(itempoolSize))
         foo = BuildItemPool(itempoolSize, self.options)
@@ -313,8 +311,7 @@ class DSRWorld(World):
 
         # Handle SKIP items separately
         for skip_item in skip_items:
-            location = next(loc for loc in self.multiworld.get_locations(self.player) 
-                            if loc.default_item_name == skip_item.name)
+            location = next(loc for loc in self.multiworld.get_locations(self.player) if loc.default_item_name == skip_item.name)
             location.place_locked_item(skip_item)
             #self.multiworld.itempool.append(skip_item)
             #print("Placing skip item: " + skip_item.name + " in location: " + location.name)
@@ -349,7 +346,8 @@ class DSRWorld(World):
                     set_rule(location, lambda state: True)        
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Gwyn, Lord of Cinder Defeated", self.player)
           
-        set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
+        set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Undead Asylum Cell Door", self.player), lambda state: state.has("Dungeon Cell Key", self.player))   
+        #set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Northern Undead Asylum F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Undead Asylum Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
 
