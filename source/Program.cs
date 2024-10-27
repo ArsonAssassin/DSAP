@@ -193,8 +193,9 @@ namespace DSAP
             };
             foreach (var lot in lots)
             {
-                if (lot.Items[0].LotItemId == 2010 || lot.Items[0].LotItemId == 201 || lot.Items[0].LotItemId == 2011 || lot.Items[0].LotItemId == 2012) continue;
-                if (Helpers.GetStarterGearIds().Any(x => x == lot.GetItemFlagId)) continue;
+                if (lot.Items[0].LotItemId == 2010 || lot.Items[0].LotItemId == 201 || lot.Items[0].LotItemId == 2011 || lot.Items[0].LotItemId == 2012) continue; // Tutorial Keys
+                if (Helpers.GetStarterGearIds().Any(x => x == lot.GetItemFlagId)) continue; // Class gear
+                if (!Helpers.GetItemLotFlags().Any(x => x.Flag == lot.GetItemFlagId)) continue; // Not included in ItemLots yet
                 _ = Task.Run(() =>
                 {
                     Helpers.OverwriteItemLot(lot.GetItemFlagId, replacementLot);
