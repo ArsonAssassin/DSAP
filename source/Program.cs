@@ -163,7 +163,7 @@ namespace DSAP
             
             Helpers.MonitorLastBonfire((lastBonfire)=> 
             {
-                Log.Logger.Information($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
+                Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
             });
             RemoveItems();
         }

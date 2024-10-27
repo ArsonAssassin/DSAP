@@ -102,13 +102,13 @@ class DSRLocation(Location):
             "Tomb of the Giants", 
             "Tomb of the Giants - Behind Golden Fog Wall",
             "Kiln of the First Flame", 
-            "Sanctuary Garden", 
-            "Oolacile Sanctuary", 
-            "Royal Wood", 
-            "Royal Wood - After Hawkeye Gough",
-            "Oolacile Township", 
-            "Oolacile Township - After Crest Key",
-            "Chasm of the Abyss", 
+            # "Sanctuary Garden", 
+            # "Oolacile Sanctuary", 
+            # "Royal Wood", 
+            # "Royal Wood - After Hawkeye Gough",
+            # "Oolacile Township", 
+            # "Oolacile Township - After Crest Key",
+            # "Chasm of the Abyss", 
          ]
 
         output = {}
@@ -524,7 +524,7 @@ location_tables = {
     DSRLocationData(11110296, f"Soul of Gwyndolin", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110297, f"Brass Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110298, f"Miracle: Sunlight Blade", f"Firebomb", DSRLocationCategory.ITEM_LOT),    
-    DSRLocationData(11110555, f"Anor Londo Chamber of the Princess lit", f"Firebomb", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110555, f"Anor Londo Chamber of the Princess lit", f"Anor Londo Chamber of the Princess lit", DSRLocationCategory.BONFIRE),
 ],
 "Painted World of Ariamis": [
     DSRLocationData(11110299, f"Painted World lit", f"Painted World lit", DSRLocationCategory.BONFIRE),
@@ -809,11 +809,11 @@ location_tables = {
   #  DSRLocationData(11110501, f"Oolacile - Sanctuary Garden lit", f"Oolacile - Sanctuary Garden lit", DSRLocationCategory.BONFIRE),
   #  DSRLocationData(11110502, f"Sanctuary Guardian Defeated", f"Sanctuary Guardian Defeated", DSRLocationCategory.BOSS),
   #  DSRLocationData(11110503, f"Guardian Soul", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
-],                         
+#],                         
 #"Oolacile Sanctuary": [    
   #  DSRLocationData(11110504, f"Humanity - Corpse", f"Firebomb", DSRLocationCategory.ITEM_LOT),
   #  DSRLocationData(11110505, f"Oolacile - Sanctuary lit", f"Oolacile - Sanctuary lit", DSRLocationCategory.BONFIRE),
-],                         
+#],                         
 #"Royal Wood": [            
   #  DSRLocationData(11110506, f"Guardian Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
   #  DSRLocationData(11110507, f"Blue Titanite Slab - In Chest at Pool", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -829,11 +829,11 @@ location_tables = {
   #  DSRLocationData(11110517, f"Soul of Artorias", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
   #  DSRLocationData(11110518, f"Soul of a Brave Warrior - Outside of Tower", f"Firebomb", DSRLocationCategory.ITEM_LOT),
   #  DSRLocationData(11110519, f"Twinkling Titanite - Drop from Crystal Lizard on Small Platform", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
-],                        
+#],                        
 #"Royal Wood - After Hawkeye Gough": [
   #  DSRLocationData(11110520, f"Black Dragon Kalameet Defeated", f"Black Dragon Kalameet Defeated", DSRLocationCategory.BOSS),
   #  DSRLocationData(11110521, f"Calamity Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-],
+#],
 #"Oolacile Township": [    
   #  DSRLocationData(11110522, f"Oolacile - Township lit", f"Oolacile - Township lit", DSRLocationCategory.BONFIRE),
   #  DSRLocationData(11110523, f"Soul of a Hero - Behind left Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -852,10 +852,10 @@ location_tables = {
   #  DSRLocationData(11110536, f"Twin Humanities - Drop onto Roof", f"Firebomb", DSRLocationCategory.ITEM_LOT),
   #  DSRLocationData(11110537, f"Soul of a Brave Warrior - Corpse in left Corner", f"Firebomb", DSRLocationCategory.ITEM_LOT),
   #  DSRLocationData(11110538, f"Oolacile - Township Dungeon lit", f"Oolacile - Township Dungeon lit", DSRLocationCategory.BONFIRE),
-],                        
+#],                        
 #"Oolacile Township - After Crest Key": [
   #  DSRLocationData(11110539, f"Oolacile Crest Key Door opened", f"Firebomb", DSRLocationCategory.DOOR),
-],
+#],
 #"Chasm of the Abyss": [   
   #  DSRLocationData(11110540, f"Twinkling Titanite - Drop from Crystal Lizard near Entrance", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
   #  DSRLocationData(11110541, f"Sorcery: Dark Bead", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -869,7 +869,7 @@ location_tables = {
   #  DSRLocationData(11110549, f"Manus, Father of the Abyss Defeated", f"Manus, Father of the Abyss Defeated", DSRLocationCategory.BOSS),
   #  DSRLocationData(11110550, f"Soul of Manus", f"Firebomb", DSRLocationCategory.ITEM_LOT),
   #  DSRLocationData(11110551, f"Chasm of the Abyss lit", f"Chasm of the Abyss lit", DSRLocationCategory.BONFIRE),
-],
+#],
 # "Bosses": [
     # DSRLocationData(f"Asylum Demon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
     # DSRLocationData(f"Tauros Demon Defeated", f"Firebomb", DSRLocationCategory.BOSS),
