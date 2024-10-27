@@ -487,7 +487,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Sorcerer Gauntlets", 7079, DSRItemCategory.ARMOR),
     ("Sorcerer Boots", 7080, DSRItemCategory.ARMOR),
     ("Tattered Cloth Hood", 7081, DSRItemCategory.ARMOR),
-    ("tattered Cloth Robe", 7082, DSRItemCategory.ARMOR),
+    ("Tattered Cloth Robe", 7082, DSRItemCategory.ARMOR),
     ("Tattered Cloth Machette", 7083, DSRItemCategory.ARMOR),
     ("Heavy Boots", 7084, DSRItemCategory.ARMOR),
     ("Pharis's Hat", 7085, DSRItemCategory.ARMOR),
@@ -797,25 +797,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Velka's Talisman", 8122, DSRItemCategory.WEAPON),
     ("Manus Catalyst", 8151, DSRItemCategory.WEAPON),
     ("Oolacile Catalyst", 8152, DSRItemCategory.WEAPON),
-
-    ("Gough's Greatbow", 8123, DSRItemCategory.WEAPON),
-    
-    ("Standard Arrow", 8124, DSRItemCategory.WEAPON),
-    ("Large Arrow", 8125, DSRItemCategory.WEAPON),
-    ("Feather Arrow", 8126, DSRItemCategory.WEAPON),
-    ("Fire Arrow", 8127, DSRItemCategory.WEAPON),
-    ("Poison Arrow", 8128, DSRItemCategory.WEAPON),
-    ("Moonlight Arrow", 8129, DSRItemCategory.WEAPON),
-    ("Wooden Arrow", 8130, DSRItemCategory.WEAPON),
-    ("Dragonslayer Arrow", 8131, DSRItemCategory.WEAPON),
-    ("Gough's Great Arrow", 8132, DSRItemCategory.WEAPON),
-    ("Standard Bolt", 8133, DSRItemCategory.WEAPON),
-    ("Heavy Bolt", 8134, DSRItemCategory.WEAPON),
-    ("Sniper Bolt", 8135, DSRItemCategory.WEAPON),
-    ("Wood Bolt", 8136, DSRItemCategory.WEAPON),
-    ("Lightning Bolt", 8137, DSRItemCategory.WEAPON),
-    
-    
+  
     ("Manus Catalyst", 8138, DSRItemCategory.WEAPON),
     ("Oolacile Catalyst", 8139, DSRItemCategory.WEAPON),
     ("Pyromancy Flame Ascended", 8140, DSRItemCategory.WEAPON),
