@@ -5,41 +5,6 @@
     "Id": 11110055
   },
   {
-    "Name": "Tiny Being's Ring",
-    "Flag": 50000010,
-    "Id": 11113001
-  },
-  {
-    "Name": "Pierce Shield",
-    "Flag": 50000020,
-    "Id": 11113002
-  },
-  {
-    "Name": "Purging Stone",
-    "Flag": 50000030,
-    "Id": 11113003
-  },
-  {
-    "Name": "Pierce Shield",
-    "Flag": 50000040,
-    "Id": 11113004
-  },
-  {
-    "Name": "Speckled Stoneplate Ring",
-    "Flag": 50000070,
-    "Id": 11113005
-  },
-  {
-    "Name": "Miracle: Emit Force",
-    "Flag": 50000060,
-    "Id": 11113006
-  },
-  {
-    "Name": "Speckled Stoneplate Ring",
-    "Flag": 50000070,
-    "Id": 11113007
-  },
-  {
     "Name": "Undead Asylum F2 East Key",
     "Flag": 50000080,
     "Id": 11110007
@@ -52,232 +17,12 @@
   {
     "Name": "Key to the Seal",
     "Flag": 50000100,
-    "Id": 11113010
-  },
-  {
-    "Name": "Pyromancy Flame",
-    "Flag": 50000110,
-    "Id": 11113011
-  },
-  {
-    "Name": "Miracle: Lightning Spear",
-    "Flag": 50000120,
-    "Id": 11113012
-  },
-  {
-    "Name": "Miracle: Great Lightning Spear",
-    "Flag": 50000130,
-    "Id": 11113013
-  },
-  {
-    "Name": "Copper Coin",
-    "Flag": 50000140,
-    "Id": 11113014
-  },
-  {
-    "Name": "Sunlight Medal",
-    "Flag": 50000150,
-    "Id": 11113015
-  },
-  {
-    "Name": "Cat Covenant Ring",
-    "Flag": 50000160,
-    "Id": 11113016
-  },
-  {
-    "Name": "Divine Blessing",
-    "Flag": 50000170,
-    "Id": 11113017
-  },
-  {
-    "Name": "Ring of Fog",
-    "Flag": 50000180,
-    "Id": 11113018
-  },
-  {
-    "Name": "Soul of a Lost Undead",
-    "Flag": 50000190,
-    "Id": 11113019
-  },
-  {
-    "Name": "Humanity",
-    "Flag": 50000200,
-    "Id": 11113020
-  },
-  {
-    "Name": "Replenishment",
-    "Flag": 50000210,
-    "Id": 11113021
-  },
-  {
-    "Name": "Gravelord Sword",
-    "Flag": 50000220,
-    "Id": 11113022
-  },
-  {
-    "Name": "Miracle: Gravelord Sword Dance",
-    "Flag": 50000225,
-    "Id": 11113023
-  },
-  {
-    "Name": "Miracle: Gravelord Greatsword Dance",
-    "Flag": 50000230,
-    "Id": 11113024
-  },
-  {
-    "Name": "Twin Humanities",
-    "Flag": 50000240,
-    "Id": 11113025
-  },
-  {
-    "Name": "Titanite Slab",
-    "Flag": 50000250,
-    "Id": 11113026
-  },
-  {
-    "Name": "Dragon Eye",
-    "Flag": 50000265,
-    "Id": 11113027
-  },
-  {
-    "Name": "Dragon Head Stone",
-    "Flag": 50000260,
-    "Id": 11113028
-  },
-  {
-    "Name": "Dragon Torso Stone",
-    "Flag": 50000270,
-    "Id": 11113029
-  },
-  {
-    "Name": "Pyromancy Flame",
-    "Flag": 50000290,
-    "Id": 11113030
-  },
-  {
-    "Name": "Pyromancy: Fire Tempest",
-    "Flag": 50000300,
-    "Id": 11113031
-  },
-  {
-    "Name": "Pyromancy: Great Chaos Fireball",
-    "Flag": 50000310,
-    "Id": 11113032
-  },
-  {
-    "Name": "Pyromancy: Chaos Fire Whip",
-    "Flag": 50000320,
-    "Id": 11110444
-  },
-  {
-    "Name": "Pyromancy: Chaos Storm",
-    "Flag": 50000330,
-    "Id": 11113034
-  },
-  {
-    "Name": "Soul of a Hero",
-    "Flag": 50000340,
-    "Id": 11113035
-  },
-  {
-    "Name": "Ring of the Sun Princess",
-    "Flag": 50000350,
-    "Id": 11113036
-  },
-  {
-    "Name": "Blue Eye Orb",
-    "Flag": 50000360,
-    "Id": 11113037
-  },
-  {
-    "Name": "Darkmoon Blade Covenant Ring",
-    "Flag": 50000365,
-    "Id": 11113038
-  },
-  {
-    "Name": "Miracle: Darkmoon Blade",
-    "Flag": 50000370,
-    "Id": 11113039
-  },
-  {
-    "Name": "Darkmoon Talisman",
-    "Flag": 50000375,
-    "Id": 11113040
-  },
-  {
-    "Name": "Dark Hand",
-    "Flag": 50000380,
-    "Id": 11113041
-  },
-  {
-    "Name": "Red Eye Orb",
-    "Flag": 50000390,
-    "Id": 11113042
-  },
-  {
-    "Name": "Darksword",
-    "Flag": 50000400,
-    "Id": 11113043
-  },
-  {
-    "Name": "Dark Mask",
-    "Flag": 50000410,
-    "Id": 11113044
-  },
-  {
-    "Name": "Dark Armor",
-    "Flag": 50000420,
-    "Id": 11113045
-  },
-  {
-    "Name": "Dark Gauntlets",
-    "Flag": 50000430,
-    "Id": 11113046
-  },
-  {
-    "Name": "Dark Leggings",
-    "Flag": 50000440,
-    "Id": 11113047
+    "Id": 11110340
   },
   {
     "Name": "Archive Tower Cell Key",
     "Flag": 50001020,
     "Id": 11110369
-  },
-  {
-    "Name": "Dingy Hood",
-    "Flag": 50001030,
-    "Id": 11113050
-  },
-  {
-    "Name": "Dingy Robe",
-    "Flag": 50001030,
-    "Id": 11113051
-  },
-  {
-    "Name": "Dingy Gloves",
-    "Flag": 50001030,
-    "Id": 11113052
-  },
-  {
-    "Name": "Blood-Stained Skirt",
-    "Flag": 50001030,
-    "Id": 11113053
-  },
-  {
-    "Name": "Black Eye Orb",
-    "Flag": 50001031,
-    "Id": 11113054
-  },
-  {
-    "Name": "Fire Keeper Soul",
-    "Flag": 50001060,
-    "Id": 11113055
-  },
-  {
-    "Name": "Pendant",
-    "Flag": 50001070,
-    "Id": 11113056
   },
   {
     "Name": "Blighttown Key",
@@ -1015,9 +760,9 @@
     "Id": 11110067
   },
   {
-	"Name": "Uchiatana",
-	"Flag": 51010960,
-	"Id": 11110040
+    "Name": "Uchiatana",
+    "Flag": 51010960,
+    "Id": 11110040
   },
   {
     "Name": "Humanity - Firelink Well",
@@ -1280,9 +1025,9 @@
     "Id": 11110305
   },
   {
-	"Name": "Pyromancy: Fire Surge",
-	"Flag": 51100980,
-	"Id": 11110321
+    "Name": "Pyromancy: Fire Surge",
+    "Flag": 51100980,
+    "Id": 11110321
   },
   {
     "Name": "Partizan",
@@ -2514,30 +2259,30 @@
     "Flag": 51510700,
     "Id": 11110280
   },
-  { 
-	"Name": "Gold Coin - Anor Londo Mimic",
-	"Flag": 51510951,
-	"Id": 11110282
+  {
+    "Name": "Gold Coin - Anor Londo Mimic",
+    "Flag": 51510951,
+    "Id": 11110282
   },
   {
-	"Name": "Silver Coin - Anor Londo Mimic",
-	"Flag": 51510961,
-	"Id": 11110283
+    "Name": "Silver Coin - Anor Londo Mimic",
+    "Flag": 51510961,
+    "Id": 11110283
   },
   {
-	"Name": "Crystal Halberd",
-	"Flag": 51510971,
-	"Id": 11110263
+    "Name": "Crystal Halberd",
+    "Flag": 51510971,
+    "Id": 11110263
   },
   {
-	"Name": "Occult Club",
-	"Flag": 51510981,
-	"Id": 11110279
+    "Name": "Occult Club",
+    "Flag": 51510981,
+    "Id": 11110279
   },
   {
-	"Name": "Lightning Spear",
-	"Flag": 51500991,
-	"Id": 11110244
+    "Name": "Lightning Spear",
+    "Flag": 51500991,
+    "Id": 11110244
   },
   {
     "Name": "Soul of a Nameless Soldier - New Londo Entrance",
@@ -2865,9 +2610,9 @@
     "Id": 11110390
   },
   {
-	"Name": "Enchanted Falchion",
-	"Flag": 51700951,
-	"Id": 11110385
+    "Name": "Enchanted Falchion",
+    "Flag": 51700951,
+    "Id": 11110385
   },
   {
     "Name": "Black Knight Set",

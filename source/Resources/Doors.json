@@ -1,137 +1,137 @@
 ﻿[
   {
     "Name": "Depths Shortcut",
-    "Id": 11112000,
+    "Id": 11110126,
     "Flag": 11000100
   },
   {
     "Name": "Depths -> Blighttown",
-    "Id": 11112001,
+    "Id": 11110130,
     "Flag": 11000111
   },
   {
     "Name": "Depths Bonfire room",
-    "Id": 11112002,
+    "Id": 11110131,
     "Flag": 11000120
   },
   {
     "Name": "Undead Burg Female Merchant shortcut",
-    "Id": 11112003,
+    "Id": 11110107,
     "Flag": 11010101
   },
   {
     "Name": "Undead Burg -> Lower Undead Burg",
-    "Id": 11112004,
+    "Id": 11110102,
     "Flag": 11010160
   },
   {
     "Name": "Undead Burg Basement",
-    "Id": 11112005,
+    "Id": 11110101,
     "Flag": 11010172
   },
   {
     "Name": "Undead Burg Watchtower Upper",
-    "Id": 11112006,
+    "Id": 11110051,
     "Flag": 11010191
   },
   {
     "Name": "Undead Burg Watchtower Lower",
-    "Id": 11112007,
+    "Id": 11110052,
     "Flag": 11010192
   },
   {
     "Name": "Undead Burg Sunlight Altar",
-    "Id": 11112008,
+    "Id": 11110059,
     "Flag": 11010621
   },
   {
     "Name": "Oolacile Crest Key Door",
-    "Id": 11112009,
+    "Id": 11110539,
     "Flag": 11210650
   },
   {
     "Name": "Catacombs Door 1",
-    "Id": 11112010,
+    "Id": 11110449,
     "Flag": 11300900
   },
   {
     "Name": "Catacombs Door 2",
-    "Id": 11112011,
+    "Id": 11110459,
     "Flag": 11300901
   },
   {
     "Name": "Demon Ruins Shortcut",
-    "Id": 11112012,
+    "Id": 11110439,
     "Flag": 11410340
   },
   {
     "Name": "Sen's Fortress Main Gate",
-    "Id": 11112013,
+    "Id": 11110232,
     "Flag": 11500200
   },
   {
     "Name": "Anor Londo Main Hall Door",
-    "Id": 11112014,
+    "Id": 11110292,
     "Flag": 11510200
   },
   {
     "Name": "Anor Londo Giant Blacksmith Shortcut",
-    "Id": 11112015,
+    "Id": 11110291,
     "Flag": 11510210
   },
   {
     "Name": "Anor Londo Bonfire Shortcut",
-    "Id": 11112016,
+    "Id": 11110287,
     "Flag": 11510251
   },
   {
     "Name": "New Londo Ruins Door to the Seal",
-    "Id": 11112017,
+    "Id": 11110348,
     "Flag": 11600110
   },
   {
     "Name": "New Londo Ruins -> Valley of the Drakes",
-    "Id": 11112018,
+    "Id": 11110331,
     "Flag": 11600120
   },
   {
     "Name": "Duke's Archives Bookshelf door",
-    "Id": 11112019,
+    "Id": 11110383,
     "Flag": 11700120
   },
   {
     "Name": "Duke's Archives Cell door",
-    "Id": 11112020,
+    "Id": 11110368,
     "Flag": 11700300
   },
   {
     "Name": "Undead Asylum Cell door",
-    "Id": 11112021,
+    "Id": 11110001,
     "Flag": 11810103
   },
   {
     "Name": "Undead Asylum F2 West door",
-    "Id": 11112022,
+    "Id": 11110076,
     "Flag": 11810104
   },
   {
     "Name": "Undead Asylum Shortcut door",
-    "Id": 11112023,
+    "Id": 11110554,
     "Flag": 11810105
   },
   {
     "Name": "Undead Asylum F2 East door",
-    "Id": 11112024,
+    "Id": 11110008,
     "Flag": 11810106
   },
   {
     "Name": "Undead Asylum Big Pilgrim door",
-    "Id": 11112025,
+    "Id": 11110011,
     "Flag": 11810110
   },
   {
     "Name": "Undead Asylum Boss door",
-    "Id": 11112026,
+    "Id": 11110003,
     "Flag": 11810112
   }
 ]

@@ -125,7 +125,7 @@ class DSRLocation(Location):
 location_skip_categories = {
 DSRLocationCategory.EVENT, DSRLocationCategory.SKIP, DSRLocationCategory.BOSS, DSRLocationCategory.BONFIRE
 }
-
+# Last id used = 556
 location_tables = {
 "Undead Asylum Cell": [
     DSRLocationData(11110000, f"Dungeon Cell Key", f"Dungeon Cell Key", DSRLocationCategory.SKIP),
@@ -139,6 +139,7 @@ location_tables = {
     DSRLocationData(11110005, f"Undead Asylum - Interior lit", f"Undead Asylum - Interior lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110006, f"Estus Flask", f"Estus Flask", DSRLocationCategory.SKIP),
     DSRLocationData(11110007, f"Undead Asylum F2 East Key", f"Undead Asylum F2 East Key", DSRLocationCategory.SKIP),
+    DSRLocationData(11110554, f"Undead Asylum Shortcut Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],     
 "Northern Undead Asylum F2 East Door": [
     DSRLocationData(11110008, f"Undead Asylum F2 East Door opened", f"Firebomb", DSRLocationCategory.DOOR),
@@ -218,7 +219,7 @@ location_tables = {
     DSRLocationData(11110071, f"Large Soul of a Nameless Soldier - Parish Window", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110072, f"Humanity - Parish Barrel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110073, f"Bell Gargoyles Defeated", f"Bell Gargoyles Defeated", DSRLocationCategory.BOSS),
-    #DSRLocationData(11110074, f"Homeward Bone - Ringing First Bell", f"Firebomb", DSRLocationCategory.EVENT),
+    DSRLocationData(11110074, f"Bell of Awakening #1", f"Bell of Awakening #1", DSRLocationCategory.EVENT),
 ],
 "Firelink Shrine - After Undead Parish Elevator": [
     DSRLocationData(11110075, f"Undead Asylum F2 West Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -334,7 +335,8 @@ location_tables = {
     DSRLocationData(11110162, f"Twin Humanities - Great Hallow Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110163, f"Large Titanite Shard - Blighttown Swamp 2", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110164, f"Chaos Witch Quelaag Defeated", f"Chaos Witch Quelaag Defeated", DSRLocationCategory.BOSS),
-    DSRLocationData(11110165, f"Quelaag's Domain lit", f"Quelaag's Domain lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110165, f"Quelaag's Domain lit", f"Quelaag's Domain lit", DSRLocationCategory.BONFIRE),    
+    DSRLocationData(11110556, f"Bell of Awakening #2", f"Bell of Awakening #2", DSRLocationCategory.EVENT),
     DSRLocationData(11110166, f"Soul of a Proud Knight - Blighttown Fire Keeper Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110167, f"Fire Keeper Soul - Blighttown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110168, f"Crimson Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -490,7 +492,8 @@ location_tables = {
     DSRLocationData(11110295, f"Gwyndolin Defeated", f"Gwyndolin Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110296, f"Soul of Gwyndolin", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110297, f"Brass Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110298, f"Miracle: Sunlight Blade", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110298, f"Miracle: Sunlight Blade", f"Firebomb", DSRLocationCategory.ITEM_LOT),    
+    DSRLocationData(11110555, f"Anor Londo Chamber of the Princess lit", f"Firebomb", DSRLocationCategory.BONFIRE),
 ],
 "Painted World of Ariamis": [
     DSRLocationData(11110299, f"Painted World lit", f"Painted World lit", DSRLocationCategory.BONFIRE),
@@ -731,7 +734,7 @@ location_tables = {
 "Tomb of the Giants - Behind Golden Fog Wall": [
     DSRLocationData(11110490, f"White Titanite Slab - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110493, f"Soul of a Hero - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110494, f"Gravelord Nito Defeated", f"Gravelord Nito Defeated", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110494, f"Gravelord Nito Defeated", f"Gravelord Nito Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110495, f"Lord Soul (Nito)", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110496, f"Tomb of the Giants - Altar of the Gravelord lit", f"Tomb of the Giants - Altar of the Gravelord lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110497, f"Paladin Set", f"Firebomb", DSRLocationCategory.ENEMY_DROP),

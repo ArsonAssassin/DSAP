@@ -136,6 +136,8 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Undead Asylum Big Pilgrim Door opened", 1093, DSRItemCategory.EVENT),
     ("Undead Asylum - Boss Door opened", 1094, DSRItemCategory.EVENT),
     ("Oolacile - Township lit", 1095, DSRItemCategory.EVENT),
+    ("Bell of Awakening #1", 1096, DSRItemCategory.EVENT),
+    ("Bell of Awakening #2", 1097, DSRItemCategory.EVENT),
 
     ("Eye of Death", 2000, DSRItemCategory.CONSUMABLE),
     ("Cracked Red Eye Orb", 2001, DSRItemCategory.CONSUMABLE),
