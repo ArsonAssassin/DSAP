@@ -375,15 +375,15 @@ namespace DSAP
             var lastBonfire = GetLastBonfire();
             if (lastBonfire == null)
             {
-                Log.Logger.Information("No Last Bonfire found");
+                Log.Logger.Debug("No Last Bonfire found");
             }
-            else Log.Logger.Information($"Last bonfire was {lastBonfire.id}:{lastBonfire.name} ");
+            else Log.Logger.Debug($"Last bonfire was {lastBonfire.id}:{lastBonfire.name} ");
             while (true)
             {
                 var currentLastBonfire = GetLastBonfire();
                 if (currentLastBonfire != lastBonfire)
                 {
-                    Log.Logger.Information("Last Bonfire Changed");
+                    Log.Logger.Debug("Last Bonfire Changed");
                     lastBonfire = currentLastBonfire;
                     action?.Invoke(currentLastBonfire);
                 }
