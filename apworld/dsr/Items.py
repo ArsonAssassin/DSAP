@@ -32,11 +32,10 @@ class DSRItem(Item):
         base_id = 11110000
         return {item_data.name: (base_id + item_data.dsr_code if item_data.dsr_code is not None else None) for item_data in _all_items}
 
-
 key_item_names = {
-"Covenant of Artorias","Orange Charred Ring",
+"Covenant of Artorias","Orange Charred Ring", "Pendant", "Rubbish", "Sunlight Medal", "Bloodred Moss Clump", "Purple Moss Clump", "Blooming Purple Moss Clump", "Cracked Red Eye Orb", "Humanity", "Twin Humanities", "Prism Stone", "Dung Pie",
+"Pyromancy Flame", "Pyromancy Flame (Ascended)", "Egg Vermifuge", "Sunlight Maggot", "Sack", "Skull Lantern", "Ring of the Sun Princess", "Xanthous Crown", "Soul of Manus","Souvenir of Reprisal"
 }
-
 
 _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [    
    
@@ -70,7 +69,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Firelink Shrine lit", 1026, DSRItemCategory.EVENT),
     ("Undead Parish lit", 1027, DSRItemCategory.EVENT),
     ("Depths lit", 1028, DSRItemCategory.EVENT),
-    ("Undead Burg - Sunfire Altar lit", 1029, DSRItemCategory.EVENT),
+    ("Undead Burg - Sunlight Altar lit", 1029, DSRItemCategory.EVENT),
     ("Quelaag's Domain lit", 1030, DSRItemCategory.EVENT),
     ("Anor Londo lit", 1031, DSRItemCategory.EVENT),
     ("Anor Londo Chamber of the Princess lit", 1032, DSRItemCategory.EVENT),
@@ -95,8 +94,8 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Anor Londo - Residence lit", 1051, DSRItemCategory.EVENT),
     ("Painted World lit", 1052, DSRItemCategory.EVENT),
     ("Duke's Archives - Entrance lit", 1053, DSRItemCategory.EVENT),
-    ("Duke's Archives - Cell lit", 1054, DSRItemCategory.EVENT),
-    ("Duke's Archives - Balchony lit", 1055, DSRItemCategory.EVENT),
+    ("Duke's Archives Cell lit", 1054, DSRItemCategory.EVENT),
+    ("Duke's Archives - Balcony lit", 1055, DSRItemCategory.EVENT),
     ("Crystal Cave lit", 1056, DSRItemCategory.EVENT),
     ("Catacombs - Necromancer Cave lit", 1057, DSRItemCategory.EVENT),
     ("Catacombs - Vamos lit", 1058, DSRItemCategory.EVENT),
@@ -136,6 +135,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Undead Asylum F2 East Door opened", 1092, DSRItemCategory.EVENT),
     ("Undead Asylum Big Pilgrim Door opened", 1093, DSRItemCategory.EVENT),
     ("Undead Asylum - Boss Door opened", 1094, DSRItemCategory.EVENT),
+    ("Oolacile - Township lit", 1095, DSRItemCategory.EVENT),
 
     ("Eye of Death", 2000, DSRItemCategory.CONSUMABLE),
     ("Cracked Red Eye Orb", 2001, DSRItemCategory.CONSUMABLE),
@@ -897,7 +897,7 @@ def BuildItemPool(count, options):
     
     key_items = [item for item in _all_items if item.name in key_item_names or item.category == DSRItemCategory.KEY_ITEM]
     for item in key_items:
-        if item.name not in ["Dungeon Cell Key", "Estus Flask"]:
+        if item.name not in ["Dungeon Cell Key", "Estus Flask", "Undead Asylum F2 East Key", "Big Pilgrim's Key"]:
             item_pool.append(item)
             remaining_count = remaining_count - 1
     
