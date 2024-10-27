@@ -125,13 +125,13 @@ class DSRWorld(World):
             "Tomb of the Giants", 
             "Tomb of the Giants - Behind Golden Fog Wall",
             "Kiln of the First Flame", 
-            "Sanctuary Garden", 
-            "Oolacile Sanctuary", 
-            "Royal Wood", 
-            "Royal Wood - After Hawkeye Gough",
-            "Oolacile Township", 
-            "Oolacile Township - After Crest Key",
-            "Chasm of the Abyss", 
+            #"Sanctuary Garden", 
+            #"Oolacile Sanctuary", 
+            #"Royal Wood", 
+            #"Royal Wood - After Hawkeye Gough",
+            #"Oolacile Township", 
+            #"Oolacile Township - After Crest Key",
+            #"Chasm of the Abyss", 
                 ]})
        
         # Connect Regions
@@ -228,13 +228,13 @@ class DSRWorld(World):
 
 
         # DLC Entrances
-        create_connection("Darkroot Basin", "Sanctuary Garden")
-        create_connection("Sanctuary Garden", "Oolacile Sanctuary")
-        create_connection("Oolacile Sanctuary", "Royal Wood")
-        create_connection("Royal Wood", "Oolacile Township")
-        create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
-        create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
-        create_connection("Oolacile Township", "Chasm of the Abyss")
+        #create_connection("Darkroot Basin", "Sanctuary Garden")
+        #create_connection("Sanctuary Garden", "Oolacile Sanctuary")
+        #create_connection("Oolacile Sanctuary", "Royal Wood")
+        #create_connection("Royal Wood", "Oolacile Township")
+        #create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
+        #create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
+        #create_connection("Oolacile Township", "Chasm of the Abyss")
       
         
     # For each region, add the associated locations retrieved from the corresponding location_table
@@ -415,10 +415,10 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("The Catacombs - After Door 1 -> Tomb of the Giants", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Tomb of the Giants -> Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) and state.has("Lordvessel", self.player))
-        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
-        set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
+        #set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
+        #set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
+        #set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
+        #set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         
  
         
