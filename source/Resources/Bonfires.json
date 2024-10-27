@@ -1,237 +1,237 @@
 ﻿[
   {
     "Name": "Undead Asylum - Courtyard",
-    "Id": 11109000,
+    "Id": 11110002,
     "Offset": "0x1A"
   },
   {
     "Name": "Undead Asylum - Interior",
-    "Id": 11109000,
+    "Id": 11110005,
     "Offset": "0x1A"
   },
   {
     "Name": "Firelink Shrine",
-    "Id": 11111000,
+    "Id": 11110013,
     "Offset": "0x1A",
     "AddressBit": 7
   },
   {
     "Name": "Undead Burg",
-    "Id": 11109000,
+    "Id": 11110039,
     "Offset": "0x1A"
   },
   {
     "Name": "Undead Burg - Sunlight Altar",
-    "Id": 11111003,
+    "Id": 11110058,
     "Offset": "0x1A",
     "AddressBit": 2
   },
   {
     "Name": "Undead Parish",
-    "Id": 11111001,
+    "Id": 11110066,
     "Offset": "0x19",
     "AddressBit": 0
   },
   {
     "Name": "Darkroot Garden",
-    "Id": 11109000,
+    "Id": 11110194,
     "Offset": "0x1A"
   },
   {
     "Name": "Darkroot Basin",
-    "Id": 11109000,
+    "Id": 11110189,
     "Offset": "0x1A"
   },
   {
     "Name": "Depths",
-    "Id": 11111002,
+    "Id": 11110132,
     "Offset": "0x19",
     "AddressBit": 1
   },
   {
     "Name": "Blighttown Catwalk",
-    "Id": 11109000,
+    "Id": 11110138,
     "Offset": "0x1A"
   },
   {
     "Name": "Blighttown Swamp",
-    "Id": 11109000,
+    "Id": 11110152,
     "Offset": "0x1A"
   },
   {
     "Name": "Quelaag's Domain",
-    "Id": 11111004,
+    "Id": 11110165,
     "Offset": "0x1A",
     "AddressBit": 5
   },
   {
     "Name": "The Great Hollow",
-    "Id": 11109000,
+    "Id": 11110214,
     "Offset": "0x1A"
   },
   {
     "Name": "Ash Lake",
-    "Id": 11109000,
+    "Id": 11110226,
     "Offset": "0x1A"
   },
   {
     "Name": "Ash Lake - Stone Dragon",
-    "Id": 11109000,
+    "Id": 11110231,
     "Offset": "0x1A",
     "AddressBit": 6
   },
   {
     "Name": "Demon Ruins - Entrance",
-    "Id": 11109000,
+    "Id": 11110405,
     "Offset": "0x1A"
   },
   {
     "Name": "Demon Ruins - Staircase",
-    "Id": 11109000,
+    "Id": 11110412,
     "Offset": "0x1A"
   },
   {
     "Name": "Demon Ruins - Catacombs",
-    "Id": 11109000,
+    "Id": 11110421,
     "Offset": "0x1A"
   },
   {
     "Name": "Lost Izalith - Lava Pits",
-    "Id": 11109000,
+    "Id": 11110426,
     "Offset": "0x1A"
   },
   {
     "Name": "Lost Izalith - Past illusory wall",
-    "Id": 11109000,
+    "Id": 11110433,
     "Offset": "0x1A"
   },
   {
     "Name": "Lost Izalith - Heart of Chaos",
-    "Id": 11109000,
+    "Id": 11110447,
     "Offset": "0x1A"
   },
   {
     "Name": "Sen's Fortress",
-    "Id": 11109000,
+    "Id": 11110252,
     "Offset": "0x1A"
   },
   {
     "Name": "Anor Londo",
-    "Id": 11111005,
+    "Id": 11110261,
     "Offset": "0x1A",
     "AddressBit": 4
   },
   {
     "Name": "Anor Londo - Darkmoon Tomb",
-    "Id": 11109000,
+    "Id": 11110267,
     "Offset": "0x19",
     "AddressBit": 7
   },
   {
     "Name": "Anor Londo - Residence",
-    "Id": 11109000,
+    "Id": 11110273,
     "Offset": "0x1A"
   },
   {
     "Name": "Anor Londo - Chamber of the Princess",
-    "Id": 11111006,
+    "Id": 11110555,
     "Offset": "0x1A",
     "AddressBit": 0
   },
   {
     "Name": "Painted World",
-    "Id": 11109000,
+    "Id": 11110299,
     "Offset": "0x18",
     "AddressBit": 7
   },
   {
     "Name": "Duke's Archives - Entrance",
-    "Id": 11109000,
+    "Id": 11110360,
     "Offset": "0x18",
     "AddressBit": 5
   },
   {
     "Name": "Duke's Archives - Cell",
-    "Id": 11109000,
+    "Id": 11110367,
     "Offset": "0x1A"
   },
   {
     "Name": "Duke's Archives - Balcony",
-    "Id": 11109000,
+    "Id": 11110382,
     "Offset": "0x1A"
   },
   {
     "Name": "Crystal Cave",
-    "Id": 11109000,
+    "Id": 11110402,
     "Offset": "0x18",
     "AddressBit": 4
   },
   {
     "Name": "Catacombs - Necromancer cave",
-    "Id": 11109000,
+    "Id": 11110448,
     "Offset": "0x1A"
   },
   {
     "Name": "Catacombs - Vamos",
-    "Id": 11109000,
+    "Id": 11110461,
     "Offset": "0x18",
     "AddressBit": 3
   },
   {
     "Name": "Catacombs - past illusory wall",
-    "Id": 11109000,
+    "Id": 11110458,
     "Offset": "0x1A"
   },
   {
     "Name": "Tomb of the Giants - Patches",
-    "Id": 11109000,
+    "Id": 11110475,
     "Offset": "0x1A"
   },
   {
     "Name": "Tomb of the Giants",
-    "Id": 11109000,
+    "Id": 11110483,
     "Offset": "0x18",
     "AddressBit": 6
   },
   {
     "Name": "Tomb of the Giants - Altar of the Gravelord",
-    "Id": 11109000,
+    "Id": 11110496,
     "Offset": "0x1A",
     "AddressBit": 1
   },
   {
     "Name": "The Abyss",
-    "Id": 11109000,
+    "Id": 11110359,
     "Offset": "0x1A",
     "AddressBit": 3
   },
   {
     "Name": "Oolacile - Sanctuary Garden",
-    "Id": 11109000,
+    "Id": 11110501,
     "Offset": "0x19",
     "AddressBit": 6
   },
   {
     "Name": "Oolacile - Sanctuary",
-    "Id": 11109000,
+    "Id": 11110505,
     "Offset": "0x19",
     "AddressBit": 5
   },
   {
     "Name": "Oolacile - Township",
-    "Id": 11109000,
+    "Id": 11110522,
     "Offset": "0x19",
     "AddressBit": 4
   },
   {
     "Name": "Oolacile - Township Dungeon",
-    "Id": 11109000,
+    "Id": 11110538,
     "Offset": "0x19",
     "AddressBit": 2
   },
   {
     "Name": "Chasm of the Abyss",
-    "Id": 11109000,
+    "Id": 11110551,
     "Offset": "0x19",
     "AddressBit": 3
   }

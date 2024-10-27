@@ -2,6 +2,7 @@ using Archipelago.Core;
 using Archipelago.Core.GUI;
 using Archipelago.Core.GUI.Logging;
 using Archipelago.Core.Models;
+using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
@@ -129,6 +130,7 @@ namespace DSAP
 
             Client = new ArchipelagoClient(client);
 
+            AllItems = Helpers.GetAllItems();
             Client.Connected += OnConnected;
             Client.Disconnected += OnDisconnected;
             var isOnline = Helpers.GetIsPlayerOnline();
@@ -139,21 +141,31 @@ namespace DSAP
             }
             await Client.Connect(e.Host, "Dark Souls Remastered");
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+
+
             Client.ItemReceived += Client_ItemReceived;
 
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
             var bonfireLocations = Helpers.GetBonfireFlagLocations();
             var doorLocations = Helpers.GetDoorFlagLocations();
+            var fogWallLocations = Helpers.GetFogWallFlagLocations();
+            var miscLocations = Helpers.GetMiscFlagLocations();
+
 
             Client.MonitorLocations(bossLocations);
             Client.MonitorLocations(itemLocations);
             Client.MonitorLocations(bonfireLocations);
             Client.MonitorLocations(doorLocations);
+            // Client.MonitorLocations(fogWallLocations);
+            Client.MonitorLocations(miscLocations);
 
-            AllItems = Helpers.GetAllItems();
-
-            //RemoveItems();
+            
+            Helpers.MonitorLastBonfire((lastBonfire)=> 
+            {
+                Log.Logger.Information($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
+            });
+            RemoveItems();
         }
         private static void RemoveItems()
         {
@@ -181,6 +193,8 @@ namespace DSAP
             };
             foreach (var lot in lots)
             {
+                if (lot.Items[0].LotItemId == 2010 || lot.Items[0].LotItemId == 201 || lot.Items[0].LotItemId == 2011 || lot.Items[0].LotItemId == 2012) continue;
+                if (Helpers.GetStarterGearIds().Any(x => x == lot.GetItemFlagId)) continue;
                 _ = Task.Run(() =>
                 {
                     Helpers.OverwriteItemLot(lot.GetItemFlagId, replacementLot);

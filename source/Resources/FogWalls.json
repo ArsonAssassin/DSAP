@@ -1,0 +1,57 @@
+﻿[
+  {
+    "Name": "Fog Wall - Anor Londo Rafters",
+    "Id": 0,
+    "Flag": 11510090
+  },
+  {
+    "Name": "Fog Wall - Anor Londo Archers",
+    "Id": 0,
+    "Flag": 11510091
+  },
+  {
+    "Name": "Fog Wall - Duke's Archives",
+    "Id": 0,
+    "Flag": 11700083
+  },
+  {
+    "Name": "Fog Wall - Northern Undead Asylum",
+    "Id": 0,
+    "Flag": 11810090
+  },
+  {
+    "Name": "Fog Wall - Sen's Fortress 1",
+    "Id": 0,
+    "Flag": 11500090
+  },
+  {
+    "Name": "Fog Wall - Sen's Fortress 2",
+    "Id": 0,
+    "Flag": 11500091
+  },
+  {
+    "Name": "Fog Wall - Bell Gargoyles",
+    "Id": 0,
+    "Flag": 11015390
+  },
+  {
+    "Name": "Fog Wall - Catacombs",
+    "Id": 0,
+    "Flag": 11300090
+  },
+  {
+    "Name": "Fog Wall - Tomb of the Giants",
+    "Id": 0,
+    "Flag": 11310090
+  },
+  {
+    "Name": "Fog Wall - Blighttown",
+    "Id": 0,
+    "Flag": 11400091
+  },
+  {
+    "Name": "Fog Wall - Undead Burg",
+    "Id": 0,
+    "Flag": 11010090
+  }
+]

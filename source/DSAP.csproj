@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,9 +16,13 @@
     <None Remove="Resources\BossFlags.json" />
     <None Remove="Resources\Consumables.json" />
     <None Remove="Resources\Doors.json" />
+    <None Remove="Resources\EnemyDrop.json" />
+    <None Remove="Resources\FogWalls.json" />
     <None Remove="Resources\ItemLots.json" />
     <None Remove="Resources\KeyItems.json" />
+    <None Remove="Resources\LastBonfire.json" />
     <None Remove="Resources\MeleeWeapons.json" />
+    <None Remove="Resources\MiscFlags.json" />
     <None Remove="Resources\RangedWeapons.json" />
     <None Remove="Resources\Rings.json" />
     <None Remove="Resources\Shields.json" />
@@ -30,7 +34,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\EnemyDrop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resources\Armor.json" />
+    <EmbeddedResource Include="Resources\FogWalls.json" />
+    <EmbeddedResource Include="Resources\LastBonfire.json" />
     <EmbeddedResource Include="Resources\MeleeWeapons.json" />
   </ItemGroup>
 
@@ -51,6 +61,7 @@
     <EmbeddedResource Include="Resources\KeyItems.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MiscFlags.json" />
     <EmbeddedResource Include="Resources\RangedWeapons.json" />
     <EmbeddedResource Include="Resources\Rings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -72,8 +83,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Archipelago.Core" Version="0.1.8" />
-    <PackageReference Include="Archipelago.Core.GUI" Version="0.0.15" />
+    <PackageReference Include="Archipelago.Core" Version="0.1.12" />
+    <PackageReference Include="Archipelago.Core.GUI" Version="0.0.19" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

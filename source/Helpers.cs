@@ -2,6 +2,7 @@
 using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,18 +20,21 @@ namespace DSAP
     {
         public static ulong GetBaseAddress()
         {
-            var address = (ulong)Memory.GetBaseAddress("DarkSoulsRemastered");
+            var address = Memory.GetBaseAddress("DarkSoulsRemastered");
             if (address == 0)
             {
                 Console.WriteLine("Could not find Base Address");
             }
-            return address;
+            return (ulong)address;
         }
         public static ulong GetBaseCOffset()
         {
             var baseAddress = GetBaseAddress();
-            byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
-            string mask = "xxx????xxxxxxxxxx";
+            // byte[] pattern = { 48 8B 05 xx xx xx xx 0F 28 01 66 0F 7F 80 xx xx 00 00 C6 80 }
+            byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x28, 0x01, 0x66, 0x0F, 0x7F, 0x80, 0x00, 0x00, 0x00, 0x00, 0xC6, 0x80 };
+            string mask = "xxx????xxxxxxx??xxxx";
+            //   byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
+            //  string mask = "xxx????xxxxxxxxxx";
             IntPtr getPFAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
 
             int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getPFAddress + 3), 4), 0);
@@ -102,7 +106,7 @@ namespace DSAP
                     Name = lot.Name,
                     Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
                     AddressBit = GetEventFlagOffset(lot.Flag).Item2,
-                    Id = lot.Id,                    
+                    Id = lot.Id,
                 });
             }
             return locations;
@@ -145,6 +149,40 @@ namespace DSAP
         {
             List<Location> locations = new List<Location>();
             var lotFlags = GetDoorFlags();
+            var baseAddress = GetEventFlagsOffset();
+            foreach (var lot in lotFlags)
+            {
+                locations.Add(new Location
+                {
+                    Name = lot.Name,
+                    Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
+                    AddressBit = GetEventFlagOffset(lot.Flag).Item2,
+                    Id = lot.Id,
+                });
+            }
+            return locations;
+        }
+        public static List<Location> GetFogWallFlagLocations()
+        {
+            List<Location> locations = new List<Location>();
+            var lotFlags = GetFogWallFlags();
+            var baseAddress = GetEventFlagsOffset();
+            foreach (var lot in lotFlags)
+            {
+                locations.Add(new Location
+                {
+                    Name = lot.Name,
+                    Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
+                    AddressBit = GetEventFlagOffset(lot.Flag).Item2,
+                    Id = lot.Id,
+                });
+            }
+            return locations;
+        }
+        public static List<Location> GetMiscFlagLocations()
+        {
+            List<Location> locations = new List<Location>();
+            var lotFlags = GetMiscFlags();
             var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)
             {
@@ -205,7 +243,7 @@ namespace DSAP
                     LotItemBasePoint = Memory.ReadUShort(currentAddress + 0x40 + (ulong)(i * 2)),
                     CumulateLotPoint = Memory.ReadUShort(currentAddress + 0x50 + (ulong)(i * 2)),
                     GetItemFlagId = Memory.ReadInt(currentAddress + 0x60 + (ulong)(i * 4)),
-                    LotItemNum = Memory.ReadByte(startAddress + 0x8A + (ulong)i),                    
+                    LotItemNum = Memory.ReadByte(startAddress + 0x8A + (ulong)i),
                     EnableLuck = bitArray.Get(i),
                     CumulateReset = bitArray.Get(i + 8)
                 };
@@ -252,12 +290,12 @@ namespace DSAP
                             Memory.Write(currentAddress + 0x20 + (ulong)(j * 4), 0);  // LotItemCategory
                             Memory.Write(currentAddress + 0x40 + (ulong)(j * 2), (ushort)0);  // LotItemBasePoint
                             Memory.Write(currentAddress + 0x50 + (ulong)(j * 2), (ushort)0);  // CumulateLotPoint
-                           // Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), 0);  // GetItemFlagId
+                                                                                              // Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), 0);  // GetItemFlagId
                             Memory.WriteByte(currentAddress + 0x8A + (ulong)j, 0);  // LotItemNum
                         }
                     }
 
-                 //   Memory.Write(currentAddress + 0x80, newItemLot.GetItemFlagId);
+                    //   Memory.Write(currentAddress + 0x80, newItemLot.GetItemFlagId);
                     Memory.Write(currentAddress + 0x84, newItemLot.CumulateNumFlagId);
                     Memory.WriteByte(currentAddress + 0x88, newItemLot.CumulateNumMax);
                     Memory.WriteByte(currentAddress + 0x89, newItemLot.Rarity);
@@ -286,7 +324,7 @@ namespace DSAP
         }
         public static DarkSoulsItem CreateItemFromLot(ItemLotItem lot)
         {
-           var allItems = GetAllItems();
+            var allItems = GetAllItems();
             var item = allItems.FirstOrDefault(x => x.Id == lot.LotItemId);
             return item;
         }
@@ -295,7 +333,7 @@ namespace DSAP
             var baseCOffset = GetBaseCOffset();
             ulong onlineFlagOffset = 0xB7D;
 
-            var isOnline = Memory.ReadByte(baseCOffset +  onlineFlagOffset) != 0;
+            var isOnline = Memory.ReadByte(baseCOffset + onlineFlagOffset) != 0;
             return isOnline;
 
         }
@@ -316,6 +354,41 @@ namespace DSAP
                 locations.Add(location);
             }
             return locations;
+        }
+        public static LastBonfire GetLastBonfire()
+        {
+
+            var baseC = GetBaseCOffset();
+            var lastBonfireAddress = OffsetPointer(baseC, 0xB34);
+            var lastBonfireId = Memory.ReadInt(lastBonfireAddress);
+            //todo get last bonfire
+            var list = GetLastBonfireList();
+            var lastBonfire = list.FirstOrDefault(x => x.id == lastBonfireId);
+            if (lastBonfire != null)
+            {
+                return lastBonfire;
+            }
+            return null;
+        }
+        public static async void MonitorLastBonfire(Action<LastBonfire> action)
+        {
+            var lastBonfire = GetLastBonfire();
+            if (lastBonfire == null)
+            {
+                Log.Logger.Information("No Last Bonfire found");
+            }
+            else Log.Logger.Information($"Last bonfire was {lastBonfire.id}:{lastBonfire.name} ");
+            while (true)
+            {
+                var currentLastBonfire = GetLastBonfire();
+                if (currentLastBonfire != lastBonfire)
+                {
+                    Log.Logger.Information("Last Bonfire Changed");
+                    lastBonfire = currentLastBonfire;
+                    action?.Invoke(currentLastBonfire);
+                }
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
         }
         public static List<DarkSoulsItem> GetConsumables()
         {
@@ -356,7 +429,7 @@ namespace DSAP
         public static List<DarkSoulsItem> GetRangedWeapons()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.RangedWeapons.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);            
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
             return list;
         }
         public static List<DarkSoulsItem> GetMeleeWeapons()
@@ -405,6 +478,24 @@ namespace DSAP
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Doors.json");
             var list = JsonConvert.DeserializeObject<List<DoorFlag>>(json);
+            return list;
+        }
+        public static List<FogWallFlag> GetFogWallFlags()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.FogWalls.json");
+            var list = JsonConvert.DeserializeObject<List<FogWallFlag>>(json);
+            return list;
+        }
+        public static List<EventFlag> GetMiscFlags()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.MiscFlags.json");
+            var list = JsonConvert.DeserializeObject<List<EventFlag>>(json);
+            return list;
+        }
+        public static List<LastBonfire> GetLastBonfireList()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.LastBonfire.json");
+            var list = JsonConvert.DeserializeObject<List<LastBonfire>>(json);
             return list;
         }
         public static List<DarkSoulsItem> GetAllItems()
@@ -492,6 +583,37 @@ namespace DSAP
                 _ => throw new ArgumentException("Cannot get secondary offset for GetItemFlagId: " + eventFlag),
             };
             return num * 1280;
+        }
+        public static List<int> GetStarterGearIds()
+        {
+            return new List<int>
+            {
+                51810100,
+                51810110,
+                51810120,
+                51810130,
+                51810140,
+                51810150,
+                51810160,
+                51810170,
+                51810180,
+                51810190,
+                51810200,
+                51810210,
+                51810220,
+                51810220,
+                51810230,
+                51810240,
+                51810250,
+                51810260,
+                51810270,
+                51810280,
+                51810290,
+                51810300,
+                51810310,
+                51810320,
+                51810330,
+            };
         }
         public static List<Boss> GetBosses()
         {
