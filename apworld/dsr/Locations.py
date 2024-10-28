@@ -468,7 +468,7 @@ location_tables = {
     DSRLocationData(11110247, f"Black Sorcerer Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110248, f"Sorcery: Hush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110249, f"Slumbering Dragoncrest Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110250, f"Large Titanite Shard - Sen's Fortress 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110250, f"Large Titanite Shard - Guarded by Serpent Soldier", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110251, f"Large Soul of a Brave Warrior - Sen's Fortress above Bonfire", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110252, f"Sen's Fortress lit", f"Sen's Fortress lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110253, f"Flame Stoneplate Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),    
@@ -615,12 +615,12 @@ location_tables = {
     DSRLocationData(11110365, f"Crystal Knight Shield", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110366, f"Twinkling Titanite - Drop from Crystal Lizard in Tunnel", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110367, f"Duke's Archives Cell lit", f"Duke's Archives Cell lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110369, f"Archive Tower Cell Key", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],
 "The Duke's Archives Cell Door": [
     DSRLocationData(11110368, f"Duke's Archives Cell Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "The Duke's Archives - Getting out of Cell": [
-    DSRLocationData(11110369, f"Archive Tower Cell Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110370, f"Archive Prison Extra Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "The Duke's Archives - After Archive Prison Extra Key": [    
