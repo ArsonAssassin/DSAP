@@ -62,7 +62,7 @@
   {
     "Name": "Lord Soul",
     "Flag": 50001560,
-    "Id": 11110446
+    "Id": 11110495
   },
   {
     "Name": "Soul of Quelaag",
@@ -72,7 +72,7 @@
   {
     "Name": "Lord Soul",
     "Flag": 50001580,
-    "Id": 11110495
+    "Id": 11110446
   },
   {
     "Name": "Core of an Iron Golem",
@@ -97,12 +97,12 @@
   {
     "Name": "Bequeathed Lord Soul Shard",
     "Flag": 50001630,
-    "Id": 11110401
+    "Id": 111103581
   },
   {
     "Name": "Bequeathed Lord Soul Shard",
     "Flag": 50001640,
-    "Id": 11110358
+    "Id": 11110401
   },
   {
     "Name": "Soul of Gwyn, Lord of Cinder",
