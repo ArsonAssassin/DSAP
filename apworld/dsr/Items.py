@@ -40,7 +40,7 @@ key_item_names = {
 _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [    
    
     ("Asylum Demon Defeated", 1000, DSRItemCategory.EVENT),
-    ("Tauros Demon Defeated", 1001, DSRItemCategory.EVENT),
+    ("Taurus Demon Defeated", 1001, DSRItemCategory.EVENT),
     ("Bell Gargoyles Defeated", 1002, DSRItemCategory.EVENT),
     ("Capra Demon Defeated", 1003, DSRItemCategory.EVENT),
     ("Ceaseless Discharge Defeated", 1004, DSRItemCategory.EVENT),
@@ -215,9 +215,6 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Darksign", 2073, DSRItemCategory.CONSUMABLE),
     ("Purple Coward's Crystal", 2074, DSRItemCategory.CONSUMABLE),
     ("Silver Pendant", 2075, DSRItemCategory.CONSUMABLE),
-    ("Binoculars", 2082, DSRItemCategory.CONSUMABLE),
-    ("Dragon Head Stone", 2083, DSRItemCategory.CONSUMABLE),
-    ("Dragon Torso Stone", 2084, DSRItemCategory.CONSUMABLE),
     ("Dried Finger", 2076, DSRItemCategory.CONSUMABLE),
     ("Carving: HELLO!", 2077, DSRItemCategory.CONSUMABLE),
     ("Carving: THANK YOU!", 2078, DSRItemCategory.CONSUMABLE),
@@ -840,6 +837,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Sanctus", 9040, DSRItemCategory.SHIELD),
     ("Bloodshield", 9041, DSRItemCategory.SHIELD),
     ("Black Iron Greatshield", 9042, DSRItemCategory.SHIELD),
+    ("Cleansing Greatshield", 9043, DSRItemCategory.SHIELD),
     
     
     ("Lag Trap", 10000, DSRItemCategory.TRAP),

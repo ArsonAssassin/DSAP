@@ -1685,7 +1685,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Armor",
-    "ApId": 11117133
+    "ApId": 11117219
   },
   {
     "Name": "Armor of Artorias",
@@ -1693,7 +1693,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Armor",
-    "ApId": 11117134
+    "ApId": 11117220
   },
   {
     "Name": "Gauntlets of Artorias",
@@ -1701,7 +1701,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Armor",
-    "ApId": 11117135
+    "ApId": 11117221
   },
   {
     "Name": "Leggings of Artorias",
@@ -1709,7 +1709,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Armor",
-    "ApId": 11117136
+    "ApId": 11117222
   },
   {
     "Name": "Porcelain Mask",
@@ -1717,7 +1717,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Armor",
-    "ApId": 11117137
+    "ApId": 11117223
   },
   {
     "Name": "Lord's Blade Robe",

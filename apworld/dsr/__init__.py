@@ -365,7 +365,6 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_location("Purging Stone - Snuggly Trade", self.player), lambda state: state.has("Cracked Red Eye Orb", self.player))
         set_rule(self.multiworld.get_location("Ring of Sacrifice - Snuggly Trade", self.player), lambda state: state.has("Humanity", self.player))
         set_rule(self.multiworld.get_location("Rare Ring of Sacrifice - Snuggly Trade", self.player), lambda state: state.has("Twin Humanities", self.player))
-        set_rule(self.multiworld.get_location("Demon Titanite - Snuggly Prism Stone", self.player), lambda state: state.has("Prism Stone", self.player))
         set_rule(self.multiworld.get_location("Demon Titanite - Snuggly Dung Pie", self.player), lambda state: state.has("Dung Pie", self.player))
         set_rule(self.multiworld.get_location("Red Titanite Chunk - Snuggly Trade", self.player), lambda state: state.has("Pyromancy Flame)", self.player))
         set_rule(self.multiworld.get_location("Red Titanite Slab - Snuggly Trade", self.player), lambda state: state.has("Pyromancy Flame (Ascended)", self.player))
