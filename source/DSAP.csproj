@@ -50,7 +50,9 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <WindowsPackageType>None</WindowsPackageType>
+  </PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Resources\Armor.json" />
 	  <None Remove="Resources\Bonfires.json" />
