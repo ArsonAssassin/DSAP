@@ -389,6 +389,8 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Blighttown -> Demon Ruins", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
         
+        set_rule(self.multiworld.get_location("UP: Bell of Awakening rung", self.player), lambda state: state.has("Bell Gargoyles Defeated", self.player))
+        set_rule(self.multiworld.get_location("BT: Bell of Awakening rung", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Undead Parish -> Sen's Fortress", self.player), lambda state: state.has("Bell of Awakening #1", self.player) and state.has("Bell of Awakening #2", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress -> Sen's Fortress - After Cage Key", self.player), lambda state: state.has("Cage Key", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress -> Anor Londo", self.player), lambda state: state.has("Iron Golem Defeated", self.player))

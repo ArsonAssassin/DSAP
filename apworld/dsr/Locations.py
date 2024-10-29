@@ -220,7 +220,7 @@ location_tables = {
     DSRLocationData(11110071, f"UP: Large Soul of a Nameless Soldier - Parish Window", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110072, f"UP: Humanity - Parish Barrel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110073, f"UP: Bell Gargoyles Defeated", f"Bell Gargoyles Defeated", DSRLocationCategory.BOSS),
-    DSRLocationData(11110074, f"UP: Bell of Awakening #1", f"Bell of Awakening #1", DSRLocationCategory.EVENT),
+    DSRLocationData(11110074, f"UP: Bell of Awakening #1 rung", f"Bell of Awakening #1", DSRLocationCategory.EVENT),
 ],
 "Firelink Shrine - After Undead Parish Elevator": [
     DSRLocationData(11110075, f"FS: Undead Asylum F2 West Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -342,7 +342,7 @@ location_tables = {
     DSRLocationData(11110164, f"BT: Chaos Witch Quelaag Defeated", f"Chaos Witch Quelaag Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110560, f"BT: Soul of Quelaag", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110165, f"BT: Quelaag's Domain lit", f"Quelaag's Domain lit", DSRLocationCategory.BONFIRE),    
-    DSRLocationData(11110556, f"BT: Bell of Awakening #2", f"Bell of Awakening #2", DSRLocationCategory.EVENT),
+    DSRLocationData(11110556, f"BT: Bell of Awakening #2 rung", f"Bell of Awakening #2", DSRLocationCategory.EVENT),
     DSRLocationData(11110166, f"BT: Soul of a Proud Knight - Blighttown Fire Keeper Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110167, f"BT: Fire Keeper Soul - Blighttown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110168, f"BT: Crimson Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
