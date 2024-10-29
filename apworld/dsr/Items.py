@@ -40,7 +40,7 @@ key_item_names = {
 _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [    
    
     ("Asylum Demon Defeated", 1000, DSRItemCategory.EVENT),
-    ("Tauros Demon Defeated", 1001, DSRItemCategory.EVENT),
+    ("Taurus Demon Defeated", 1001, DSRItemCategory.EVENT),
     ("Bell Gargoyles Defeated", 1002, DSRItemCategory.EVENT),
     ("Capra Demon Defeated", 1003, DSRItemCategory.EVENT),
     ("Ceaseless Discharge Defeated", 1004, DSRItemCategory.EVENT),
@@ -215,9 +215,6 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Darksign", 2073, DSRItemCategory.CONSUMABLE),
     ("Purple Coward's Crystal", 2074, DSRItemCategory.CONSUMABLE),
     ("Silver Pendant", 2075, DSRItemCategory.CONSUMABLE),
-    ("Binoculars", 2082, DSRItemCategory.CONSUMABLE),
-    ("Dragon Head Stone", 2083, DSRItemCategory.CONSUMABLE),
-    ("Dragon Torso Stone", 2084, DSRItemCategory.CONSUMABLE),
     ("Dried Finger", 2076, DSRItemCategory.CONSUMABLE),
     ("Carving: HELLO!", 2077, DSRItemCategory.CONSUMABLE),
     ("Carving: THANK YOU!", 2078, DSRItemCategory.CONSUMABLE),
@@ -540,7 +537,6 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Wanderer Boots", 7132, DSRItemCategory.ARMOR),
     ("Big Hat", 7138, DSRItemCategory.ARMOR),
     ("Sage Robe", 7139, DSRItemCategory.ARMOR),
-    ("Traveling Gloves", 7140, DSRItemCategory.ARMOR),
     ("Traveling Boots", 7141, DSRItemCategory.ARMOR),
     ("Knight Helm", 7142, DSRItemCategory.ARMOR),
     ("Knight Armor", 7143, DSRItemCategory.ARMOR),
@@ -797,23 +793,6 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Velka's Talisman", 8122, DSRItemCategory.WEAPON),
     ("Manus Catalyst", 8151, DSRItemCategory.WEAPON),
     ("Oolacile Catalyst", 8152, DSRItemCategory.WEAPON),
-  
-    ("Manus Catalyst", 8138, DSRItemCategory.WEAPON),
-    ("Oolacile Catalyst", 8139, DSRItemCategory.WEAPON),
-    ("Pyromancy Flame Ascended", 8140, DSRItemCategory.WEAPON),
-    
-    ("Sunlight Straight Sword", 8141, DSRItemCategory.WEAPON),
-    ("Greatsword of Artorias (Cursed)", 8142, DSRItemCategory.WEAPON),
-    ("Dragon King Greataxe", 8143, DSRItemCategory.WEAPON),
-    ("Black Knight Greataxe", 8144, DSRItemCategory.WEAPON),
-    ("Blacksmith Giant Hammer", 8145, DSRItemCategory.WEAPON),
-    ("Gold Tracer", 8146, DSRItemCategory.WEAPON),
-    ("Dark Silver Tracer", 8147, DSRItemCategory.WEAPON),
-    ("Abyss Greatsword", 8148, DSRItemCategory.WEAPON),
-    ("Stone Greataxe", 8149, DSRItemCategory.WEAPON),
-    ("Four-pronged Plow", 8150, DSRItemCategory.WEAPON),
-    ("Guardian Tail", 8151, DSRItemCategory.WEAPON),
-    ("Obsidian Greatsword", 8152, DSRItemCategory.WEAPON),
     
     ("Skull Lantern", 9000, DSRItemCategory.SHIELD),
     ("East-West Shield", 9001, DSRItemCategory.SHIELD),
@@ -858,6 +837,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Sanctus", 9040, DSRItemCategory.SHIELD),
     ("Bloodshield", 9041, DSRItemCategory.SHIELD),
     ("Black Iron Greatshield", 9042, DSRItemCategory.SHIELD),
+    ("Cleansing Greatshield", 9043, DSRItemCategory.SHIELD),
     
     
     ("Lag Trap", 10000, DSRItemCategory.TRAP),
