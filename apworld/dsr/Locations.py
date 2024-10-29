@@ -254,7 +254,7 @@ location_tables = {
     DSRLocationData(11110097, f"Snuggly: Skull Lantern -> Ring of Fog", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110098, f"Snuggly: Ring of the Sun Princess -> Divine Blessing x2", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110099, f"Snuggly: Xanthous Crown -> Ring of Favor and Protection", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110100, f"Snuggly: Soul of Manus -> Sorcery: Pursuers", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110100, f"Snuggly: Soul of Manus -> Sorcery: Pursuers", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],  
 "Undead Burg Basement Door": [
     DSRLocationData(11110101, f"UUB: Undead Burg Basement opened", f"Firebomb", DSRLocationCategory.DOOR),
