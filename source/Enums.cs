@@ -13,17 +13,17 @@ namespace DSAP
             Armor = 0x10000000,
             Consumables = 0x40000000,
             KeyItems = 0x40000000,
-            MeleeWeapons=0x00000000,
-            RangedWeapons=0x00000000,
-            Rings=0x20000000,
-            Shields=0x00000000,
-            Spells=0x40000000,
-            SpellTools=0x00000000,
-            UpgradeMaterials=0x40000000,
+            MeleeWeapons = 0x00000000,
+            RangedWeapons = 0x00000000,
+            Rings = 0x20000000,
+            Shields = 0x00000000,
+            Spells = 0x40000000,
+            SpellTools = 0x00000000,
+            UpgradeMaterials = 0x40000000,
             UsableItems = 0x40000000,
-            MysteryWeapons=0x000000000,
-            MysteryArmor=0x10000000,
-            MysteryGoods=0x40000000
+            MysteryWeapons = 0x000000000,
+            MysteryArmor = 0x10000000,
+            MysteryGoods = 0x40000000
         }
 
         public enum ItemUpgrade

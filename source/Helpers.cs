@@ -1,5 +1,4 @@
-﻿using Archipelago.Core.Models;
-using Archipelago.Core.Util;
+﻿using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
@@ -10,10 +9,8 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static System.Windows.Forms.LinkLabel;
-
+using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
     public class Helpers
