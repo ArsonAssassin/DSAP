@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSAP", "DSAP.csproj", "{CDE10657-824C-4EA5-B723-C50B6E3AC41E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archipelago.Core.MauiGUI", "..\Archipelago.Core.MauiGUI\Archipelago.Core.MauiGUI.csproj", "{399435A6-1356-42FE-ABB1-FC1EA4133406}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSAP", "DSAP.csproj", "{CDE10657-824C-4EA5-B723-C50B6E3AC41E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{CDE10657-824C-4EA5-B723-C50B6E3AC41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDE10657-824C-4EA5-B723-C50B6E3AC41E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDE10657-824C-4EA5-B723-C50B6E3AC41E}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{399435A6-1356-42FE-ABB1-FC1EA4133406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{399435A6-1356-42FE-ABB1-FC1EA4133406}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{399435A6-1356-42FE-ABB1-FC1EA4133406}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{399435A6-1356-42FE-ABB1-FC1EA4133406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
