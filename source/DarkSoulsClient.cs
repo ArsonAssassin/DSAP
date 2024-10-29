@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Archipelago.Core.Util;
+using Archipelago.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Archipelago.Core;
-using Archipelago.Core.Util;
 
 namespace DSAP
 {
@@ -20,13 +20,13 @@ namespace DSAP
         }
         public bool Connect()
         {
-            Console.WriteLine($"Connecting to {ProcessName}");            
+            Console.WriteLine($"Connecting to {ProcessName}");
             if (ProcId == 0)
             {
                 Console.WriteLine($"{ProcessName} not found.");
                 return false;
             }
-			IsConnected = true;
+            IsConnected = true;
             return true;
         }
 

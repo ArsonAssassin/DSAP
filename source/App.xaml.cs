@@ -1,51 +1,38 @@
+﻿
 using Archipelago.Core;
-using Archipelago.Core.GUI;
-using Archipelago.Core.GUI.Logging;
+using Archipelago.Core.MauiGUI;
+using Archipelago.Core.MauiGUI.Models;
+using Archipelago.Core.MauiGUI.ViewModels;
 using Archipelago.Core.Models;
-using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 using static DSAP.Enums;
-
+using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
-    internal static class Program
+    public partial class App : Application
     {
-
+        MainPageViewModel Context;
         public static ArchipelagoClient Client { get; set; }
-        public static MainForm MainForm { get; set; }
         public static List<DarkSoulsItem> AllItems { get; set; }
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
+        public App()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+            InitializeComponent();
             var options = new GuiDesignOptions
             {
-                BackgroundColor = Color.Black,
-                ButtonColor = Color.DarkRed,
-                ButtonTextColor = Color.Black,
+                BackgroundColor = Color.FromArgb("FF000000"),
+                ButtonColor = Color.FromArgb("FFFF0000"),
+                ButtonTextColor = Color.FromArgb("FF000000"),
                 Title = "DSAP - Dark Souls Remastered Archipelago",
 
             };
-            MainForm = new MainForm(options);
-#if __DEBUG__
-            LoggerConfig.SetLogLevel(LogEventLevel.Verbose);
-#endif
-            MainForm.ConnectClicked += MainForm_ConnectClicked;
-            Application.Run(MainForm);
+
+            Context = new MainPageViewModel(options);
+            Context.ConnectClicked += Context_ConnectClicked;
+            MainPage = new MainPage(Context);
         }
-
-
-
         public static void AddItem(int category, int id, int quantity)
         {
             var command = Helpers.GetItemCommand();
@@ -55,7 +42,7 @@ namespace DSAP
             Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x7, 4);
             //set item id
             Array.Copy(BitConverter.GetBytes(id), 0, command, 0xD, 4);
-            
+
             var result = Memory.ExecuteCommand(command);
         }
 
@@ -110,8 +97,7 @@ namespace DSAP
                 await Task.Delay(500);
             }
         }
-
-        private static async void MainForm_ConnectClicked(object? sender, ConnectClickedEventArgs e)
+        private async void Context_ConnectClicked(object? sender, ConnectClickedEventArgs e)
         {
             if (Client != null)
             {
@@ -144,7 +130,7 @@ namespace DSAP
 
 
             Client.ItemReceived += Client_ItemReceived;
-
+            Client.MessageReceived += Client_MessageReceived;
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
             var bonfireLocations = Helpers.GetBonfireFlagLocations();
@@ -160,13 +146,20 @@ namespace DSAP
             // Client.MonitorLocations(fogWallLocations);
             Client.MonitorLocations(miscLocations);
 
-            
-            Helpers.MonitorLastBonfire((lastBonfire)=> 
+
+            Helpers.MonitorLastBonfire((lastBonfire) =>
             {
                 Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
             });
             RemoveItems();
         }
+
+        private void Client_MessageReceived(object? sender, Archipelago.Core.Models.MessageReceivedEventArgs e)
+        {
+            
+            Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
+        }
+
         private static void RemoveItems()
         {
             var lots = Helpers.GetItemLots();
@@ -229,6 +222,18 @@ namespace DSAP
         private static void OnDisconnected(object sender, EventArgs args)
         {
             Log.Logger.Information("Disconnected from Archipelago");
+        }
+        protected override Window CreateWindow(IActivationState activationState)
+        {
+            var window = base.CreateWindow(activationState);
+            if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+            {
+                window.Title = "DSAP - Dark Souls Archipelago Randomizer";
+
+            }
+            window.Width = 600;
+
+            return window;
         }
     }
 }
