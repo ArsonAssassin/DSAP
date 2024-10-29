@@ -183,7 +183,7 @@ location_tables = {
     DSRLocationData(11110037, f"UB: Soul of a Lost Undead - Upper Burg Fogwall House", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110038, f"UB: Wooden Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110039, f"UB: Undead Burg lit", f"Undead Burg lit", DSRLocationCategory.BONFIRE),
-    DSRLocationData(11110040, f"UB: Uchigatana", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110040, f"UB: Uchigatana", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110041, f"UB: Orange Guidance Soapstone", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110042, f"UB: Residence Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110043, f"UB: Throwing Knife", f"Firebomb", DSRLocationCategory.ITEM_LOT),
