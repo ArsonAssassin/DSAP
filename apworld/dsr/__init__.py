@@ -365,7 +365,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_location("Snuggly: Cracked Red Eye Orb -> Purging Stone x2", self.player), lambda state: state.has("Cracked Red Eye Orb", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Humanity -> Ring of Sacrifice", self.player), lambda state: state.has("Humanity", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Twin Humanities -> Rare Ring of Sacrifice", self.player), lambda state: state.has("Twin Humanities", self.player))
-        set_rule(self.multiworld.get_location("Snuggly: Dung Pie -> Demon Titanite", f"Firebomb", self.player), lambda state: state.has("Dung Pie", self.player))
+        set_rule(self.multiworld.get_location("Snuggly: Dung Pie -> Demon Titanite", self.player), lambda state: state.has("Dung Pie", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Pyromancy Flame -> Red Titanite Chunk", self.player), lambda state: state.has("Pyromancy Flame)", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Pyromancy Flame (Ascended) -> Red Titanite Slab", self.player), lambda state: state.has("Pyromancy Flame (Ascended)", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Egg Vermifuge -> Dragon Scale", self.player), lambda state: state.has("Egg Vermifuge", self.player))
