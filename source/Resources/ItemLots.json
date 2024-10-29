@@ -60,7 +60,7 @@
     "Id": 11110471
   },
   {
-    "Name": "Lord Soul",
+    "Name": "Lord Soul (Nito)",
     "Flag": 50001560,
     "Id": 11110495
   },
@@ -70,7 +70,7 @@
     "Id": 11110560
   },
   {
-    "Name": "Lord Soul",
+    "Name": "Lord Soul (Bed of Chaos)",
     "Flag": 50001580,
     "Id": 11110446
   },
@@ -95,12 +95,12 @@
     "Id": 11110562
   },
   {
-    "Name": "Bequeathed Lord Soul Shard",
+    "Name": "Bequeathed Lord Soul Shard (Four Kings)",
     "Flag": 50001630,
-    "Id": 111103581
+    "Id": 11110358
   },
   {
-    "Name": "Bequeathed Lord Soul Shard",
+    "Name": "Bequeathed Lord Soul Shard (Seath)",
     "Flag": 50001640,
     "Id": 11110401
   },
@@ -475,24 +475,9 @@
     "Id": 11110566
   },
   {
-    "Name": "Soul of a Lost Undead",
-    "Flag": 51010390,
-    "Id": 11110567
-  },
-  {
     "Name": "Soul of a Lost Undead - Window Corpse",
     "Flag": 51010400,
     "Id": 11110568
-  },
-  {
-    "Name": "Soul of a Lost Undead",
-    "Flag": 51010410,
-    "Id": 11110569
-  },
-  {
-    "Name": "Soul of a Lost Undead",
-    "Flag": 51010420,
-    "Id": 11110570
   },
   {
     "Name": "Large Soul of a Lost Undead - Hallway to Depths",
@@ -663,6 +648,11 @@
     "Name": "Soul of a Proud Knight - Painted World 1",
     "Flag": 51100010,
     "Id": 11110571
+  },
+  {
+    "Name": "Twin Humanities - Old Dried Finger Location",
+    "Flag": 51100020,
+    "Id": 11110302
   },
   {
     "Name": "Soul of a Brave Warrior - Painted World Albino Rats",
@@ -1437,7 +1427,7 @@
   {
     "Name": "Large Soul of a Nameless Soldier - Upper Blighttown",
     "Flag": 51400050,
-    "Id": 11110113
+    "Id": 11110134
   },
   {
     "Name": "Humanity - Blighttown Swaying Bridge",
@@ -1650,34 +1640,9 @@
     "Id": 11110406
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410190,
-    "Id": 11110597
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410200,
-    "Id": 11110598
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410210,
-    "Id": 11110599
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410220,
-    "Id": 11110600
-  },
-  {
     "Name": "Soul of a Brave Warrior - Ruins/Domain shortcut",
     "Flag": 51410230,
     "Id": 11110419
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410240,
-    "Id": 11110601
   },
   {
     "Name": "Soul of a Brave Warrior",
@@ -1685,29 +1650,9 @@
     "Id": 11110602
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410260,
-    "Id": 11110603
-  },
-  {
     "Name": "Green Titanite Shard - Centipede Demon",
     "Flag": 51410270,
     "Id": 11110424
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410280,
-    "Id": 11110604
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410290,
-    "Id": 11110605
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410300,
-    "Id": 11110606
   },
   {
     "Name": "Soul of a Brave Warrior - Izalith Lava 2",
@@ -1730,19 +1675,9 @@
     "Id": 11110432
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410350,
-    "Id": 11110607
-  },
-  {
     "Name": "Twin Humanities - Lost Izalith",
     "Flag": 51410360,
     "Id": 11110430
-  },
-  {
-    "Name": "Large Soul of a Brave Warrior",
-    "Flag": 51410370,
-    "Id": 11110608
   },
   {
     "Name": "Rare Ring of Sacrifice - Izalith City",
@@ -1800,19 +1735,9 @@
     "Id": 11110240
   },
   {
-    "Name": "Large Soul of a Proud Knight",
-    "Flag": 51500030,
-    "Id": 11110610
-  },
-  {
     "Name": "Divine Blessing - Sen's Fortress",
     "Flag": 51500040,
     "Id": 11110611
-  },
-  {
-    "Name": "Large Soul of a Proud Knight",
-    "Flag": 51500050,
-    "Id": 11110612
   },
   {
     "Name": "Black Sorcerer Set",
@@ -1893,11 +1818,6 @@
     "Name": "Soul of a Hero - Sen's Fortress Cage",
     "Flag": 51500420,
     "Id": 11110260
-  },
-  {
-    "Name": "Large Soul of a Proud Knight",
-    "Flag": 51500430,
-    "Id": 11110615
   },
   {
     "Name": "Sniper Crossbow and Sniper Bolts",
@@ -2142,7 +2062,7 @@
   {
     "Name": "Humanity - Valley of Drakes",
     "Flag": 51600210,
-    "Id": 11110617
+    "Id": 11110178
   },
   {
     "Name": "Brigand Set",
