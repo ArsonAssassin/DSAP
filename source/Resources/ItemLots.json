@@ -340,9 +340,14 @@
     "Id": 11110122
   },
   {
-    "Name": "Heavy Crossbow and Heavy Bolts",
+    "Name": "Heavy Crossbow",
     "Flag": 51000190,
     "Id": 11110125
+  },
+  {
+    "Name": "Heavy Bolt",
+    "Flag": 51000190,
+    "Id": 11110624
   },
   {
     "Name": "Warrior Set",
@@ -390,9 +395,14 @@
     "Id": 11110035
   },
   {
-    "Name": "Light Crossbow and Standard Bolts",
+    "Name": "Light Crossbow",
     "Flag": 51010090,
     "Id": 11110044
+  },
+   {
+    "Name": "Standard Bolt",
+    "Flag": 51010090,
+    "Id": 11110617
   },
   {
     "Name": "Humanity - Undead Burg Entrance Wall",
@@ -457,17 +467,17 @@
   {
     "Name": "Black Leather Armor",
     "Flag": 51010380,
-    "Id": 11110565
+    "Id": 11110618
   },
   {
     "Name": "Black Leather Gloves",
     "Flag": 51010380,
-    "Id": 11110565
+    "Id": 11110619
   },
   {
     "Name": "Black Leather Boots",
     "Flag": 51010380,
-    "Id": 11110565
+    "Id": 11110620
   },
   {
     "Name": "Target Shield",
@@ -520,9 +530,24 @@
     "Id": 11110071
   },
   {
-    "Name": "Sorcerer Set",
+    "Name": "Sorcerer Hat",
     "Flag": 51010510,
     "Id": 11110110
+  },
+  {
+    "Name": "Sorcerer Cloak",
+    "Flag": 51010510,
+    "Id": 11110621
+  },
+  {
+    "Name": "Sorcerer Gauntlets",
+    "Flag": 51010510,
+    "Id": 11110622
+  },
+  {
+    "Name": "Sorcerer Boots",
+    "Flag": 51010510,
+    "Id": 11110623
   },
   {
     "Name": "Sorcerer's Catalyst",
@@ -665,9 +690,24 @@
     "Id": 11110308
   },
   {
-    "Name": "Velka's Set",
+    "Name": "Mask of Velka",
     "Flag": 51100060,
     "Id": 11110329
+  },
+  {
+    "Name": "Black Cleric Robe",
+    "Flag": 51100060,
+    "Id": 11110675
+  },
+  {
+    "Name": "Black Manchette",
+    "Flag": 51100060,
+    "Id": 11110676
+  },
+  {
+    "Name": "Black Tights",
+    "Flag": 51100060,
+    "Id": 11110677
   },
   {
     "Name": "Soul of a Brave Warrior - Painted World 1",
@@ -700,9 +740,24 @@
     "Id": 11110322
   },
   {
-    "Name": "Xanthous Set",
+    "Name": "Xanthous Crown",
     "Flag": 51100150,
     "Id": 11110327
+  },
+  {
+    "Name": "Xanthous Overcoat",
+    "Flag": 51100150,
+    "Id": 11110672
+  },
+  {
+    "Name": "Xanthous Gloves",
+    "Flag": 51100150,
+    "Id": 11110673
+  },
+  {
+    "Name": "Xanthous Waistcloth",
+    "Flag": 51100150,
+    "Id": 11110674
   },
   {
     "Name": "Ring of Sacrifice - Painted World",
@@ -835,9 +890,24 @@
     "Id": 11110197
   },
   {
-    "Name": "Elite Knight Set",
+    "Name": "Elite Knight Helm",
     "Flag": 51200070,
     "Id": 11110196
+  },
+  {
+    "Name": "Elite Knight Armor",
+    "Flag": 51200070,
+    "Id": 11110649
+  },
+  {
+    "Name": "Elite Knight Gauntlets",
+    "Flag": 51200070,
+    "Id": 11110650
+  },
+  {
+    "Name": "Elite Knight Leggings",
+    "Flag": 51200070,
+    "Id": 11110651
   },
   {
     "Name": "Eastern Helm",
@@ -847,17 +917,17 @@
   {
     "Name": "Eastern Armor",
     "Flag": 51200080,
-    "Id": 11110553
+    "Id": 11110652
   },
   {
     "Name": "Eastern Gauntlets",
     "Flag": 51200080,
-    "Id": 11110553
+    "Id": 11110653
   },
   {
     "Name": "Eastern Leggings",
     "Flag": 51200080,
-    "Id": 11110553
+    "Id": 11110654
   },
   {
     "Name": "Large Soul of a Brave Warrior - Darkroot Garden Cats",
@@ -880,9 +950,24 @@
     "Id": 11110201
   },
   {
-    "Name": "Dusk Set",
+    "Name": "Crown of Dusk",
     "Flag": 51200150,
     "Id": 11110191
+  },
+  {
+    "Name": "Antiquated Dress",
+    "Flag": 51200150,
+    "Id": 11110646
+  },
+  {
+    "Name": "Antiquated Gloves",
+    "Flag": 51200150,
+    "Id": 11110647
+  },
+  {
+    "Name": "Antiquated Skirt",
+    "Flag": 51200150,
+    "Id": 11110648
   },
   {
     "Name": "Hornet Ring",
@@ -900,9 +985,24 @@
     "Id": 11110210
   },
   {
-    "Name": "Stone Knight Set",
+    "Name": "Stone Helm",
     "Flag": 51200510,
     "Id": 11110204
+  },
+  {
+    "Name": "Stone Armor",
+    "Flag": 51200510,
+    "Id": 11110655
+  },
+  {
+    "Name": "Stone Gauntlets",
+    "Flag": 51200510,
+    "Id": 11110656
+  },
+  {
+    "Name": "Stone Leggings",
+    "Flag": 51200510,
+    "Id": 11110657
   },
   {
     "Name": "Soul of a Proud Knight - Past Fake Trees",
@@ -923,6 +1023,21 @@
     "Name": "Knight Set",
     "Flag": 51200210,
     "Id": 11110190
+  },
+  {
+    "Name": "Knight Armor",
+    "Flag": 51200210,
+    "Id": 11110643
+  },
+  {
+    "Name": "Knight Gauntlets",
+    "Flag": 51200210,
+    "Id": 11110644
+  },
+  {
+    "Name": "Knight Leggings",
+    "Flag": 51200210,
+    "Id": 11110645
   },
   {
     "Name": "Soul of a Lost Undead",
@@ -1185,9 +1300,24 @@
     "Id": 11110466
   },
   {
-    "Name": "Holy Set",
+    "Name": "Priest's Hat",
     "Flag": 51300190,
     "Id": 11110469
+  },
+  {
+    "Name": "Holy Robe",
+    "Flag": 51300190,
+    "Id": 11110694
+  },
+  {
+    "Name": "Traveling Gloves",
+    "Flag": 51300190,
+    "Id": 11110695
+  },
+  {
+    "Name": "Holy Trousers",
+    "Flag": 51300190,
+    "Id": 11110696
   },
   {
     "Name": "Mace",
@@ -1310,9 +1440,24 @@
     "Id": 11110493
   },
   {
-    "Name": "Paladin Set",
+    "Name": "Paladin Helm",
     "Flag": 51310240,
     "Id": 11110497
+  },
+  {
+    "Name": "Paladin Armor",
+    "Flag": 51310240,
+    "Id": 11110697
+  },
+  {
+    "Name": "Paladin Gauntlets",
+    "Flag": 51310240,
+    "Id": 11110698
+  },
+  {
+    "Name": "Paladin Leggings",
+    "Flag": 51310240,
+    "Id": 11110699
   },
   {
     "Name": "White Titanite Chunk - Outside Nito",
@@ -1420,9 +1565,24 @@
     "Id": 11110133
   },
   {
-    "Name": "Shadow Set",
+    "Name": "Shadow Mask",
     "Flag": 51400040,
     "Id": 11110141
+  },
+  {
+    "Name": "Shadow Garb",
+    "Flag": 51400040,
+    "Id": 11110625
+  },
+  {
+    "Name": "Shadow Gauntlets",
+    "Flag": 51400040,
+    "Id": 11110626
+  },
+  {
+    "Name": "Shadow Leggings",
+    "Flag": 51400040,
+    "Id": 11110627
   },
   {
     "Name": "Large Soul of a Nameless Soldier - Upper Blighttown",
@@ -1475,9 +1635,24 @@
     "Id": 11110595
   },
   {
-    "Name": "Crimson Set",
+    "Name": "Mask of the Sealer",
     "Flag": 51400190,
     "Id": 11110168
+  },
+  {
+    "Name": "Crimson Robe",
+    "Flag": 51400190,
+    "Id": 11110634
+  },
+  {
+    "Name": "Crimson Gloves",
+    "Flag": 51400190,
+    "Id": 11110635
+  },
+  {
+    "Name": "Crimson Waistcloth",
+    "Flag": 51400190,
+    "Id": 11110636
   },
   {
     "Name": "Tin Banishment Catalyst",
@@ -1505,9 +1680,24 @@
     "Id": 11110153
   },
   {
-    "Name": "Pyromancer Set",
+    "Name": "Tattered Cloth Hood",
     "Flag": 51400270,
     "Id": 11110155
+  },
+  {
+    "Name": "Tattered Cloth Robe",
+    "Flag": 51400270,
+    "Id": 11110631
+  },
+  {
+    "Name": "Tattered Cloth Manchette",
+    "Flag": 51400270,
+    "Id": 11110632
+  },
+  {
+    "Name": "Heavy Boots",
+    "Flag": 51400270,
+    "Id": 11110633
   },
   {
     "Name": "Pyromancy: Poison Mist",
@@ -1530,9 +1720,24 @@
     "Id": 11110158
   },
   {
-    "Name": "Wanderer Set",
+    "Name": "Wanderer Hood",
     "Flag": 51400310,
     "Id": 11110146
+  },
+  {
+    "Name": "Wanderer Coat",
+    "Flag": 51400310,
+    "Id": 11110628
+  },
+  {
+    "Name": "Wanderer Manchette",
+    "Flag": 51400310,
+    "Id": 11110629
+  },
+  {
+    "Name": "Wanderer Boots",
+    "Flag": 51400310,
+    "Id": 11110630
   },
   {
     "Name": "Falchion",
@@ -1560,9 +1765,24 @@
     "Id": 11110159
   },
   {
-    "Name": "Thorns Set",
+    "Name": "Helm of Thorns",
     "Flag": 51400370,
     "Id": 11110411
+  },
+  {
+    "Name": "Armor of Thorns",
+    "Flag": 51400370,
+    "Id": 11110691
+  },
+  {
+    "Name": "Gauntlets of Thorns",
+    "Flag": 51400370,
+    "Id": 11110692
+  },
+  {
+    "Name": "Leggings of Thorns",
+    "Flag": 51400370,
+    "Id": 11110693
   },
   {
     "Name": "Key to New Londo Ruins",
@@ -1635,9 +1855,24 @@
     "Id": 11110420
   },
   {
-    "Name": "Gold-Hemmed Black Set",
+    "Name": "Gold-Hemmed Black Hood",
     "Flag": 51410180,
     "Id": 11110406
+  },
+  {
+    "Name": "Gold-Hemmed Black Cloak",
+    "Flag": 51410180,
+    "Id": 11110688
+  },
+  {
+    "Name": "Gold-Hemmed Black Gloves",
+    "Flag": 51410180,
+    "Id": 11110689
+  },
+  {
+    "Name": "Gold-Hemmed Black Skirt",
+    "Flag": 51410180,
+    "Id": 11110690
   },
   {
     "Name": "Soul of a Brave Warrior - Ruins/Domain shortcut",
@@ -1740,9 +1975,24 @@
     "Id": 11110611
   },
   {
-    "Name": "Black Sorcerer Set",
+    "Name": "Black Sorcerer Hat",
     "Flag": 51500060,
     "Id": 11110247
+  },
+  {
+    "Name": "Black Sorcerer Cloak",
+    "Flag": 51500060,
+    "Id": 11110658
+  },
+  {
+    "Name": "Black Sorcerer Gauntlets",
+    "Flag": 51500060,
+    "Id": 11110659
+  },
+  {
+    "Name": "Black Sorcerer Boots",
+    "Flag": 51500060,
+    "Id": 11110660
   },
   {
     "Name": "Sorcery: Hush",
@@ -1820,9 +2070,14 @@
     "Id": 11110260
   },
   {
-    "Name": "Sniper Crossbow and Sniper Bolts",
+    "Name": "Sniper Crossbow",
     "Flag": 51500440,
     "Id": 11110256
+  },
+  {
+    "Name": "Sniper Bolt",
+    "Flag": 51500440,
+    "Id": 11110661
   },
   {
     "Name": "Sorcery: Great Magic Weapon",
@@ -1850,9 +2105,24 @@
     "Id": 11110288
   },
   {
-    "Name": "Black Iron Set",
+    "Name": "Black Iron Helm",
     "Flag": 51510070,
     "Id": 11110270
+  },
+  {
+    "Name": "Black Iron Armor",
+    "Flag": 51510070,
+    "Id": 11110662
+  },
+  {
+    "Name": "Black Iron Gauntlets",
+    "Flag": 51510070,
+    "Id": 11110663
+  },
+  {
+    "Name": "Black Iron Leggings",
+    "Flag": 51510070,
+    "Id": 11110664
   },
   {
     "Name": "Greatsword",
@@ -1875,14 +2145,24 @@
     "Id": 11110266
   },
   {
-    "Name": "Havel's Set 1",
+    "Name": "Havel's Helm",
     "Flag": 51510530,
     "Id": 11110276
   },
   {
-    "Name": "Havel's Set 2",
+    "Name": "Havel's Armor",
+    "Flag": 51510530,
+    "Id": 11110665
+  },
+  {
+    "Name": "Havel's Gauntlets",
     "Flag": 51510540,
     "Id": 11110616
+  },
+  {
+    "Name": "Havel's Leggings",
+    "Flag": 51510540,
+    "Id": 11110666
   },
   {
     "Name": "Havel's Greatshield",
@@ -1895,14 +2175,24 @@
     "Id": 11110277
   },
   {
-    "Name": "Silver Knight Set 1",
+    "Name": "Silver Knight Helm",
     "Flag": 51510580,
     "Id": 11110285
   },
   {
-    "Name": "Silver Knight Set 2",
+    "Name": "Silver Knight Armor",
+    "Flag": 51510580,
+    "Id": 11110667
+  },
+  {
+    "Name": "Silver Knight Gauntlets",
     "Flag": 51510590,
     "Id": 11110286
+  },
+  {
+    "Name": "Silver Knight Leggings",
+    "Flag": 51510590,
+    "Id": 11110668
   },
   {
     "Name": "Demon Titanite - Anor Londo Bedroom",
@@ -1920,9 +2210,24 @@
     "Id": 11110298
   },
   {
-    "Name": "Brass Set",
+    "Name": "Brass Helm",
     "Flag": 51510660,
     "Id": 11110297
+  },
+   {
+    "Name": "Brass Armor",
+    "Flag": 51510660,
+    "Id": 11110669
+  },
+   {
+    "Name": "Brass Gauntlets",
+    "Flag": 51510660,
+    "Id": 11110670
+  },
+   {
+    "Name": "Brass Leggings",
+    "Flag": 51510660,
+    "Id": 11110671
   },
   {
     "Name": "Twinkling Titanite - Anor Londo",
@@ -2035,7 +2340,12 @@
     "Id": 11110345
   },
   {
-    "Name": "Composite Bow and Large Arrows",
+    "Name": "Composite Bow",
+    "Flag": 51600160,
+    "Id": 11110347
+  },
+  {
+    "Name": "Large Arrow",
     "Flag": 51600160,
     "Id": 11110347
   },
@@ -2065,9 +2375,24 @@
     "Id": 11110178
   },
   {
-    "Name": "Brigand Set",
+    "Name": "Brigand Hood",
     "Flag": 51600220,
     "Id": 11110179
+  },
+  {
+    "Name": "Brigand Armor",
+    "Flag": 51600220,
+    "Id": 11110637
+  },
+  {
+    "Name": "Brigand Gauntlets",
+    "Flag": 51600220,
+    "Id": 11110638
+  },
+  {
+    "Name": "Brigand Trousers",
+    "Flag": 51600220,
+    "Id": 11110639
   },
   {
     "Name": "Spider Shield - Brigand Armor Set",
@@ -2110,9 +2435,23 @@
     "Id": 11110619
   },
   {
-    "Name": "Witch Set",
+    "Name": "Witch Hat",
     "Flag": 51600360,
     "Id": 11110182
+  },
+  {
+    "Name": "Witch Cloak",
+    "Flag": 51600360,
+    "Id": 11110640
+  },
+  {
+    "Name": "Witch Gloves",
+    "Flag": 51600360,
+    "Id": 11110641
+  },{
+    "Name": "Witch Skirt",
+    "Flag": 51600360,
+    "Id": 11110642
   },
   {
     "Name": "Beatrice's Catalyst",
@@ -2175,9 +2514,24 @@
     "Id": 11110375
   },
   {
-    "Name": "Maiden Set",
+    "Name": "Maiden Hood",
     "Flag": 51700070,
     "Id": 11110372
+  },
+  {
+    "Name": "Maiden Robe",
+    "Flag": 51700070,
+    "Id": 11110679
+  },
+  {
+    "Name": "Maiden Gloves",
+    "Flag": 51700070,
+    "Id": 11110680
+  },
+  {
+    "Name": "Maiden Skirt",
+    "Flag": 51700070,
+    "Id": 11110681
   },
   {
     "Name": "White Seance Ring",
@@ -2250,9 +2604,24 @@
     "Id": 11110384
   },
   {
-    "Name": "Channeler Set",
+    "Name": "Six-Eyed Helm of the Channelers",
     "Flag": 51700580,
     "Id": 11110388
+  },
+  {
+    "Name": "Robe of the Channelers",
+    "Flag": 51700580,
+    "Id": 11110682
+  },
+  {
+    "Name": "Gauntlets of the Channelers",
+    "Flag": 51700580,
+    "Id": 11110683
+  },
+  {
+    "Name": "Waistcloth of the Channelers",
+    "Flag": 51700580,
+    "Id": 11110684
   },
   {
     "Name": "Archive Tower Giant Cell Key",
@@ -2270,9 +2639,24 @@
     "Id": 11110376
   },
   {
-    "Name": "Crystalline Set",
+    "Name": "Crystalline Helm",
     "Flag": 51700650,
     "Id": 11110390
+  },
+  {
+    "Name": "Crystalline Armor",
+    "Flag": 51700650,
+    "Id": 11110685
+  },
+  {
+    "Name": "Crystalline Gauntlets",
+    "Flag": 51700650,
+    "Id": 11110686
+  },
+  {
+    "Name": "Crystalline Leggings",
+    "Flag": 51700650,
+    "Id": 11110687
   },
   {
     "Name": "Enchanted Falchion",
@@ -2280,9 +2664,24 @@
     "Id": 11110385
   },
   {
-    "Name": "Black Knight Set",
+    "Name": "Black Knight Helm",
     "Flag": 51800050,
     "Id": 11110498
+  },
+  {
+    "Name": "Black Knight Armor",
+    "Flag": 51800050,
+    "Id": 11110700
+  },
+  {
+    "Name": "Black Knight Gauntlets",
+    "Flag": 51800050,
+    "Id": 11110701
+  },
+  {
+    "Name": "Black Knight Leggings",
+    "Flag": 51800050,
+    "Id": 11110702
   },
   {
     "Name": "Dungeon Cell Key",
