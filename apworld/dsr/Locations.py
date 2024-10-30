@@ -751,7 +751,7 @@ location_tables = {
     DSRLocationData(11110580, f"TotG: Large Soul of a Proud Knight - Right after Green Light Slide", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110581, f"TotG: Large Soul of a Proud Knight - Ledge Overlooking Pinwheel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110582, f"TotG: Soul of a Brave Warrior - Behind Bone Archer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110583, f"TotG: Soul of a Hero - Tomb of the Giants 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110583, f"TotG: Soul of a Hero - Tomb of the Giants", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110584, f"TotG: White Titanite Chunk - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110585, f"TotG: Large Soul of a Proud Knight - Giant Coffin Drop", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110473, f"TotG: Large Soul of a Proud Knight - Upper Giant Coffin", f"Firebomb", DSRLocationCategory.ITEM_LOT),
