@@ -125,7 +125,7 @@ class DSRLocation(Location):
 location_skip_categories = {
 DSRLocationCategory.EVENT, DSRLocationCategory.SKIP, DSRLocationCategory.BOSS, DSRLocationCategory.BONFIRE
 }
-# Last id used = 690
+# Last id used = 702
 location_tables = {
 "Undead Asylum Cell": [
     DSRLocationData(11110000, f"UA: Dungeon Cell Key", f"Dungeon Cell Key", DSRLocationCategory.SKIP),
@@ -258,7 +258,7 @@ location_tables = {
     DSRLocationData(11110100, f"Snuggly: Soul of Manus -> Sorcery: Pursuers", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],  
 "Undead Burg Basement Door": [
-    DSRLocationData(11110101, f"UUB: Undead Burg Basement opened", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(11110101, f"UB: Undead Burg Basement opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "Lower Undead Burg": [
     DSRLocationData(11110102, f"UB: Undead Burg -> Lower Undead Burg opened", f"Firebomb", DSRLocationCategory.DOOR),
@@ -831,7 +831,6 @@ location_tables = {
     DSRLocationData(11110580, f"TotG: Large Soul of a Proud Knight - Right after Green Light Slide", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110581, f"TotG: Large Soul of a Proud Knight - Ledge Overlooking Pinwheel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110582, f"TotG: Soul of a Brave Warrior - Behind Bone Archer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110583, f"TotG: Soul of a Hero - Tomb of the Giants", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110584, f"TotG: White Titanite Chunk - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110585, f"TotG: Large Soul of a Proud Knight - Giant Coffin Drop", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110473, f"TotG: Large Soul of a Proud Knight - Upper Giant Coffin", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -856,6 +855,7 @@ location_tables = {
 ],                    
 "Tomb of the Giants - Behind Golden Fog Wall": [
     DSRLocationData(11110490, f"TotG: White Titanite Slab - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110583, f"TotG: Soul of a Hero - Pinwheel Clone Room Entryway", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110493, f"TotG: Soul of a Hero - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110494, f"TotG: Gravelord Nito Defeated", f"Gravelord Nito Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110495, f"TotG: Lord Soul (Nito)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
