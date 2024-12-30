@@ -193,6 +193,7 @@ class DSRWorld(World):
         create_connection("Valley of the Drakes", "Valley of the Drakes - After Defeating Four Kings")
 
         create_connection("Depths to Blighttown Door", "Blighttown")
+        create_connection("Blighttown", "Depths to Blighttown Door")
         create_connection("Blighttown", "Demon Ruins")
         create_connection("Blighttown", "The Great Hollow")
 

@@ -125,7 +125,7 @@ class DSRLocation(Location):
 location_skip_categories = {
 DSRLocationCategory.EVENT, DSRLocationCategory.SKIP, DSRLocationCategory.BOSS, DSRLocationCategory.BONFIRE
 }
-# Last id used = 702
+# Last id used = 714
 location_tables = {
 "Undead Asylum Cell": [
     DSRLocationData(11110000, f"UA: Dungeon Cell Key", f"Dungeon Cell Key", DSRLocationCategory.SKIP),
@@ -305,7 +305,10 @@ location_tables = {
     DSRLocationData(11110126, f"DE: Depths Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110127, f"DE: Gaping Dragon Defeated", f"Gaping Dragon Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110128, f"DE: Blighttown Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110129, f"DE: Warrior Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110129, f"DE: Standard Helm", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110711, f"DE: Hard Leather Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110712, f"DE: Hard Leather Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110713, f"DE: Hard Leather Boots", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Depths - After Sewer Chamber Key": [
     DSRLocationData(11110131, f"DE: Depths Bonfire Room opened", f"Firebomb", DSRLocationCategory.DOOR),
@@ -396,9 +399,12 @@ location_tables = {
 ],
 "Darkroot Basin": [
     DSRLocationData(11110184, f"DB: Crystal Lizard near Hunter Set", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
-    DSRLocationData(11110185, f"DB: Hunter Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110185, f"DB: Leather Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110705, f"DB: Leather Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110706, f"DB: Leather Boots", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110577, f"DB: Large Soul of a Nameless Soldier - Darkroot Hydra", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110186, f"DB: Longbow and Feather Arrows", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110186, f"DB: Longbow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110707, f"DB: Feather Arrow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110187, f"DB: Grass Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110188, f"DB: Black Knight near Bonfire", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110189, f"DB: Darkroot Basin lit", f"Darkroot Basin lit", DSRLocationCategory.BONFIRE),
@@ -556,7 +562,8 @@ location_tables = {
     DSRLocationData(11110286, f"AL: Silver Knight Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110668, f"AL: Silver Knight Leggings", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110287, f"AL: Anor Londo Bonfire Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
-    DSRLocationData(11110288, f"AL: Dragonslayer Greatbow and Dragonslayer Arrow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110288, f"AL: Dragonslayer Greatbow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110714, f"AL: Dragonslayer Arrow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110289, f"AL: Titanite Chunk - near Giant Blacksmith", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110290, f"AL: Hawk Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110291, f"AL: Anor Londo Giant Blacksmith Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
@@ -587,7 +594,10 @@ location_tables = {
     DSRLocationData(11110302, f"PW: Twin Humanities - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110303, f"PW: Soul of a Brave Warrior - Corpse Hanging out of Hole", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110304, f"PW: Soul of a Brave Warrior - Painted World Albino Rats", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110305, f"PW: Painting Guardian Set", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110305, f"PW: Painting Guardian Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110708, f"PW: Painting Guardian Robe", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110709, f"PW: Painting Guardian Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110710, f"PW: Painting Guardian Waistcloth", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110306, f"PW: Egg Vermifuge - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110307, f"PW: Velka's Rapier", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110308, f"PW: Large Soul of a Proud Knight - Ambush after Building", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -645,8 +655,8 @@ location_tables = {
     DSRLocationData(11110348, f"NL: New Londo Ruins Door to the Seal opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "Lower New Londo Ruins": [
-    DSRLocationData(11110618, f"NL: Humanity - Lower New Londo Ruins", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110619, f"NL: Large Soul of a Proud Knight - Right Path after Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110703, f"NL: Humanity - Lower New Londo Ruins", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110704, f"NL: Large Soul of a Proud Knight - Right Path after Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110349, f"NL: Large Soul of a Proud Knight - Corpse in Shed", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110350, f"NL: Soul of a Brave Warrior - New Londo Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110351, f"NL: Very Large Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),

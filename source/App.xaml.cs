@@ -31,6 +31,10 @@ namespace DSAP
 
             Context = new MainPageViewModel(options);
             Context.ConnectClicked += Context_ConnectClicked;
+            Context.CommandReceived += (e, a) =>
+            {
+                Client?.SendMessage(a.Command);
+            };
             MainPage = new MainPage(Context);
         }
         public static void AddItem(int category, int id, int quantity)
@@ -89,7 +93,7 @@ namespace DSAP
                     foreach (var location in completed)
                     {
                         Client.SendLocation(location);
-                        Log.Logger.Information($"{location.Name} ({location.Id}) Completed");
+                   //     Log.Logger.Information($"{location.Name} ({location.Id}) Completed");
                         batch.Remove(location);
                     }
                 }
@@ -147,10 +151,10 @@ namespace DSAP
             Client.MonitorLocations(miscLocations);
 
 
-            Helpers.MonitorLastBonfire((lastBonfire) =>
-            {
-                Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
-            });
+            //Helpers.MonitorLastBonfire((lastBonfire) =>
+            //{
+            //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
+            //});
             RemoveItems();
         }
 
@@ -163,13 +167,16 @@ namespace DSAP
         private static void RemoveItems()
         {
             var lots = Helpers.GetItemLots();
+
+            //Helpers.WriteToFile("itemLots.json", lots);
+
             var replacementLot = new ItemLot()
             {
                 Rarity = 1,
                 GetItemFlagId = -1,
                 CumulateNumFlagId = -1,
                 CumulateNumMax = 0,
-                Items = new List<ItemLotItem>
+                Items = new List<ItemLotItem>()
                 {
                     new ItemLotItem
                     {
@@ -184,6 +191,7 @@ namespace DSAP
                     }
                 }
             };
+
             foreach (var lot in lots)
             {
                 if (lot.Items[0].LotItemId == 2010 || lot.Items[0].LotItemId == 201 || lot.Items[0].LotItemId == 2011 || lot.Items[0].LotItemId == 2012) continue; // Tutorial Keys
@@ -191,7 +199,7 @@ namespace DSAP
                 if (!Helpers.GetItemLotFlags().Any(x => x.Flag == lot.GetItemFlagId)) continue; // Not included in ItemLots yet
                 _ = Task.Run(() =>
                 {
-                    Helpers.OverwriteItemLot(lot.GetItemFlagId, replacementLot);
+                    Helpers.OverwriteItemLot(lot.GetItemFlagId, replacementLot, lot.Items.Count());
                 });
             }
             Log.Logger.Information("Finished overwriting items");
@@ -202,7 +210,7 @@ namespace DSAP
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
             if (itemToReceive != null)
             {
-                Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
+                //Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
             }
             else

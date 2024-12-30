@@ -350,9 +350,24 @@
     "Id": 11110624
   },
   {
-    "Name": "Warrior Set",
+    "Name": "Standard Helm",
     "Flag": 51000210,
     "Id": 11110129
+  },
+  {
+    "Name": "Hard Leather Armor",
+    "Flag": 51000210,
+    "Id": 11110711
+  },
+  {
+    "Name": "Hard Leather Gauntlets",
+    "Flag": 51000210,
+    "Id": 11110712
+  },
+  {
+    "Name": "Hard Leather Boots",
+    "Flag": 51000210,
+    "Id": 11110713
   },
   {
     "Name": "Sewer Chamber Key",
@@ -850,9 +865,24 @@
     "Id": 11110309
   },
   {
-    "Name": "Painting Guardian Set",
+    "Name": "Painting Guardian Hood",
     "Flag": 51100500,
     "Id": 11110305
+  },
+  {
+    "Name": "Painting Guardian Robe",
+    "Flag": 51100500,
+    "Id": 11110708
+  },
+  {
+    "Name": "Painting Guardian Gloves",
+    "Flag": 51100500,
+    "Id": 11110709
+  },
+  {
+    "Name": "Painting Guardian Waistcloth",
+    "Flag": 51100500,
+    "Id": 11110710
   },
   {
     "Name": "Pyromancy: Fire Surge",
@@ -865,14 +895,29 @@
     "Id": 11110199
   },
   {
-    "Name": "Hunter Set",
+    "Name": "Leather Armor",
     "Flag": 51200020,
     "Id": 11110185
   },
   {
-    "Name": "Longbow and Feather Arrows",
+    "Name": "Leather Gloves",
+    "Flag": 51200020,
+    "Id": 11110705
+  },
+  {
+    "Name": "Leather Boots",
+    "Flag": 51200020,
+    "Id": 11110706
+  },
+  {
+    "Name": "Longbow",
     "Flag": 51200021,
     "Id": 11110186
+  },
+  {
+    "Name": "Feather Arrow",
+    "Flag": 51200021,
+    "Id": 11110707
   },
   {
     "Name": "Large Soul of a Nameless Soldier - Darkroot Cliff",
@@ -2100,9 +2145,14 @@
     "Id": 11110274
   },
   {
-    "Name": "Dragonslayer Greatbow and Dragonslayer Arrow",
+    "Name": "Dragonslayer Greatbow",
     "Flag": 51510060,
     "Id": 11110288
+  },
+  {
+    "Name": "Dragonslayer Arrow",
+    "Flag": 51510060,
+    "Id": 11110714
   },
   {
     "Name": "Black Iron Helm",
@@ -2407,7 +2457,7 @@
   {
     "Name": "Humanity - New Londo 2",
     "Flag": 51600260,
-    "Id": 11110618
+    "Id": 11110703
   },
   {
     "Name": "Soul of a Brave Warrior - New Londo Stairs",
@@ -2432,7 +2482,7 @@
   {
     "Name": "Large Soul of a Proud Knight - New Londo 4",
     "Flag": 51600330,
-    "Id": 11110619
+    "Id": 11110704
   },
   {
     "Name": "Witch Hat",

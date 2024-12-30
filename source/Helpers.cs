@@ -1,4 +1,5 @@
-﻿using Archipelago.Core.Util;
+﻿using Archipelago.Core.Models;
+using Archipelago.Core.Util;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
@@ -206,8 +207,6 @@ namespace DSAP
 
             var startAddress = GetItemLotParamOffset();
 
-            var lotFlags = GetItemLotFlags();
-
             var dataOffset = Memory.ReadUInt(startAddress + 0x4);
             var rowCount = Memory.ReadUShort(startAddress + 0xA);
             var rowSize = 148;
@@ -235,16 +234,15 @@ namespace DSAP
             {
                 ItemLotItem item = new ItemLotItem
                 {
-                    LotItemId = Memory.ReadInt(currentAddress + (ulong)(i * 4)),
-                    LotItemCategory = Memory.ReadInt(currentAddress + 0x20 + (ulong)(i * 4)),
-                    LotItemBasePoint = Memory.ReadUShort(currentAddress + 0x40 + (ulong)(i * 2)),
-                    CumulateLotPoint = Memory.ReadUShort(currentAddress + 0x50 + (ulong)(i * 2)),
-                    GetItemFlagId = Memory.ReadInt(currentAddress + 0x60 + (ulong)(i * 4)),
+                    LotItemId = Memory.ReadInt(startAddress + (ulong)(i * 4)),
+                    LotItemCategory = Memory.ReadInt(startAddress + 0x20 + (ulong)(i * 4)),
+                    LotItemBasePoint = Memory.ReadUShort(startAddress + 0x40 + (ulong)(i * 2)),
+                    CumulateLotPoint = Memory.ReadUShort(startAddress + 0x50 + (ulong)(i * 2)),
+                    GetItemFlagId = Memory.ReadInt(startAddress + 0x60 + (ulong)(i * 4)),
                     LotItemNum = Memory.ReadByte(startAddress + 0x8A + (ulong)i),
                     EnableLuck = bitArray.Get(i),
                     CumulateReset = bitArray.Get(i + 8)
                 };
-                currentAddress += 0x04;
                 lot.Items.Add(item);
             }
             lot.GetItemFlagId = Memory.ReadInt(startAddress + 0x80);
@@ -253,7 +251,7 @@ namespace DSAP
             lot.Rarity = Memory.ReadByte(startAddress + 0x89);
             return lot;
         }
-        public static void OverwriteItemLot(int itemLotId, ItemLot newItemLot)
+        public static void OverwriteItemLot(int itemLotId, ItemLot newItemLot, int itemsInLot)
         {
             var startAddress = GetItemLotParamOffset();
             var dataOffset = Memory.ReadUInt(startAddress + 0x4);
@@ -270,25 +268,13 @@ namespace DSAP
                     // We found the correct item lot, now let's overwrite it
                     for (int j = 0; j < 8; j++)
                     {
-                        if (j < newItemLot.Items.Count)
+                        if (j < itemsInLot)
                         {
-                            // Write actual item data
-                            Memory.Write(currentAddress + (ulong)(j * 4), newItemLot.Items[j].LotItemId);
-                            Memory.Write(currentAddress + 0x20 + (ulong)(j * 4), newItemLot.Items[j].LotItemCategory);
-                            Memory.Write(currentAddress + 0x40 + (ulong)(j * 2), (ushort)newItemLot.Items[j].LotItemBasePoint);
-                            Memory.Write(currentAddress + 0x50 + (ulong)(j * 2), (ushort)newItemLot.Items[j].CumulateLotPoint);
-                            //Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), newItemLot.Items[j].GetItemFlagId);
-                            Memory.WriteByte(currentAddress + 0x8A + (ulong)j, newItemLot.Items[j].LotItemNum);
+                            OverwriteSingleItem(currentAddress, newItemLot.Items[0], j);
                         }
                         else
                         {
-                            // Fill remaining slots with default values
-                            Memory.Write(currentAddress + (ulong)(j * 4), 0);  // LotItemId
-                            Memory.Write(currentAddress + 0x20 + (ulong)(j * 4), 0);  // LotItemCategory
-                            Memory.Write(currentAddress + 0x40 + (ulong)(j * 2), (ushort)0);  // LotItemBasePoint
-                            Memory.Write(currentAddress + 0x50 + (ulong)(j * 2), (ushort)0);  // CumulateLotPoint
-                                                                                              // Memory.Write(currentAddress + 0x60 + (ulong)(j * 4), 0);  // GetItemFlagId
-                            Memory.WriteByte(currentAddress + 0x8A + (ulong)j, 0);  // LotItemNum
+                            RemoveSingleItem(currentAddress, j);
                         }
                     }
 
@@ -318,6 +304,25 @@ namespace DSAP
             }
 
             Console.WriteLine($"ItemLot with GetItemFlagId {itemLotId} not found.");
+        }
+
+        public static void OverwriteSingleItem(ulong address, ItemLotItem newItemLot, int position)
+        {
+            Memory.Write(address + (ulong)(position * 4), newItemLot.LotItemId);
+            Memory.Write(address + 0x20 + (ulong)(position * 4), newItemLot.LotItemCategory);
+            Memory.Write(address + 0x40 + (ulong)(position * 2), (ushort)newItemLot.LotItemBasePoint);
+            Memory.Write(address + 0x50 + (ulong)(position * 2), (ushort)newItemLot.CumulateLotPoint);
+            //Memory.Write(address + 0x60 + (ulong)(position * 4), newItemLot.Items[j].GetItemFlagId);
+            Memory.WriteByte(address + 0x8A + (ulong)position, newItemLot.LotItemNum);
+        }
+        public static void RemoveSingleItem(ulong address, int position)
+        {
+            Memory.Write(address + (ulong)(position * 4), 0);
+            Memory.Write(address + 0x20 + (ulong)(position * 4), 0);
+            Memory.Write(address + 0x40 + (ulong)(position * 2), (ushort)0);
+            Memory.Write(address + 0x50 + (ulong)(position * 2), (ushort)0);
+            //Memory.Write(address + 0x60 + (ulong)(position * 4), newItemLot.Items[j].GetItemFlagId);
+            Memory.WriteByte(address + 0x8A + (ulong)position, (byte)0);
         }
         public static DarkSoulsItem CreateItemFromLot(ItemLotItem lot)
         {
@@ -518,6 +523,20 @@ namespace DSAP
             var offset = GetEventFlagOffset(flag.Flag).Item1;
             return offset;
         }
+        public static void WriteToFile(string fileName, object content)
+        {
+            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"AP_DarkSoulsRemastered", fileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, true))
+            using (var streamWriter = new StreamWriter(fileStream))
+            using (var jsonWriter = new JsonTextWriter(streamWriter))
+            {
+                var serializer = new JsonSerializer();
+
+                serializer.Serialize(jsonWriter, content);
+            }
+        }
+
 
         public static (ulong, int) GetEventFlagOffset(int eventFlag)
         {
