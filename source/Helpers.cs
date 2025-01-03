@@ -21,7 +21,7 @@ namespace DSAP
             var address = Memory.GetBaseAddress("DarkSoulsRemastered");
             if (address == 0)
             {
-                Console.WriteLine("Could not find Base Address");
+                Log.Debug("Could not find Base Address");
             }
             return (ulong)address;
         }
@@ -298,12 +298,12 @@ namespace DSAP
                     }
                     Memory.Write(currentAddress + 0x92, bitfield);
 
-                    Console.WriteLine($"ItemLot with GetItemFlagId {itemLotId} has been overwritten.");
+                    Log.Verbose($"ItemLot with GetItemFlagId {itemLotId} has been overwritten.");
                     return;
                 }
             }
 
-            Console.WriteLine($"ItemLot with GetItemFlagId {itemLotId} not found.");
+            Log.Verbose($"ItemLot with GetItemFlagId {itemLotId} not found.");
         }
 
         public static void OverwriteSingleItem(ulong address, ItemLotItem newItemLot, int position)
@@ -377,15 +377,15 @@ namespace DSAP
             var lastBonfire = GetLastBonfire();
             if (lastBonfire == null)
             {
-                Log.Logger.Debug("No Last Bonfire found");
+                Log.Debug("No Last Bonfire found");
             }
-            else Log.Logger.Debug($"Last bonfire was {lastBonfire.id}:{lastBonfire.name} ");
+            else Log.Debug($"Last bonfire was {lastBonfire.id}:{lastBonfire.name} ");
             while (true)
             {
                 var currentLastBonfire = GetLastBonfire();
                 if (currentLastBonfire != lastBonfire)
                 {
-                    Log.Logger.Debug("Last Bonfire Changed");
+                    Log.Debug("Last Bonfire Changed");
                     lastBonfire = currentLastBonfire;
                     action?.Invoke(currentLastBonfire);
                 }

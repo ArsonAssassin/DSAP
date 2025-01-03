@@ -5,6 +5,7 @@ using Archipelago.Core.MauiGUI.Models;
 using Archipelago.Core.MauiGUI.ViewModels;
 using Archipelago.Core.Models;
 using Archipelago.Core.Util;
+using Archipelago.MultiClient.Net.MessageLog.Messages;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
@@ -14,7 +15,7 @@ namespace DSAP
 {
     public partial class App : Application
     {
-        MainPageViewModel Context;
+        static MainPageViewModel Context;
         public static ArchipelagoClient Client { get; set; }
         public static List<DarkSoulsItem> AllItems { get; set; }
         public App()
@@ -36,6 +37,7 @@ namespace DSAP
                 Client?.SendMessage(a.Command);
             };
             MainPage = new MainPage(Context);
+            Context.ConnectButtonEnabled = true;
         }
         public static void AddItem(int category, int id, int quantity)
         {
@@ -93,7 +95,7 @@ namespace DSAP
                     foreach (var location in completed)
                     {
                         Client.SendLocation(location);
-                   //     Log.Logger.Information($"{location.Name} ({location.Id}) Completed");
+                        //     Log.Logger.Information($"{location.Name} ({location.Id}) Completed");
                         batch.Remove(location);
                     }
                 }
@@ -103,20 +105,24 @@ namespace DSAP
         }
         private async void Context_ConnectClicked(object? sender, ConnectClickedEventArgs e)
         {
+            Context.ConnectButtonEnabled = false;
+            Log.Logger.Information("Connecting...");
             if (Client != null)
             {
                 Client.Connected -= OnConnected;
                 Client.Disconnected -= OnDisconnected;
+                Client.ItemReceived -= Client_ItemReceived;
+                Client.MessageReceived -= Client_MessageReceived;
+                Client.CancelMonitors();
             }
             DarkSoulsClient client = new DarkSoulsClient();
             var connected = client.Connect();
             if (!connected)
             {
-                Log.Logger.Information("Dark Souls not running, open Dark Souls before connecting!");
+                Log.Logger.Error("Dark Souls not running, open Dark Souls before connecting!");
+                Context.ConnectButtonEnabled = true;
                 return;
             }
-
-
 
             Client = new ArchipelagoClient(client);
 
@@ -126,15 +132,19 @@ namespace DSAP
             var isOnline = Helpers.GetIsPlayerOnline();
             if (isOnline)
             {
-                Log.Logger.Information("YOU ARE PLAYING ONLINE. THIS APPLICATION WILL NOT PROCEED.");
+                Log.Logger.Warning("YOU ARE PLAYING ONLINE. THIS APPLICATION WILL NOT PROCEED.");
+                Context.ConnectButtonEnabled = true;
                 return;
             }
             await Client.Connect(e.Host, "Dark Souls Remastered");
-            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
-
 
             Client.ItemReceived += Client_ItemReceived;
             Client.MessageReceived += Client_MessageReceived;
+
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+
+
+
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
             var bonfireLocations = Helpers.GetBonfireFlagLocations();
@@ -156,11 +166,15 @@ namespace DSAP
             //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
             //});
             RemoveItems();
+            Context.ConnectButtonEnabled = true;
         }
 
         private void Client_MessageReceived(object? sender, Archipelago.Core.Models.MessageReceivedEventArgs e)
         {
-            
+            if (e.Message.Parts.Any(x => x.Text == "[Hint]: "))
+            {
+                LogHint(e.Message);
+            }
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
         }
 
@@ -206,11 +220,12 @@ namespace DSAP
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
+            LogItem(e.Item);
             var itemId = e.Item.Id;
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
             if (itemToReceive != null)
             {
-                //Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
+                Log.Logger.Verbose($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
             }
             else
@@ -220,7 +235,33 @@ namespace DSAP
                 AddItem((int)filler.Category, filler.Id, 1);
             }
         }
+        private static void LogItem(Item item)
+        {
+            var messageToLog = new LogListItem(new List<TextSpan>()
+            {
+                new TextSpan(){Text = $"[{item.Id.ToString()}] - ", TextColor = Color.FromRgb(255, 255, 255)},
+                new TextSpan(){Text = $"{item.Name} ", TextColor = Color.FromRgb(200, 255, 200)},
+                new TextSpan(){Text = $" x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
+            });
+            Context.ItemList.Add(messageToLog);
+        }
+        private static void LogHint(LogMessage message)
+        {
+            var newMessage = string.Join(" ", message.Parts.Select(x => x.Text));
 
+            if (Context.HintList.Any(x => string.Join(" ", x.TextSpans.Select(y => y.Text)) == newMessage))
+            {
+                return; //Hint already in list
+            }
+            List<TextSpan> spans = new List<TextSpan>();
+            foreach (var part in message.Parts)
+            {
+                spans.Add(new TextSpan() { Text = part.Text, TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });
+                spans.Add(new TextSpan() { Text = "  ", TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });
+            }
+
+            Context.HintList.Add(new LogListItem(spans));
+        }
         private static void OnConnected(object sender, EventArgs args)
         {
             Log.Logger.Information("Connected to Archipelago");

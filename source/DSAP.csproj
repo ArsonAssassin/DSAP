@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <WindowsPackageType>None</WindowsPackageType>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
 
@@ -23,14 +24,21 @@
 		<ApplicationTitle>DSAP</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.dsap</ApplicationId>
+		<ApplicationId>com.arsonassassin.dsap</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
+		<ApplicationVersion>0.0.5</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<Title>DSAP</Title>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishAppxPackage>false</PublishAppxPackage>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -50,9 +58,7 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <WindowsPackageType>None</WindowsPackageType>
-  </PropertyGroup>
+
 	<ItemGroup>
 	  <None Remove="Resources\Armor.json" />
 	  <None Remove="Resources\Bonfires.json" />
@@ -102,16 +108,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Archipelago.Core" Version="0.2.0" />
+		<PackageReference Include="Archipelago.Core.MauiGUI" Version="0.0.10" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="Archipelago.Core.MauiGUI">
-	    <HintPath>..\..\Archipelago.Core.MauiGUI\bin\Debug\net8.0-windows10.0.19041.0\Archipelago.Core.MauiGUI.dll</HintPath>
-	  </Reference>
+	  <Folder Include="Properties\" />
 	</ItemGroup>
 
 </Project>

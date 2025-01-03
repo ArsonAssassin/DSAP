@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace DSAP
 {
@@ -20,10 +21,10 @@ namespace DSAP
         }
         public bool Connect()
         {
-            Console.WriteLine($"Connecting to {ProcessName}");
+            Log.Information($"Connecting to {ProcessName}");
             if (ProcId == 0)
             {
-                Console.WriteLine($"{ProcessName} not found.");
+                Log.Error($"{ProcessName} not found.");
                 return false;
             }
             IsConnected = true;
