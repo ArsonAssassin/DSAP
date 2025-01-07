@@ -8,6 +8,6 @@ namespace DSAP.Models
 {
     public class ItemLotFlag : EventFlag
     {
-
+        public bool IsEnabled { get; set; } = true;
     }
 }

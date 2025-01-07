@@ -7,7 +7,8 @@
   {
     "Name": "Undead Asylum F2 East Key",
     "Flag": 50000080,
-    "Id": 11110007
+    "Id": 11110007,
+    "IsEnabled":  false
   },
   {
     "Name": "Lordvessel",
@@ -112,7 +113,8 @@
   {
     "Name": "Big Pilgrim's Key",
     "Flag": 50001660,
-    "Id": 11110010
+    "Id": 11110010,
+    "IsEnabled": false
   },
   {
     "Name": "Orange Charred Ring",
@@ -222,7 +224,8 @@
   {
     "Name": "Estus Flask",
     "Flag": 50000082,
-    "Id": 11110006
+    "Id": 11110006,
+    "IsEnabled": false
   },
   {
     "Name": "Butcher Knife",
@@ -2397,7 +2400,7 @@
   {
     "Name": "Large Arrow",
     "Flag": 51600160,
-    "Id": 11110347
+    "Id": 11110678
   },
   {
     "Name": "Large Soul of a Nameless Soldier - New Londo Door",
@@ -2736,7 +2739,8 @@
   {
     "Name": "Dungeon Cell Key",
     "Flag": 51810000,
-    "Id": 11110000
+    "Id": 11110000,
+    "IsEnabled": false
   },
   {
     "Name": "Rusted Iron Ring",

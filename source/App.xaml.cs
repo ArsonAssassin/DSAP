@@ -181,6 +181,7 @@ namespace DSAP
         private static void RemoveItems()
         {
             var lots = Helpers.GetItemLots();
+            var lotFlags = Helpers.GetItemLotFlags();
 
             //Helpers.WriteToFile("itemLots.json", lots);
 
@@ -205,15 +206,11 @@ namespace DSAP
                     }
                 }
             };
-
-            foreach (var lot in lots)
+            foreach(var lotFlag in lotFlags.Where(x => x.IsEnabled))
             {
-                if (lot.Items[0].LotItemId == 2010 || lot.Items[0].LotItemId == 201 || lot.Items[0].LotItemId == 2011 || lot.Items[0].LotItemId == 2012) continue; // Tutorial Keys
-                if (Helpers.GetStarterGearIds().Any(x => x == lot.GetItemFlagId)) continue; // Class gear
-                if (!Helpers.GetItemLotFlags().Any(x => x.Flag == lot.GetItemFlagId)) continue; // Not included in ItemLots yet
                 _ = Task.Run(() =>
                 {
-                    Helpers.OverwriteItemLot(lot.GetItemFlagId, replacementLot, lot.Items.Count());
+                    Helpers.OverwriteItemLot(lotFlag.Flag, replacementLot);
                 });
             }
             Log.Logger.Information("Finished overwriting items");
@@ -239,25 +236,24 @@ namespace DSAP
         {
             var messageToLog = new LogListItem(new List<TextSpan>()
             {
-                new TextSpan(){Text = $"[{item.Id.ToString()}] - ", TextColor = Color.FromRgb(255, 255, 255)},
-                new TextSpan(){Text = $"{item.Name} ", TextColor = Color.FromRgb(200, 255, 200)},
-                new TextSpan(){Text = $" x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
+                new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = Color.FromRgb(255, 255, 255)},
+                new TextSpan(){Text = $"{item.Name}", TextColor = Color.FromRgb(200, 255, 200)},
+                new TextSpan(){Text = $"x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
             });
             Context.ItemList.Add(messageToLog);
         }
         private static void LogHint(LogMessage message)
         {
-            var newMessage = string.Join(" ", message.Parts.Select(x => x.Text));
+            var newMessage = message.Parts.Select(x => x.Text);
 
-            if (Context.HintList.Any(x => string.Join(" ", x.TextSpans.Select(y => y.Text)) == newMessage))
+            if (Context.HintList.Any(x => x.TextSpans.Select(y => y.Text) == newMessage))
             {
                 return; //Hint already in list
             }
             List<TextSpan> spans = new List<TextSpan>();
             foreach (var part in message.Parts)
             {
-                spans.Add(new TextSpan() { Text = part.Text, TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });
-                spans.Add(new TextSpan() { Text = "  ", TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });
+                spans.Add(new TextSpan() { Text = part.Text, TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });               
             }
 
             Context.HintList.Add(new LogListItem(spans));
