@@ -193,9 +193,7 @@ location_tables = {
     DSRLocationData(11110046, f"UB: Soul of a Lost Undead - Firebomb Throwers", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110047, f"UB: Black Knight guarding Blue Tearstone Ring", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110048, f"UB: Blue Tearstone Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110049, f"UB: Havel's Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110050, f"UB: Crystal Lizard hidden in Barrel", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
-    DSRLocationData(11110051, f"UB: Undead Burg Watchtower Upper opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110053, f"UB: Taurus Demon Defeated", f"Taurus Demon Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110054, f"UB: Large Soul of a Lost Undead - After Taurus", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110055, f"UB: White Sign Soapstone", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -283,6 +281,8 @@ location_tables = {
     DSRLocationData(11110111, f"UB: Sorcerer's Catalyst", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Watchtower Basement": [
+    DSRLocationData(11110051, f"UB: Undead Burg Watchtower Upper opened", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(11110049, f"UB: Havel's Ring", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110052, f"UB: Undead Burg Watchtower Lower opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "Depths": [
