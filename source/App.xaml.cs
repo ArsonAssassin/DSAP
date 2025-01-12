@@ -18,6 +18,7 @@ namespace DSAP
         static MainPageViewModel Context;
         public static ArchipelagoClient Client { get; set; }
         public static List<DarkSoulsItem> AllItems { get; set; }
+        private static readonly object _lockObject = new object();
         public App()
         {
             InitializeComponent();
@@ -240,7 +241,13 @@ namespace DSAP
                 new TextSpan(){Text = $"{item.Name}", TextColor = Color.FromRgb(200, 255, 200)},
                 new TextSpan(){Text = $"x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
             });
-            Context.ItemList.Add(messageToLog);
+            lock (_lockObject)
+            {
+                Application.Current.Dispatcher.DispatchAsync(() =>
+                {
+                    Context.ItemList.Add(messageToLog);
+                });
+            }
         }
         private static void LogHint(LogMessage message)
         {
@@ -255,8 +262,13 @@ namespace DSAP
             {
                 spans.Add(new TextSpan() { Text = part.Text, TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });               
             }
-
-            Context.HintList.Add(new LogListItem(spans));
+            lock (_lockObject)
+            {
+                Application.Current.Dispatcher.DispatchAsync(() =>
+                {
+                    Context.HintList.Add(new LogListItem(spans));
+                });
+            }
         }
         private static void OnConnected(object sender, EventArgs args)
         {
