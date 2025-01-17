@@ -853,10 +853,10 @@ def BuildItemPool(count, options):
     included_itemcount = 0
 
     if options.guaranteed_items.value:
-        for item_name in options.guaranteed_items.value:
+        for item_name, item_quant in options.guaranteed_items.value.items():
             item = item_dictionary[item_name]
-            item_pool.append(item)
-            included_itemcount = included_itemcount + 1
+            item_pool += [item] * item_quant
+            included_itemcount += item_quant
     remaining_count = count - included_itemcount
     
     key_items = [item for item in _all_items if item.name in key_item_names or item.category == DSRItemCategory.KEY_ITEM]
