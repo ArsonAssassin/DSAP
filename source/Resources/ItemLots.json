@@ -2760,126 +2760,151 @@
   {
     "Name": "Longsword",
     "Flag": 51810100,
-    "Id": 11113668
+    "Id": 11113668,
+    "IsEnabled": false
   },
   {
     "Name": "Heater Shield",
     "Flag": 51810110,
-    "Id": 11113669
+    "Id": 11113669,
+    "IsEnabled": false
   },
   {
     "Name": "Broadsword",
     "Flag": 51810120,
-    "Id": 11113670
+    "Id": 11113670,
+    "IsEnabled": false
   },
   {
     "Name": "Tower Kite Shield",
     "Flag": 51810130,
-    "Id": 11113671
+    "Id": 11113671,
+    "IsEnabled": false
   },
   {
     "Name": "Scimitar",
     "Flag": 51810140,
-    "Id": 11113672
+    "Id": 11113672,
+    "IsEnabled": false
   },
   {
     "Name": "Leather Shield",
     "Flag": 51810150,
-    "Id": 11113673
+    "Id": 11113673,
+    "IsEnabled": false
   },
   {
     "Name": "Bandit's Knife",
     "Flag": 51810160,
-    "Id": 11113674
+    "Id": 11113674,
+    "IsEnabled": false
   },
   {
     "Name": "Target Shield",
     "Flag": 51810170,
-    "Id": 11113675
+    "Id": 11113675,
+    "IsEnabled": false
   },
   {
     "Name": "Battle Axe",
     "Flag": 51810180,
-    "Id": 11113676
+    "Id": 11113676,
+    "IsEnabled": false
   },
   {
     "Name": "Spider Shield",
     "Flag": 51810190,
-    "Id": 11113677
+    "Id": 11113677,
+    "IsEnabled": false
   },
   {
     "Name": "Shortsword",
     "Flag": 51810200,
-    "Id": 11113678
+    "Id": 11113678,
+    "IsEnabled": false
   },
   {
     "Name": "Large Leather Shield",
     "Flag": 51810210,
-    "Id": 11113679
+    "Id": 11113679,
+    "IsEnabled": false
   },
   {
     "Name": "Short Bow",
     "Flag": 51810220,
-    "Id": 11113680
+    "Id": 11113680,
+    "IsEnabled": false
   },
   {
     "Name": "Standard Arrow",
     "Flag": 51810220,
-    "Id": 11113681
+    "Id": 11113681,
+    "IsEnabled": false
   },
   {
     "Name": "Dagger",
     "Flag": 51810230,
-    "Id": 11113682
+    "Id": 11113682,
+    "IsEnabled": false
   },
   {
     "Name": "Small Leather Shield",
     "Flag": 51810240,
-    "Id": 11113683
+    "Id": 11113683,
+    "IsEnabled": false
   },
   {
     "Name": "Sorcerer's Catalyst",
     "Flag": 51810250,
-    "Id": 11113684
+    "Id": 11113684,
+    "IsEnabled": false
   },
   {
     "Name": "Hand Axe",
     "Flag": 51810260,
-    "Id": 11113685
+    "Id": 11113685,
+    "IsEnabled":  false
   },
   {
     "Name": "Cracked Round Shield",
     "Flag": 51810270,
-    "Id": 11113686
+    "Id": 11113686,
+    "IsEnabled": false
   },
   {
     "Name": "Pyromancy Flame",
     "Flag": 51810280,
-    "Id": 11113687
+    "Id": 11113687,
+    "IsEnabled": false
   },
   {
     "Name": "Mace",
     "Flag": 51810290,
-    "Id": 11113688
+    "Id": 11113688,
+    "IsEnabled": false
   },
   {
     "Name": "East-West Shield",
     "Flag": 51810300,
-    "Id": 11113689
+    "Id": 11113689,
+    "IsEnabled": false
   },
   {
     "Name": "Canvas Talisman",
     "Flag": 51810310,
-    "Id": 11113690
+    "Id": 11113690,
+    "IsEnabled": false
   },
   {
     "Name": "Club",
     "Flag": 51810320,
-    "Id": 11113691
+    "Id": 11113691,
+    "IsEnabled": false
   },
   {
     "Name": "Plank Shield",
     "Flag": 51810330,
-    "Id": 11113692
+    "Id": 11113692,
+    "IsEnabled": false
   }
 ]

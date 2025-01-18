@@ -9,6 +9,7 @@ using Archipelago.MultiClient.Net.MessageLog.Messages;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
+using Windows.UI.Core;
 using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP
@@ -153,6 +154,8 @@ namespace DSAP
             var fogWallLocations = Helpers.GetFogWallFlagLocations();
             var miscLocations = Helpers.GetMiscFlagLocations();
 
+            var goalLocation = bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
+            Archipelago.Core.Util.Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
 
             Client.MonitorLocations(bossLocations);
             Client.MonitorLocations(itemLocations);
