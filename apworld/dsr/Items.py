@@ -34,7 +34,7 @@ class DSRItem(Item):
 
 key_item_names = {
 "Covenant of Artorias","Orange Charred Ring", "Pendant", "Rubbish", "Sunlight Medal", "Bloodred Moss Clump", "Purple Moss Clump", "Blooming Purple Moss Clump", "Cracked Red Eye Orb", "Humanity", "Twin Humanities", "Prism Stone", "Dung Pie",
-"Pyromancy Flame", "Pyromancy Flame (Ascended)", "Egg Vermifuge", "Sunlight Maggot", "Sack", "Skull Lantern", "Ring of the Sun Princess", "Xanthous Crown", "Soul of Manus","Souvenir of Reprisal"
+"Pyromancy Flame", "Pyromancy Flame (Ascended)", "Egg Vermifuge", "Sunlight Maggot", "Sack", "Skull Lantern", "Ring of the Sun Princess", "Xanthous Crown", "Soul of Manus","Souvenir of Reprisal", "Fire Keeper Soul (Anastacia of Astora)", "Fire Keeper Soul (Darkmoon Knightess)", "Fire Keeper Soul (Daughter of Chaos)", "Fire Keeper Soul (New Londo)", "Fire Keeper Soul (Blighttown)", "Fire Keeper Soul (Duke's Archives)", "Fire Keeper Soul (Undead Parish)"
 }
 
 _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [    
@@ -861,16 +861,45 @@ def BuildItemPool(count, options):
     
     key_items = [item for item in _all_items if item.name in key_item_names or item.category == DSRItemCategory.KEY_ITEM]
     for item in key_items:
-        if item.name not in ["Dungeon Cell Key", "Estus Flask", "Undead Asylum F2 East Key", "Big Pilgrim's Key"]:
+        if item.name not in ["Dungeon Cell Key", "Estus Flask", "Undead Asylum F2 East Key", "Big Pilgrim's Key", "Master Key"]:
             item_pool.append(item)
             remaining_count = remaining_count - 1
     
-    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]]
-
-    for i in range(remaining_count):
-        itemList = [item for item in filler_items]
-        item = random.choice(itemList)
-        item_pool.append(item)
+    if(options.enable_masterkey.value == True):
+        masterKey = item_dictionary["Master Key"]
+        item_pool.append(masterKey)
+        remaining_count = remaining_count - 1
     
+    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]]
+    
+    pool_size = remaining_count
+    
+    consumableList = [item for item in filler_items if item.category in [DSRItemCategory.CONSUMABLE] and "soul" not in item.name.lower() and "fire keeper" not in item.name.lower()]
+
+    soulList = [item for item in filler_items if "soul" in item.name.lower() and "fire keeper" not in item.name.lower()]
+    materialList = [item for item in filler_items if item.category in [DSRItemCategory.UPGRADE_MATERIAL]]
+    
+    consumable_count = int(pool_size * 0.2)
+    for i in range(consumable_count):        
+        item = random.choice(consumableList)
+        item_pool.append(item)        
+    remaining_count = remaining_count - consumable_count
+    
+    soul_count = int(pool_size * 0.3)    
+    for i in range(soul_count):        
+        item = random.choice(soulList)
+        item_pool.append(item)        
+    remaining_count = remaining_count - soul_count
+    
+    material_count = int(pool_size * 0.2)
+    for i in range(material_count):        
+        item = random.choice(materialList)
+        item_pool.append(item)        
+    remaining_count = remaining_count - material_count
+    
+    itemList = [item for item in filler_items if item.category in [DSRItemCategory.WEAPON, DSRItemCategory.ARMOR, DSRItemCategory.SHIELD, DSRItemCategory.SPELL, DSRItemCategory.RING]]
+    for i in range(remaining_count):        
+        item = random.choice(itemList)
+        item_pool.append(item)    
     random.shuffle(item_pool)
     return item_pool

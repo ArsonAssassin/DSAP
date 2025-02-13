@@ -4,6 +4,7 @@ using Archipelago.Core.MauiGUI;
 using Archipelago.Core.MauiGUI.Models;
 using Archipelago.Core.MauiGUI.ViewModels;
 using Archipelago.Core.Models;
+using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using DSAP.Models;
@@ -13,7 +14,7 @@ using Windows.UI.Core;
 using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP
-{
+{    
     public partial class App : Application
     {
         static MainPageViewModel Context;
@@ -53,7 +54,21 @@ namespace DSAP
 
             var result = Memory.ExecuteCommand(command);
         }
+        public static void AddItemWithMessage(int category, int id, int quantity)
+        {
+            var command = Helpers.GetItemWithMessage();
 
+            // Set item category (at offset 0x3F)
+            Array.Copy(BitConverter.GetBytes(category), 0, command, 0x3F, 4);
+
+            // Set item quantity (at offset 0x43)
+            Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x43, 4);
+
+            // Set item id (at offset 0x47)
+            Array.Copy(BitConverter.GetBytes(id), 0, command, 0x47, 4);
+
+            var result = Memory.ExecuteCommand(command);
+        }
         public static bool IsValidPointer(ulong address)
         {
             try
@@ -155,7 +170,7 @@ namespace DSAP
             var miscLocations = Helpers.GetMiscFlagLocations();
 
             var goalLocation = bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
-            Archipelago.Core.Util.Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
+            Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
 
             Client.MonitorLocations(bossLocations);
             Client.MonitorLocations(itemLocations);
@@ -227,7 +242,11 @@ namespace DSAP
             if (itemToReceive != null)
             {
                 Log.Logger.Verbose($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
-                AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+                if (itemToReceive.ApId == 11120000)
+                {
+                    RunLagTrap();
+                }
+                else AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
             }
             else
             {
@@ -236,6 +255,16 @@ namespace DSAP
                 AddItem((int)filler.Category, filler.Id, 1);
             }
         }
+
+        private static async void RunLagTrap()
+        {
+            using (var lagTrap = new LagTrap(TimeSpan.FromSeconds(20)))
+            {
+                lagTrap.Start();
+                await lagTrap.WaitForCompletionAsync();
+            }
+        }
+
         private static void LogItem(Item item)
         {
             var messageToLog = new LogListItem(new List<TextSpan>()

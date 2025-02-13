@@ -228,12 +228,12 @@ location_tables = {
     DSRLocationData(11110076, f"UA2: Undead Asylum F2 West Door opened", f"Firebomb", DSRLocationCategory.DOOR),    
 ],
 "Northern Undead Asylum - Second Visit Behind F2 West Door": [    
-    DSRLocationData(11110077, f"UA2: Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110078, f"UA2: Rusted Iron Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110079, f"UA2: Peculiar Doll", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110080, f"UA2: Stray Demon Defeated", f"Stray Demon Defeated", DSRLocationCategory.BOSS),
 ],
 "Northern Undead Asylum - Second Visit Snuggly Trades": [
+    DSRLocationData(11110077, f"UA2: Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110079, f"UA2: Peculiar Doll", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110080, f"UA2: Stray Demon Defeated", f"Stray Demon Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110081, f"Snuggly: Pendant -> Souvenir of Reprisal", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110082, f"Snuggly: Rubbish -> Titanite Chunk", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110083, f"Snuggly: Sunlight Medal -> White Titanite Chunk", f"Firebomb", DSRLocationCategory.ITEM_LOT),

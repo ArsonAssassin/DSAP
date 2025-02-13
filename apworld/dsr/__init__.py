@@ -40,7 +40,7 @@ class DSRWorld(World):
     data_version = 0
     base_id = 11110000
     enabled_location_categories: Set[DSRLocationCategory]
-    required_client_version = (0, 5, 0)
+    required_client_version = (0, 5, 1)
     item_name_to_id = DSRItem.get_name_to_id()
     location_name_to_id = DSRLocation.get_name_to_id()
     item_name_groups = {
@@ -367,7 +367,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_location("Snuggly: Humanity -> Ring of Sacrifice", self.player), lambda state: state.has("Humanity", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Twin Humanities -> Rare Ring of Sacrifice", self.player), lambda state: state.has("Twin Humanities", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Dung Pie -> Demon Titanite", self.player), lambda state: state.has("Dung Pie", self.player))
-        set_rule(self.multiworld.get_location("Snuggly: Pyromancy Flame -> Red Titanite Chunk", self.player), lambda state: state.has("Pyromancy Flame)", self.player))
+        set_rule(self.multiworld.get_location("Snuggly: Pyromancy Flame -> Red Titanite Chunk", self.player), lambda state: state.has("Pyromancy Flame", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Pyromancy Flame (Ascended) -> Red Titanite Slab", self.player), lambda state: state.has("Pyromancy Flame (Ascended)", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Egg Vermifuge -> Dragon Scale", self.player), lambda state: state.has("Egg Vermifuge", self.player))
         set_rule(self.multiworld.get_location("Snuggly: Sunlight Maggot -> Old Witch's Ring", self.player), lambda state: state.has("Sunlight Maggot", self.player))
