@@ -198,7 +198,7 @@ stages:
           git tag -a "v$(newVersion)" -m "Version $(newVersion)"
           git push origin HEAD:$(Build.SourceBranch) --follow-tags
       env:
-        GITHUB_PAT: $(ArsonAssassin.AccessToken)
+        GITHUB_PAT: $(github_connection.AccessToken)
         GIT_TERMINAL_PROMPT: "0"
     - task: PowerShell@2
       name: GetProjectName
