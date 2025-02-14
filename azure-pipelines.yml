@@ -49,6 +49,8 @@ stages:
       artifact: ApWorldRelease
 
 - stage: Build_Application
+  dependsOn: Package_ApWorld
+  condition: succeeded('Package_ApWorld')
   jobs:
   - job: Build_And_Package_App
     steps:
