@@ -25,7 +25,7 @@ variables:
   solution: '**/source/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-
+  DISCORD_TOKEN: $[variables.discord_token]
 stages:
 - stage: Build_And_Package
   jobs:
@@ -273,7 +273,7 @@ stages:
         targetType: 'inline'
         script: |
           $Headers = @{
-            "Authorization" = "$(discord_token)"
+            "Authorization" = "$env:DISCORD_TOKEN"
             "Content-Type" = "application/json"
           }
           $Body = @{
