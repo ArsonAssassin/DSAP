@@ -222,7 +222,8 @@ stages:
         targetType: 'inline'
         script: |
           $publishDir = "bin/release/net8.0-windows10.0.19041.0/win-x64/publish"
-          $files = Get-ChildItem -Path "$(Build.SourcesDirectory)/source/*/$publishDir" -Include "*.exe", "*.pdb"
+          Get-Childitem -Path "$(Build.SourcesDirectory)/source/*/$publishDir" -Include "*.exe", "*.pdb" -depth 5 | Write-Host $_.FullName
+          $files = Get-ChildItem -Path "$(Build.SourcesDirectory)/source/*/$publishDir" -Include "*.exe", "*.pdb" -depth 5
           
           # Create directory for files
           New-Item -ItemType Directory -Path "$(Build.ArtifactStagingDirectory)/app" -Force
