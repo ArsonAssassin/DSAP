@@ -134,24 +134,62 @@ stages:
           
           # Set version for later tasks
           Write-Host "##vso[task.setvariable variable=newVersion]$newVersion"
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
     - task: PowerShell@2
       name: SetupGitHub
       inputs:
         targetType: 'inline'
         script: |
-          git config --global user.email "azure-pipeline@your-domain.com"
-          git config --global user.name "Azure Pipeline"
-          
-          # Use the GitHub service connection token
-          $encodedPat = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(GITHUB_PAT)"))
-          git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic $encodedPat"
+            Write-Host "Starting Git configuration..."
+            Write-Host "Current directory: $(Get-Location)"
+            
+            # Basic git config
+            Write-Host "Setting up Git user info..."
+            git config --global user.email "azure-pipeline@your-domain.com"
+            git config --global user.name "Azure Pipeline"
+            
+            # Debug: Show current git config
+            Write-Host "Current Git config:"
+            git config --list
+            
+            # Get and verify PAT
+            Write-Host "Retrieving PAT..."
+            $token = "$(PAT)"
+            if ([string]::IsNullOrEmpty($token)) {
+                Write-Error "PAT token is empty. Check the service connection configuration."
+                exit 1
+            }
+            Write-Host "PAT token length: $($token.Length) characters"
+            
+            # Setup authentication
+            Write-Host "Setting up Git authentication..."
+            $encodedPat = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$token"))
+            Write-Host "Encoded PAT length: $($encodedPat.Length) characters"
+            
+            git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic $encodedPat"
+            
+            # Verify remote
+            Write-Host "Configured remote URLs:"
+            git remote -v
+            
+            # Test git access
+            Write-Host "Testing Git connection..."
+            try {
+                $output = git ls-remote --heads origin 2>&1
+                Write-Host "Git connection test successful"
+            }
+            catch {
+                Write-Error "Git connection test failed: $_"
+                exit 1
+            }
+            
+            Write-Host "Git setup completed"
       env:
         GITHUB_PAT: $(ArsonAssassin.PAT)
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
     - task: PowerShell@2
       name: CommitVersionUpdate
       inputs:
