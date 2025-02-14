@@ -173,9 +173,6 @@ stages:
           Write-Host "Encoded PAT length: $($encodedPat.Length) characters"
           
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic $encodedPat"
-          $repoUrl = git config --get remote.origin.url
-          $repoUrlWithAuth = $repoUrl -replace "https://", "https://$token@"
-          git remote set-url origin $repoUrlWithAuth
 
           # Verify remote
           Write-Host "Configured remote URLs:"
