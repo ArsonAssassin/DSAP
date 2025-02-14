@@ -12,6 +12,12 @@ parameters:
     - patch
     - minor
     - major
+  - name: releaseToGithub
+    type: boolean
+    default: false
+  - name: pingEije
+    type: boolean
+    default: false
 
 variables:
   solution: '**/source/*.sln'
@@ -192,7 +198,6 @@ stages:
           git config --global core.autocrlf true
           git add **/**.csproj
           git commit -m "Bump version to $(newVersion) [skip ci]"
-          git tag -a "v$(newVersion)" -m "Version $(newVersion)"
           git push origin HEAD:$(Build.SourceBranch) --follow-tags
       env:
         GITHUB_PAT: $(github_connection.token)
@@ -242,3 +247,35 @@ stages:
 
     - publish: $(Build.ArtifactStagingDirectory)/$(projectName).zip
       artifact: ApplicationRelease
+    - task: GitHubRelease@1
+      displayName: 'Create GitHub Release'
+      condition: eq(${{ parameters.releaseToGithub }}, true)
+      inputs:
+        gitHubConnection: 'github_connection'
+        repositoryName: '$(Build.Repository.Name)'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'userSpecified'
+        tag: '$(newVersion)'
+        title: 'V$(newVersion)'
+        assets: '$(Build.ArtifactStagingDirectory)/$(projectName).zip'
+        isDraft: false
+        isPreRelease: true
+        releaseNotesSource: 'inline'
+        releaseNotesInline: |
+          Release version $(newVersion)
+    - task: Powershell@2
+      displayName: Ping Eije
+      condition: eq(${{ parameters.pingEije }}, true)
+      inputs:
+        targetType: 'inline'
+        script: |
+          $Headers = @{
+            "Authorization" = "$(discord_token)"
+            "Content-Type" = "application/json"
+          }
+          $Body = @{
+            "content" = "@Eijebong: new $(Build.Repository.Name) release: https://github.com/$(Build.Repository.Name)/releases/tag/v$(newVersion)"
+          } | ConvertTo-Json
+      
+          Invoke-RestMethod -Uri "https://discord.com/api/v10/channels/214865144218517504/messages" -Method Post -Headers $Headers -Body $Body
