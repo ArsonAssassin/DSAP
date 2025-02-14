@@ -69,6 +69,7 @@ stages:
     condition: succeeded('Create_ApWorld_Package')
     steps:
     - checkout: self
+      persistCredentials: true
 
     - task: NuGetToolInstaller@1
 
