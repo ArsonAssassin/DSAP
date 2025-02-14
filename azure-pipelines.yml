@@ -87,7 +87,7 @@ stages:
         targetType: 'inline'
         script: |
           # Get the client project file
-          $csprojPath = Get-ChildItem -Path "$(Build.SourcesDirectory)/source" -Filter "*.csproj" -Recurse | Select-Object -First 1
+          $csprojPath = Get-ChildItem -Path "$(Build.SourcesDirectory)\\source" -Filter "*.csproj" -Recurse | Select-Object -First 1
           
           # Read current version
           [xml]$csproj = Get-Content $csprojPath
