@@ -11,7 +11,7 @@ variables:
   buildConfiguration: 'Release'
 
 stages:
-- stage: Package_ApWorld
+- stage: Build_And_Package
   jobs:
   - job: Create_ApWorld_Package
     steps:
@@ -45,14 +45,12 @@ stages:
           $folderName = "$(FindSourceDirectory.folderName)"
           Compress-Archive -Path "$(sourcePath)/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$folderName.apworld"
 
-    - publish: $(Build.ArtifactStagingDirectory)/$(folderName).apworld
+    - publish: $(Build.ArtifactStagingDirectory)
       artifact: ApWorldRelease
 
-- stage: Build_Application
-  dependsOn: Package_ApWorld
-  condition: succeeded('Package_ApWorld')
-  jobs:
   - job: Build_And_Package_App
+    dependsOn: Create_ApWorld_Package
+    condition: succeeded('Create_ApWorld_Package')
     steps:
     - checkout: self
 
