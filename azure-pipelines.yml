@@ -12,10 +12,12 @@ parameters:
     - patch
     - minor
     - major
+    
   - name: releaseToGithub
     type: boolean
     default: false
-  - name: pingEije
+
+  - name: notifyDiscord
     type: boolean
     default: false
 
@@ -265,8 +267,8 @@ stages:
         releaseNotesInline: |
           Release version $(newVersion)
     - task: Powershell@2
-      displayName: Ping Eije
-      condition: eq(${{ parameters.pingEije }}, true)
+      displayName: Notify discord
+      condition: eq(${{ parameters.notifyDiscord }}, true)
       inputs:
         targetType: 'inline'
         script: |
@@ -275,7 +277,7 @@ stages:
             "Content-Type" = "application/json"
           }
           $Body = @{
-            "content" = "@Eijebong: new $(Build.Repository.Name) release: https://github.com/$(Build.Repository.Name)/releases/tag/v$(newVersion)"
+            "content" = "New $(Build.Repository.Name) release: https://github.com/$(Build.Repository.Name)/releases/tag/v$(newVersion)"
           } | ConvertTo-Json
       
-          Invoke-RestMethod -Uri "https://discord.com/api/v10/channels/214865144218517504/messages" -Method Post -Headers $Headers -Body $Body
+          Invoke-RestMethod -Uri "https://discord.com/api/v10/channels/1092600948548976680/messages" -Method Post -Headers $Headers -Body $Body
