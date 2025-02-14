@@ -223,7 +223,7 @@ stages:
         script: |
           $publishDir = "bin/release/net8.0-windows10.0.19041.0/win-x64/publish"
           Write-Host "Enumerating files in $(Build.SourcesDirectory)/source/*/$publishDir"
-          Get-Childitem -Path "$(Build.SourcesDirectory)/source/*/$publishDir" -Include "*.exe", "*.pdb" -Recurse | ForEach-Object { Write-Host $_.FullName }
+          Get-Childitem -Path "$(Build.SourcesDirectory)/source" -Recurse | ForEach-Object { Write-Host $_.FullName }
           $files = Get-ChildItem -Path "$(Build.SourcesDirectory)/source/*/$publishDir" -Include "*.exe", "*.pdb" -Recurse
           if (-not $files) {
               Write-Error "No files found in $publishDir"
