@@ -50,7 +50,14 @@ stages:
           
           # Create zip file
           $folderName = "$(FindSourceDirectory.folderName)"
-          Compress-Archive -Path "$(sourcePath)/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$folderName.apworld"
+          $tempZipPath = "$(Build.ArtifactStagingDirectory)/$folderName.zip"
+          $finalPath = "$(Build.ArtifactStagingDirectory)/$folderName.apworld"
+          
+          # Create the zip file first
+          Compress-Archive -Path "$(sourcePath)/*" -DestinationPath $tempZipPath
+          
+          # Rename to .apworld
+          Move-Item -Path $tempZipPath -Destination $finalPath -Force
 
     - publish: $(Build.ArtifactStagingDirectory)
       artifact: ApWorldRelease
