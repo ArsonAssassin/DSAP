@@ -1,7 +1,7 @@
 trigger: none
 
-pool:
-  name: 'Default'
+#pool:
+  #name: 'Default'
 
 parameters:
   - name: versionIncrement
