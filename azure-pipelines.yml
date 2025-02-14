@@ -24,6 +24,7 @@ stages:
   - job: Create_ApWorld_Package
     steps:
     - checkout: self
+      persistCredentials: true
       
     - task: PowerShell@2
       name: FindSourceDirectory
@@ -200,6 +201,7 @@ stages:
       env:
         GITHUB_PAT: $(github_connection.token)
         GIT_TERMINAL_PROMPT: "0"
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     - task: PowerShell@2
       name: GetProjectName
       inputs:
