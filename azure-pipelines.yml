@@ -1,9 +1,17 @@
-trigger:
-  - main
+trigger: none
 
 pool:
   name: 'Azure Pipelines'
   vmImage: 'windows-2022'
+
+parameters:
+  - name: versionIncrement
+    type: string
+    default: 'patch'
+    values:
+    - patch
+    - minor
+    - major
 
 variables:
   solution: '**/source/*.sln'
@@ -66,7 +74,73 @@ stages:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
-
+    - task: PowerShell@2
+      name: IncrementVersion
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Get the client project file
+          $csprojPath = Get-ChildItem -Path "$(Build.SourcesDirectory)/source" -Filter "*.csproj" -Recurse | Select-Object -First 1
+          
+          # Read current version
+          [xml]$csproj = Get-Content $csprojPath
+          $currentVersion = $csproj.Project.PropertyGroup.ApplicationVersion
+          Write-Host "Current version: $currentVersion"
+          
+          # Parse version
+          $versionParts = $currentVersion.Split('.')
+          $major = [int]$versionParts[0]
+          $minor = [int]$versionParts[1]
+          $patch = [int]$versionParts[2]
+          
+          # Increment version
+          switch ("${{ parameters.versionIncrement }}") {
+            "major" {
+              $major++
+              $minor = 0
+              $patch = 0
+            }
+            "minor" {
+              $minor++
+              $patch = 0
+            }
+            "patch" {
+              $patch++
+            }
+          }
+          
+          $newVersion = "$major.$minor.$patch"
+          Write-Host "New version: $newVersion"
+          
+          # Update both version properties
+          $csproj.Project.PropertyGroup.ApplicationVersion = $newVersion
+          $csproj.Project.PropertyGroup.ApplicationDisplayVersion = $newVersion
+          $csproj.Save($csprojPath)
+          
+          # Set version for later tasks
+          Write-Host "##vso[task.setvariable variable=newVersion]$newVersion"
+    - task: PowerShell@2
+      name: SetupGitHub
+      inputs:
+        targetType: 'inline'
+        script: |
+          git config --global user.email "azure-pipeline@your-domain.com"
+          git config --global user.name "Azure Pipeline"
+          
+          # Use the GitHub service connection token
+          $encodedPat = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(GITHUB_PAT)"))
+          git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic $encodedPat"
+      env:
+        GITHUB_PAT: $(github-connection.PAT)
+    - task: PowerShell@2
+      name: CommitVersionUpdate
+      inputs:
+        targetType: 'inline'
+        script: |
+          git add **/**.csproj
+          git commit -m "Bump version to $(newVersion) [skip ci]"
+          git tag -a "v$(newVersion)" -m "Version $(newVersion)"
+          git push origin HEAD:$(Build.SourceBranch) --follow-tags
     - task: PowerShell@2
       name: GetProjectName
       inputs:
