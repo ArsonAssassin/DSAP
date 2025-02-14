@@ -158,7 +158,7 @@ stages:
           
           # Get and verify PAT
           Write-Host "Retrieving PAT..."
-          $token = "$(github_connection.token)"
+          $token = $env:SYSTEM_ACCESSTOKEN
           if ([string]::IsNullOrEmpty($token)) {
               Write-Error "PAT token is empty. Check the service connection configuration."
               exit 1
