@@ -195,6 +195,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          $env:GIT_TERMINAL_PROMPT = "0"
           git add **/**.csproj
           git commit -m "Bump version to $(newVersion) [skip ci]"
           git tag -a "v$(newVersion)" -m "Version $(newVersion)"
