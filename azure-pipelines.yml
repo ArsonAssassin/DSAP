@@ -228,9 +228,10 @@ stages:
           New-Item -ItemType Directory -Path "$(Build.ArtifactStagingDirectory)/app" -Force
           $files | ForEach-Object {
             # Copy files to staging directory
+            Write-Host "Copying $_.FullName to $(Build.ArtifactStagingDirectory)/app"
             Copy-Item -Path $_.FullName -Destination "$(Build.ArtifactStagingDirectory)/app"
           }
-          
+          Write-Host "Zipping $(Build.ArtifactStagingDirectory)/app/* to $(Build.ArtifactStagingDirectory)/$(projectName).zip"
           # Create zip file
           Compress-Archive -Path "$(Build.ArtifactStagingDirectory)/app/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(projectName).zip"
 
