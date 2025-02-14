@@ -254,7 +254,7 @@ stages:
       condition: eq(${{ parameters.releaseToGithub }}, true)
       inputs:
         gitHubConnection: 'github_connection'
-        repositoryName: '$(Build.Repository.Name)'
+        repositoryName: 'ArsonAssassin/$(Build.Repository.Name)'
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: 'userSpecified'
