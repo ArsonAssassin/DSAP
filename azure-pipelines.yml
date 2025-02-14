@@ -1,8 +1,7 @@
 trigger: none
 
 pool:
-  name: 'Azure Pipelines'
-  vmImage: 'windows-2022'
+  name: 'Default'
 
 parameters:
   - name: versionIncrement
