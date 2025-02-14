@@ -131,7 +131,7 @@ stages:
           $encodedPat = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(GITHUB_PAT)"))
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic $encodedPat"
       env:
-        GITHUB_PAT: $(github-connection.PAT)
+        GITHUB_PAT: $(ArsonAssassin.PAT)
     - task: PowerShell@2
       name: CommitVersionUpdate
       inputs:
