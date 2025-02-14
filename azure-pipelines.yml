@@ -76,22 +76,30 @@ stages:
         command: 'restore'
         restoreSolution: '$(solution)'
 
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
     - task: PowerShell@2
       name: IncrementVersion
       inputs:
         targetType: 'inline'
         script: |
-          # Get the client project file
-          $csprojPath = Get-ChildItem -Path "$(Build.SourcesDirectory)\\source" -Filter "*.csproj" -Recurse | Select-Object -First 1
+          Write-Host "Searching in: $(Build.SourcesDirectory)\source"
+          $csprojPath = Get-ChildItem -Path "$(Build.SourcesDirectory)\source" -Filter "*.csproj" -Recurse | Select-Object -First 1
+          
+          if ($null -eq $csprojPath) {
+              Write-Error "Could not find .csproj file in source directory"
+              exit 1
+          }
+          
+          Write-Host "Found project file at: $($csprojPath.FullName)"
           
           # Read current version
-          [xml]$csproj = Get-Content $csprojPath
+          [xml]$csproj = Get-Content $csprojPath.FullName
           $currentVersion = $csproj.Project.PropertyGroup.ApplicationVersion
+          
+          if ([string]::IsNullOrEmpty($currentVersion)) {
+              Write-Error "Could not find ApplicationVersion in csproj file"
+              exit 1
+          }
+          
           Write-Host "Current version: $currentVersion"
           
           # Parse version
@@ -122,10 +130,15 @@ stages:
           # Update both version properties
           $csproj.Project.PropertyGroup.ApplicationVersion = $newVersion
           $csproj.Project.PropertyGroup.ApplicationDisplayVersion = $newVersion
-          $csproj.Save($csprojPath)
+          $csproj.Save($csprojPath.FullName)
           
           # Set version for later tasks
           Write-Host "##vso[task.setvariable variable=newVersion]$newVersion"
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
     - task: PowerShell@2
       name: SetupGitHub
       inputs:
