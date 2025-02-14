@@ -1,0 +1,105 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/source/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+stages:
+- stage: Package_ApWorld
+  jobs:
+  - job: Create_ApWorld_Package
+    steps:
+    - checkout: self
+      
+    - task: PowerShell@2
+      name: FindSourceDirectory
+      inputs:
+        targetType: 'inline'
+        script: |
+          $sourceDir = Get-ChildItem -Path "$(Build.SourcesDirectory)/apworld" -Directory | Select-Object -First 1
+          if ($sourceDir) {
+            $folderName = $sourceDir.Name
+            Write-Host "Found source directory: $folderName"
+            Write-Host "##vso[task.setvariable variable=folderName;isOutput=true]$folderName"
+            Write-Host "##vso[task.setvariable variable=sourcePath]$($sourceDir.FullName)"
+          } else {
+            Write-Error "No directory found in apworld folder"
+            exit 1
+          }
+
+    - task: PowerShell@2
+      name: CleanAndPackage
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Remove __pycache__ directories
+          Get-ChildItem -Path "$(sourcePath)" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
+          
+          # Create zip file
+          $folderName = "$(FindSourceDirectory.folderName)"
+          Compress-Archive -Path "$(sourcePath)/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$folderName.apworld"
+
+    - publish: $(Build.ArtifactStagingDirectory)/$(folderName).apworld
+      artifact: ApWorldRelease
+
+- stage: Build_Application
+  jobs:
+  - job: Build_And_Package_App
+    steps:
+    - checkout: self
+
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(solution)'
+
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+    - task: PowerShell@2
+      name: GetProjectName
+      inputs:
+        targetType: 'inline'
+        script: |
+          $slnFile = Get-ChildItem -Path "$(Build.SourcesDirectory)/source" -Filter "*.sln" | Select-Object -First 1
+          $projectName = [System.IO.Path]::GetFileNameWithoutExtension($slnFile.Name)
+          Write-Host "Project name: $projectName"
+          Write-Host "##vso[task.setvariable variable=projectName]$projectName"
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(solution)'
+        arguments: '-f net8.0-windows10.0.19041.0 -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:EnableCompressionInSingleFile=true /p:PublishAppxPackage=false'
+        zipAfterPublish: false
+
+    - task: PowerShell@2
+      name: PackageApplication
+      inputs:
+        targetType: 'inline'
+        script: |
+          $publishDir = "bin/release/net8.0-windows10.0.19041.0/win-x64/publish"
+          $files = Get-ChildItem -Path "$(Build.SourcesDirectory)/source/*/$publishDir" -Include "*.exe", "*.pdb"
+          
+          # Create directory for files
+          New-Item -ItemType Directory -Path "$(Build.ArtifactStagingDirectory)/app" -Force
+          
+          # Copy files to staging directory
+          Copy-Item -Path $files.FullName -Destination "$(Build.ArtifactStagingDirectory)/app"
+          
+          # Create zip file
+          Compress-Archive -Path "$(Build.ArtifactStagingDirectory)/app/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(projectName).zip"
+
+    - publish: $(Build.ArtifactStagingDirectory)/$(projectName).zip
+      artifact: ApplicationRelease
