@@ -1,6 +1,7 @@
 trigger: none
 
-#pool:
+pool:
+  vmImage: 'windows-2022'
   #name: 'Default'
 
 parameters:
