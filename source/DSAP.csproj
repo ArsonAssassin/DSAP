@@ -21,8 +21,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.arsonassassin.dsap</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.0.13</ApplicationDisplayVersion>
-    <ApplicationVersion>0.0.13</ApplicationVersion>
+    <ApplicationDisplayVersion>0.0.14</ApplicationDisplayVersion>
+    <ApplicationVersion>0.0.14</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <Title>DSAP</Title>
