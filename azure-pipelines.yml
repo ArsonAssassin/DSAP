@@ -171,7 +171,10 @@ stages:
           Write-Host "Encoded PAT length: $($encodedPat.Length) characters"
           
           git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic $encodedPat"
-          
+          $repoUrl = git config --get remote.origin.url
+          $repoUrlWithAuth = $repoUrl -replace "https://", "https://$token@"
+          git remote set-url origin $repoUrlWithAuth
+
           # Verify remote
           Write-Host "Configured remote URLs:"
           git remote -v
@@ -189,7 +192,6 @@ stages:
           
           Write-Host "Git setup completed"
 
-          $env:GIT_TERMINAL_PROMPT = "0"
           git config --global core.autocrlf true
           git add **/**.csproj
           git commit -m "Bump version to $(newVersion) [skip ci]"
@@ -197,6 +199,7 @@ stages:
           git push origin HEAD:$(Build.SourceBranch) --follow-tags
       env:
         GITHUB_PAT: $(ArsonAssassin.PAT)
+        GIT_TERMINAL_PROMPT: "0"
     - task: PowerShell@2
       name: GetProjectName
       inputs:
