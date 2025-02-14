@@ -172,8 +172,6 @@ stages:
           $encodedPat = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$token"))
           Write-Host "Encoded PAT length: $($encodedPat.Length) characters"
           
-          git config --global http.https://github.com/.extraheader "AUTHORIZATION: basic $encodedPat"
-
           # Verify remote
           Write-Host "Configured remote URLs:"
           git remote -v
