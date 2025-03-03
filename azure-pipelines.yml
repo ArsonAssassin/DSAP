@@ -201,7 +201,7 @@ stages:
 
           git config --global core.autocrlf true
           git add **/**.csproj
-          git commit -m "Bump version to $(newVersion) [skip ci]"
+          git commit -m "Bump version to $newVersion [skip ci]"
           git push origin HEAD:$(Build.SourceBranch) --follow-tags
       env:
         GITHUB_PAT: $(github_connection.token)
@@ -260,14 +260,14 @@ stages:
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: 'userSpecifiedTag'
-        tag: '$(newVersion)'
-        title: 'V$(newVersion)'
+        tag: '$newVersion'
+        title: 'V$newVersion'
         assets: '$(Build.ArtifactStagingDirectory)/$(projectName).zip'
         isDraft: false
         isPreRelease: true
         releaseNotesSource: 'inline'
         releaseNotesInline: |
-          Release version $(newVersion)
+          Release version $newVersion
     - task: Powershell@2
       displayName: Notify discord
       condition: eq(${{ parameters.notifyDiscord }}, true)
