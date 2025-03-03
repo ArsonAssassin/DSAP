@@ -6,6 +6,7 @@ using Archipelago.Core.MauiGUI.ViewModels;
 using Archipelago.Core.Models;
 using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
+using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using DSAP.Models;
 using Newtonsoft.Json;
@@ -18,22 +19,24 @@ namespace DSAP
     public partial class App : Application
     {
         static MainPageViewModel Context;
+        private DeathLinkService _deathlinkService;
+
         public static ArchipelagoClient Client { get; set; }
         public static List<DarkSoulsItem> AllItems { get; set; }
         private static readonly object _lockObject = new object();
         public App()
         {
             InitializeComponent();
-            var options = new GuiDesignOptions
-            {
-                BackgroundColor = Color.FromArgb("FF000000"),
-                ButtonColor = Color.FromArgb("FFFF0000"),
-                ButtonTextColor = Color.FromArgb("FF000000"),
-                Title = "DSAP - Dark Souls Remastered Archipelago",
+            //var options = new GuiDesignOptions
+            //{
+            //    BackgroundColor = Color.FromArgb("FF000000"),
+            //    ButtonColor = Color.FromArgb("FFFF0000"),
+            //    ButtonTextColor = Color.FromArgb("FF000000"),
+            //    Title = "DSAP - Dark Souls Remastered Archipelago",
 
-            };
+            //};
 
-            Context = new MainPageViewModel(options);
+            Context = new MainPageViewModel();
             Context.ConnectClicked += Context_ConnectClicked;
             Context.CommandReceived += (e, a) =>
             {
@@ -130,6 +133,11 @@ namespace DSAP
                 Client.Disconnected -= OnDisconnected;
                 Client.ItemReceived -= Client_ItemReceived;
                 Client.MessageReceived -= Client_MessageReceived;
+                if(_deathlinkService != null)
+                {
+                    _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
+                    _deathlinkService = null;
+                }
                 Client.CancelMonitors();
             }
             DarkSoulsClient client = new DarkSoulsClient();
@@ -160,7 +168,12 @@ namespace DSAP
 
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
-
+            if (Client.Options.ContainsKey("EnableDeathlink") && (bool)Client.Options["EnableDeathlink"])
+            {
+               var _deathlinkService = Client.EnableDeathLink();
+                _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
+                //ToDo listen for player death
+            }
 
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
@@ -186,6 +199,11 @@ namespace DSAP
             //});
             RemoveItems();
             Context.ConnectButtonEnabled = true;
+        }
+
+        private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
+        {
+            //Todo kill player
         }
 
         private void Client_MessageReceived(object? sender, Archipelago.Core.Models.MessageReceivedEventArgs e)

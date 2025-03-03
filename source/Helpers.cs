@@ -25,6 +25,18 @@ namespace DSAP
             }
             return (ulong)address;
         }
+        public static ulong GetBaseAOffset()
+        {
+            var baseAddress = GetBaseAddress();
+            byte[] pattern = { 0x8B, 0x76, 0x0C, 0x89, 0x35, 0x00, 0x00, 0x00, 0x00, 0x33, 0xC0 };
+            string mask = "xxxxx????xx";
+            IntPtr getBaseAAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
+
+            int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getBaseAAddress + 3), 4), 0);
+            IntPtr baseAAddress = getBaseAAddress + offset + 7;
+
+            return (ulong)baseAAddress;
+        }
         public static ulong GetBaseCOffset()
         {
             var baseAddress = GetBaseAddress();
@@ -83,6 +95,18 @@ namespace DSAP
             IntPtr eventFlagsAddress = getEFAddress + offset + 7;
 
             return (ulong)(BitConverter.ToInt32(Memory.ReadFromPointer((ulong)eventFlagsAddress, 4, 2)));
+        }
+        internal int GetPlayerHP()
+        {
+            var baseA = GetBaseAOffset();
+            var next = OffsetPointer(baseA, 0x2D4);
+            return Memory.ReadInt(next);
+        }
+        internal ulong GetPlayerHPAddress()
+        {
+            var baseA = GetBaseAOffset();
+            var next = OffsetPointer(baseA, 0x2D4);
+            return next;
         }
         private static ulong GetItemLotParamOffset()
         {
@@ -431,6 +455,12 @@ namespace DSAP
             var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
             return list;
         }
+        public static List<DarkSoulsItem> GetTraps()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Traps.json");
+            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            return list;
+        }
         public static List<DarkSoulsItem> GetRangedWeapons()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.RangedWeapons.json");
@@ -518,6 +548,7 @@ namespace DSAP
             results = results.Concat(GetUsableItems()).ToList();
             results = results.Concat(GetMeleeWeapons()).ToList();
             results = results.Concat(GetArmor()).ToList();
+            results = results.Concat(GetTraps()).ToList();
 
             return results;
         }

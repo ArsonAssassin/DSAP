@@ -23,7 +23,8 @@ namespace DSAP
             UsableItems = 0x40000000,
             MysteryWeapons = 0x000000000,
             MysteryArmor = 0x10000000,
-            MysteryGoods = 0x40000000
+            MysteryGoods = 0x40000000,
+            Trap = 0x33333333
         }
 
         public enum ItemUpgrade
