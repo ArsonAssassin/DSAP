@@ -1,124 +1,107 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <WindowsPackageType>None</WindowsPackageType>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
-
-		<!-- Note for MacCatalyst:
+    <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+    <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
+    <!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
 		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
 		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
-
-		<OutputType>Exe</OutputType>
-		<RootNamespace>DSAP</RootNamespace>
-		<UseMaui>true</UseMaui>
-		<SingleProject>true</SingleProject>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-
-		<!-- Display name -->
-		<ApplicationTitle>DSAP</ApplicationTitle>
-
-		<!-- App Identifier -->
-		<ApplicationId>com.arsonassassin.dsap</ApplicationId>
-
-		<!-- Versions -->
-		<ApplicationDisplayVersion>0.0.11</ApplicationDisplayVersion>
-		<ApplicationVersion>0.0.11</ApplicationVersion>
-
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<Title>DSAP</Title>
+    <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DSAP</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Display name -->
+    <ApplicationTitle>DSAP</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.arsonassassin.dsap</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>0.0.12</ApplicationDisplayVersion>
+    <ApplicationVersion>0.0.12</ApplicationVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+    <Title>DSAP</Title>
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <SelfContained>true</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishAppxPackage>false</PublishAppxPackage>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
-
-		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
-
-		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
-
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Resources\Armor.json" />
-	  <None Remove="Resources\Bonfires.json" />
-	  <None Remove="Resources\Bosses.json" />
-	  <None Remove="Resources\BossFlags.json" />
-	  <None Remove="Resources\Consumables.json" />
-	  <None Remove="Resources\Doors.json" />
-	  <None Remove="Resources\EnemyDrop.json" />
-	  <None Remove="Resources\FogWalls.json" />
-	  <None Remove="Resources\ItemLots.json" />
-	  <None Remove="Resources\KeyItems.json" />
-	  <None Remove="Resources\LastBonfire.json" />
-	  <None Remove="Resources\MeleeWeapons.json" />
-	  <None Remove="Resources\MiscFlags.json" />
-	  <None Remove="Resources\RangedWeapons.json" />
-	  <None Remove="Resources\Rings.json" />
-	  <None Remove="Resources\Shields.json" />
-	  <None Remove="Resources\Spells.json" />
-	  <None Remove="Resources\SpellTools.json" />
-	  <None Remove="Resources\temp.json" />
-	  <None Remove="Resources\Traps.json" />
-	  <None Remove="Resources\UpgradeMaterials.json" />
-	  <None Remove="Resources\UsableItems.json" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="Resources\Armor.json" />
-	  <EmbeddedResource Include="Resources\Bonfires.json" />
-	  <EmbeddedResource Include="Resources\Bosses.json" />
-	  <EmbeddedResource Include="Resources\BossFlags.json" />
-	  <EmbeddedResource Include="Resources\Consumables.json" />
-	  <EmbeddedResource Include="Resources\Doors.json" />
-	  <EmbeddedResource Include="Resources\EnemyDrop.json" />
-	  <EmbeddedResource Include="Resources\FogWalls.json" />
-	  <EmbeddedResource Include="Resources\ItemLots.json" />
-	  <EmbeddedResource Include="Resources\KeyItems.json" />
-	  <EmbeddedResource Include="Resources\LastBonfire.json" />
-	  <EmbeddedResource Include="Resources\MeleeWeapons.json" />
-	  <EmbeddedResource Include="Resources\MiscFlags.json" />
-	  <EmbeddedResource Include="Resources\RangedWeapons.json" />
-	  <EmbeddedResource Include="Resources\Rings.json" />
-	  <EmbeddedResource Include="Resources\Shields.json" />
-	  <EmbeddedResource Include="Resources\Spells.json" />
-	  <EmbeddedResource Include="Resources\SpellTools.json" />
-	  <EmbeddedResource Include="Resources\temp.json" />
-	  <EmbeddedResource Include="Resources\Traps.json" />
-	  <EmbeddedResource Include="Resources\UpgradeMaterials.json" />
-	  <EmbeddedResource Include="Resources\UsableItems.json" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Archipelago.Core.MauiGUI" Version="0.0.22" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="System.Text.Json" Version="9.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Properties\" />
-	</ItemGroup>
-
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- App Icon -->
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+    <!-- Splash Screen -->
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+    <!-- Images -->
+    <MauiImage Include="Resources\Images\*" />
+    <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+    <!-- Custom Fonts -->
+    <MauiFont Include="Resources\Fonts\*" />
+    <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\Armor.json" />
+    <None Remove="Resources\Bonfires.json" />
+    <None Remove="Resources\Bosses.json" />
+    <None Remove="Resources\BossFlags.json" />
+    <None Remove="Resources\Consumables.json" />
+    <None Remove="Resources\Doors.json" />
+    <None Remove="Resources\EnemyDrop.json" />
+    <None Remove="Resources\FogWalls.json" />
+    <None Remove="Resources\ItemLots.json" />
+    <None Remove="Resources\KeyItems.json" />
+    <None Remove="Resources\LastBonfire.json" />
+    <None Remove="Resources\MeleeWeapons.json" />
+    <None Remove="Resources\MiscFlags.json" />
+    <None Remove="Resources\RangedWeapons.json" />
+    <None Remove="Resources\Rings.json" />
+    <None Remove="Resources\Shields.json" />
+    <None Remove="Resources\Spells.json" />
+    <None Remove="Resources\SpellTools.json" />
+    <None Remove="Resources\temp.json" />
+    <None Remove="Resources\Traps.json" />
+    <None Remove="Resources\UpgradeMaterials.json" />
+    <None Remove="Resources\UsableItems.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Armor.json" />
+    <EmbeddedResource Include="Resources\Bonfires.json" />
+    <EmbeddedResource Include="Resources\Bosses.json" />
+    <EmbeddedResource Include="Resources\BossFlags.json" />
+    <EmbeddedResource Include="Resources\Consumables.json" />
+    <EmbeddedResource Include="Resources\Doors.json" />
+    <EmbeddedResource Include="Resources\EnemyDrop.json" />
+    <EmbeddedResource Include="Resources\FogWalls.json" />
+    <EmbeddedResource Include="Resources\ItemLots.json" />
+    <EmbeddedResource Include="Resources\KeyItems.json" />
+    <EmbeddedResource Include="Resources\LastBonfire.json" />
+    <EmbeddedResource Include="Resources\MeleeWeapons.json" />
+    <EmbeddedResource Include="Resources\MiscFlags.json" />
+    <EmbeddedResource Include="Resources\RangedWeapons.json" />
+    <EmbeddedResource Include="Resources\Rings.json" />
+    <EmbeddedResource Include="Resources\Shields.json" />
+    <EmbeddedResource Include="Resources\Spells.json" />
+    <EmbeddedResource Include="Resources\SpellTools.json" />
+    <EmbeddedResource Include="Resources\temp.json" />
+    <EmbeddedResource Include="Resources\Traps.json" />
+    <EmbeddedResource Include="Resources\UpgradeMaterials.json" />
+    <EmbeddedResource Include="Resources\UsableItems.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Archipelago.Core.MauiGUI" Version="0.0.22" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>
