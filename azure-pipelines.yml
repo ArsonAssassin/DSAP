@@ -258,8 +258,8 @@ stages:
         tag: '$(IncrementVersion.newVersion)'
         title: 'V$(IncrementVersion.newVersion)'
         assets: |
-          '$(Build.ArtifactStagingDirectory)/*.zip'
-          '$(Build.ArtifactStagingDirectory)/*.apworld'
+          $(Build.ArtifactStagingDirectory)/*.zip
+          $(Build.ArtifactStagingDirectory)/*.apworld
         isDraft: false
         isPreRelease: true
         releaseNotesSource: 'inline'
