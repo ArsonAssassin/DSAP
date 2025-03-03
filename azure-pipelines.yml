@@ -60,13 +60,13 @@ stages:
           Get-ChildItem -Path "$(sourcePath)" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
           
           # Create zip file
-          $folderName = "$(FindSourceDirectory.folderName)"
-          $tempZipPath = "$(Build.ArtifactStagingDirectory)/$folderName.zip"
-          $finalPath = "$(Build.ArtifactStagingDirectory)/$folderName.apworld"
+          $projectName = "$(FindSourceDirectory.folderName)"
+          $tempZipPath = "$(Build.ArtifactStagingDirectory)/$projectName.zip"
+          $finalPath = "$(Build.ArtifactStagingDirectory)/$projectName.apworld"
           
           # Create the zip file first
           Compress-Archive -Path "$(sourcePath)/*" -DestinationPath $tempZipPath
-          
+          Write-Host "##vso[task.setvariable variable=projectName;isOutput=true]$projectName"
           # Rename to .apworld
           Move-Item -Path $tempZipPath -Destination $finalPath -Force
 
@@ -262,12 +262,15 @@ stages:
         tagSource: 'userSpecifiedTag'
         tag: '$(IncrementVersion.newVersion)'
         title: 'V$(IncrementVersion.newVersion)'
-        assets: '$(Build.ArtifactStagingDirectory)/$(projectName).zip'
+        assets: |
+          '$(Build.ArtifactStagingDirectory)/*.zip'
+          '$(Build.ArtifactStagingDirectory)/*.apworld'
         isDraft: false
         isPreRelease: true
         releaseNotesSource: 'inline'
         releaseNotesInline: |
           Release version $(IncrementVersion.newVersion)
+          
     - task: Powershell@2
       displayName: Notify discord
       condition: eq(${{ parameters.notifyDiscord }}, true)
