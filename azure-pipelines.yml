@@ -271,18 +271,3 @@ stages:
         releaseNotesInline: |
           Release version $(IncrementVersion.newVersion)
           
-    - task: Powershell@2
-      displayName: Notify discord
-      condition: eq(${{ parameters.notifyDiscord }}, true)
-      inputs:
-        targetType: 'inline'
-        script: |
-          $Headers = @{
-            "Authorization" = "$env:DISCORD_TOKEN"
-            "Content-Type" = "application/json"
-          }
-          $Body = @{
-            "content" = "New $(Build.Repository.Name) release: https://github.com/$(Build.Repository.Name)/releases/tag/v$(IncrementVersion.newVersion)"
-          } | ConvertTo-Json
-      
-          Invoke-RestMethod -Uri "https://discord.com/api/v10/channels/1092600948548976680/messages" -Method Post -Headers $Headers -Body $Body
