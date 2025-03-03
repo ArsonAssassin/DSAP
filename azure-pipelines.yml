@@ -7,11 +7,12 @@ pool:
 parameters:
   - name: versionIncrement
     type: string
-    default: 'patch'
+    default: 'none'
     values:
-    - patch
-    - minor
-    - major
+    - 'none'
+    - 'patch'
+    - 'minor'
+    - 'major'
     
   - name: releaseToGithub
     type: boolean
@@ -88,6 +89,7 @@ stages:
 
     - task: PowerShell@2
       name: IncrementVersion
+      condition: ne('${{ parameters.versionIncrement }}', 'none')
       inputs:
         targetType: 'inline'
         script: |
@@ -151,6 +153,7 @@ stages:
         configuration: '$(buildConfiguration)'
     - task: PowerShell@2
       name: CommitVersionUpdate
+      condition: ne('${{ parameters.versionIncrement }}', 'none')
       inputs:
         targetType: 'inline'
         script: |
