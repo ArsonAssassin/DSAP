@@ -18,15 +18,10 @@ parameters:
     type: boolean
     default: false
 
-  - name: notifyDiscord
-    type: boolean
-    default: false
-
 variables:
   solution: '**/source/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  DISCORD_TOKEN: $[variables.discord_token]
 stages:
 - stage: Build_And_Package
   jobs:
