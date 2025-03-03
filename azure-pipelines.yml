@@ -145,7 +145,7 @@ stages:
           $csproj.Save($csprojPath.FullName)
           
           # Set version for later tasks
-          Write-Host "##vso[task.setvariable variable=newVersion]$newVersion"
+          Write-Host "##vso[task.setvariable variable=newVersion;isOutput=true]$newVersion"
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
