@@ -22,14 +22,16 @@ variables:
   solution: '**/source/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+
 stages:
 - stage: Build_And_Package
   jobs:
-  - job: Create_ApWorld_Package
+  - job: Build_Package_And_Release
     steps:
     - checkout: self
       persistCredentials: true
       
+    # Create ApWorld Package
     - task: PowerShell@2
       name: FindSourceDirectory
       inputs:
@@ -61,20 +63,15 @@ stages:
           
           # Create the zip file first
           Compress-Archive -Path "$(sourcePath)/*" -DestinationPath $tempZipPath
-          Write-Host "##vso[task.setvariable variable=projectName;isOutput=true]$projectName"
+          Write-Host "##vso[task.setvariable variable=projectName]$projectName"
           # Rename to .apworld
           Move-Item -Path $tempZipPath -Destination $finalPath -Force
+          
+          # List contents of the artifact staging directory for debugging
+          Write-Host "Files in Artifact Staging Directory after creating .apworld:"
+          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse | ForEach-Object { Write-Host $_.FullName }
 
-    - publish: $(Build.ArtifactStagingDirectory)
-      artifact: ApWorldRelease
-
-  - job: Build_And_Package_App
-    dependsOn: Create_ApWorld_Package
-    condition: succeeded('Create_ApWorld_Package')
-    steps:
-    - checkout: self
-      persistCredentials: true
-
+    # Build and Package Application
     - task: NuGetToolInstaller@1
 
     - task: NuGetCommand@2
@@ -140,11 +137,13 @@ stages:
           
           # Set version for later tasks
           Write-Host "##vso[task.setvariable variable=newVersion;isOutput=true]$newVersion"
+
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
+
     - task: PowerShell@2
       name: CommitVersionUpdate
       condition: ne('${{ parameters.versionIncrement }}', 'none')
@@ -202,6 +201,7 @@ stages:
         GITHUB_PAT: $(github_connection.token)
         GIT_TERMINAL_PROMPT: "0"
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
     - task: PowerShell@2
       name: GetProjectName
       inputs:
@@ -243,9 +243,17 @@ stages:
           Write-Host "Zipping $(Build.ArtifactStagingDirectory)/app/* to $(Build.ArtifactStagingDirectory)/$(projectName).zip"
           # Create zip file
           Compress-Archive -Path "$(Build.ArtifactStagingDirectory)/app/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(projectName).zip"
+          
+          # List all files in the artifact staging directory for debugging
+          Write-Host "Files in Artifact Staging Directory before GitHub Release:"
+          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse | ForEach-Object { Write-Host $_.FullName }
 
-    - publish: $(Build.ArtifactStagingDirectory)/$(projectName).zip
-      artifact: ApplicationRelease
+    # Publish both artifacts for the pipeline
+    - publish: $(Build.ArtifactStagingDirectory)
+      artifact: AllReleaseFiles
+      displayName: 'Publish All Release Files'
+
+    # Create GitHub Release with all artifacts
     - task: GitHubRelease@1
       displayName: 'Create GitHub Release'
       condition: eq(${{ parameters.releaseToGithub }}, true)
@@ -265,4 +273,3 @@ stages:
         releaseNotesSource: 'inline'
         releaseNotesInline: |
           Release version $(IncrementVersion.newVersion)
-          
