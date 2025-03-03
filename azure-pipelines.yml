@@ -89,7 +89,6 @@ stages:
 
     - task: PowerShell@2
       name: IncrementVersion
-      condition: ne('${{ parameters.versionIncrement }}', 'none')
       inputs:
         targetType: 'inline'
         script: |
