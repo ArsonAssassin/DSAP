@@ -260,7 +260,7 @@ stages:
         repositoryName: 'ArsonAssassin/$(Build.Repository.Name)'
         action: 'create'
         target: '$(Build.SourceVersion)'
-        tagSource: 'userSpecified'
+        tagSource: 'userSpecifiedTag'
         tag: '$(newVersion)'
         title: 'V$(newVersion)'
         assets: '$(Build.ArtifactStagingDirectory)/$(projectName).zip'
