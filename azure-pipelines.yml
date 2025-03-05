@@ -56,7 +56,7 @@ stages:
           # Remove __pycache__ directories
           Get-ChildItem -Path "$(sourcePath)" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
           
-          Move-Item -Path "$(sourcePath)/*" -Destination "$(sourcePath)/$projectName" -Force
+          Move-Item -Path "$(sourcePath)/*" -Destination "$(sourcePath)/$projectName/" -Force
           # Create zip file
           $projectName = "$(FindSourceDirectory.folderName)"
           $tempZipPath = "$(Build.ArtifactStagingDirectory)/$projectName.zip"
