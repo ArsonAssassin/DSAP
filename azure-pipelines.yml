@@ -56,14 +56,13 @@ stages:
           # Remove __pycache__ directories
           Get-ChildItem -Path "$(sourcePath)/$projectName" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
           
-          Move-Item -Path "$(sourcePath)/*" -Destination "$(sourcePath)/$projectName/" -Force
           # Create zip file
           $projectName = "$(FindSourceDirectory.folderName)"
           $tempZipPath = "$(Build.ArtifactStagingDirectory)/$projectName.zip"
           $finalPath = "$(Build.ArtifactStagingDirectory)/$projectName.apworld"
           
           # Create the zip file first
-          Compress-Archive -Path "$(sourcePath)/*" -DestinationPath $tempZipPath
+          Compress-Archive -Path "$(sourcePath)" -DestinationPath $tempZipPath
           Write-Host "##vso[task.setvariable variable=projectName]$projectName"
           # Rename to .apworld
           Move-Item -Path $tempZipPath -Destination $finalPath -Force
