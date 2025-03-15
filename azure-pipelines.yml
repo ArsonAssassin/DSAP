@@ -54,7 +54,7 @@ stages:
         targetType: 'inline'
         script: |
           # Remove __pycache__ directories
-          Get-ChildItem -Path "$(sourcePath)" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
+          Get-ChildItem -Path "$(sourcePath)/$projectName" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
           
           Move-Item -Path "$(sourcePath)/*" -Destination "$(sourcePath)/$projectName/" -Force
           # Create zip file
