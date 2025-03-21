@@ -2,7 +2,7 @@ trigger: none
 
 pool:
   vmImage: 'windows-2022'
-  #name: 'Default'
+  name: 'Default'
 
 parameters:
   - name: versionIncrement
