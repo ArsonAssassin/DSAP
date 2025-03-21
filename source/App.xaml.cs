@@ -15,7 +15,7 @@ using Windows.UI.Core;
 using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP
-{    
+{
     public partial class App : Application
     {
         static MainPageViewModel Context;
@@ -24,6 +24,7 @@ namespace DSAP
         public static ArchipelagoClient Client { get; set; }
         public static List<DarkSoulsItem> AllItems { get; set; }
         private static readonly object _lockObject = new object();
+        private bool IsHandlingDeathlink = false;
         public App()
         {
             InitializeComponent();
@@ -103,7 +104,7 @@ namespace DSAP
             {
                 foreach (var location in batch)
                 {
-                    var isCompleted = await global::Archipelago.Core.Util.Helpers.CheckLocation(location);
+                    var isCompleted = global::Archipelago.Core.Util.Helpers.CheckLocation(location);
                     if (isCompleted)
                     {
                         completed.Add(location);
@@ -133,7 +134,7 @@ namespace DSAP
                 Client.Disconnected -= OnDisconnected;
                 Client.ItemReceived -= Client_ItemReceived;
                 Client.MessageReceived -= Client_MessageReceived;
-                if(_deathlinkService != null)
+                if (_deathlinkService != null)
                 {
                     _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
                     _deathlinkService = null;
@@ -168,12 +169,13 @@ namespace DSAP
 
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
-            if (Client.Options.ContainsKey("EnableDeathlink") && (bool)Client.Options["EnableDeathlink"])
-            {
-               var _deathlinkService = Client.EnableDeathLink();
+          //  if (Client.Options.ContainsKey("EnableDeathlink") && (bool)Client.Options["EnableDeathlink"])
+         //   {
+                _deathlinkService = Client.EnableDeathLink();
                 _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
+                Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
                 //ToDo listen for player death
-            }
+         //   }
 
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
@@ -199,11 +201,33 @@ namespace DSAP
             //});
             RemoveItems();
             Context.ConnectButtonEnabled = true;
-        }
 
+
+        }
+        
+        private void SendDeathlink(DeathLinkService _deathlinkService)
+        {
+            if (!IsHandlingDeathlink)
+            {
+                Log.Logger.Information("Sending Deathlink. RIP.");
+                _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
+            }
+            
+            //Restart deathlink when player is alive again
+            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), 
+                () => {
+                    IsHandlingDeathlink = false;
+                    Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
+                        () => SendDeathlink(_deathlinkService),
+                        (health) => Helpers.GetPlayerHP() <= 0);
+                    },
+                (health) => Helpers.GetPlayerHP() > 0);
+        }
         private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
         {
-            //Todo kill player
+            Log.Logger.Information("Deathlink received. RIP.");
+            IsHandlingDeathlink = true;
+            Memory.Write(Helpers.GetPlayerHPAddress(), 0);
         }
 
         private void Client_MessageReceived(object? sender, Archipelago.Core.Models.MessageReceivedEventArgs e)
@@ -243,7 +267,7 @@ namespace DSAP
                     }
                 }
             };
-            foreach(var lotFlag in lotFlags.Where(x => x.IsEnabled))
+            foreach (var lotFlag in lotFlags.Where(x => x.IsEnabled))
             {
                 _ = Task.Run(() =>
                 {
@@ -310,7 +334,7 @@ namespace DSAP
             List<TextSpan> spans = new List<TextSpan>();
             foreach (var part in message.Parts)
             {
-                spans.Add(new TextSpan() { Text = part.Text, TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });               
+                spans.Add(new TextSpan() { Text = part.Text, TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });
             }
             lock (_lockObject)
             {

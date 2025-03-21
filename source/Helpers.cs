@@ -37,6 +37,39 @@ namespace DSAP
 
             return (ulong)baseAAddress;
         }
+        public static ulong GetBaseBOffset()
+        {
+            var baseAddress = GetBaseAddress();
+            byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
+            string mask = "xxx????xxxxxxxxx";
+            IntPtr getBaseBAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
+
+            if (getBaseBAddress == IntPtr.Zero)
+            {
+                throw new Exception("Failed to find the signature pattern");
+            }
+
+            int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getBaseBAddress + 3), 4), 0);
+
+            IntPtr baseBAddress = new IntPtr(getBaseBAddress.ToInt64() + offset + 7);
+
+            ulong pointerValue = Memory.ReadULong((ulong)baseBAddress);
+
+            return pointerValue; 
+
+        }
+        //public static ulong GetBaseBOffset()
+        //{
+        //    var baseAddress = GetBaseAddress();
+        //    byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
+        //    string mask = "xxx????xxxxxxxxx";
+        //    IntPtr getBaseBAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
+
+        //    int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getBaseBAddress + 3), 4), 0);
+        //    IntPtr baseBAddress = (getBaseBAddress + 7)+ offset;
+
+        //    return (ulong)baseBAddress;
+        //}
         public static ulong GetBaseCOffset()
         {
             var baseAddress = GetBaseAddress();
@@ -48,6 +81,19 @@ namespace DSAP
             IntPtr progressionFlagsAddress = getPFAddress + offset + 7;
 
             return (ulong)progressionFlagsAddress;
+        }
+        public static ulong GetBaseXOffset()
+        {
+            var baseAddress = GetBaseAddress();
+            byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x39, 0x48, 0x68, 0x0f, 0x94, 0xc0, 0xc3 };
+            string mask = "xxx????xxxxxxxx";
+            IntPtr getBaseXAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
+
+            uint offset = BitConverter.ToUInt32(Memory.ReadByteArray((ulong)(getBaseXAddress + 3), 4), 0);
+            IntPtr baseXAddress = (nint)(getBaseXAddress + offset + 7);
+
+
+            return (ulong)baseXAddress;
         }
         public static ulong GetChrBaseClassOffset()
         {
@@ -96,16 +142,16 @@ namespace DSAP
 
             return (ulong)(BitConverter.ToInt32(Memory.ReadFromPointer((ulong)eventFlagsAddress, 4, 2)));
         }
-        internal int GetPlayerHP()
+        internal static int GetPlayerHP()
         {
-            var baseA = GetBaseAOffset();
-            var next = OffsetPointer(baseA, 0x2D4);
-            return Memory.ReadInt(next);
+            return Memory.ReadInt(GetPlayerHPAddress());
         }
-        internal ulong GetPlayerHPAddress()
+        internal static ulong GetPlayerHPAddress()
         {
-            var baseA = GetBaseAOffset();
-            var next = OffsetPointer(baseA, 0x2D4);
+            var baseB = GetBaseBOffset();
+            var next = OffsetPointer(baseB, 0x10);
+            var pointer = Memory.ReadULong(next);
+            next = OffsetPointer(pointer, 0x14);
             return next;
         }
         private static ulong GetItemLotParamOffset()
