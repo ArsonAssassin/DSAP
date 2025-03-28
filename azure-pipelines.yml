@@ -63,8 +63,11 @@ stages:
           # Create the zip file first
           #DO NOT USE powershell adds incorrect slashes for linux filesystems
           ##Compress-Archive -Path "$(sourcePath)" -DestinationPath $tempZipPath
-          Push-Location $(sourcePath)
-          tar -a -c -f $tempZipPath "$projectName"
+          Write-Host "TempZipPath: $tempZipPath"
+          Write-Host "projectName: $projectName"
+          Write-Host "sourcePath: $(sourcePath)"
+
+          tar -a -c -f $tempZipPath -C "$(sourcePath)" "$(sourcePath)/$projectName"
           Write-Host "##vso[task.setvariable variable=projectName]$projectName"
           # Rename to .apworld
           Move-Item -Path $tempZipPath -Destination $finalPath -Force
