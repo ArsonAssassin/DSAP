@@ -12,8 +12,13 @@ class EnableMasterKeyOption(Toggle):
     """Includes the Master Key in the item pool"""
     display_name = "Enable Master Key"
 
+class EnableDeathlinkOption(Toggle):
+    """Includes Deathlink"""
+    display_name = "Enable Deathlink"
+
 @dataclass
 class DSROption(PerGameCommonOptions):
     #goal: GoalOption
     guaranteed_items: GuaranteedItemsOption
     enable_masterkey: EnableMasterKeyOption
+    enable_deathlink: EnableDeathlinkOption

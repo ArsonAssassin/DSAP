@@ -169,13 +169,12 @@ namespace DSAP
 
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
-          //  if (Client.Options.ContainsKey("EnableDeathlink") && (bool)Client.Options["EnableDeathlink"])
-         //   {
+            if (Client.Options.ContainsKey("enable_deathlink") && (bool)Client.Options["enable_deathlink"])
+            {
                 _deathlinkService = Client.EnableDeathLink();
                 _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
                 Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
-                //ToDo listen for player death
-         //   }
+            }
 
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
