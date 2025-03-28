@@ -2,7 +2,6 @@ trigger: none
 
 pool:
   vmImage: 'windows-2022'
-  #name: 'Default'
 
 parameters:
   - name: versionIncrement
@@ -62,7 +61,9 @@ stages:
           $finalPath = "$(Build.ArtifactStagingDirectory)/$projectName.apworld"
           
           # Create the zip file first
-          Compress-Archive -Path "$(sourcePath)" -DestinationPath $tempZipPath
+          #DO NOT USE powershell adds incorrect slashes for linux filesystems
+          ##Compress-Archive -Path "$(sourcePath)" -DestinationPath $tempZipPath
+          tar -a -c -f $tempZipPath "$(sourcePath)"
           Write-Host "##vso[task.setvariable variable=projectName]$projectName"
           # Rename to .apworld
           Move-Item -Path $tempZipPath -Destination $finalPath -Force
