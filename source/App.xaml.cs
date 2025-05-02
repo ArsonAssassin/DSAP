@@ -45,8 +45,8 @@ namespace DSAP
 
         private async void Context_UnstuckClicked(object? sender, EventArgs e)
         {
-            var bonfireStates = Helpers.GetBonfireStates();
-            Log.Logger.Information(JsonConvert.SerializeObject(bonfireStates));
+            //var bonfireStates = Helpers.GetBonfireStates();
+            //Log.Logger.Information(JsonConvert.SerializeObject(bonfireStates));
         }
 
         public static void AddItem(int category, int id, int quantity)
