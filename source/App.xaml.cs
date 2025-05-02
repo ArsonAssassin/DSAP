@@ -8,12 +8,15 @@ using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using Archipelago.Core.Util.Overlay;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
 using Windows.UI.Core;
 using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
+using Color = Microsoft.Maui.Graphics.Color;
+using System.Threading.Tasks;
 namespace DSAP
 {
     public partial class App : Application
@@ -28,17 +31,10 @@ namespace DSAP
         public App()
         {
             InitializeComponent();
-            //var options = new GuiDesignOptions
-            //{
-            //    BackgroundColor = Color.FromArgb("FF000000"),
-            //    ButtonColor = Color.FromArgb("FFFF0000"),
-            //    ButtonTextColor = Color.FromArgb("FF000000"),
-            //    Title = "DSAP - Dark Souls Remastered Archipelago",
-
-            //};
 
             Context = new MainPageViewModel();
             Context.ConnectClicked += Context_ConnectClicked;
+            Context.UnstuckVisible = true;
             Context.CommandReceived += (e, a) =>
             {
                 Client?.SendMessage(a.Command);
@@ -46,6 +42,13 @@ namespace DSAP
             MainPage = new MainPage(Context);
             Context.ConnectButtonEnabled = true;
         }
+
+        private async void Context_UnstuckClicked(object? sender, EventArgs e)
+        {
+            var bonfireStates = Helpers.GetBonfireStates();
+            Log.Logger.Information(JsonConvert.SerializeObject(bonfireStates));
+        }
+
         public static void AddItem(int category, int id, int quantity)
         {
             var command = Helpers.GetItemCommand();
@@ -134,11 +137,12 @@ namespace DSAP
                 Client.Disconnected -= OnDisconnected;
                 Client.ItemReceived -= Client_ItemReceived;
                 Client.MessageReceived -= Client_MessageReceived;
-                if (_deathlinkService != null)
-                {
-                    _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
-                    _deathlinkService = null;
-                }
+                Context.UnstuckClicked -= Context_UnstuckClicked;
+                //if (_deathlinkService != null)
+                //{
+                //    _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
+                //    _deathlinkService = null;
+                //}
                 Client.CancelMonitors();
             }
             DarkSoulsClient client = new DarkSoulsClient();
@@ -166,15 +170,18 @@ namespace DSAP
 
             Client.ItemReceived += Client_ItemReceived;
             Client.MessageReceived += Client_MessageReceived;
+            Context.UnstuckClicked += Context_UnstuckClicked;
 
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
-            if (Client.Options.ContainsKey("enable_deathlink") && (bool)Client.Options["enable_deathlink"])
-            {
-                _deathlinkService = Client.EnableDeathLink();
-                _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
-                Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
-            }
+            Client.IntializeOverlayService(new WindowsOverlayService());
+            
+            //if (Client.Options.ContainsKey("enable_deathlink") && (bool)Client.Options["enable_deathlink"])
+            //{
+            //    _deathlinkService = Client.EnableDeathLink();
+            //    _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
+            //    Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
+            //}
 
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
@@ -193,7 +200,6 @@ namespace DSAP
             // Client.MonitorLocations(fogWallLocations);
             Client.MonitorLocations(miscLocations);
 
-
             //Helpers.MonitorLastBonfire((lastBonfire) =>
             //{
             //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
@@ -204,30 +210,30 @@ namespace DSAP
 
         }
         
-        private void SendDeathlink(DeathLinkService _deathlinkService)
-        {
-            if (!IsHandlingDeathlink)
-            {
-                Log.Logger.Information("Sending Deathlink. RIP.");
-                _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
-            }
+        //private void SendDeathlink(DeathLinkService _deathlinkService)
+        //{
+        //    if (!IsHandlingDeathlink)
+        //    {
+        //        Log.Logger.Information("Sending Deathlink. RIP.");
+        //        _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
+        //    }
             
-            //Restart deathlink when player is alive again
-            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), 
-                () => {
-                    IsHandlingDeathlink = false;
-                    Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
-                        () => SendDeathlink(_deathlinkService),
-                        (health) => Helpers.GetPlayerHP() <= 0);
-                    },
-                (health) => Helpers.GetPlayerHP() > 0);
-        }
-        private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
-        {
-            Log.Logger.Information("Deathlink received. RIP.");
-            IsHandlingDeathlink = true;
-            Memory.Write(Helpers.GetPlayerHPAddress(), 0);
-        }
+        //    //Restart deathlink when player is alive again
+        //    Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), 
+        //        () => {
+        //            IsHandlingDeathlink = false;
+        //            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
+        //                () => SendDeathlink(_deathlinkService),
+        //                (health) => Helpers.GetPlayerHP() <= 0);
+        //            },
+        //        (health) => Helpers.GetPlayerHP() > 0);
+        //}
+        //private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
+        //{
+        //    Log.Logger.Information("Deathlink received. RIP.");
+        //    IsHandlingDeathlink = true;
+        //    Memory.Write(Helpers.GetPlayerHPAddress(), 0);
+        //}
 
         private void Client_MessageReceived(object? sender, Archipelago.Core.Models.MessageReceivedEventArgs e)
         {
@@ -236,9 +242,10 @@ namespace DSAP
                 LogHint(e.Message);
             }
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
+            Client.AddOverlayMessage(e.Message.ToString(), TimeSpan.FromSeconds(10));
         }
 
-        private static void RemoveItems()
+        private static async Task RemoveItems()
         {
             var lots = Helpers.GetItemLots();
             var lotFlags = Helpers.GetItemLotFlags();
@@ -266,13 +273,16 @@ namespace DSAP
                     }
                 }
             };
+            var overwriteTasks = new List<Task>();
             foreach (var lotFlag in lotFlags.Where(x => x.IsEnabled))
             {
-                _ = Task.Run(() =>
+                var overwriteTask = new Task(() =>
                 {
                     Helpers.OverwriteItemLot(lotFlag.Flag, replacementLot);
                 });
+                overwriteTasks.Add(overwriteTask);
             }
+            await Task.WhenAll(overwriteTasks);
             Log.Logger.Information("Finished overwriting items");
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
@@ -321,6 +331,8 @@ namespace DSAP
                     Context.ItemList.Add(messageToLog);
                 });
             }
+
+            
         }
         private static void LogHint(LogMessage message)
         {

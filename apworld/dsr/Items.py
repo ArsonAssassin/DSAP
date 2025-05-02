@@ -15,7 +15,8 @@ class DSRItemCategory(IntEnum):
     ARMOR = 7
     WEAPON = 8
     SHIELD = 9,
-    TRAP = 10
+    TRAP = 10,
+    BOSS_SOUL = 11
 
 
 class DSRItemData(NamedTuple):
@@ -189,18 +190,18 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Soul of a Great Hero", 2048, DSRItemCategory.CONSUMABLE),
     ("Humanity", 2049, DSRItemCategory.CONSUMABLE),
     ("Twin Humanities", 2050, DSRItemCategory.CONSUMABLE),
-    ("Soul of Quelaag", 2051, DSRItemCategory.CONSUMABLE),
-    ("Soul of Sif", 2052, DSRItemCategory.CONSUMABLE),
-    ("Soul of Gwyn, Lord of Cinder", 2053, DSRItemCategory.CONSUMABLE),
-    ("Core of an Iron Golem", 2054, DSRItemCategory.CONSUMABLE),
-    ("Soul of Ornstein", 2055, DSRItemCategory.CONSUMABLE),
-    ("Soul of Moonlight Butterfly", 2056, DSRItemCategory.CONSUMABLE),
-    ("Soul of Smough", 2057, DSRItemCategory.CONSUMABLE),
-    ("Soul of Priscilla", 2058, DSRItemCategory.CONSUMABLE),
-    ("Soul of Gwyndolin", 2059, DSRItemCategory.CONSUMABLE),
-    ("Guardian Soul", 2060, DSRItemCategory.CONSUMABLE),
-    ("Soul of Artorias", 2061, DSRItemCategory.CONSUMABLE),
-    ("Soul of Manus", 2062, DSRItemCategory.CONSUMABLE),
+    ("Soul of Quelaag", 2051, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Sif", 2052, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Gwyn, Lord of Cinder", 2053, DSRItemCategory.BOSS_SOUL),
+    ("Core of an Iron Golem", 2054, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Ornstein", 2055, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Moonlight Butterfly", 2056, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Smough", 2057, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Priscilla", 2058, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Gwyndolin", 2059, DSRItemCategory.BOSS_SOUL),
+    ("Guardian Soul", 2060, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Artorias", 2061, DSRItemCategory.BOSS_SOUL),
+    ("Soul of Manus", 2062, DSRItemCategory.BOSS_SOUL),
     ("White Sign Soapstone", 2063, DSRItemCategory.CONSUMABLE),
     ("Red Sign Soapstone", 2064, DSRItemCategory.CONSUMABLE),
     ("Red Eye Orb", 2065, DSRItemCategory.CONSUMABLE),
@@ -873,11 +874,21 @@ def BuildItemPool(count, options):
     
     pool_size = remaining_count
     
-    consumableList = [item for item in filler_items if item.category in [DSRItemCategory.CONSUMABLE] and "soul" not in item.name.lower() and "fire keeper" not in item.name.lower()]
 
-    soulList = [item for item in filler_items if "soul" in item.name.lower() and "fire keeper" not in item.name.lower()]
+    
+    bossList = [item for item in filler_items if item.category in [DSRItemCategory.BOSS_SOUL]]
+    consumableList = [item for item in filler_items if item.category in [DSRItemCategory.CONSUMABLE] and "soul" not in item.name.lower() and "fire keeper" not in item.name.lower()]
+    soulList = [item for item in filler_items if "soul" in item.name.lower() and "fire keeper" not in item.name.lower() and item.category not in [DSRItemCategory.BOSS_SOUL]]
+    
     materialList = [item for item in filler_items if item.category in [DSRItemCategory.UPGRADE_MATERIAL]]
     
+    if (options.unique_souls.value == True):
+        for item in bossList:
+            item_pool.append(item)
+            remaining_count = remaining_count - 1
+    else:
+        soulList.extend(bossList)
+        
     consumable_count = int(pool_size * 0.2)
     for i in range(consumable_count):        
         item = random.choice(consumableList)
