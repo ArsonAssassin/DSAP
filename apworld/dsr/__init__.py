@@ -135,10 +135,10 @@ class DSRWorld(World):
                 ]})
        
         # Connect Regions
-        def create_connection(from_region: str, to_region: str, rule = None):
+        def create_connection(from_region: str, to_region: str):
             connection = Entrance(self.player, f"{from_region} -> {to_region}", regions[from_region])
             regions[from_region].exits.append(connection)
-            connection.connect(regions[to_region], rule)
+            connection.connect(regions[to_region])
             #print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
         create_connection("Menu", "Undead Asylum Cell")    
         
