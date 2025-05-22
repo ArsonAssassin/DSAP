@@ -125,13 +125,13 @@ class DSRWorld(World):
             "Tomb of the Giants", 
             "Tomb of the Giants - Behind Golden Fog Wall",
             "Kiln of the First Flame", 
-            #"Sanctuary Garden", 
-            #"Oolacile Sanctuary", 
-            #"Royal Wood", 
-            #"Royal Wood - After Hawkeye Gough",
-            #"Oolacile Township", 
-            #"Oolacile Township - After Crest Key",
-            #"Chasm of the Abyss", 
+            "Sanctuary Garden", 
+            "Oolacile Sanctuary", 
+            "Royal Wood", 
+            "Royal Wood - After Hawkeye Gough",
+            "Oolacile Township", 
+            "Oolacile Township - After Crest Key",
+            "Chasm of the Abyss", 
                 ]})
        
         # Connect Regions
@@ -229,13 +229,13 @@ class DSRWorld(World):
 
 
         # DLC Entrances
-        #create_connection("Darkroot Basin", "Sanctuary Garden")
-        #create_connection("Sanctuary Garden", "Oolacile Sanctuary")
-        #create_connection("Oolacile Sanctuary", "Royal Wood")
-        #create_connection("Royal Wood", "Oolacile Township")
-        #create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
-        #create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
-        #create_connection("Oolacile Township", "Chasm of the Abyss")
+        create_connection("Darkroot Basin", "Sanctuary Garden")
+        create_connection("Sanctuary Garden", "Oolacile Sanctuary")
+        create_connection("Oolacile Sanctuary", "Royal Wood")
+        create_connection("Royal Wood", "Oolacile Township")
+        create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
+        create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
+        create_connection("Oolacile Township", "Chasm of the Abyss")
       
         
     # For each region, add the associated locations retrieved from the corresponding location_table
@@ -356,27 +356,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))        
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Parish", self.player), lambda state: state.has("Taurus Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
-        
-        # set_rule(self.multiworld.get_location("Snuggly: Pendant -> Souvenir of Reprisal", self.player), lambda state: state.has("Pendant", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Rubbish -> Titanite Chunk", self.player), lambda state: state.has("Rubbish", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Sunlight Medal -> White Titanite Chunk", self.player), lambda state: state.has("Sunlight Medal", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Bloodred Moss Clump -> Twinkling Titanite", self.player), lambda state: state.has("Bloodred Moss Clump", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Purple Moss Clump -> Twinkling Titanite", self.player), lambda state: state.has("Purple Moss Clump", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Blooming Purple Moss Clump -> Twinkling Titanite x2", self.player), lambda state: state.has("Blooming Purple Moss Clump", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Cracked Red Eye Orb -> Purging Stone x2", self.player), lambda state: state.has("Cracked Red Eye Orb", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Humanity -> Ring of Sacrifice", self.player), lambda state: state.has("Humanity", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Twin Humanities -> Rare Ring of Sacrifice", self.player), lambda state: state.has("Twin Humanities", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Dung Pie -> Demon Titanite", self.player), lambda state: state.has("Dung Pie", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Pyromancy Flame -> Red Titanite Chunk", self.player), lambda state: state.has("Pyromancy Flame", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Pyromancy Flame (Ascended) -> Red Titanite Slab", self.player), lambda state: state.has("Pyromancy Flame (Ascended)", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Egg Vermifuge -> Dragon Scale", self.player), lambda state: state.has("Egg Vermifuge", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Sunlight Maggot -> Old Witch's Ring", self.player), lambda state: state.has("Sunlight Maggot", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Sack -> Demon's Great Hammer", self.player), lambda state: state.has("Sack", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Skull Lantern -> Ring of Fog", self.player), lambda state: state.has("Skull Lantern", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Ring of the Sun Princess -> Divine Blessing x2", self.player), lambda state: state.has("Ring of the Sun Princess", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Xanthous Crown -> Ring of Favor and Protection", self.player), lambda state: state.has("Xanthous Crown", self.player))
-        # set_rule(self.multiworld.get_location("Snuggly: Soul of Manus -> Sorcery: Pursuers", self.player), lambda state: state.has("Soul of Manus", self.player))
-        
+               
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
@@ -421,10 +401,10 @@ class DSRWorld(World):
         
       
         
-        #set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
-        #set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
-        #set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
-        #set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
+        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
+        set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         
  
         

@@ -47,6 +47,14 @@ namespace DSAP
         {
             //var bonfireStates = Helpers.GetBonfireStates();
             //Log.Logger.Information(JsonConvert.SerializeObject(bonfireStates));
+            var originalLots = Helpers.GetItemLots();
+            await RemoveItems();
+            var overwrittenLots = Helpers.GetItemLots();
+
+            if(originalLots == overwrittenLots)
+            {
+                Log.Error("Overwriting itemlots failed.");
+            }
         }
 
         public static void AddItem(int category, int id, int quantity)
