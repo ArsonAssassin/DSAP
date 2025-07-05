@@ -17,6 +17,7 @@ using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
 using Color = Microsoft.Maui.Graphics.Color;
 using System.Threading.Tasks;
+using System.Diagnostics;
 namespace DSAP
 {
     public partial class App : Application
@@ -28,6 +29,7 @@ namespace DSAP
         public static List<DarkSoulsItem> AllItems { get; set; }
         private static readonly object _lockObject = new object();
         private bool IsHandlingDeathlink = false;
+        private static List<InjectedString> injectedStrings = new List<InjectedString>();
         public App()
         {
             InitializeComponent();
@@ -84,6 +86,22 @@ namespace DSAP
 
             var result = Memory.ExecuteCommand(command);
         }
+
+        public static void ItemPickupDialogWithoutPickup(int category, int id, int quantity)
+        {
+            var command = Helpers.ItemPickupDialogWithoutPickup();
+
+            // Set item category (at offset 0x3F)
+            Array.Copy(BitConverter.GetBytes(category), 0, command, 0x38, 4);
+
+            // Set item quantity (at offset 0x43)
+            Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x3C, 4);
+
+            // Set item id (at offset 0x47)
+            Array.Copy(BitConverter.GetBytes(id), 0, command, 0x40, 4);
+
+            var result = Memory.ExecuteCommand(command);
+        }
         public static bool IsValidPointer(ulong address)
         {
             try
@@ -96,45 +114,7 @@ namespace DSAP
                 return false;
             }
         }
-        public static async Task MonitorLocations(List<Location> locations)
-        {
-            var locationBatches = locations
-                .Select((location, index) => new { Location = location, Index = index })
-                .GroupBy(x => x.Index / 25)
-                .Select(g => g.Select(x => x.Location).ToList())
-                .ToList();
-            var tasks = locationBatches.Select(x => MonitorBatch(x));
-            await Task.WhenAll(tasks);
 
-        }
-        private static async Task MonitorBatch(List<Location> batch)
-        {
-            List<Location> completed = new List<Location>();
-
-            while (!batch.All(x => completed.Any(y => y.Id == x.Id)))
-            {
-                foreach (var location in batch)
-                {
-                    var isCompleted = global::Archipelago.Core.Util.Helpers.CheckLocation(location);
-                    if (isCompleted)
-                    {
-                        completed.Add(location);
-                        //  Log.Logger.Information(JsonConvert.SerializeObject(location));
-                    }
-                }
-                if (completed.Any())
-                {
-                    foreach (var location in completed)
-                    {
-                        Client.SendLocation(location);
-                        //     Log.Logger.Information($"{location.Name} ({location.Id}) Completed");
-                        batch.Remove(location);
-                    }
-                }
-                completed.Clear();
-                await Task.Delay(500);
-            }
-        }
         private async void Context_ConnectClicked(object? sender, ConnectClickedEventArgs e)
         {
             Context.ConnectButtonEnabled = false;
@@ -174,6 +154,14 @@ namespace DSAP
                 Context.ConnectButtonEnabled = true;
                 return;
             }
+            if(string.IsNullOrWhiteSpace(e.Host))
+            {
+                e.Host = "127.0.0.1:38281";
+            }
+            if (string.IsNullOrWhiteSpace(e.Slot))
+            {
+                e.Slot = "Player1";
+            }
             await Client.Connect(e.Host, "Dark Souls Remastered");
 
             Client.ItemReceived += Client_ItemReceived;
@@ -183,13 +171,15 @@ namespace DSAP
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
             Client.IntializeOverlayService(new WindowsOverlayService());
-            
+
             //if (Client.Options.ContainsKey("enable_deathlink") && (bool)Client.Options["enable_deathlink"])
             //{
             //    _deathlinkService = Client.EnableDeathLink();
             //    _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
             //    Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
             //}
+
+
 
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
@@ -200,6 +190,7 @@ namespace DSAP
 
             var goalLocation = bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
             Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
+            
 
             Client.MonitorLocations(bossLocations);
             Client.MonitorLocations(itemLocations);
@@ -212,12 +203,26 @@ namespace DSAP
             //{
             //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
             //});
+            CleanUpItemPickupText();
+            Memory.MonitorAddressByteChangeForAction(Helpers.GetItemPickupDialog(), 0x1, 0x0, () => CleanUpItemPickupText());
             RemoveItems();
+            InjectedString injString = Helpers.SetItemPickupText("test hacking");
+            injectedStrings.Add(injString);
+            ItemPickupDialogWithoutPickup(((int)DSItemCategory.Consumables), 0x172, 0x1);
             Context.ConnectButtonEnabled = true;
 
 
         }
-        
+
+        private void CleanUpItemPickupText()
+        {
+            foreach (InjectedString injString in injectedStrings)
+            {
+                Helpers.FreeItemPickupText(injString);
+            }
+            injectedStrings = new List<InjectedString>();
+        }
+
         //private void SendDeathlink(DeathLinkService _deathlinkService)
         //{
         //    if (!IsHandlingDeathlink)
@@ -225,7 +230,7 @@ namespace DSAP
         //        Log.Logger.Information("Sending Deathlink. RIP.");
         //        _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
         //    }
-            
+
         //    //Restart deathlink when player is alive again
         //    Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), 
         //        () => {
@@ -260,37 +265,29 @@ namespace DSAP
 
             //Helpers.WriteToFile("itemLots.json", lots);
 
-            var replacementLot = new ItemLot()
+            var replacementLot = new ItemLotParamStruct
             {
-                Rarity = 1,
-                GetItemFlagId = -1,
-                CumulateNumFlagId = -1,
-                CumulateNumMax = 0,
-                Items = new List<ItemLotItem>()
-                {
-                    new ItemLotItem
-                    {
-                        CumulateLotPoint = 0,
-                        CumulateReset = false,
-                        EnableLuck = false,
-                        GetItemFlagId = -1,
-                        LotItemBasePoint = 100,
-                        LotItemCategory = (int)DSItemCategory.Consumables,
-                        LotItemNum = 1,
-                        LotItemId = 370
-                    }
-                }
+                LotRarity = 1,
+                LotOverallGetItemFlagId = -1,
+                LotCumulateNumFlagId = -1,
+                LotCumulateNumMax = 0,
             };
-            var overwriteTasks = new List<Task>();
-            foreach (var lotFlag in lotFlags.Where(x => x.IsEnabled))
+            replacementLot.CumulateResetBits = 0;
+            replacementLot.EnableLuckBits = 0;
+            replacementLot.CumulateLotPoints[0] = 0;
+            replacementLot.GetItemFlagIds[0] = -1;
+            replacementLot.LotItemBasePoints[0] = 100;
+            replacementLot.LotItemCategories[0] = (int)DSItemCategory.Consumables;
+            replacementLot.LotItemNums[0] = 1;
+            replacementLot.LotItemIds[0] = 370;
+
+            for (int i = 0; i < lotFlags.Count; i++)
             {
-                var overwriteTask = new Task(() =>
+                if (lotFlags[i].IsEnabled)
                 {
-                    Helpers.OverwriteItemLot(lotFlag.Flag, replacementLot);
-                });
-                overwriteTasks.Add(overwriteTask);
+                    Helpers.OverwriteItemLot(lots.GetValueOrDefault(lotFlags[i].Flag), replacementLot);
+                }
             }
-            await Task.WhenAll(overwriteTasks);
             Log.Logger.Information("Finished overwriting items");
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
@@ -305,7 +302,15 @@ namespace DSAP
                 {
                     RunLagTrap();
                 }
-                else AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+                else { 
+                    AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+                    InjectedString injString = Helpers.SetItemPickupText(itemToReceive.Name);
+                    injectedStrings.Add(injString);
+                    if (!Helpers.GetIsItemPickupDialogVisible())
+                    {
+                        ItemPickupDialogWithoutPickup(((int)DSItemCategory.Consumables), 0x172, 0x1);
+                    }
+                }
             }
             else
             {

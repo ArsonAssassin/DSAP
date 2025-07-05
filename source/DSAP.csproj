@@ -94,8 +94,11 @@
     <EmbeddedResource Include="Resources\UpgradeMaterials.json" />
     <EmbeddedResource Include="Resources\UsableItems.json" />
   </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\Archipelago.Core.csproj" />
+		<ProjectReference Include="..\..\MauiGUI\Archipelago.Core.MauiGUI.csproj" />
+	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Archipelago.Core.MauiGUI" Version="0.0.39" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

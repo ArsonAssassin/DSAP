@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
@@ -63,6 +65,7 @@ namespace DSAP
                 "xxx????xxxxxxxxxxx",
                 3, true, 7) }
         };
+        private static ulong ItemLotParamOffset = 0;
 
         public static ulong FindAddressBySignature(OffsetParams signature)
         {
@@ -253,8 +256,8 @@ namespace DSAP
         }
         public static ulong GetEventFlagsOffset()
         {
-            return Memory.ReadULong(GetAddressBySignatureName("EventFlags"));
-        //    return (ulong)(BitConverter.ToInt32(Memory.ReadFromPointer(addressPointer, 4, 2)));
+            return Memory.ReadULong(Memory.ReadULong(GetAddressBySignatureName("EventFlags")));
+            //    return (ulong)(BitConverter.ToInt32(Memory.ReadFromPointer(addressPointer, 4, 2)));
         }
         internal static int GetPlayerHP()
         {
@@ -265,10 +268,15 @@ namespace DSAP
             var baseB = GetBaseBOffset();
             return ResolvePointerChain(baseB, 0x10, 0x14);
         }
-        private static ulong GetItemLotParamOffset()
+        public static ulong GetItemLotParamOffset()
         {
+            if (ItemLotParamOffset != 0)
+            {
+                return ItemLotParamOffset;
+            }
             var soloParams = GetSoloParamOffset();
-            return ResolvePointerChain(soloParams, 0x0, 0x570, 0x38);
+            ItemLotParamOffset = ResolvePointerChain(soloParams, 0x570, 0x38, 0x0);
+            return ItemLotParamOffset;
         }
         private static ulong GetBonfireOffset()
         {
@@ -289,6 +297,9 @@ namespace DSAP
                     Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
                     AddressBit = GetEventFlagOffset(lot.Flag).Item2,
                     Id = lot.Id,
+                    NibblePosition = NibblePosition.Lower,
+                    CheckType = LocationCheckType.Bit,
+                    Category = "ItemLot",
                 });
             }
             return locations;
@@ -306,6 +317,10 @@ namespace DSAP
                     Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
                     AddressBit = GetEventFlagOffset(lot.Flag).Item2,
                     Id = lot.Id,
+                    NibblePosition = NibblePosition.Lower,
+                    CheckType = LocationCheckType.Bit,
+                    Category = "BossEvent",
+
                 });
             }
             return locations;
@@ -322,7 +337,10 @@ namespace DSAP
                     Name = lot.Name,
                     Id = lot.Id,
                     Address = lot.Flag,
-                    AddressBit = lot.AddressBit
+                    AddressBit = lot.AddressBit,
+                    NibblePosition = NibblePosition.Lower,
+                    CheckType = LocationCheckType.Bit,
+                    Category = "Bonfire",
                 });
             }
             return locations;
@@ -340,6 +358,9 @@ namespace DSAP
                     Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
                     AddressBit = GetEventFlagOffset(lot.Flag).Item2,
                     Id = lot.Id,
+                    NibblePosition = NibblePosition.Lower,
+                    CheckType = LocationCheckType.Bit,
+                    Category = "Door",
                 });
             }
             return locations;
@@ -357,6 +378,9 @@ namespace DSAP
                     Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
                     AddressBit = GetEventFlagOffset(lot.Flag).Item2,
                     Id = lot.Id,
+                    NibblePosition = NibblePosition.Lower,
+                    CheckType = LocationCheckType.Bit,
+                    Category = "FogWall",
                 });
             }
             return locations;
@@ -374,6 +398,9 @@ namespace DSAP
                     Address = baseAddress + GetEventFlagOffset(lot.Flag).Item1,
                     AddressBit = GetEventFlagOffset(lot.Flag).Item2,
                     Id = lot.Id,
+                    NibblePosition = NibblePosition.Lower,
+                    CheckType = LocationCheckType.Bit,
+                    Category = "MiscFlag"
                 });
             }
             return locations;
@@ -385,113 +412,41 @@ namespace DSAP
             ulong newAddress = (ptr & 0xFFFF0000) | newOffset;
             return newAddress;
         }
-        public static List<ItemLot> GetItemLots()
+        public static Dictionary<int, ItemLot> GetItemLots()
         {
-            List<ItemLot> itemLots = new List<ItemLot>();
-
+            List<ItemLotParamStruct> itemLots = new List<ItemLotParamStruct>();
+            Dictionary<int, ItemLot> itemLotLookup = new Dictionary<int, ItemLot>();
             var startAddress = GetItemLotParamOffset();
 
             var dataOffset = Memory.ReadUInt(startAddress + 0x4);
             var rowCount = Memory.ReadUShort(startAddress + 0xA);
-            var rowSize = 148;
+            var sizeOfStruct = Marshal.SizeOf(typeof(ItemLotParamStruct));
 
-            var paramTableBytes = Memory.ReadByteArray(startAddress + (ulong)(12 * rowCount), 0x30);
+            List<ItemLotParamStruct> itemLotParams = Memory.ReadStructs<ItemLotParamStruct>(startAddress + dataOffset, rowCount);
 
-            for (int i = 0; i < rowCount; i++)
+            for (int i = 0; i < itemLotParams.Count; i++)
             {
-                var tableOffset = i * 12;
+                ItemLotParamStruct p = itemLotParams[i];
+                itemLots.Add(p);
+                itemLotLookup.TryAdd(p.LotOverallGetItemFlagId, new ItemLot(p, startAddress + dataOffset + (ulong)i * (ulong)sizeOfStruct));
 
-                var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
-                var itemLot = ReadItemLot(currentAddress);
-                itemLots.Add(itemLot);
             }
-            return itemLots;
+            return itemLotLookup;
         }
-        public static ItemLot ReadItemLot(ulong startAddress)
+        public static void OverwriteItemLot(ItemLot oldItemLot, ItemLotParamStruct newItemLot)
         {
-            ItemLot lot = new ItemLot();
-            lot.Items = new List<ItemLotItem>();
-            var currentAddress = startAddress;
-            var extraField = Memory.ReadByteArray(startAddress + 0x92, 2);
-            var bitArray = new BitArray(extraField);
-            for (int i = 0; i < 8; i++)
-            {
-                ItemLotItem item = new ItemLotItem
-                {
-                    LotItemId = Memory.ReadInt(startAddress + (ulong)(i * 4)),
-                    LotItemCategory = Memory.ReadInt(startAddress + 0x20 + (ulong)(i * 4)),
-                    LotItemBasePoint = Memory.ReadUShort(startAddress + 0x40 + (ulong)(i * 2)),
-                    CumulateLotPoint = Memory.ReadUShort(startAddress + 0x50 + (ulong)(i * 2)),
-                    GetItemFlagId = Memory.ReadInt(startAddress + 0x60 + (ulong)(i * 4)),
-                    LotItemNum = Memory.ReadByte(startAddress + 0x8A + (ulong)i),
-                    EnableLuck = bitArray.Get(i),
-                    CumulateReset = bitArray.Get(i + 8)
-                };
-                lot.Items.Add(item);
-            }
-            lot.GetItemFlagId = Memory.ReadInt(startAddress + 0x80);
-            lot.CumulateNumFlagId = Memory.ReadInt(startAddress + 0x84);
-            lot.CumulateNumMax = Memory.ReadByte(startAddress + 0x88);
-            lot.Rarity = Memory.ReadByte(startAddress + 0x89);
-            return lot;
+            newItemLot.LotOverallGetItemFlagId = oldItemLot.itemLotParam.LotOverallGetItemFlagId;
+            newItemLot.GetItemFlagIds[0] = oldItemLot.itemLotParam.GetItemFlagIds[0];
+            Memory.WriteStruct<ItemLotParamStruct>(oldItemLot.startAddress, newItemLot);
         }
-        public static void OverwriteItemLot(int itemLotId, ItemLot newItemLot)
+        public static void OverwriteSingleItem(ulong address, int position, ItemLotParamStruct newItemLot, int itemNumber)
         {
-            var startAddress = GetItemLotParamOffset();
-            var dataOffset = Memory.ReadUInt(startAddress + 0x4);
-            var rowCount = Memory.ReadUShort(startAddress + 0xA);
-            const int rowSize = 148; // Size of each ItemLotParam
-
-            for (int i = 0; i < rowCount; i++)
-            {
-                var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
-                var currentItemLotId = Memory.ReadInt(currentAddress + 0x80);  // GetItemFlagId is at offset 0x80
-
-                if (currentItemLotId == itemLotId)
-                {
-                    // We found the correct item lot, now let's overwrite it
-
-                    for (int j = 0; j < 8; j++)
-                    {
-                        OverwriteSingleItem(currentAddress, newItemLot.Items[0], j);
-                        //RemoveSingleItem(currentAddress, j);
-                    }
-
-                    //   Memory.Write(currentAddress + 0x80, newItemLot.GetItemFlagId);
-                    Memory.Write(currentAddress + 0x84, newItemLot.CumulateNumFlagId);
-                    Memory.WriteByte(currentAddress + 0x88, newItemLot.CumulateNumMax);
-                    Memory.WriteByte(currentAddress + 0x89, newItemLot.Rarity);
-
-                    // Write EnableLuck and CumulateReset as a single ushort
-                    ushort bitfield = 0;
-                    for (int j = 0; j < 8; j++)
-                    {
-                        if (j < newItemLot.Items.Count)
-                        {
-                            if (newItemLot.Items[j].EnableLuck)
-                                bitfield |= (ushort)(1 << j);
-                            if (newItemLot.Items[j].CumulateReset)
-                                bitfield |= (ushort)(1 << (j + 8));
-                        }
-                        // If item doesn't exist, its bits remain 0
-                    }
-                    Memory.Write(currentAddress + 0x92, bitfield);
-
-                    Log.Verbose($"ItemLot with GetItemFlagId {itemLotId} has been overwritten.");
-                    
-                }
-            }
-
-            Log.Verbose($"ItemLot with GetItemFlagId {itemLotId} not found.");
-        }
-        public static void OverwriteSingleItem(ulong address, ItemLotItem newItemLot, int position)
-        {
-            Memory.Write(address + (ulong)(position * 4), newItemLot.LotItemId);
-            Memory.Write(address + 0x20 + (ulong)(position * 4), newItemLot.LotItemCategory);
-            Memory.Write(address + 0x40 + (ulong)(position * 2), (ushort)newItemLot.LotItemBasePoint);
-            Memory.Write(address + 0x50 + (ulong)(position * 2), (ushort)newItemLot.CumulateLotPoint);
+            Memory.Write(address + (ulong)(position * 4), newItemLot.LotItemIds[itemNumber]);
+            Memory.Write(address + 0x20 + (ulong)(position * 4), newItemLot.LotItemCategories[itemNumber]);
+            Memory.Write(address + 0x40 + (ulong)(position * 2), (ushort)newItemLot.LotItemBasePoints[itemNumber]);
+            Memory.Write(address + 0x50 + (ulong)(position * 2), (ushort)newItemLot.CumulateLotPoints[itemNumber]);
             //Memory.Write(address + 0x60 + (ulong)(position * 4), newItemLot.Items[j].GetItemFlagId);
-            Memory.WriteByte(address + 0x8A + (ulong)position, newItemLot.LotItemNum);
+            Memory.WriteByte(address + 0x8A + (ulong)position, newItemLot.LotItemNums[itemNumber]);
         }
         public static void RemoveSingleItem(ulong address, int position)
         {
@@ -502,10 +457,10 @@ namespace DSAP
             //Memory.Write(address + 0x60 + (ulong)(position * 4), newItemLot.Items[j].GetItemFlagId);
             Memory.WriteByte(address + 0x8A + (ulong)position, (byte)0);
         }
-        public static DarkSoulsItem CreateItemFromLot(ItemLotItem lot)
+        public static DarkSoulsItem CreateItemFromLot(ItemLotParamStruct lot, int itemNumber)
         {
             var allItems = GetAllItems();
-            var item = allItems.FirstOrDefault(x => x.Id == lot.LotItemId);
+            var item = allItems.FirstOrDefault(x => x.Id == lot.LotItemIds[itemNumber]);
             return item;
         }
         public static bool GetIsPlayerOnline()
@@ -529,7 +484,10 @@ namespace DSAP
                     Id = b.LocationId,
                     Name = b.Name,
                     Address = offset + (ulong)b.Offset,
-                    AddressBit = b.AddressBit
+                    AddressBit = b.AddressBit,
+                    NibblePosition = NibblePosition.Lower,
+                    CheckType = LocationCheckType.Bit,
+                    Category = "BossProg"
                 };
                 locations.Add(location);
             }
@@ -812,6 +770,7 @@ namespace DSAP
             var list = JsonConvert.DeserializeObject<List<Boss>>(json);
             return list;
         }
+
         public static string OpenEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -822,6 +781,27 @@ namespace DSAP
                 return file;
             }
         }
+
+        /*---------GetItemCommand Injected ASM-------------------------
+            0:  ba 00 00 00 10          mov    edx,0x10000000
+            5:  41 b9 01 00 00 00       mov    r9d,0x1
+            b:  41 b8 28 70 08 00       mov    r8d,0x87028
+            11: 41 bc fe fe fe fe       mov    r12d,0xfefefefe
+            17: 48 a1 30 a5 c8 41 01    movabs rax,ds:0x141c8a530
+            1e: 00 00 00
+            21: c6 44 24 38 01          mov    BYTE PTR [rsp+0x38],0x1
+            26: 40 88 7c 24 30          mov    BYTE PTR [rsp+0x30],dil
+            2b: c6 44 24 28 01          mov    BYTE PTR [rsp+0x28],0x1
+            30: 4c 8b 78 10             mov    r15,QWORD PTR [rax+0x10]
+            34: c6 44 24 20 01          mov    BYTE PTR [rsp+0x20],0x1
+            39: 49 8d 8f 80 02 00 00    lea    rcx,[r15+0x280]
+            40: 48 83 ec 38             sub    rsp,0x38
+            44: 49 be e0 79 74 40 01    movabs r14,0x1407479e0
+            4b: 00 00 00
+            4e: 41 ff d6                call   r14
+            51: 48 83 c4 38             add    rsp,0x38
+            55: c3                      ret 
+         */
         public static byte[] GetItemCommand()
         {
 
@@ -829,7 +809,36 @@ namespace DSAP
             return x;
         }
 
-
+        /*---------GetItemWithMessage Injected ASM-----------------------------------
+            0:  8b 15 3e 00 00 00       mov    edx,DWORD PTR [rip+0x3e]        # 0x44
+            6:  48 a1 30 a5 c8 41 01    movabs rax,ds:0x141c8a530
+            d:  00 00 00
+            10: 44 8b 0d 31 00 00 00    mov    r9d,DWORD PTR [rip+0x31]        # 0x48
+            17: 44 8b 05 2e 00 00 00    mov    r8d,DWORD PTR [rip+0x2e]        # 0x4c
+            1e: 4c 8b 78 10             mov    r15,QWORD PTR [rax+0x10]
+            22: 49 8d 8f 80 02 00 00    lea    rcx,[r15+0x280]
+            29: 48 83 ec 38             sub    rsp,0x38
+            2d: ff 15 02 00 00 00       call   QWORD PTR [rip+0x2]        # 0x35
+            33: eb 08                   jmp    0x3d
+            35: e0 79                   loopne 0xb0
+            37: 74 40                   je     0x79
+            39: 01 00                   add    DWORD PTR [rax],eax
+            3b: 00 00                   add    BYTE PTR [rax],al
+            3d: 48 83 c4 38             add    rsp,0x38
+            41: c3                      ret
+            42: 90                      nop
+            43: 90                      nop
+            44: 00 00                   add    BYTE PTR [rax],al
+            46: 00 00                   add    BYTE PTR [rax],al
+            48: 00 00                   add    BYTE PTR [rax],al
+            4a: 00 00                   add    BYTE PTR [rax],al
+            4c: 00 00                   add    BYTE PTR [rax],al
+            4e: 00 00                   add    BYTE PTR [rax],al
+            50: ff                      (bad)
+            51: ff                      (bad)
+            52: ff                      (bad)
+            53: ff                      .byte 0xff 
+         */
         public static byte[] GetItemWithMessage()
         {
             byte[] x = new byte[] {
@@ -857,5 +866,105 @@ namespace DSAP
             return x;
         }
 
+        /*  ----------Code To Emulate--------------
+            
+            1403fe4ef 8b d0           MOV        EDX,ItemCategory
+            1403fe4f1 44 8b ce        MOV        R9D,ItemCount
+            1403fe4f4 44 8b c3        MOV        R8D,ItemId
+            1403fe4f7 48 8b cf        MOV        RCX,RDI
+            1403fe4fa e8 91 a7        CALL       SetupItemPickupMenuWithoutPickup
+
+        */
+        /*  ----------ItemPickupDialogWithoutPickup injected ASM--------------
+            0:  8b 15 32 00 00 00       mov    edx,DWORD PTR [rip+0x32]        # 0x38
+            6:  44 8b 0d 2f 00 00 00    mov    r9d,DWORD PTR [rip+0x2f]        # 0x3c
+            d:  44 8b 05 2c 00 00 00    mov    r8d,DWORD PTR [rip+0x2c]        # 0x40
+            14: 48 a1 a8 91 c8 41 01    movabs rax,ds:0x141c891a8
+            1b: 00 00 00
+            1e: 48 89 c1                mov    rcx,rax
+            21: 48 83 ec 38             sub    rsp,0x38
+            25: 49 be 90 8c 72 40 01    movabs r14,0x140728c90
+            2c: 00 00 00
+            2f: 41 ff d6                call   r14
+            32: 48 83 c4 38             add    rsp,0x38
+            36: c3                      ret
+            37: 90                      nop
+            38: 00 00                   add    BYTE PTR [rax],al
+            3a: 00 00                   add    BYTE PTR [rax],al
+            3c: 00 00                   add    BYTE PTR [rax],al
+            3e: 00 00                   add    BYTE PTR [rax],al
+            40: 00 00                   add    BYTE PTR [rax],al
+            42: 00 00                   add    BYTE PTR [rax],al 
+         */
+        public static byte[] ItemPickupDialogWithoutPickup()
+        {
+            byte[] x = new byte[] {
+                0x8B, 0x15, 0x32, 0x00, 0x00, 0x00,
+                0x44, 0x8B, 0x0D, 0x2F, 0x00, 0x00, 0x00,
+                0x44, 0x8B, 0x05, 0x2C, 0x00, 0x00, 0x00,
+                0x48, 0xA1, 0xA8, 0x91, 0xC8, 0x41, 0x01,
+                0x00, 0x00, 0x00,
+                0x48, 0x89, 0xC1,
+                0x48, 0x83, 0xEC, 0x38,
+                0x49, 0xBE, 0x90, 0x8C, 0x72, 0x40, 0x01, 0x00, 0x00, 0x00,
+                0x41, 0xFF, 0xD6,
+                0x48, 0x83, 0xC4, 0x38,
+                0xC3,
+                0x90,
+                0x00,0x00, 0x00, 0x00,
+                0x00,0x00, 0x00, 0x00,
+                0x00,0x00, 0x00, 0x00,
+                };
+
+            return x;
+        }
+        internal static ulong GetItemPickupDialog()
+        {
+            return Helpers.ResolvePointerChain(0x141c88d98, new int[] { 0x0, 0x12C });
+        }
+        internal static bool GetIsItemPickupDialogVisible()
+        {
+            return Memory.ReadByte(GetItemPickupDialog()) != 0;
+        }
+        internal static InjectedString SetItemPickupText(String itemName)
+        {
+            //ulong MsgMan = 0x141c7e3e8;
+            //ulong itemPickupDialogTable = ResolvePointerChain(MsgMan, new int[] { 0x0, 0x380, 0x0 });
+            //uint baseOfStringOffsetTable = Memory.ReadUInt(itemPickupDialogTable + 0x14);
+            //ulong baseOfItemIdToStringMap = itemPickupDialogTable + 0x1C;
+            //ulong prismStoneItemToStringMapEntry = baseOfItemIdToStringMap + (0x6 * 0xC);
+            //uint indexOfPrismStoneInStringOffsetTable = Memory.ReadUInt(prismStoneItemToStringMapEntry);
+            //ulong prismStoneStringOffset = Memory.ReadUInt(itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4);
+            //ulong prismStoneStringAddress = itemPickupDialogTable + prismStoneStringOffset;
+            //string itemName = "3p1x l3 PWN4g3";
+            //uint unicodeStringLength = ((uint)itemName.Length + 1) * 2;
+            //IntPtr injectedStringLoc = Memory.Allocate(unicodeStringLength);
+            //uint injectedStringAddress = (uint)injectedStringLoc.ToInt32();
+            //uint offsetToInjectedString = injectedStringAddress - (uint)itemPickupDialogTable;
+            //Memory.WriteString((ulong)injectedStringAddress, itemName, Archipelago.Core.Util.Enums.Endianness.Little, Encoding.Unicode);
+            //Memory.Write(itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4, offsetToInjectedString);
+            ulong MsgMan = 0x141c7e3e8;
+            ulong itemPickupDialogTable = ResolvePointerChain(MsgMan, new int[] { 0x0, 0x380, 0x0 });
+            uint baseOfStringOffsetTable = Memory.ReadUInt(itemPickupDialogTable + 0x14);
+            ulong baseOfItemIdToStringMap = itemPickupDialogTable + 0x1C;
+            ulong prismStoneItemToStringMapEntry = baseOfItemIdToStringMap + (0x6 * 0xC);
+            uint indexOfPrismStoneInStringOffsetTable = Memory.ReadUInt(prismStoneItemToStringMapEntry);
+            ulong prismStoneStringOffset = Memory.ReadUInt(itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4);
+            uint unicodeStringLength = ((uint)itemName.Length + 3) * 2;
+            IntPtr injectedStringLoc = Memory.AllocateAbove(unicodeStringLength);
+            uint injectedStringAddress = (uint)injectedStringLoc.ToInt32();
+            uint offsetToInjectedString = injectedStringAddress - (uint)itemPickupDialogTable;
+            ulong stringOffsetLoc = itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4;
+            Memory.WriteString((ulong)injectedStringAddress, itemName, Archipelago.Core.Util.Enums.Endianness.Little, Encoding.Unicode);
+            Memory.Write(stringOffsetLoc, offsetToInjectedString);
+            InjectedString result = new InjectedString(itemName, injectedStringLoc, stringOffsetLoc, prismStoneStringOffset);
+            return result;
+        }
+
+        internal static void FreeItemPickupText(InjectedString injectedString)
+        {
+            Memory.Write(injectedString.stringOffsetLoc, injectedString.originalStringOffset);
+            Memory.FreeMemory(injectedString.injectedStringLoc);
+        }
     }
 }
