@@ -21,8 +21,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.arsonassassin.dsap</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.0.18</ApplicationDisplayVersion>
-    <ApplicationVersion>0.0.18</ApplicationVersion>
+    <ApplicationDisplayVersion>0.0.19</ApplicationDisplayVersion>
+    <ApplicationVersion>0.0.19</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <Title>DSAP</Title>
@@ -94,11 +94,9 @@
     <EmbeddedResource Include="Resources\UpgradeMaterials.json" />
     <EmbeddedResource Include="Resources\UsableItems.json" />
   </ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\Core\Archipelago.Core.csproj" />
-		<ProjectReference Include="..\..\MauiGUI\Archipelago.Core.MauiGUI.csproj" />
-	</ItemGroup>
   <ItemGroup>
+	  <PackageReference Include="Archipelago.Core" Version="0.3.26" />
+	  <PackageReference Include="Archipelago.Core.MauiGUI" Version="0.0.44" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

@@ -154,14 +154,7 @@ namespace DSAP
                 Context.ConnectButtonEnabled = true;
                 return;
             }
-            if(string.IsNullOrWhiteSpace(e.Host))
-            {
-                e.Host = "127.0.0.1:38281";
-            }
-            if (string.IsNullOrWhiteSpace(e.Slot))
-            {
-                e.Slot = "Player1";
-            }
+
             await Client.Connect(e.Host, "Dark Souls Remastered");
 
             Client.ItemReceived += Client_ItemReceived;
@@ -206,9 +199,6 @@ namespace DSAP
             CleanUpItemPickupText();
             Memory.MonitorAddressByteChangeForAction(Helpers.GetItemPickupDialog(), 0x1, 0x0, () => CleanUpItemPickupText());
             RemoveItems();
-            InjectedString injString = Helpers.SetItemPickupText("test hacking");
-            injectedStrings.Add(injString);
-            ItemPickupDialogWithoutPickup(((int)DSItemCategory.Consumables), 0x172, 0x1);
             Context.ConnectButtonEnabled = true;
 
 

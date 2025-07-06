@@ -928,21 +928,6 @@ namespace DSAP
         }
         internal static InjectedString SetItemPickupText(String itemName)
         {
-            //ulong MsgMan = 0x141c7e3e8;
-            //ulong itemPickupDialogTable = ResolvePointerChain(MsgMan, new int[] { 0x0, 0x380, 0x0 });
-            //uint baseOfStringOffsetTable = Memory.ReadUInt(itemPickupDialogTable + 0x14);
-            //ulong baseOfItemIdToStringMap = itemPickupDialogTable + 0x1C;
-            //ulong prismStoneItemToStringMapEntry = baseOfItemIdToStringMap + (0x6 * 0xC);
-            //uint indexOfPrismStoneInStringOffsetTable = Memory.ReadUInt(prismStoneItemToStringMapEntry);
-            //ulong prismStoneStringOffset = Memory.ReadUInt(itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4);
-            //ulong prismStoneStringAddress = itemPickupDialogTable + prismStoneStringOffset;
-            //string itemName = "3p1x l3 PWN4g3";
-            //uint unicodeStringLength = ((uint)itemName.Length + 1) * 2;
-            //IntPtr injectedStringLoc = Memory.Allocate(unicodeStringLength);
-            //uint injectedStringAddress = (uint)injectedStringLoc.ToInt32();
-            //uint offsetToInjectedString = injectedStringAddress - (uint)itemPickupDialogTable;
-            //Memory.WriteString((ulong)injectedStringAddress, itemName, Archipelago.Core.Util.Enums.Endianness.Little, Encoding.Unicode);
-            //Memory.Write(itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4, offsetToInjectedString);
             ulong MsgMan = 0x141c7e3e8;
             ulong itemPickupDialogTable = ResolvePointerChain(MsgMan, new int[] { 0x0, 0x380, 0x0 });
             uint baseOfStringOffsetTable = Memory.ReadUInt(itemPickupDialogTable + 0x14);
