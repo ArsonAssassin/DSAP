@@ -6,18 +6,19 @@ using Archipelago.Core.MauiGUI.ViewModels;
 using Archipelago.Core.Models;
 using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
+using Archipelago.Core.Util.Overlay;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
-using Archipelago.Core.Util.Overlay;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
+using SharpDX;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.UI.Core;
 using static DSAP.Enums;
-using Location = Archipelago.Core.Models.Location;
 using Color = Microsoft.Maui.Graphics.Color;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
     public partial class App : Application
@@ -87,7 +88,39 @@ namespace DSAP
             var result = Memory.ExecuteCommand(command);
         }
 
-        public static void ItemPickupDialogWithoutPickup(int category, int id, int quantity)
+        public static bool ItemPickupDialogWithoutPickup(int category, int id, int quantity)
+        {
+            // Tested this method of displaying messages with a 100 back to back triggers and it does not crash the game
+            ulong itemPickupDialogManImpl = Helpers.ResolvePointerChain(0x141C891A8, new int[] { 0x0, 0x0 });
+            ItemPickupDialogLinkedList itemPickupLL = Memory.ReadStruct<ItemPickupDialogLinkedList>(itemPickupDialogManImpl);
+            ulong currIdxOfLastElement = (itemPickupLL.NextAllocationInLL - itemPickupLL.StartOfLL) / 0x18;
+
+            if(currIdxOfLastElement >= 5)
+            {
+                return false;
+            }
+
+            LinkedListItemData itemData = itemPickupLL.Items[currIdxOfLastElement];
+            itemData.ItemCategory = (uint)category;
+            itemData.ItemCode = (uint)id;
+            itemData.ItemCount = (uint)quantity;
+            itemData.PreviousItemInLL = itemPickupLL.StartOfLL + ((currIdxOfLastElement-1) * 0x18);
+            if(currIdxOfLastElement == 0)
+            {
+                itemData.PreviousItemInLL = 0;
+            }
+            itemPickupLL.Items[currIdxOfLastElement] = itemData;
+            itemPickupLL.NextAllocationInLL += 0x18;
+            itemPickupLL.LastElementLinkedList = itemPickupLL.NextAllocationInLL - 0x18;
+
+            Memory.WriteStruct<ItemPickupDialogLinkedList>(itemPickupDialogManImpl, itemPickupLL);
+            return true;
+        }
+
+        /// <summary>
+        /// This command triggers the anti debugger occasionally use ItemPickupDialogWithoutPickup instead
+        /// <summary>
+        public static void ItemPickupDialogWithoutPickupCommand(int category, int id, int quantity)
         {
             var command = Helpers.ItemPickupDialogWithoutPickup();
 
@@ -102,6 +135,36 @@ namespace DSAP
 
             var result = Memory.ExecuteCommand(command);
         }
+
+        public static void RemoveItemPickupDialogSetupFunction()
+        { 
+            long itemPickupDialogSetupFunction = 0x140728c90;
+            var command = Helpers.InjectItemPickupDialogSwitch();
+            long address = 0x1400003F0;
+            int destinationIndex = 0x12;
+            long offsetToItemPickupSetupFunction = itemPickupDialogSetupFunction - (address + destinationIndex);
+            byte[] offsetInjectedFunctionBytes = BitConverter.GetBytes((int)offsetToItemPickupSetupFunction);
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(offsetInjectedFunctionBytes);
+            }
+            Array.Copy(offsetInjectedFunctionBytes, 0, command, destinationIndex - 0x4, 4);
+            Memory.WriteByteArray((ulong)address, command);
+
+            long itemPickupDialogSetupFunctionCall = 0x1403fe4fa;
+            long offset = address - (itemPickupDialogSetupFunctionCall + 0x5);
+            byte[] injectedFuncitonCall = new byte[5];
+            injectedFuncitonCall[0] = 0xE8;
+            byte[] offsetBytes = BitConverter.GetBytes((int)offset);
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(offsetBytes);
+            }
+            Array.Copy(offsetBytes, 0, injectedFuncitonCall, 1, 4);
+            Memory.WriteByteArray((ulong)itemPickupDialogSetupFunctionCall, injectedFuncitonCall);
+
+        }
+
         public static bool IsValidPointer(ulong address)
         {
             try
@@ -198,7 +261,10 @@ namespace DSAP
             //});
             CleanUpItemPickupText();
             Memory.MonitorAddressByteChangeForAction(Helpers.GetItemPickupDialog(), 0x1, 0x0, () => CleanUpItemPickupText());
+
             RemoveItems();
+            RemoveItemPickupDialogSetupFunction();
+
             Context.ConnectButtonEnabled = true;
 
 
@@ -275,7 +341,8 @@ namespace DSAP
             {
                 if (lotFlags[i].IsEnabled)
                 {
-                    Helpers.OverwriteItemLot(lots.GetValueOrDefault(lotFlags[i].Flag), replacementLot);
+                    ItemLot lot = lots.GetValueOrDefault(lotFlags[i].Flag);
+                    Helpers.OverwriteItemLot(lot, replacementLot);
                 }
             }
             Log.Logger.Information("Finished overwriting items");
@@ -283,30 +350,35 @@ namespace DSAP
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
             LogItem(e.Item);
-            var itemId = e.Item.Id;
-            var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
-            if (itemToReceive != null)
+            int itemAPId = (int) e.Item.Id;
+            int itemCount = e.Item.Quantity;
+
+            DarkSoulsItem fakeItem = new DarkSoulsItem();
+            fakeItem.Category = DSItemCategory.Consumables;
+            fakeItem.Id = 0x172;
+            fakeItem.ApId = (int) e.Item.Id;
+            fakeItem.Name = e.Item.Name;
+            
+            var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemAPId, fakeItem);
+            
+            if (itemToReceive != fakeItem)
             {
                 Log.Logger.Verbose($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 if (itemToReceive.ApId == 11120000)
                 {
                     RunLagTrap();
                 }
-                else { 
-                    AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
-                    InjectedString injString = Helpers.SetItemPickupText(itemToReceive.Name);
-                    injectedStrings.Add(injString);
-                    if (!Helpers.GetIsItemPickupDialogVisible())
-                    {
-                        ItemPickupDialogWithoutPickup(((int)DSItemCategory.Consumables), 0x172, 0x1);
-                    }
+                else {
+                    AddItem((int)itemToReceive.Category, itemToReceive.Id, itemCount);
+                    ItemPickupDialogWithoutPickup(((int)itemToReceive.Category), itemToReceive.Id, itemCount);
                 }
             }
             else
             {
                 Log.Logger.Information("Couldnt find correct item");
-                var filler = AllItems.First(x => x.Id == 380);
-                AddItem((int)filler.Category, filler.Id, 1);
+                InjectedString injString = Helpers.SetItemPickupText(itemToReceive);
+                injectedStrings.Add(injString);
+                ItemPickupDialogWithoutPickup(((int)itemToReceive.Category), itemToReceive.Id, itemCount);
             }
         }
 

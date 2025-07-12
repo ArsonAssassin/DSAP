@@ -918,6 +918,30 @@ namespace DSAP
 
             return x;
         }
+
+        /*  ----------InjectItemPickupDialogSwitch injected ASM
+            0:  41 81 f8 72 01 00 00    cmp    r8d,0x172
+            7:  74 0d                   je     16 <skip_dialog>
+            9:  48 83 ec 38             sub    rsp,0x38
+            d:  e8 00 00 00 00          call   12 <_main+0x12>
+            12: 48 83 c4 38             add    rsp,0x38
+            0000000000000016 <skip_dialog>:
+            16: c3                      ret 
+         */
+        public static byte[] InjectItemPickupDialogSwitch()
+        {
+            byte[] x = new byte[] {
+                0x41, 0x81, 0xF8, 0x72, 0x01, 0x00, 0x00,
+                0x74, 0x0D,
+                0x48, 0x83, 0xEC, 0x38,
+                0xE8, 0x92, 0xA7, 0x32, 0x00,
+                0x48, 0x83, 0xC4, 0x38,
+                0xC3,
+            };
+
+            return x;
+        }
+
         internal static ulong GetItemPickupDialog()
         {
             return Helpers.ResolvePointerChain(0x141c88d98, new int[] { 0x0, 0x12C });
@@ -926,23 +950,98 @@ namespace DSAP
         {
             return Memory.ReadByte(GetItemPickupDialog()) != 0;
         }
-        internal static InjectedString SetItemPickupText(String itemName)
+
+        internal static InjectedString SetItemPickupText(DarkSoulsItem item)
         {
+            //base struct of all text messages in the game including dialog and item text
             ulong MsgMan = 0x141c7e3e8;
-            ulong itemPickupDialogTable = ResolvePointerChain(MsgMan, new int[] { 0x0, 0x380, 0x0 });
-            uint baseOfStringOffsetTable = Memory.ReadUInt(itemPickupDialogTable + 0x14);
+            /*
+             * offset Goods Table       0x380
+             * offset Ring Table        0x390
+             * offset Weapon Table      0x3A0
+             * offset Armor Table       0x3B0
+             */
+            int messageManOffset;
+            switch (item.Category)
+            {
+                case Enums.DSItemCategory.Armor: 
+                    messageManOffset = 0x3B0; 
+                    break;
+                case Enums.DSItemCategory.MeleeWeapons:
+                    messageManOffset = 0x3A0;
+                    break;
+                case Enums.DSItemCategory.Rings:
+                    messageManOffset = 0x390;
+                    break;
+                case Enums.DSItemCategory.Consumables:
+                    messageManOffset = 0x380;
+                    break;
+                default: 
+                    messageManOffset = 0x380;
+                    break;
+            }
+            ulong itemPickupDialogTable = ResolvePointerChain(MsgMan, new int[] { 0x0, messageManOffset, 0x0 });
+            //See Func 0x14053df10 for how this Message Man struct is used.
+            //This value at this address is an offset from the base of the table that tells us how far to offset to get to the correct string.
+            uint offsetOfBaseOfStringOffsetTable = Memory.ReadUInt(itemPickupDialogTable + 0x14);
+            
+            //This is the offset of the Map From Item Ids to String Ids, the map starts here.
             ulong baseOfItemIdToStringMap = itemPickupDialogTable + 0x1C;
-            ulong prismStoneItemToStringMapEntry = baseOfItemIdToStringMap + (0x6 * 0xC);
-            uint indexOfPrismStoneInStringOffsetTable = Memory.ReadUInt(prismStoneItemToStringMapEntry);
-            ulong prismStoneStringOffset = Memory.ReadUInt(itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4);
-            uint unicodeStringLength = ((uint)itemName.Length + 3) * 2;
+
+            uint sizeOfItemIdToStringIndexMap = Memory.ReadUInt(itemPickupDialogTable + 0xC);
+
+
+            //In the prism stone example this value is 6A, this is the index in the string offset table (mult by 4)
+            //that we look for the string offset for the prism stone string.
+
+            //the first 4 byte value in each entry in this map is the index in the string offset table
+
+            //the second 4 byte value in each entry in this map is the starting item id 
+            //(for example there are prism stones for each different color of prism stone and they all need to be named the same text)
+            //more concretely each weapon and armor upgrade and infusion had a separate id/upgrade number so for example the Striaght Sword has a base id
+            //as well as a series of offset ids marking each smith upgrade as well as each infused upgrade as well as each smithed and infused upgrade.
+            //the items are grouped first by their base id, then infusion type, then upgrade level.
+
+            //the third 4 byte value in each entry in this map is the the last id in the bucket associated with the string table offset
+
+            byte[] byteArray = Memory.ReadByteArray(baseOfItemIdToStringMap, (int) sizeOfItemIdToStringIndexMap * 0xC);
+
+            uint[] intArray = new uint[byteArray.Length / 4];
+            Buffer.BlockCopy(byteArray, 0, intArray, 0, byteArray.Length);
+            uint offset = 0x6A;
+            bool found = false;
+            for (int i = 0; i < sizeOfItemIdToStringIndexMap - 1; i++)
+            {
+                int index = i * 3;
+                if(item.Id >= intArray[index + 1] && item.Id <= intArray[index + 2])
+                {
+                    found = true;
+                    offset = intArray[index] + ((uint)item.Id - intArray[index + 1]);
+                    break;
+                }
+            }
+            
+            uint indexOfItemInStringOffsetTable = offset * 0x4;
+            
+            //The value at this address is the offset from the base of the table to find the string
+            ulong stringOffsetLoc = itemPickupDialogTable + offsetOfBaseOfStringOffsetTable + indexOfItemInStringOffsetTable;
+            ulong itemStringOffset = Memory.ReadUInt(stringOffsetLoc);
+
+            String itemName = item.Name;
+            
+            //We need padding of at least 2 Zeros to end a unicode string, unicode strings have zeros between each character.
+            uint unicodeStringLength = ((uint)itemName.Length + 1) * 2;
+            
+            //Allocate space for an injected string above the start of the table but below the
+            //transition from the 32 bit address space to the 64 bit address space.
+            //On original harware this was unlikely a constraint, but we cannot overflow to the correct address
+            //given the 4 byte offset that we can inject.
             IntPtr injectedStringLoc = Memory.AllocateAbove(unicodeStringLength);
             uint injectedStringAddress = (uint)injectedStringLoc.ToInt32();
             uint offsetToInjectedString = injectedStringAddress - (uint)itemPickupDialogTable;
-            ulong stringOffsetLoc = itemPickupDialogTable + baseOfStringOffsetTable + indexOfPrismStoneInStringOffsetTable * 0x4;
             Memory.WriteString((ulong)injectedStringAddress, itemName, Archipelago.Core.Util.Enums.Endianness.Little, Encoding.Unicode);
             Memory.Write(stringOffsetLoc, offsetToInjectedString);
-            InjectedString result = new InjectedString(itemName, injectedStringLoc, stringOffsetLoc, prismStoneStringOffset);
+            InjectedString result = new InjectedString(itemName, injectedStringLoc, stringOffsetLoc, itemStringOffset);
             return result;
         }
 
