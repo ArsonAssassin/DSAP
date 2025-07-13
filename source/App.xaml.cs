@@ -12,13 +12,8 @@ using Archipelago.MultiClient.Net.MessageLog.Messages;
 using DSAP.Models;
 using Newtonsoft.Json;
 using Serilog;
-using SharpDX;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Windows.UI.Core;
 using static DSAP.Enums;
 using Color = Microsoft.Maui.Graphics.Color;
-using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
     public partial class App : Application
@@ -46,12 +41,12 @@ namespace DSAP
             Context.ConnectButtonEnabled = true;
         }
 
-        private async void Context_UnstuckClicked(object? sender, EventArgs e)
+        private void Context_UnstuckClicked(object? sender, EventArgs e)
         {
             //var bonfireStates = Helpers.GetBonfireStates();
             //Log.Logger.Information(JsonConvert.SerializeObject(bonfireStates));
             var originalLots = Helpers.GetItemLots();
-            await RemoveItems();
+            RemoveItems();
             var overwrittenLots = Helpers.GetItemLots();
 
             if(originalLots == overwrittenLots)
@@ -314,7 +309,7 @@ namespace DSAP
             Client.AddOverlayMessage(e.Message.ToString(), TimeSpan.FromSeconds(10));
         }
 
-        private static async Task RemoveItems()
+        private static void RemoveItems()
         {
             var lots = Helpers.GetItemLots();
             var lotFlags = Helpers.GetItemLotFlags();
@@ -349,17 +344,18 @@ namespace DSAP
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
-            LogItem(e.Item);
             int itemAPId = (int) e.Item.Id;
-            int itemCount = e.Item.Quantity;
 
             DarkSoulsItem fakeItem = new DarkSoulsItem();
             fakeItem.Category = DSItemCategory.Consumables;
             fakeItem.Id = 0x172;
+            fakeItem.StackSize = 0;
             fakeItem.ApId = (int) e.Item.Id;
             fakeItem.Name = e.Item.Name;
-            
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemAPId, fakeItem);
+            
+            int itemCount = itemToReceive.StackSize == 0 ? 1 : itemToReceive.StackSize;
+            LogItem(e.Item, itemCount);
             
             if (itemToReceive != fakeItem)
             {
@@ -368,7 +364,8 @@ namespace DSAP
                 {
                     RunLagTrap();
                 }
-                else {
+                else
+                {
                     AddItem((int)itemToReceive.Category, itemToReceive.Id, itemCount);
                     ItemPickupDialogWithoutPickup(((int)itemToReceive.Category), itemToReceive.Id, itemCount);
                 }
@@ -391,13 +388,13 @@ namespace DSAP
             }
         }
 
-        private static void LogItem(Item item)
+        private static void LogItem(Item item, int quantity)
         {
             var messageToLog = new LogListItem(new List<TextSpan>()
             {
                 new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = Color.FromRgb(255, 255, 255)},
                 new TextSpan(){Text = $"{item.Name}", TextColor = Color.FromRgb(200, 255, 200)},
-                new TextSpan(){Text = $"x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
+                new TextSpan(){Text = $"x{quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
             });
             lock (_lockObject)
             {
