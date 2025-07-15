@@ -250,7 +250,7 @@ namespace DSAP
                 LogHint(e.Message);
             }
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
-            Client.AddOverlayMessage(e.Message.ToString(), TimeSpan.FromSeconds(10));
+            Client.AddOverlayMessage(e.Message.ToString());
         }
 
         private static async Task RemoveItems()
@@ -330,7 +330,6 @@ namespace DSAP
             {
                 new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = Color.FromRgb(255, 255, 255)},
                 new TextSpan(){Text = $"{item.Name}", TextColor = Color.FromRgb(200, 255, 200)},
-                new TextSpan(){Text = $"x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
             });
             lock (_lockObject)
             {
@@ -339,8 +338,9 @@ namespace DSAP
                     Context.ItemList.Add(messageToLog);
                 });
             }
-
             
+            Client.AddOverlayMessage($"Received [{item.Id.ToString()}] - {item.Name}");
+
         }
         private static void LogHint(LogMessage message)
         {
