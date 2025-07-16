@@ -213,6 +213,14 @@ namespace DSAP
                 return;
             }
 
+            var isInGame = Helpers.GetIsPlayerInGame();
+            if (!isInGame)
+            {
+                Log.Logger.Warning("Please load into the game with your character to connect.");
+                Context.ConnectButtonEnabled = true;
+                return;
+            }
+
             await Client.Connect(e.Host, "Dark Souls Remastered");
 
             Client.ItemReceived += Client_ItemReceived;

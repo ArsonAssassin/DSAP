@@ -278,6 +278,10 @@ namespace DSAP
             ItemLotParamOffset = ResolvePointerChain(soloParams, 0x570, 0x38, 0x0);
             return ItemLotParamOffset;
         }
+        public static ulong GetPlayerGameDataOffset()
+        {
+            return ResolvePointerChain(0x141C8A530, new int[] { 0x0, 0xD10});
+        }
         private static ulong GetBonfireOffset()
         {
             var baseAddress = GetEventFlagsOffset();
@@ -471,6 +475,11 @@ namespace DSAP
             var isOnline = Memory.ReadByte(baseCOffset + onlineFlagOffset) != 0;
             return isOnline;
 
+        }
+        public static bool GetIsPlayerInGame()
+        {
+            ulong playerGameData = GetPlayerGameDataOffset();
+            return Memory.ReadByte(playerGameData + 0x120) != 0;
         }
         public static List<Location> GetBossLocations()
         {
