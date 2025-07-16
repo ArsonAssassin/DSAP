@@ -131,8 +131,17 @@ namespace DSAP
             var result = Memory.ExecuteCommand(command);
         }
 
+        public static void HomewardBoneCommand()
+        {
+            var command = Helpers.HomewardBone();
+
+            Array.Copy(BitConverter.GetBytes(Helpers.GetBaseBOffset()), 0, command, 0x3, 4);
+
+            var result = Memory.ExecuteCommand(command);
+        }
+
         public static void RemoveItemPickupDialogSetupFunction()
-        { 
+        {
             long itemPickupDialogSetupFunction = 0x140728c90;
             var command = Helpers.InjectItemPickupDialogSwitch();
             long address = 0x1400003F0;
@@ -267,6 +276,9 @@ namespace DSAP
 
             RemoveItems();
             RemoveItemPickupDialogSetupFunction();
+
+            //need to reload the area on connect to ensure that the item lots are updated 
+            HomewardBoneCommand();
 
             Context.ConnectButtonEnabled = true;
 

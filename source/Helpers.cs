@@ -877,6 +877,44 @@ namespace DSAP
 
         /*  ----------Code To Emulate--------------
             
+            mov rcx,[BaseB]
+            mov edx,1
+            sub rsp,38
+            call 0x1404867e0
+            add rsp,38
+            ret
+
+        */
+        /*  ----------Homeward Bone injected ASM--------------
+            0:  48 c7 c1 78 56 34 12    mov    rcx,0x12345678
+            7:  00
+            8:  ba 01 00 00 00          mov    edx,0x1
+            d:  49 be e0 67 48 40 01    movabs r14,0x1404867e0
+            14: 00 00 00
+            17: 48 83 ec 38             sub    rsp,0x38
+            1b: 41 ff d6                call   r14
+            1e: 48 83 c4 38             add    rsp,0x38
+            22: c3                      ret 
+         */
+        public static byte[] HomewardBone()
+        {
+            byte[] x = new byte[] {
+                    0x48, 0xC7, 0xC1, 0x78, 0x56, 0x34, 0x12,
+                    0xBA, 0x01, 0x00, 0x00, 0x00,
+                    0x49, 0xBE, 0xE0, 0x67, 0x48, 0x40, 0x01, 0x00, 0x00, 0x00,
+                    0x48, 0x83, 0xEC, 0x38,
+                    0x41, 0xFF, 0xD6,
+                    0x48, 0x83, 0xC4, 0x38,
+                    0xC3
+
+            };
+
+            return x;
+        }
+
+
+        /*  ----------Code To Emulate--------------
+            
             1403fe4ef 8b d0           MOV        EDX,ItemCategory
             1403fe4f1 44 8b ce        MOV        R9D,ItemCount
             1403fe4f4 44 8b c3        MOV        R8D,ItemId
