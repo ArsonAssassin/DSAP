@@ -314,7 +314,7 @@ namespace DSAP
                 LogHint(e.Message);
             }
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
-            Client.AddOverlayMessage(e.Message.ToString(), TimeSpan.FromSeconds(10));
+            Client.AddOverlayMessage(e.Message.ToString());
         }
 
         private static void RemoveItems()
@@ -411,8 +411,9 @@ namespace DSAP
                     Context.ItemList.Add(messageToLog);
                 });
             }
-
             
+            Client.AddOverlayMessage($"Received [{item.Id.ToString()}] - {item.Name}");
+
         }
         private static void LogHint(LogMessage message)
         {
