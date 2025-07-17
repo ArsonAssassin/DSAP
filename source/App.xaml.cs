@@ -45,14 +45,16 @@ namespace DSAP
         {
             //var bonfireStates = Helpers.GetBonfireStates();
             //Log.Logger.Information(JsonConvert.SerializeObject(bonfireStates));
-            var originalLots = Helpers.GetItemLots();
-            RemoveItems();
-            var overwrittenLots = Helpers.GetItemLots();
+            //var originalLots = Helpers.GetItemLots();
+            //RemoveItems();
+            //var overwrittenLots = Helpers.GetItemLots();
 
-            if (originalLots == overwrittenLots)
-            {
-                Log.Error("Overwriting itemlots failed.");
-            }
+            //if (originalLots == overwrittenLots)
+            //{
+            //    Log.Error("Overwriting itemlots failed.");
+            //}
+
+            HomewardBoneCommand();
         }
 
         public static void AddItem(int category, int id, int quantity)
@@ -258,6 +260,14 @@ namespace DSAP
 
             var goalLocation = bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
             Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
+
+            foreach(var fogWall in fogWallLocations)
+            {
+                Memory.MonitorAddressBitForAction(fogWall.Address, fogWall.AddressBit, () =>
+                {
+                    Log.Debug($"Fog Wall Opened: {fogWall.Name}");
+                });
+            }
 
 
             Client.MonitorLocations(bossLocations);
