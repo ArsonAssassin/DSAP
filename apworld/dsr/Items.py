@@ -34,7 +34,7 @@ class DSRItem(Item):
         return {item_data.name: (base_id + item_data.dsr_code if item_data.dsr_code is not None else None) for item_data in _all_items}
 
 key_item_names = {
-"Covenant of Artorias","Orange Charred Ring", "Pendant", "Skull Lantern", "Fire Keeper Soul (Anastacia of Astora)", "Fire Keeper Soul (Darkmoon Knightess)", "Fire Keeper Soul (Daughter of Chaos)", "Fire Keeper Soul (New Londo)", "Fire Keeper Soul (Blighttown)", "Fire Keeper Soul (Duke's Archives)", "Fire Keeper Soul (Undead Parish)"
+"Covenant of Artorias","Orange Charred Ring", "Skull Lantern", "Fire Keeper Soul (Anastacia of Astora)", "Fire Keeper Soul (Darkmoon Knightess)", "Fire Keeper Soul (Daughter of Chaos)", "Fire Keeper Soul (New Londo)", "Fire Keeper Soul (Blighttown)", "Fire Keeper Soul (Duke's Archives)", "Fire Keeper Soul (Undead Parish)"
 }
 
 _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [    
