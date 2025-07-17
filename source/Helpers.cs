@@ -416,10 +416,9 @@ namespace DSAP
             ulong newAddress = (ptr & 0xFFFF0000) | newOffset;
             return newAddress;
         }
-        public static Dictionary<int, ItemLot> GetItemLots()
+        public static Dictionary<int, List<ItemLot>> GetItemLots()
         {
-            List<ItemLotParamStruct> itemLots = new List<ItemLotParamStruct>();
-            Dictionary<int, ItemLot> itemLotLookup = new Dictionary<int, ItemLot>();
+            Dictionary<int, List<ItemLot>> itemLotLookup = new Dictionary<int, List<ItemLot>>();
             var startAddress = GetItemLotParamOffset();
 
             var dataOffset = Memory.ReadUInt(startAddress + 0x4);
@@ -431,9 +430,13 @@ namespace DSAP
             for (int i = 0; i < itemLotParams.Count; i++)
             {
                 ItemLotParamStruct p = itemLotParams[i];
-                itemLots.Add(p);
-                itemLotLookup.TryAdd(p.LotOverallGetItemFlagId, new ItemLot(p, startAddress + dataOffset + (ulong)i * (ulong)sizeOfStruct));
+                int flagId = p.LotOverallGetItemFlagId;
 
+                List<ItemLot> lots = itemLotLookup.GetValueOrDefault(flagId, new List<ItemLot>());
+                ItemLot itemLot = new ItemLot(p, startAddress + dataOffset + (ulong)i * (ulong)sizeOfStruct);
+                lots.Add(itemLot);
+
+                itemLotLookup.TryAdd(flagId, lots);
             }
             return itemLotLookup;
         }

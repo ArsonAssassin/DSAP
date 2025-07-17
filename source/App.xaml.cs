@@ -49,7 +49,7 @@ namespace DSAP
             RemoveItems();
             var overwrittenLots = Helpers.GetItemLots();
 
-            if(originalLots == overwrittenLots)
+            if (originalLots == overwrittenLots)
             {
                 Log.Error("Overwriting itemlots failed.");
             }
@@ -90,7 +90,7 @@ namespace DSAP
             ItemPickupDialogLinkedList itemPickupLL = Memory.ReadStruct<ItemPickupDialogLinkedList>(itemPickupDialogManImpl);
             ulong currIdxOfLastElement = (itemPickupLL.NextAllocationInLL - itemPickupLL.StartOfLL) / 0x18;
 
-            if(currIdxOfLastElement >= 5)
+            if (currIdxOfLastElement >= 5)
             {
                 return false;
             }
@@ -99,8 +99,8 @@ namespace DSAP
             itemData.ItemCategory = (uint)category;
             itemData.ItemCode = (uint)id;
             itemData.ItemCount = (uint)quantity;
-            itemData.PreviousItemInLL = itemPickupLL.StartOfLL + ((currIdxOfLastElement-1) * 0x18);
-            if(currIdxOfLastElement == 0)
+            itemData.PreviousItemInLL = itemPickupLL.StartOfLL + ((currIdxOfLastElement - 1) * 0x18);
+            if (currIdxOfLastElement == 0)
             {
                 itemData.PreviousItemInLL = 0;
             }
@@ -258,7 +258,7 @@ namespace DSAP
 
             var goalLocation = bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
             Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
-            
+
 
             Client.MonitorLocations(bossLocations);
             Client.MonitorLocations(itemLocations);
@@ -331,7 +331,7 @@ namespace DSAP
 
         private static void RemoveItems()
         {
-            var lots = Helpers.GetItemLots();
+            var lotDictionary = Helpers.GetItemLots();
             var lotFlags = Helpers.GetItemLotFlags();
 
             //Helpers.WriteToFile("itemLots.json", lots);
@@ -356,27 +356,30 @@ namespace DSAP
             {
                 if (lotFlags[i].IsEnabled)
                 {
-                    ItemLot lot = lots.GetValueOrDefault(lotFlags[i].Flag);
-                    Helpers.OverwriteItemLot(lot, replacementLot);
+                    List<ItemLot> lots = lotDictionary.GetValueOrDefault(lotFlags[i].Flag);
+                    foreach (ItemLot lot in lots)
+                    {
+                        Helpers.OverwriteItemLot(lot, replacementLot);
+                    }
                 }
             }
             Log.Logger.Information("Finished overwriting items");
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
-            int itemAPId = (int) e.Item.Id;
+            int itemAPId = (int)e.Item.Id;
 
             DarkSoulsItem fakeItem = new DarkSoulsItem();
             fakeItem.Category = DSItemCategory.Consumables;
             fakeItem.Id = 0x172;
             fakeItem.StackSize = 0;
-            fakeItem.ApId = (int) e.Item.Id;
+            fakeItem.ApId = (int)e.Item.Id;
             fakeItem.Name = e.Item.Name;
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemAPId, fakeItem);
-            
+
             int itemCount = itemToReceive.StackSize == 0 ? 1 : itemToReceive.StackSize;
             LogItem(e.Item, itemCount);
-            
+
             if (itemToReceive != fakeItem)
             {
                 Log.Logger.Verbose($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
@@ -423,7 +426,7 @@ namespace DSAP
                     Context.ItemList.Add(messageToLog);
                 });
             }
-            
+
             Client.AddOverlayMessage($"Received [{item.Id.ToString()}] - {item.Name}");
 
         }
