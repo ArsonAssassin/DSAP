@@ -12,6 +12,10 @@ class EnableMasterKeyOption(Toggle):
     """Includes the Master Key in the item pool"""
     display_name = "Enable Master Key"
 
+class EnableDLCOption(Toggle):
+    """Includes the DLC locations"""
+    display_name = "Include DLC Locations"
+
 # class EnableDeathlinkOption(Toggle):
     # """Includes Deathlink"""
     # display_name = "Enable Deathlink"
@@ -25,5 +29,6 @@ class DSROption(PerGameCommonOptions):
     #goal: GoalOption
     guaranteed_items: GuaranteedItemsOption
     enable_masterkey: EnableMasterKeyOption
+    enable_dlc: EnableDLCOption
     unique_souls: UniqueSoulOption
     # enable_deathlink: EnableDeathlinkOption

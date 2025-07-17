@@ -67,7 +67,8 @@ class DSRWorld(World):
         # Create Regions
         regions: Dict[str, Region] = {}
         regions["Menu"] = self.create_region("Menu", [])
-        regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in [
+        
+        region_names = [
             "Undead Asylum Cell",
             "Undead Asylum Cell Door",
             "Northern Undead Asylum F2 East Door",
@@ -125,6 +126,8 @@ class DSRWorld(World):
             "Tomb of the Giants", 
             "Tomb of the Giants - Behind Golden Fog Wall",
             "Kiln of the First Flame", 
+            ]
+        dlc_region_names = [
             "Sanctuary Garden", 
             "Oolacile Sanctuary", 
             "Royal Wood", 
@@ -132,7 +135,11 @@ class DSRWorld(World):
             "Oolacile Township", 
             "Oolacile Township - After Crest Key",
             "Chasm of the Abyss", 
-                ]})
+            ]
+        if self.options.enable_dlc.value:
+            region_names.extend(dlc_region_names)
+            
+        regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in region_names})
        
         # Connect Regions
         def create_connection(from_region: str, to_region: str):
@@ -227,15 +234,15 @@ class DSRWorld(World):
         create_connection("Demon Ruins - Behind Golden Fog Wall", "Demon Ruins Shortcut")
         create_connection("Lost Izalith", "Demon Ruins Shortcut")
 
-
-        # DLC Entrances
-        create_connection("Darkroot Basin", "Sanctuary Garden")
-        create_connection("Sanctuary Garden", "Oolacile Sanctuary")
-        create_connection("Oolacile Sanctuary", "Royal Wood")
-        create_connection("Royal Wood", "Oolacile Township")
-        create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
-        create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
-        create_connection("Oolacile Township", "Chasm of the Abyss")
+        if self.options.enable_dlc.value:
+            # DLC Entrances
+            create_connection("Darkroot Basin", "Sanctuary Garden")
+            create_connection("Sanctuary Garden", "Oolacile Sanctuary")
+            create_connection("Oolacile Sanctuary", "Royal Wood")
+            create_connection("Royal Wood", "Oolacile Township")
+            create_connection("Oolacile Township", "Oolacile Township - After Crest Key")
+            create_connection("Oolacile Township - After Crest Key", "Royal Wood - After Hawkeye Gough")
+            create_connection("Oolacile Township", "Chasm of the Abyss")
       
         
     # For each region, add the associated locations retrieved from the corresponding location_table
@@ -326,7 +333,8 @@ class DSRWorld(World):
         useful_categories = {
         }
         data = self.item_name_to_id[name]
-
+        if self.options.enable_dlc.value:
+            key_item_names.append("Broken Pendant")
         if name in key_item_names or item_dictionary[name].category in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]:
             item_classification = ItemClassification.progression
         elif item_dictionary[name].category in useful_categories:
@@ -400,11 +408,11 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) and state.has("Lordvessel", self.player))
         
       
-        
-        set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
-        set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
+        if self.options.enable_dlc.value:
+            set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
+            set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
+            set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
+            set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         
  
         
@@ -438,6 +446,7 @@ class DSRWorld(World):
                 "guaranteed_items": self.options.guaranteed_items.value,
                 # "enable_deathlink": self.options.enable_deathlink.value,
                 "enable_masterkey": self.options.enable_masterkey.value,
+                "enable_dlc": self.options.enable_dlc.value,
                 "unique_souls": self.options.unique_souls.value
             },
             "seed": self.multiworld.seed_name,  # to verify the server's multiworld
