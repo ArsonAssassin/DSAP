@@ -645,7 +645,7 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Priscilla's Dagger", 8004, DSRItemCategory.WEAPON),
     ("Shortsword", 8005, DSRItemCategory.WEAPON),
     ("Longsword", 8006, DSRItemCategory.WEAPON),
-    ("BroadSword", 8007, DSRItemCategory.WEAPON),
+    ("Broadsword", 8007, DSRItemCategory.WEAPON),
     ("Broken Straight Sword", 8008, DSRItemCategory.WEAPON),
     ("Balder Side Sword", 8009, DSRItemCategory.WEAPON),
     ("Crystal Straight Sword", 8010, DSRItemCategory.WEAPON),
