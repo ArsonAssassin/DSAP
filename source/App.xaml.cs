@@ -26,6 +26,9 @@ namespace DSAP
         private static readonly object _lockObject = new object();
         private bool IsHandlingDeathlink = false;
         private static List<InjectedString> injectedStrings = new List<InjectedString>();
+        private static Queue<Item> itemQueue = new Queue<Item>();
+        private static int MAX_DISPLAYED_ITEMS = 5;
+
         public App()
         {
             InitializeComponent();
@@ -88,11 +91,11 @@ namespace DSAP
         public static bool ItemPickupDialogWithoutPickup(int category, int id, int quantity)
         {
             // Tested this method of displaying messages with a 100 back to back triggers and it does not crash the game
-            ulong itemPickupDialogManImpl = Helpers.ResolvePointerChain(0x141C891A8, new int[] { 0x0, 0x0 });
+            ulong itemPickupDialogManImpl = Helpers.GetItemPickupDialogManImplOffset();
             ItemPickupDialogLinkedList itemPickupLL = Memory.ReadStruct<ItemPickupDialogLinkedList>(itemPickupDialogManImpl);
             ulong currIdxOfLastElement = (itemPickupLL.NextAllocationInLL - itemPickupLL.StartOfLL) / 0x18;
 
-            if (currIdxOfLastElement >= 5)
+            if (currIdxOfLastElement >= (ulong)MAX_DISPLAYED_ITEMS)
             {
                 return false;
             }
@@ -249,7 +252,12 @@ namespace DSAP
             //    Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
             //}
 
+            CleanUpItemPickupText();
+            RemoveItems();
+            RemoveItemPickupDialogSetupFunction();
 
+            //need to reload the area on connect to ensure that the item lots are updated 
+            HomewardBoneCommand();
 
             var bossLocations = Helpers.GetBossFlagLocations();
             var itemLocations = Helpers.GetItemLotLocations();
@@ -281,14 +289,10 @@ namespace DSAP
             //{
             //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
             //});
-            CleanUpItemPickupText();
+
             Memory.MonitorAddressByteChangeForAction(Helpers.GetItemPickupDialog(), 0x1, 0x0, () => CleanUpItemPickupText());
 
-            RemoveItems();
-            RemoveItemPickupDialogSetupFunction();
 
-            //need to reload the area on connect to ensure that the item lots are updated 
-            HomewardBoneCommand();
 
             Context.ConnectButtonEnabled = true;
 
@@ -302,6 +306,11 @@ namespace DSAP
                 Helpers.FreeItemPickupText(injString);
             }
             injectedStrings = new List<InjectedString>();
+            while (injectedStrings.Count() == 0 && Helpers.GetDisplayedItemCount() < MAX_DISPLAYED_ITEMS
+                && itemQueue.Count() > 0)
+            {
+                DisplayItemPickupText(itemQueue.Dequeue());
+            }
         }
 
         //private void SendDeathlink(DeathLinkService _deathlinkService)
@@ -379,19 +388,34 @@ namespace DSAP
         {
             int itemAPId = (int)e.Item.Id;
 
+            int displayedItemCount = Helpers.GetDisplayedItemCount();
+            bool isDarkSoulsItem = AllItems.First(x => x.ApId == itemAPId) != null;
+            if (displayedItemCount >= MAX_DISPLAYED_ITEMS || (!isDarkSoulsItem && displayedItemCount > 0))
+            {
+                itemQueue.Enqueue(e.Item);
+                return;
+            }
+            DisplayItemPickupText(e.Item);
+
+        }
+        private static void DisplayItemPickupText(Item item)
+        {
+
+            int itemAPId = (int)item.Id;
             DarkSoulsItem fakeItem = new DarkSoulsItem();
             fakeItem.Category = DSItemCategory.Consumables;
             fakeItem.Id = 0x172;
             fakeItem.StackSize = 0;
-            fakeItem.ApId = (int)e.Item.Id;
-            fakeItem.Name = e.Item.Name;
-            var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemAPId, fakeItem);
-
+            fakeItem.ApId = (int)item.Id;
+            fakeItem.Name = item.Name;
+            DarkSoulsItem itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemAPId, fakeItem);
+            bool isDarkSoulsItem = itemToReceive != fakeItem;
             int itemCount = itemToReceive.StackSize == 0 ? 1 : itemToReceive.StackSize;
-            LogItem(e.Item, itemCount);
+            LogItem(item, itemCount);
 
-            if (itemToReceive != fakeItem)
+            if (isDarkSoulsItem)
             {
+
                 Log.Logger.Verbose($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 if (itemToReceive.ApId == 11120000)
                 {

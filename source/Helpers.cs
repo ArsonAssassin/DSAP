@@ -282,6 +282,10 @@ namespace DSAP
         {
             return ResolvePointerChain(0x141C8A530, new int[] { 0x0, 0xD10});
         }
+        public static ulong GetItemPickupDialogManImplOffset()
+        {
+            return Helpers.ResolvePointerChain(0x141C891A8, new int[] { 0x0, 0x0 });
+        }
         private static ulong GetBonfireOffset()
         {
             var baseAddress = GetEventFlagsOffset();
@@ -1099,6 +1103,13 @@ namespace DSAP
         {
             Memory.Write(injectedString.stringOffsetLoc, injectedString.originalStringOffset);
             Memory.FreeMemory(injectedString.injectedStringLoc);
+        }
+
+        internal static int GetDisplayedItemCount()
+        {
+            ulong itemPickupDialogManImpl = Helpers.GetItemPickupDialogManImplOffset();
+            ItemPickupDialogLinkedList itemPickupLL = Memory.ReadStruct<ItemPickupDialogLinkedList>(itemPickupDialogManImpl);
+            return (int)((itemPickupLL.NextAllocationInLL - itemPickupLL.StartOfLL) / 0x18);
         }
     }
 }
