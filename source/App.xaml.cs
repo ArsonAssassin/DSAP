@@ -46,17 +46,6 @@ namespace DSAP
 
         private void Context_UnstuckClicked(object? sender, EventArgs e)
         {
-            //var bonfireStates = Helpers.GetBonfireStates();
-            //Log.Logger.Information(JsonConvert.SerializeObject(bonfireStates));
-            //var originalLots = Helpers.GetItemLots();
-            //RemoveItems();
-            //var overwrittenLots = Helpers.GetItemLots();
-
-            //if (originalLots == overwrittenLots)
-            //{
-            //    Log.Error("Overwriting itemlots failed.");
-            //}
-
             HomewardBoneCommand();
         }
 
