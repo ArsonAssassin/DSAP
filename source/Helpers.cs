@@ -171,9 +171,9 @@ namespace DSAP
             var baseBonfire = OffsetPointer(baseAddress, 0x5B);
             return baseBonfire;
         }
-        public static List<Location> GetItemLotLocations()
+        public static List<ILocation> GetItemLotLocations()
         {
-            List<Location> locations = new List<Location>();
+            List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetItemLotFlags();
             var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)
@@ -188,9 +188,9 @@ namespace DSAP
             }
             return locations;
         }
-        public static List<Location> GetBossFlagLocations()
+        public static List<ILocation> GetBossFlagLocations()
         {
-            List<Location> locations = new List<Location>();
+            List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetBossFlags();
             var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)
@@ -205,9 +205,9 @@ namespace DSAP
             }
             return locations;
         }
-        public static List<Location> GetBonfireFlagLocations()
+        public static List<ILocation> GetBonfireFlagLocations()
         {
-            List<Location> locations = new List<Location>();
+            List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetBonfireFlags();
             var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)
@@ -222,9 +222,9 @@ namespace DSAP
             }
             return locations;
         }
-        public static List<Location> GetDoorFlagLocations()
+        public static List<ILocation> GetDoorFlagLocations()
         {
-            List<Location> locations = new List<Location>();
+            List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetDoorFlags();
             var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)
@@ -239,9 +239,9 @@ namespace DSAP
             }
             return locations;
         }
-        public static List<Location> GetFogWallFlagLocations()
+        public static List<ILocation> GetFogWallFlagLocations()
         {
-            List<Location> locations = new List<Location>();
+            List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetFogWallFlags();
             var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)
@@ -256,9 +256,9 @@ namespace DSAP
             }
             return locations;
         }
-        public static List<Location> GetMiscFlagLocations()
+        public static List<ILocation> GetMiscFlagLocations()
         {
-            List<Location> locations = new List<Location>();
+            List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetMiscFlags();
             var baseAddress = GetEventFlagsOffset();
             foreach (var lot in lotFlags)

@@ -103,8 +103,8 @@ namespace DSAP
             while (!batch.All(x => completed.Any(y => y.Id == x.Id)))
             {
                 foreach (var location in batch)
-                {
-                    var isCompleted = global::Archipelago.Core.Util.Helpers.CheckLocation(location);
+                {                    
+                    var isCompleted = location.Check();
                     if (isCompleted)
                     {
                         completed.Add(location);
@@ -183,7 +183,7 @@ namespace DSAP
             var fogWallLocations = Helpers.GetFogWallFlagLocations();
             var miscLocations = Helpers.GetMiscFlagLocations();
 
-            var goalLocation = bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
+            var goalLocation = (Location) bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
             Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
 
             Client.MonitorLocations(bossLocations);
@@ -277,7 +277,7 @@ namespace DSAP
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
-            LogItem(e.Item);
+            LogItem(e.Item, 1);
             var itemId = e.Item.Id;
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
             if (itemToReceive != null)
@@ -306,13 +306,13 @@ namespace DSAP
             }
         }
 
-        private static void LogItem(Item item)
+        private static void LogItem(Item item, int quantity)
         {
             var messageToLog = new LogListItem(new List<TextSpan>()
             {
                 new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = Color.FromRgb(255, 255, 255)},
                 new TextSpan(){Text = $"{item.Name}", TextColor = Color.FromRgb(200, 255, 200)},
-                new TextSpan(){Text = $"x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
+                new TextSpan(){Text = $"x{quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
             });
             lock (_lockObject)
             {
