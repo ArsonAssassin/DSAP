@@ -103,7 +103,7 @@ namespace DSAP
             while (!batch.All(x => completed.Any(y => y.Id == x.Id)))
             {
                 foreach (var location in batch)
-                {                    
+                {
                     var isCompleted = location.Check();
                     if (isCompleted)
                     {
