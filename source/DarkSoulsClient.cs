@@ -17,16 +17,20 @@ namespace DSAP
         public DarkSoulsClient()
         {
             ProcessName = "DarkSoulsRemastered";
-            ProcId = Memory.GetProcIdFromExe(ProcessName);
         }
         public bool Connect()
         {
-            Log.Information($"Connecting to {ProcessName}");
+            ProcId = Memory.GetProcIdFromExe(ProcessName);
+
             if (ProcId == 0)
             {
                 Log.Error($"{ProcessName} not found.");
+                IsConnected = false;
                 return false;
             }
+            /* Log first connection */
+            if (!IsConnected)
+                Log.Information($"Connecting to {ProcessName}");
             IsConnected = true;
             return true;
         }
