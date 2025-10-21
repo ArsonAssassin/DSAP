@@ -37,6 +37,67 @@ namespace DSAP
 
             return (ulong)baseAAddress;
         }
+
+
+        public static ulong GetFrpgNetManOffset()
+        {
+            try
+            {
+                var baseAddress = GetBaseAddress();
+                Log.Debug($"Base address: 0x{baseAddress:X}");
+
+                byte[] pattern = { 0x48, 0x83, 0x3d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8b, 0xf1 };
+                string mask = "xxx????xxxx";
+
+                IntPtr getfrpgNetManAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
+
+                if (getfrpgNetManAddress == IntPtr.Zero)
+                {
+                    Log.Error("Failed to find the signature pattern for FrpgNetMan");
+                    throw new Exception("Failed to find the signature pattern");
+                }
+
+                Log.Debug($"Found pattern at: 0x{getfrpgNetManAddress.ToInt64():X}");
+
+                // Read the bytes at the pattern location to verify
+                byte[] bytes = Memory.ReadByteArray((ulong)getfrpgNetManAddress, 11);
+                Log.Debug($"Bytes at pattern: {BitConverter.ToString(bytes)}");
+
+                // Read the 4-byte offset at position 3
+                int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getfrpgNetManAddress + 3), 4), 0);
+                Log.Debug($"Read offset value: 0x{offset:X}");
+
+                // Try different pointer calculation methods
+                IntPtr method1 = new IntPtr(getfrpgNetManAddress.ToInt64() + offset + 7);
+                IntPtr method2 = new IntPtr(getfrpgNetManAddress.ToInt64() + 3 + 4 + offset);
+                IntPtr method3 = new IntPtr(getfrpgNetManAddress.ToInt64() + offset + 8);
+
+                ulong value1 = Memory.ReadULong((ulong)method1);
+                ulong value2 = Memory.ReadULong((ulong)method2);
+                ulong value3 = Memory.ReadULong((ulong)method3);
+
+                Log.Debug($"Method 1 (offset+7): Address=0x{method1.ToInt64():X}, Value=0x{value1:X}");
+                Log.Debug($"Method 2 (offset+3+4): Address=0x{method2.ToInt64():X}, Value=0x{value2:X}");
+                Log.Debug($"Method 3 (offset+8): Address=0x{method3.ToInt64():X}, Value=0x{value3:X}");
+
+                // Check if any method gives a likely valid pointer (usually in a specific memory range)
+ if (value3 > 0x10000000 && value3 < 0x7FFFFFFFFFFF)
+                {
+                    Log.Debug("Using Method 3");
+                    return value3;
+                }
+
+                // If we're here, all methods failed to produce a reasonable pointer
+                Log.Error("Failed to resolve a valid FrpgNetMan pointer with any method");
+                throw new Exception("Failed to get valid FrpgNetMan pointer");
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error in GetFrpgNetManOffset: {ex.Message}");
+                throw;
+            }
+        }
+
         public static ulong GetBaseBOffset()
         {
             var baseAddress = GetBaseAddress();
@@ -603,20 +664,10 @@ namespace DSAP
             var offset = GetEventFlagOffset(flag.Flag).Item1;
             return offset;
         }
-        public static void WriteToFile(string fileName, object content)
+        public bool IsInGame()
         {
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"AP_DarkSoulsRemastered", fileName);
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, true))
-            using (var streamWriter = new StreamWriter(fileStream))
-            using (var jsonWriter = new JsonTextWriter(streamWriter))
-            {
-                var serializer = new JsonSerializer();
-
-                serializer.Serialize(jsonWriter, content);
-            }
+            throw new NotImplementedException();
         }
-
 
         public static (ulong, int) GetEventFlagOffset(int eventFlag)
         {
