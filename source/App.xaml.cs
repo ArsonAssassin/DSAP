@@ -14,6 +14,7 @@ using Serilog;
 using Windows.UI.Core;
 using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
+using System.Threading.Tasks;
 namespace DSAP
 {
     public partial class App : Application
@@ -238,7 +239,7 @@ namespace DSAP
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
         }
 
-        private static void RemoveItems()
+        private static async Task RemoveItems()
         {
             var lots = Helpers.GetItemLots();
             var lotFlags = Helpers.GetItemLotFlags();
@@ -266,13 +267,16 @@ namespace DSAP
                     }
                 }
             };
+            var overwriteTasks = new List<Task>();
             foreach (var lotFlag in lotFlags.Where(x => x.IsEnabled))
             {
-                _ = Task.Run(() =>
+                var overwriteTask = new Task(() =>
                 {
                     Helpers.OverwriteItemLot(lotFlag.Flag, replacementLot);
                 });
+                overwriteTasks.Add(overwriteTask);
             }
+            await Task.WhenAll(overwriteTasks);
             Log.Logger.Information("Finished overwriting items");
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
