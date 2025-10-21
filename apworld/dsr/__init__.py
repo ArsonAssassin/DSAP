@@ -456,8 +456,9 @@ class DSRWorld(World):
         slot_data = {
             "options": {
                 "guaranteed_items": self.options.guaranteed_items.value,
-                "enable_deathlink": self.options.enable_deathlink.value,
+                # "enable_deathlink": self.options.enable_deathlink.value,
                 "enable_masterkey": self.options.enable_masterkey.value
+                "unique_souls": self.options.unique_souls.value
             },
             "seed": self.multiworld.seed_name,  # to verify the server's multiworld
             "slot": self.multiworld.player_name[self.player],  # to connect to server
