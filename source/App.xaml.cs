@@ -14,6 +14,7 @@ using Serilog;
 using Windows.UI.Core;
 using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
+using System.Threading.Tasks;
 namespace DSAP
 {
     public partial class App : Application
@@ -104,7 +105,7 @@ namespace DSAP
             {
                 foreach (var location in batch)
                 {
-                    var isCompleted = global::Archipelago.Core.Util.Helpers.CheckLocation(location);
+                    var isCompleted = location.Check();
                     if (isCompleted)
                     {
                         completed.Add(location);
@@ -183,7 +184,7 @@ namespace DSAP
             var fogWallLocations = Helpers.GetFogWallFlagLocations();
             var miscLocations = Helpers.GetMiscFlagLocations();
 
-            var goalLocation = bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
+            var goalLocation = (Location) bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
             Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
 
             Client.MonitorLocations(bossLocations);
@@ -238,7 +239,7 @@ namespace DSAP
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
         }
 
-        private static void RemoveItems()
+        private static async Task RemoveItems()
         {
             var lots = Helpers.GetItemLots();
             var lotFlags = Helpers.GetItemLotFlags();
@@ -266,18 +267,21 @@ namespace DSAP
                     }
                 }
             };
+            var overwriteTasks = new List<Task>();
             foreach (var lotFlag in lotFlags.Where(x => x.IsEnabled))
             {
-                _ = Task.Run(() =>
+                var overwriteTask = new Task(() =>
                 {
                     Helpers.OverwriteItemLot(lotFlag.Flag, replacementLot);
                 });
+                overwriteTasks.Add(overwriteTask);
             }
+            await Task.WhenAll(overwriteTasks);
             Log.Logger.Information("Finished overwriting items");
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
-            LogItem(e.Item);
+            LogItem(e.Item, 1);
             var itemId = e.Item.Id;
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
             if (itemToReceive != null)
@@ -306,13 +310,13 @@ namespace DSAP
             }
         }
 
-        private static void LogItem(Item item)
+        private static void LogItem(Item item, int quantity)
         {
             var messageToLog = new LogListItem(new List<TextSpan>()
             {
                 new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = Color.FromRgb(255, 255, 255)},
                 new TextSpan(){Text = $"{item.Name}", TextColor = Color.FromRgb(200, 255, 200)},
-                new TextSpan(){Text = $"x{item.Quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
+                new TextSpan(){Text = $"x{quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
             });
             lock (_lockObject)
             {

@@ -135,10 +135,10 @@ class DSRWorld(World):
                 ]})
        
         # Connect Regions
-        def create_connection(from_region: str, to_region: str, rule = None):
+        def create_connection(from_region: str, to_region: str):
             connection = Entrance(self.player, f"{from_region} -> {to_region}", regions[from_region])
             regions[from_region].exits.append(connection)
-            connection.connect(regions[to_region], rule)
+            connection.connect(regions[to_region])
             #print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
         create_connection("Menu", "Undead Asylum Cell")    
         
@@ -456,6 +456,9 @@ class DSRWorld(World):
         slot_data = {
             "options": {
                 "guaranteed_items": self.options.guaranteed_items.value,
+                # "enable_deathlink": self.options.enable_deathlink.value,
+                "enable_masterkey": self.options.enable_masterkey.value
+                "unique_souls": self.options.unique_souls.value
             },
             "seed": self.multiworld.seed_name,  # to verify the server's multiworld
             "slot": self.multiworld.player_name[self.player],  # to connect to server
