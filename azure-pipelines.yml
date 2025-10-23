@@ -9,6 +9,7 @@ parameters:
     default: 'none'
     values:
     - 'none'
+    - 'revision'
     - 'patch'
     - 'minor'
     - 'major'
@@ -115,6 +116,7 @@ stages:
           $major = [int]$versionParts[0]
           $minor = [int]$versionParts[1]
           $patch = [int]$versionParts[2]
+          $revision = [int]$versionParts[3]
           
           # Increment version
           switch ("${{ parameters.versionIncrement }}") {
@@ -129,10 +131,14 @@ stages:
             }
             "patch" {
               $patch++
+              $revision = 0
+            }
+            "revision" {
+              $revision++
             }
           }
           
-          $newVersion = "$major.$minor.$patch"
+          $newVersion = "$major.$minor.$patch.$revision"
           Write-Host "New version: $newVersion"
           
           # Update both version properties
