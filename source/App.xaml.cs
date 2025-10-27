@@ -242,18 +242,13 @@ namespace DSAP
         private static async void RemoveItems()
         {
             var lots = Helpers.GetItemLots();
-            var lotFlags = Helpers.GetItemLotFlags();
-
-            //List<ItemLotFlag> trueLots = new List<ItemLotFlag>();
-            //trueLots = lotFlags.Where(x => x.IsEnabled).ToList();
-            
+            var lotFlags = Helpers.GetItemLotFlags();            
 
             HashSet<int> uniqueLots = new HashSet<int>();
-            //uniqueLots.UnionWith(trueLots.Select(x => x.Flag));
             uniqueLots.UnionWith(lotFlags.Where(x => x.IsEnabled).Select(x => x.Flag));
-            Log.Logger.Debug($"unique item lot count ={uniqueLots.Count}");
+            Log.Logger.Verbose($"unique item lot count ={uniqueLots.Count}");
 
-            Log.Logger.Debug(string.Join(", ", uniqueLots));
+            Log.Logger.Verbose(string.Join(", ", uniqueLots));
 
             //Helpers.WriteToFile("itemLots.json", lots);
 
