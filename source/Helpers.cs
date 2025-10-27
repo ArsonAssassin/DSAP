@@ -391,11 +391,13 @@ namespace DSAP
             lot.Rarity = Memory.ReadByte(startAddress + 0x89);
             return lot;
         }
-        public static void OverwriteItemLot(int itemLotId, ItemLot newItemLot)
+        /* Overwrite all of the item lots at once. */
+        public static void OverwriteItemLots(HashSet<int> itemLotIds, ItemLot newItemLot)
         {
             var startAddress = GetItemLotParamOffset();
             var dataOffset = Memory.ReadUInt(startAddress + 0x4);
             var rowCount = Memory.ReadUShort(startAddress + 0xA);
+            var foundItems = 0;
             const int rowSize = 148; // Size of each ItemLotParam
 
             for (int i = 0; i < rowCount; i++)
@@ -403,8 +405,9 @@ namespace DSAP
                 var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
                 var currentItemLotId = Memory.ReadInt(currentAddress + 0x80);  // GetItemFlagId is at offset 0x80
 
-                if (currentItemLotId == itemLotId)
+                if (itemLotIds.Contains(currentItemLotId))
                 {
+                    foundItems++;
                     // We found the correct item lot, now let's overwrite it
 
                     for (int j = 0; j < 8; j++)
@@ -433,12 +436,12 @@ namespace DSAP
                     }
                     Memory.Write(currentAddress + 0x92, bitfield);
 
-                    Log.Verbose($"ItemLot with GetItemFlagId {itemLotId} has been overwritten.");
-                    
+                    Log.Verbose($"ItemLot with GetItemFlagId {currentItemLotId} has been overwritten at {currentAddress}.");
+
                 }
             }
 
-            Log.Verbose($"ItemLot with GetItemFlagId {itemLotId} not found.");
+            Log.Information($"{foundItems} items overwritten");
         }
         public static void OverwriteSingleItem(ulong address, ItemLotItem newItemLot, int position)
         {

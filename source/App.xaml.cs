@@ -239,12 +239,25 @@ namespace DSAP
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
         }
 
-        private static async Task RemoveItems()
+        private static async void RemoveItems()
         {
             var lots = Helpers.GetItemLots();
             var lotFlags = Helpers.GetItemLotFlags();
 
+            //List<ItemLotFlag> trueLots = new List<ItemLotFlag>();
+            //trueLots = lotFlags.Where(x => x.IsEnabled).ToList();
+            
+
+            HashSet<int> uniqueLots = new HashSet<int>();
+            //uniqueLots.UnionWith(trueLots.Select(x => x.Flag));
+            uniqueLots.UnionWith(lotFlags.Where(x => x.IsEnabled).Select(x => x.Flag));
+            Log.Logger.Debug($"unique item lot count ={uniqueLots.Count}");
+
+            Log.Logger.Debug(string.Join(", ", uniqueLots));
+
             //Helpers.WriteToFile("itemLots.json", lots);
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
             var replacementLot = new ItemLot()
             {
@@ -267,17 +280,10 @@ namespace DSAP
                     }
                 }
             };
-            var overwriteTasks = new List<Task>();
-            foreach (var lotFlag in lotFlags.Where(x => x.IsEnabled))
-            {
-                var overwriteTask = new Task(() =>
-                {
-                    Helpers.OverwriteItemLot(lotFlag.Flag, replacementLot);
-                });
-                overwriteTasks.Add(overwriteTask);
-            }
-            await Task.WhenAll(overwriteTasks);
-            Log.Logger.Information("Finished overwriting items");
+            var overwriteTask = Task.Run(() => Helpers.OverwriteItemLots(uniqueLots, replacementLot));
+            await Task.WhenAll(overwriteTask);
+            watch.Stop();
+            Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
