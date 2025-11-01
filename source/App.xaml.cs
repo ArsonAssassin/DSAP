@@ -25,8 +25,8 @@ namespace DSAP
 
         public static ArchipelagoClient Client { get; set; }
         public static List<DarkSoulsItem> AllItems { get; set; }
-        private static Dictionary<int, ItemLot> ItemLotReplacementMap { get; set; }
-        private static Dictionary<int, ItemLot> ConditionRewardMap { get; set; }
+        private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
+        private static Dictionary<int, ItemLot> ConditionRewardMap = new Dictionary<int, ItemLot>();
         private static readonly object _lockObject = new object();
         private bool IsHandlingDeathlink = false;
         public App()
