@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Armor.json" />
+    <None Remove="Resources\Bonfires.json" />
+    <None Remove="Resources\Bosses.json" />
+    <None Remove="Resources\BossFlags.json" />
+    <None Remove="Resources\Consumables.json" />
+    <None Remove="Resources\Doors.json" />
+    <None Remove="Resources\EnemyDrop.json" />
+    <None Remove="Resources\FogWalls.json" />
+    <None Remove="Resources\ItemLots.json" />
+    <None Remove="Resources\KeyItems.json" />
+    <None Remove="Resources\LastBonfire.json" />
+    <None Remove="Resources\MeleeWeapons.json" />
+    <None Remove="Resources\MiscFlags.json" />
+    <None Remove="Resources\RangedWeapons.json" />
+    <None Remove="Resources\Rings.json" />
+    <None Remove="Resources\Shields.json" />
+    <None Remove="Resources\Spells.json" />
+    <None Remove="Resources\SpellTools.json" />
+    <None Remove="Resources\temp.json" />
+    <None Remove="Resources\Traps.json" />
+    <None Remove="Resources\UpgradeMaterials.json" />
+    <None Remove="Resources\UsableItems.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Armor.json" />
+    <EmbeddedResource Include="Resources\Bonfires.json" />
+    <EmbeddedResource Include="Resources\Bosses.json" />
+    <EmbeddedResource Include="Resources\BossFlags.json" />
+    <EmbeddedResource Include="Resources\Consumables.json" />
+    <EmbeddedResource Include="Resources\Doors.json" />
+    <EmbeddedResource Include="Resources\EnemyDrop.json" />
+    <EmbeddedResource Include="Resources\FogWalls.json" />
+    <EmbeddedResource Include="Resources\ItemLots.json" />
+    <EmbeddedResource Include="Resources\KeyItems.json" />
+    <EmbeddedResource Include="Resources\LastBonfire.json" />
+    <EmbeddedResource Include="Resources\MeleeWeapons.json" />
+    <EmbeddedResource Include="Resources\MiscFlags.json" />
+    <EmbeddedResource Include="Resources\RangedWeapons.json" />
+    <EmbeddedResource Include="Resources\Rings.json" />
+    <EmbeddedResource Include="Resources\Shields.json" />
+    <EmbeddedResource Include="Resources\Spells.json" />
+    <EmbeddedResource Include="Resources\SpellTools.json" />
+    <EmbeddedResource Include="Resources\temp.json" />
+    <EmbeddedResource Include="Resources\Traps.json" />
+    <EmbeddedResource Include="Resources\UpgradeMaterials.json" />
+    <EmbeddedResource Include="Resources\UsableItems.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Archipelago.Core.AvaloniaGUI" Version="0.2.2" />
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+</Project>

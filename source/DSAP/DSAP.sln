@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36603.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSAP", "DSAP.csproj", "{676712B1-6CD9-DE68-539D-DE618F924E2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSAP.Desktop", "..\DSAP.Desktop\DSAP.Desktop.csproj", "{DCB08E85-280E-7DE2-1640-4AC56DB09ECD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{676712B1-6CD9-DE68-539D-DE618F924E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{676712B1-6CD9-DE68-539D-DE618F924E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{676712B1-6CD9-DE68-539D-DE618F924E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{676712B1-6CD9-DE68-539D-DE618F924E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCB08E85-280E-7DE2-1640-4AC56DB09ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCB08E85-280E-7DE2-1640-4AC56DB09ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCB08E85-280E-7DE2-1640-4AC56DB09ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCB08E85-280E-7DE2-1640-4AC56DB09ECD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35E83205-E339-4EAF-9308-1EABFFB8412A}
+	EndGlobalSection
+EndGlobal
