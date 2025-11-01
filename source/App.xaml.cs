@@ -6,6 +6,7 @@ using Archipelago.Core.MauiGUI.ViewModels;
 using Archipelago.Core.Models;
 using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
+using Archipelago.Core.Util.Overlay;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using DSAP.Models;
@@ -24,6 +25,8 @@ namespace DSAP
 
         public static ArchipelagoClient Client { get; set; }
         public static List<DarkSoulsItem> AllItems { get; set; }
+        private static Dictionary<int, ItemLot> ItemLotReplacementMap { get; set; }
+        private static Dictionary<int, ItemLot> ConditionRewardMap { get; set; }
         private static readonly object _lockObject = new object();
         private bool IsHandlingDeathlink = false;
         public App()
@@ -73,6 +76,17 @@ namespace DSAP
             Array.Copy(BitConverter.GetBytes(id), 0, command, 0x47, 4);
 
             var result = Memory.ExecuteCommand(command);
+        }
+
+        public static void HomewardBoneCommand()
+        {
+            var command = Helpers.HomewardBone();
+
+            Array.Copy(BitConverter.GetBytes(Helpers.GetBaseBOffset()), 0, command, 0x3, 4);
+
+            var result = Memory.ExecuteCommand(command);
+
+            Log.Logger.Information($"Forced Load Screen - Items Reset.");
         }
         public static bool IsValidPointer(ulong address)
         {
@@ -135,6 +149,7 @@ namespace DSAP
                 Client.Disconnected -= OnDisconnected;
                 Client.ItemReceived -= Client_ItemReceived;
                 Client.MessageReceived -= Client_MessageReceived;
+                Client.LocationCompleted -= Client_LocationCompleted;
                 if (_deathlinkService != null)
                 {
                     _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
@@ -163,10 +178,16 @@ namespace DSAP
                 Context.ConnectButtonEnabled = true;
                 return;
             }
+
+            if (e.Host == null) e.Host = "localhost:38281";
+            if (e.Slot == null) e.Slot = "Player1";
             await Client.Connect(e.Host, "Dark Souls Remastered");
 
             Client.ItemReceived += Client_ItemReceived;
             Client.MessageReceived += Client_MessageReceived;
+            Client.LocationCompleted += Client_LocationCompleted;
+
+            Client.IntializeOverlayService(new WindowsOverlayService());
 
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
@@ -181,7 +202,7 @@ namespace DSAP
             var itemLocations = Helpers.GetItemLotLocations();
             var bonfireLocations = Helpers.GetBonfireFlagLocations();
             var doorLocations = Helpers.GetDoorFlagLocations();
-            var fogWallLocations = Helpers.GetFogWallFlagLocations();
+            //var fogWallLocations = Helpers.GetFogWallFlagLocations();
             var miscLocations = Helpers.GetMiscFlagLocations();
 
             var goalLocation = (Location) bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
@@ -199,7 +220,7 @@ namespace DSAP
             //{
             //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
             //});
-            RemoveItems();
+
             Context.ConnectButtonEnabled = true;
 
 
@@ -237,48 +258,35 @@ namespace DSAP
                 LogHint(e.Message);
             }
             Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
+            Client.AddOverlayMessage(e.Message.ToString());
+        }
+        private void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
+        {
+            var locid = e.CompletedLocation.Id;
+            /* If the check was in non-itemlot locations, give the player items for it */
+            if (ConditionRewardMap.ContainsKey(locid))
+            {
+                Log.Logger.Debug($"Found location in 'other' checks");
+                var itemLot = ConditionRewardMap[locid];
+                foreach (var  item in itemLot.Items)
+                {
+                    AddItem(item.LotItemCategory, item.LotItemId, 1);
+                    Log.Logger.Debug($"Gave player {item.LotItemId}");
+                }
+            }
+            Log.Logger.Debug($"Location Completed: {e.CompletedLocation.Name} at {e.CompletedLocation.Id}");
         }
 
-        private static async void RemoveItems()
+        private static void ReplaceItems()
         {
-            var lots = Helpers.GetItemLots();
-            var lotFlags = Helpers.GetItemLotFlags();            
-
-            HashSet<int> uniqueLots = new HashSet<int>();
-            uniqueLots.UnionWith(lotFlags.Where(x => x.IsEnabled).Select(x => x.Flag));
-            Log.Logger.Verbose($"unique item lot count ={uniqueLots.Count}");
-
-            Log.Logger.Verbose(string.Join(", ", uniqueLots));
-
-            //Helpers.WriteToFile("itemLots.json", lots);
-
             var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            var replacementLot = new ItemLot()
-            {
-                Rarity = 1,
-                GetItemFlagId = -1,
-                CumulateNumFlagId = -1,
-                CumulateNumMax = 0,
-                Items = new List<ItemLotItem>()
-                {
-                    new ItemLotItem
-                    {
-                        CumulateLotPoint = 0,
-                        CumulateReset = false,
-                        EnableLuck = false,
-                        GetItemFlagId = -1,
-                        LotItemBasePoint = 100,
-                        LotItemCategory = (int)DSItemCategory.Consumables,
-                        LotItemNum = 1,
-                        LotItemId = 370
-                    }
-                }
-            };
-            var overwriteTask = Task.Run(() => Helpers.OverwriteItemLots(uniqueLots, replacementLot));
-            await Task.WhenAll(overwriteTask);
+            Helpers.OverwriteItemLots(ItemLotReplacementMap);
             watch.Stop();
+
             Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
+
+            HomewardBoneCommand();
+            Log.Logger.Information($"After Load screen, new item lots will be live.");
         }
         private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
         {
@@ -315,9 +323,9 @@ namespace DSAP
         {
             var messageToLog = new LogListItem(new List<TextSpan>()
             {
-                new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = Color.FromRgb(255, 255, 255)},
-                new TextSpan(){Text = $"{item.Name}", TextColor = Color.FromRgb(200, 255, 200)},
-                new TextSpan(){Text = $"x{quantity.ToString()}", TextColor = Color.FromRgb(200, 255, 200)}
+                new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = Microsoft.Maui.Graphics.Color.FromRgb(255, 255, 255)},
+                new TextSpan(){Text = $"{item.Name}", TextColor = Microsoft.Maui.Graphics.Color.FromRgb(200, 255, 200)},
+                new TextSpan(){Text = $"x{quantity.ToString()}", TextColor = Microsoft.Maui.Graphics.Color.FromRgb(200, 255, 200)}
             });
             lock (_lockObject)
             {
@@ -338,7 +346,7 @@ namespace DSAP
             List<TextSpan> spans = new List<TextSpan>();
             foreach (var part in message.Parts)
             {
-                spans.Add(new TextSpan() { Text = part.Text, TextColor = Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });
+                spans.Add(new TextSpan() { Text = part.Text, TextColor = Microsoft.Maui.Graphics.Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) });
             }
             lock (_lockObject)
             {
@@ -352,6 +360,32 @@ namespace DSAP
         {
             Log.Logger.Information("Connected to Archipelago");
             Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
+            /* Make ready to receive items */
+
+            /* If we haven't yet initialized the dictionary, do so. */
+            if (ItemLotReplacementMap.Count == 0)
+            {
+                ItemLotReplacementMap = Helpers.BuildFlagToLotMap(Helpers.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList());
+                var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
+                nonItemLotFlags.AddRange(Helpers.GetBonfireFlags().Cast<EventFlag>());
+                nonItemLotFlags.AddRange(Helpers.GetDoorFlags().Cast<EventFlag>());
+                //nonItemLotFlags.AddRange(Helpers.GetFogWallFlags().Cast<EventFlag>());
+                nonItemLotFlags.AddRange(Helpers.GetMiscFlags().Cast<EventFlag>());
+
+                //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();
+                Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
+                foreach (var item in nonItemLotFlags) Log.Logger.Information($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
+                //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
+                ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags);
+
+                foreach (var pair in ConditionRewardMap) Log.Logger.Warning($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
+                Log.Logger.Warning($"ConditionRewardMap has {ConditionRewardMap.Count} members");
+
+            }
+            /* Set to only receive remote items and starting inventory */
+            Client.CurrentSession.ConnectionInfo.UpdateConnectionOptions(Client.CurrentSession.ConnectionInfo.Tags, Archipelago.MultiClient.Net.Enums.ItemsHandlingFlags.IncludeStartingInventory);
+            ReplaceItems();
+
         }
 
         private static void OnDisconnected(object sender, EventArgs args)
