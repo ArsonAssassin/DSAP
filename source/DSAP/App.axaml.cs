@@ -170,6 +170,13 @@ public partial class App : Application
         if (e.Slot == null) e.Slot = "Player1";
         await Client.Connect(e.Host, "Dark Souls Remastered");
 
+        if (!Client.IsConnected)
+        {
+            Log.Logger.Warning("Connect to AP Server failed");
+            Context.ConnectButtonEnabled = true;
+            return;
+
+        }
         Client.ItemReceived += Client_ItemReceived;
         Client.MessageReceived += Client_MessageReceived;
         Client.LocationCompleted += Client_LocationCompleted;
@@ -178,6 +185,13 @@ public partial class App : Application
 
         await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
+        if (!Client.IsLoggedIn)
+        {
+            Log.Logger.Warning("Login failed");
+            Context.ConnectButtonEnabled = true;
+            return;
+
+        }
         if (Client.Options.ContainsKey("enable_deathlink") && (bool)Client.Options["enable_deathlink"])
         {
             _deathlinkService = Client.EnableDeathLink();
@@ -341,7 +355,7 @@ public partial class App : Application
             });
         }
     }
-    private static void OnConnected(object sender, EventArgs args)
+    private static void OnConnected(object sender, ConnectionChangedEventArgs args)
     {
         Log.Logger.Information("Connected to Archipelago");
         Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
@@ -359,12 +373,12 @@ public partial class App : Application
 
             //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();
             Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
-            foreach (var item in nonItemLotFlags) Log.Logger.Information($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
+            foreach (var item in nonItemLotFlags) Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
             //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
             ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags);
 
-            foreach (var pair in ConditionRewardMap) Log.Logger.Warning($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
-            Log.Logger.Warning($"ConditionRewardMap has {ConditionRewardMap.Count} members");
+            foreach (var pair in ConditionRewardMap) Log.Logger.Verbose($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
+            Log.Logger.Debug($"ConditionRewardMap has {ConditionRewardMap.Count} members");
 
         }
         /* Set to only receive remote items and starting inventory */
