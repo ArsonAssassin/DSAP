@@ -61,6 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Archipelago.Core" Version="1.1.13" />
     <PackageReference Include="Archipelago.Core.AvaloniaGUI" Version="0.2.2" />
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />

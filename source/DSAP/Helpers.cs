@@ -17,6 +17,18 @@ namespace DSAP
 {
     public class Helpers
     {
+        private static ItemLotItem prismStoneLotItem = new ItemLotItem
+        {
+            CumulateLotPoint = 0,
+            CumulateReset = false,
+            EnableLuck = false,
+            GetItemFlagId = -1,
+            LotItemBasePoint = 100,
+            LotItemCategory = (int)DSAP.Enums.DSItemCategory.Consumables,
+            LotItemNum = 1,
+            LotItemId = 370
+        };
+
         public static ulong GetBaseAddress()
         {
             var address = Memory.GetBaseAddress("DarkSoulsRemastered");
@@ -355,16 +367,18 @@ namespace DSAP
             slotDataTask.Wait();
             var slotData = slotDataTask.Result;
 
+            var addonitems = 0;
+
             /* Get locationsId and locationsTarget into lists */
             List<int?> locationsIdList = new List<int?>();
-            List<int?> locationsTargetList = new List<int?>();
+            List<int> locationsTargetList = new List<int>();
 
             if (slotData.TryGetValue("locationsId", out object locationsId))
             {
                 locationsIdList.AddRange(JsonConvert.DeserializeObject<int?[]>(locationsId.ToString()));
                 if (slotData.TryGetValue("locationsTarget", out object locationsTarget))
                 {
-                    locationsTargetList.AddRange(JsonConvert.DeserializeObject<int?[]>(locationsTarget.ToString()));
+                    locationsTargetList.AddRange(JsonConvert.DeserializeObject<int[]>(locationsTarget.ToString()));
                 }
             }
 
@@ -375,102 +389,110 @@ namespace DSAP
             }
             else
             {
+                
                 /* Iterate over each pair of entries in the pair of lists */
                 for (int i = 0; i < locationsIdList.Count; i++)
                 {
-                    int? target = locationsTargetList[i];
+                    int target = locationsTargetList[i];
                     int? locId = locationsIdList[i];
-
-                    if (locId != null && target != null && target != 0)
+                    if (locId != null) /* full list of locations in our game */
                     {
-                        /* Found an item of our own, located in our own game. 
-                         * Validate that it's in the eventflags we've been given, and find the matching item. */
                         EventFlag? lot = eventflags.Find(x => x.Id == locId);
-                        DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
-                        if (lot != null && item != null)
+                        if (lot != null) /* found a location in our "item lots" */
                         {
-                            Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{item.Id}({item.Name})");
-                            var newitem = new ItemLotItem
+                            ItemLotItem newLotItem = new ItemLotItem { };
+                            if (target != 0) /* found an item in our game  */
                             {
-                                CumulateLotPoint = 0,
-                                CumulateReset = false,
-                                EnableLuck = false,
-                                GetItemFlagId = -1,
-                                LotItemBasePoint = 100,
-                                LotItemCategory = (int)item.Category,
-                                LotItemNum = 1,
-                                LotItemId = item.Id
-                            };
-                            /* If it's already in the mapping, add the item to the list of items in the existing lot */
-                            if (result.ContainsKey(lot.Flag))
-                                result[lot.Flag].Items.Add(newitem);
-                            else
-                            {
-                                /* add the found location->item to the replacement dictionary */
-                                var newitemlot = new ItemLot
+                                /* Found an item of our own, located in our own game. 
+                                 * Validate that it's in the eventflags we've been given, and find the matching item. */
+                                DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
+                                if (item != null)
                                 {
-                                    Rarity = 1,
-                                    GetItemFlagId = -1,
-                                    CumulateNumFlagId = -1,
-                                    CumulateNumMax = 0,
-                                    Items = new List<ItemLotItem>([newitem])
-                                };
-                                result.Add(lot.Flag, newitemlot);
+                                    Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{item.Id}({item.Name})");
+                                    newLotItem = new ItemLotItem { 
+                                        CumulateLotPoint = 0,
+                                        CumulateReset = false,
+                                        EnableLuck = false,
+                                        GetItemFlagId = -1,
+                                        LotItemBasePoint = 100,
+                                        LotItemCategory = (int)item.Category,
+                                        LotItemNum = 1,
+                                        LotItemId = item.Id
+                                    };
+                                }
+                                else
+                                {
+                                    Log.Logger.Warning($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                                    Log.Logger.Warning($"Item at loc {locId} replaced with prism stone instead.");
+                                    newLotItem = prismStoneLotItem;
+                                }
                             }
+                            else /* item not in own game, put a prism stone instead */
+                            {
+                                Log.Logger.Verbose($"Item {i} target = {target}");
+                                newLotItem = prismStoneLotItem;
+                            }
+                            
+                            /* add the found location->item to the replacement dictionary */
+                            var newitemlot = new ItemLot
+                            {
+                                Rarity = 1,
+                                GetItemFlagId = -1,
+                                CumulateNumFlagId = -1,
+                                CumulateNumMax = 0,
+                                Items = []
+                            };
+                            if (!result.TryAdd(lot.Flag, newitemlot))
+                                addonitems++;
+                            result[lot.Flag].Items.Add(newLotItem);
                         }
-                        else
-                        {
-                            Log.Logger.Verbose($"Item {i} {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                        }
-
+                        
                     }
                 }
             }
             Log.Logger.Debug($"replacement dict size = {result.Count}");
+            Log.Logger.Debug($" {addonitems} addonitems");
 
-            /* Then, anything that is in this eventflags list, but isn't an item for our own world, replace with prism stones */
 
-            /* prism stone lot */
-            var defaultLot = new ItemLot()
+            /* Then, anything that is in this eventflags list, but wasn't an AP location sent to us, replace with prism stones */
+            Dictionary<int, int> addedItems = [];
+            foreach (var flag in eventflags.Where(x => !result.ContainsKey(x.Flag)).Select(x => x.Flag))
             {
-                Rarity = 1,
-                GetItemFlagId = -1,
-                CumulateNumFlagId = -1,
-                CumulateNumMax = 0,
-                Items = new List<ItemLotItem>()
-                    {
-                        new ItemLotItem
-                        {
-                            CumulateLotPoint = 0,
-                            CumulateReset = false,
-                            EnableLuck = false,
-                            GetItemFlagId = -1,
-                            LotItemBasePoint = 100,
-                            LotItemCategory = (int)DSAP.Enums.DSItemCategory.Consumables,
-                            LotItemNum = 1,
-                            LotItemId = 370
-                        }
-                    }
-            };
-
-            HashSet<int> uniqueLots = new HashSet<int>();
-            uniqueLots.UnionWith(eventflags.Select(x => x.Flag));
-            Log.Logger.Verbose($"unique item lot count ={uniqueLots.Count}");
-
-            Log.Logger.Verbose(string.Join(", ", uniqueLots));
-
-            foreach (var lot in uniqueLots)
-            {
-                result.TryAdd(lot, defaultLot);
+                addedItems.TryAdd(flag, 0);
+                addedItems[flag] += 1;
             }
+            foreach (var pair in addedItems)
+            {
+                int flag = pair.Key;
+                result.TryAdd(pair.Key, new ItemLot()
+                {
+                    Rarity = 1,
+                    GetItemFlagId = -1,
+                    CumulateNumFlagId = -1,
+                    CumulateNumMax = 0,
+                    Items = []
+                });
+                for (int i = 0; i < pair.Value; i++)
+                {
+                    result[flag].Items.Add(prismStoneLotItem);
+                }
+                Log.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
+            }
+
             return result;
         }
 
-        /* Build a mapping of the location id values in eventflags to the ItemLot that should come from there, for items in our own game.
-         * This is used for detecting non-item lot conditions in our own game (like a door opening) and rewarding the player with that item.
-         * This is a separate method from the above similar method for two reasons:
-         *  1) It needs to fill in EventFlag.id as the key instead of EventFlag.flag, and
-         *  2) It doesn't need the "prism stone" fallback */
+        /// <summary>
+        /// Build a mapping of the location id values in eventflags to the ItemLot that should come from there, for items in our own game.
+        /// </summary>
+        /// <details>
+        /// This is used for detecting non-item lot conditions in our own game(like a door opening) and rewarding the player with that item.
+        /// This is a separate method from the above similar method for two reasons:
+        ///    1) It needs to fill in EventFlag.id as the key instead of EventFlag.flag, and
+        ///    2) It doesn't need the "prism stone" fallback */
+        /// </details>
+        /// <param name="eventflags">A list of location flags of which items will be found.</param>
+        /// <returns></returns>
         public static Dictionary<int, ItemLot> BuildIdToLotMap(List<EventFlag> eventflags)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
@@ -607,7 +629,10 @@ namespace DSAP
             lot.Rarity = Memory.ReadByte(startAddress + 0x89);
             return lot;
         }
-        /* Overwrite all of the item lots at once. */
+        /// <summary>
+        ///  Overwrite all of the item lots at once. 
+        /// </summary>
+        /// <param name="itemLotIds">A map of location ids to item Lots that replace them</param>
         public static void OverwriteItemLots(Dictionary<int, ItemLot> itemLotIds)
         {
             var startAddress = GetItemLotParamOffset();
@@ -618,12 +643,24 @@ namespace DSAP
             Log.Debug($"ItemParam list rowcount='{rowCount}'");
             var tasks = new List<Task>();
 
+            /* Reset the "number of itemlots placed" per id */
+            foreach (var pair in itemLotIds)
+            {
+                pair.Value.numPlaced = 0;
+            }
+
             for (int i = 0; i < rowCount; i++)
             {
                 var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
                 var currentItemLotId = Memory.ReadInt(currentAddress + 0x80);  // GetItemFlagId is at offset 0x80
 
-                    
+                /* Only if we are using Verbose logging, read in every ItemLotParam to print it out. */
+                if (Log.Logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
+                {
+                    var itemlotparams = Memory.ReadObject<ItemLotParam>(currentAddress);
+                    Log.Verbose($"ilp '{i}'=" + itemlotparams.ToString());
+                }
+
                 ItemLot newItemLot;
                 if (itemLotIds.TryGetValue(currentItemLotId, out newItemLot))
                 {
@@ -631,12 +668,28 @@ namespace DSAP
                     foundItems++;
                     // We found the correct item lot or are using the default, now let's overwrite it
 
+                    /* Check if we still have items to replace this location with */
+                    short replaceidx = newItemLot.numPlaced;
+                    newItemLot.numPlaced++;
+                    Log.Verbose($"Incremented lot id numplaced id={currentItemLotId}, curr = {itemLotIds[currentItemLotId].numPlaced}");
+
+                    if (newItemLot.numPlaced > newItemLot.Items.Count)
+                    {
+                        Log.Warning($"More items detected than are placable, for lot id={currentItemLotId}");
+                        replaceidx = 0;
+                        continue; /* don't place anything there */
+                    }
+
+
                     /* Parallelize the writing of memory to many tasks for speed-up. */
                     tasks.Add(Task.Run(() =>
                     {
+                        try
+                        {
+
                         for (int j = 0; j < 8; j++)
                         {
-                            OverwriteSingleItem(currentAddress, newItemLot.Items[0], j);
+                            OverwriteSingleItem(currentAddress, newItemLot.Items[replaceidx], j);
                             //RemoveSingleItem(currentAddress, j);
                         }
 
@@ -659,10 +712,15 @@ namespace DSAP
                             // If item doesn't exist, its bits remain 0
                         }
                         Memory.Write(currentAddress + 0x92, bitfield);
-                    }));
-                        
 
-                    Log.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} has been overwritten at {currentAddress} to give {newItemLot.Items[0].LotItemId} in {newItemLot.Items[0].LotItemCategory}.");
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Warning($"658 e:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
+                        }
+                    }));
+
+                    Log.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} has been overwritten at {currentAddress} to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
                 }
                 else
                 {
@@ -670,6 +728,15 @@ namespace DSAP
                 }
 
             }
+            foreach (var pair in itemLotIds)
+            {
+                var lot = pair.Value;
+                if (lot.Items.Count != lot.numPlaced)
+                {
+                    Log.Warning($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
+                }
+            }
+            
 
             Task.WaitAll(tasks.ToArray());
 

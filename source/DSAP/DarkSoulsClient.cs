@@ -12,7 +12,7 @@ namespace DSAP
     public class DarkSoulsClient : IGameClient
     {
         public bool IsConnected { get; set; }
-        public int ProcId { get; set; }
+        public int ProcId { get; set; } = 0;
         public string ProcessName { get; set; }
         public DarkSoulsClient()
         {
@@ -20,7 +20,16 @@ namespace DSAP
         }
         public bool Connect()
         {
-            ProcId = Memory.GetProcIdFromExe(ProcessName);
+            try
+            {
+                ProcId = Memory.GetProcIdFromExe(ProcessName);
+            }
+            catch
+            {
+                Log.Error($"{ProcessName} not found.");
+                IsConnected = false;
+                return false;
+            }
 
             if (ProcId == 0)
             {

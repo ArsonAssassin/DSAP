@@ -31,7 +31,7 @@ public partial class App : Application
 {
     public static MainWindowViewModel Context;
     private DeathLinkService _deathlinkService;
-
+    private const bool DEBUG_TXTLOG = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
@@ -66,6 +66,7 @@ public partial class App : Application
     public void Start()
     {
         Context = new MainWindowViewModel("0.6.2");
+        
         Context.ClientVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
         Context.ConnectClicked += Context_ConnectClicked;
         Context.CommandReceived += (e, a) =>
@@ -73,6 +74,7 @@ public partial class App : Application
             if (string.IsNullOrWhiteSpace(a.Command)) return;
             Client?.SendMessage(a.Command);
         };
+
         Context.ConnectButtonEnabled = true;
 
     }
@@ -129,6 +131,19 @@ public partial class App : Application
     private async void Context_ConnectClicked(object? sender, ConnectClickedEventArgs e)
     {
         Context.ConnectButtonEnabled = false;
+
+        // debugging
+        if (DEBUG_TXTLOG)
+        {
+            Log.CloseAndFlush();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.File("log.txt",
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .CreateLogger();
+        }
+
+
         Log.Logger.Information("Connecting...");
         if (Client != null)
         {
@@ -145,6 +160,7 @@ public partial class App : Application
             Client.CancelMonitors();
         }
         DarkSoulsClient client = new DarkSoulsClient();
+
         var connected = client.Connect();
         if (!connected)
         {
@@ -222,6 +238,11 @@ public partial class App : Application
         //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
         //});
 
+        if (DEBUG_TXTLOG)
+        { 
+            Log.CloseAndFlush();
+        }
+
         Context.ConnectButtonEnabled = true;
 
 
@@ -283,9 +304,11 @@ public partial class App : Application
         watch.Stop();
 
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
+        Client.AddOverlayMessage($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
 
         HomewardBoneCommand();
         Log.Logger.Information($"After Load screen, new item lots will be live.");
+        Client.AddOverlayMessage($"After Load screen, new item lots will be live.");
     }
     private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
     {
@@ -373,7 +396,10 @@ public partial class App : Application
 
             //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();
             Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
-            foreach (var item in nonItemLotFlags) Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
+            foreach (var item in nonItemLotFlags)
+            {
+                Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
+            }
             //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
             ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags);
 
