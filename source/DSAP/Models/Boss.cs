@@ -1,5 +1,5 @@
 ﻿using Archipelago.Core.Util;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Archipelago.Core.Json;
 using System;
 using System.Collections.Generic;

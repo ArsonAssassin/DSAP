@@ -13,7 +13,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using DSAP.Models;
-using Newtonsoft.Json;
 using ReactiveUI;
 using Serilog;
 using System;
@@ -21,6 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static DSAP.Enums;
 using Color = Avalonia.Media.Color;
 using Location = Archipelago.Core.Models.Location;
@@ -196,8 +197,9 @@ public partial class App : Application
         Client.ItemReceived += Client_ItemReceived;
         Client.MessageReceived += Client_MessageReceived;
         Client.LocationCompleted += Client_LocationCompleted;
+        //Client.EnableLocationsCondition = () => Helpers.IsInGame();
 
-        Client.IntializeOverlayService(new WindowsOverlayService());
+        //Client.IntializeOverlayService(new OverlayService());
 
         await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
@@ -225,12 +227,8 @@ public partial class App : Application
         var goalLocation = (Location)bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
         Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
 
-        Client.MonitorLocations(bossLocations);
-        Client.MonitorLocations(itemLocations);
-        Client.MonitorLocations(bonfireLocations);
-        Client.MonitorLocations(doorLocations);
-        // Client.MonitorLocations(fogWallLocations);
-        Client.MonitorLocations(miscLocations);
+        var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(miscLocations).ToList();
+        Client.MonitorLocations(fullLocationsList);
 
 
         //Helpers.MonitorLastBonfire((lastBonfire) =>
@@ -278,7 +276,7 @@ public partial class App : Application
         {
             LogHint(e.Message);
         }
-        Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
+        Log.Logger.Information(JsonSerializer.Serialize(e.Message, Helpers.GetJsonOptions()));
         Client.AddOverlayMessage(e.Message.ToString());
     }
     private void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)

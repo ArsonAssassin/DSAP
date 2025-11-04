@@ -1,7 +1,8 @@
 ﻿using Archipelago.Core.Models;
 using Archipelago.Core.Util;
 using DSAP.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Serilog;
 using System;
 using System.Collections;
@@ -375,10 +376,10 @@ namespace DSAP
 
             if (slotData.TryGetValue("locationsId", out object locationsId))
             {
-                locationsIdList.AddRange(JsonConvert.DeserializeObject<int?[]>(locationsId.ToString()));
+                locationsIdList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsId.ToString()));
                 if (slotData.TryGetValue("locationsTarget", out object locationsTarget))
                 {
-                    locationsTargetList.AddRange(JsonConvert.DeserializeObject<int[]>(locationsTarget.ToString()));
+                    locationsTargetList.AddRange(JsonSerializer.Deserialize<int[]>(locationsTarget.ToString()));
                 }
             }
 
@@ -508,10 +509,10 @@ namespace DSAP
 
             if (slotData.TryGetValue("locationsId", out object locationsId))
             {
-                locationsIdList.AddRange(JsonConvert.DeserializeObject<int?[]>(locationsId.ToString()));
+                locationsIdList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsId.ToString()));
                 if (slotData.TryGetValue("locationsTarget", out object locationsTarget))
                 {
-                    locationsTargetList.AddRange(JsonConvert.DeserializeObject<int?[]>(locationsTarget.ToString()));
+                    locationsTargetList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsTarget.ToString()));
                 }
             }
 
@@ -675,9 +676,17 @@ namespace DSAP
 
                     if (newItemLot.numPlaced > newItemLot.Items.Count)
                     {
-                        Log.Warning($"More items detected than are placable, for lot id={currentItemLotId}");
-                        replaceidx = 0;
-                        continue; /* don't place anything there */
+                        if (currentItemLotId == (int)Enums.SpecialItemLotIds.KeyToTheSeal
+                         || currentItemLotId == (int)Enums.SpecialItemLotIds.WhiteSignSoapstone)
+                        {
+                            Log.Debug($"Special lot detected, sending to additional locations for lot id={currentItemLotId}");
+                            replaceidx = 0;
+                        }
+                        else
+                        {
+                            Log.Warning($"More items detected than are placable, for lot id={currentItemLotId}");
+                            continue; /* don't place anything there */
+                        }
                     }
 
 
@@ -733,7 +742,11 @@ namespace DSAP
                 var lot = pair.Value;
                 if (lot.Items.Count != lot.numPlaced)
                 {
-                    Log.Warning($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
+                    if (pair.Key != (int)Enums.SpecialItemLotIds.KeyToTheSeal
+                     && pair.Key != (int)Enums.SpecialItemLotIds.WhiteSignSoapstone)
+                    {
+                        Log.Warning($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
+                    }
                 }
             }
             
@@ -837,116 +850,118 @@ namespace DSAP
         }
         public static List<DarkSoulsItem> GetConsumables()
         {
+            
+
             var json = OpenEmbeddedResource("DSAP.Resources.Consumables.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = System.Text.Json.JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetUpgradeMaterials()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.UpgradeMaterials.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetKeyItems()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.KeyItems.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetRings()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Rings.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetSpells()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Spells.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetShields()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Shields.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetTraps()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Traps.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetRangedWeapons()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.RangedWeapons.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetMeleeWeapons()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.MeleeWeapons.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetArmor()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Armor.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetSpellTools()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.SpellTools.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetUsableItems()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.UsableItems.json");
-            var list = JsonConvert.DeserializeObject<List<DarkSoulsItem>>(json);
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
         public static List<ItemLotFlag> GetItemLotFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.ItemLots.json");
-            var list = JsonConvert.DeserializeObject<List<ItemLotFlag>>(json);
+            var list = JsonSerializer.Deserialize<List<ItemLotFlag>>(json, GetJsonOptions());
             return list;
         }
         public static List<BossFlag> GetBossFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.BossFlags.json");
-            var list = JsonConvert.DeserializeObject<List<BossFlag>>(json);
+            var list = JsonSerializer.Deserialize<List<BossFlag>>(json, GetJsonOptions());
             return list;
         }
         public static List<BonfireFlag> GetBonfireFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Bonfires.json");
-            var list = JsonConvert.DeserializeObject<List<BonfireFlag>>(json);
+            var list = JsonSerializer.Deserialize<List<BonfireFlag>>(json, GetJsonOptions());
             return list;
         }
         public static List<DoorFlag> GetDoorFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Doors.json");
-            var list = JsonConvert.DeserializeObject<List<DoorFlag>>(json);
+            var list = JsonSerializer.Deserialize<List<DoorFlag>>(json, GetJsonOptions());
             return list;
         }
         public static List<FogWallFlag> GetFogWallFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.FogWalls.json");
-            var list = JsonConvert.DeserializeObject<List<FogWallFlag>>(json);
+            var list = JsonSerializer.Deserialize<List<FogWallFlag>>(json, GetJsonOptions());
             return list;
         }
         public static List<EventFlag> GetMiscFlags()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.MiscFlags.json");
-            var list = JsonConvert.DeserializeObject<List<EventFlag>>(json);
+            var list = JsonSerializer.Deserialize<List<EventFlag>>(json, GetJsonOptions());
             return list;
         }
         public static List<LastBonfire> GetLastBonfireList()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.LastBonfire.json");
-            var list = JsonConvert.DeserializeObject<List<LastBonfire>>(json);
+            var list = JsonSerializer.Deserialize<List<LastBonfire>>(json, GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetAllItems()
@@ -1074,7 +1089,7 @@ namespace DSAP
         public static List<Boss> GetBosses()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Bosses.json");
-            var list = JsonConvert.DeserializeObject<List<Boss>>(json);
+            var list = JsonSerializer.Deserialize<List<Boss>>(json);
             return list;
         }
         public static string OpenEmbeddedResource(string resourceName)
@@ -1156,6 +1171,10 @@ namespace DSAP
             };
 
             return x;
+        }
+        protected internal static JsonSerializerOptions GetJsonOptions()
+        {
+            return new JsonSerializerOptions();
         }
 
     }
