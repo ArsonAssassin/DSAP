@@ -6,6 +6,7 @@ using Archipelago.Core.Models;
 using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using Archipelago.Core.Util.Overlay;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Avalonia;
@@ -172,6 +173,7 @@ public partial class App : Application
 
         Client = new ArchipelagoClient(client);
 
+        Client.itemsFlags = ItemsHandlingFlags.IncludeStartingInventory;
         AllItems = Helpers.GetAllItems();
         Client.Connected += OnConnected;
         Client.Disconnected += OnDisconnected;
@@ -406,7 +408,6 @@ public partial class App : Application
 
         }
         /* Set to only receive remote items and starting inventory */
-        Client.CurrentSession.ConnectionInfo.UpdateConnectionOptions(Client.CurrentSession.ConnectionInfo.Tags, Archipelago.MultiClient.Net.Enums.ItemsHandlingFlags.IncludeStartingInventory);
         ReplaceItems();
 
     }
