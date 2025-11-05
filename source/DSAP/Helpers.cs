@@ -18,6 +18,7 @@ namespace DSAP
 {
     public class Helpers
     {
+        private static ulong baseBCache = 0; /* cache the BaseB pointer, to save on scanning */
         private static ItemLotItem prismStoneLotItem = new ItemLotItem
         {
             CumulateLotPoint = 0,
@@ -114,6 +115,10 @@ namespace DSAP
 
         public static ulong GetBaseBOffset()
         {
+            if (baseBCache != 0)
+            {
+                return baseBCache;
+            }
             var baseAddress = GetBaseAddress();
             byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
             string mask = "xxx????xxxxxxxxx";
@@ -130,6 +135,7 @@ namespace DSAP
 
             ulong pointerValue = Memory.ReadULong((ulong)baseBAddress);
 
+            baseBCache = pointerValue;
             return pointerValue; 
 
         }
@@ -988,9 +994,25 @@ namespace DSAP
             var offset = GetEventFlagOffset(flag.Flag).Item1;
             return offset;
         }
-        public bool IsInGame()
+        public static bool IsInGame()
         {
-            throw new NotImplementedException();
+            if (getChrType() != 0)
+                return true;
+            return false;
+        }        
+        public static ulong getChrType()
+        {
+            if (GetBaseBOffset() != 0)
+            {
+                var next = OffsetPointer(baseBCache, 0x10);
+                var pointer = Memory.ReadULong(next);
+                if (pointer != 0)
+                {
+                    next = OffsetPointer(pointer, 0xa4);
+                    return Memory.ReadUInt(next);
+                }   
+            }
+            return 0; 
         }
 
         public static (ulong, int) GetEventFlagOffset(int eventFlag)

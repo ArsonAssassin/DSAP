@@ -173,7 +173,6 @@ public partial class App : Application
 
         Client = new ArchipelagoClient(client);
 
-        Client.itemsFlags = ItemsHandlingFlags.IncludeStartingInventory;
         AllItems = Helpers.GetAllItems();
         Client.Connected += OnConnected;
         Client.Disconnected += OnDisconnected;
@@ -199,11 +198,11 @@ public partial class App : Application
         Client.ItemReceived += Client_ItemReceived;
         Client.MessageReceived += Client_MessageReceived;
         Client.LocationCompleted += Client_LocationCompleted;
-        //Client.EnableLocationsCondition = () => Helpers.IsInGame();
+        Client.EnableLocationsCondition = () => Helpers.IsInGame();
 
         //Client.IntializeOverlayService(new OverlayService());
 
-        await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+        await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
 
         if (!Client.IsLoggedIn)
         {
@@ -306,9 +305,19 @@ public partial class App : Application
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
         Client.AddOverlayMessage($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
 
-        HomewardBoneCommand();
-        Log.Logger.Information($"After Load screen, new item lots will be live.");
-        Client.AddOverlayMessage($"After Load screen, new item lots will be live.");
+        Log.Logger.Debug($"Player in game? {(Helpers.IsInGame() ? "yes" : "no")}");
+        Log.Logger.Debug($"chrtype = {Helpers.getChrType()}");
+        if (Helpers.IsInGame())
+        {
+            HomewardBoneCommand();
+            Log.Logger.Information($"After Load screen, new item lots will be live.");
+            Client.AddOverlayMessage($"After Load screen, new item lots will be live.");
+        }
+        else
+        {
+            Log.Logger.Information($"You are now safe to load your save.");
+            Client.AddOverlayMessage($"You are now safe to load you save.");
+        }
     }
     private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
     {
