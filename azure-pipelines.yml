@@ -47,36 +47,6 @@ stages:
             Write-Error "No directory found in apworld folder"
             exit 1
           }
-
-    - task: PowerShell@2
-      name: CleanAndPackage
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Remove __pycache__ directories
-          Get-ChildItem -Path "$(sourcePath)/$projectName" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
-          
-          # Create zip file
-          $projectName = "$(FindSourceDirectory.folderName)"
-          $tempZipPath = "$(Build.ArtifactStagingDirectory)/$projectName.zip"
-          $finalPath = "$(Build.ArtifactStagingDirectory)/$projectName.apworld"
-          
-          # Create the zip file first
-          #DO NOT USE powershell adds incorrect slashes for linux filesystems
-          ##Compress-Archive -Path "$(sourcePath)" -DestinationPath $tempZipPath
-          Write-Host "TempZipPath: $tempZipPath"
-          Write-Host "projectName: $projectName"
-          Write-Host "sourcePath: $(sourcePath)"
-
-          tar -v -a -c -f $tempZipPath -C "$(Build.SourcesDirectory)/apworld" "$projectName"
-          Write-Host "##vso[task.setvariable variable=projectName]$projectName"
-          # Rename to .apworld
-          Move-Item -Path $tempZipPath -Destination $finalPath -Force
-          
-          # List contents of the artifact staging directory for debugging
-          Write-Host "Files in Artifact Staging Directory after creating .apworld:"
-          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse | ForEach-Object { Write-Host $_.FullName }
-
     # Build and Package Application
     - task: NuGetToolInstaller@1
 
@@ -148,7 +118,6 @@ stages:
           
           # Set version for later tasks
           Write-Host "##vso[task.setvariable variable=newVersion;isOutput=true]$newVersion"
-
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
@@ -222,7 +191,66 @@ stages:
           $projectName = [System.IO.Path]::GetFileNameWithoutExtension($slnFile.Name)
           Write-Host "Project name: $projectName"
           Write-Host "##vso[task.setvariable variable=projectName]$projectName"
+    - task: PowerShell@2
+      name: GenerateManifest
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Get version without revision (major.minor.patch only)
+          $fullVersion = "$(IncrementVersion.newVersion)"
+          $versionParts = $fullVersion.Split('.')
+          $worldVersion = "$($versionParts[0]).$($versionParts[1]).$($versionParts[2])"
+          
+          Write-Host "Creating manifest with world_version: $worldVersion"
+          
+          # Create manifest object
+          $manifest = @{
+            minimum_ap_version = "0.6.4"
+            world_version = $worldVersion
+            authors = @("ArsonAssassin", "Noka")
+            version = 7
+            compatible_version = 7
+            game = "Dark Souls Remastered"
+          }
+          
+          # Convert to JSON and save
+          $projectName = "$(FindSourceDirectory.folderName)"
+          $manifestPath = "$(Build.SourcesDirectory)/apworld/$projectName/archipelago.json"
+          
+          Write-Host "Saving manifest to: $manifestPath"
+          $manifest | ConvertTo-Json -Depth 10 | Set-Content -Path $manifestPath
+          
+          # Display contents for verification
+          Write-Host "Manifest contents:"
+          Get-Content $manifestPath
+    - task: PowerShell@2
+      name: CleanAndPackage
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Remove __pycache__ directories
+          Get-ChildItem -Path "$(sourcePath)/$projectName" -Filter "__pycache__" -Recurse | Remove-Item -Force -Recurse
+          
+          # Create zip file
+          $projectName = "$(FindSourceDirectory.folderName)"
+          $tempZipPath = "$(Build.ArtifactStagingDirectory)/$projectName.zip"
+          $finalPath = "$(Build.ArtifactStagingDirectory)/$projectName.apworld"
+          
+          # Create the zip file first
+          #DO NOT USE powershell adds incorrect slashes for linux filesystems
+          ##Compress-Archive -Path "$(sourcePath)" -DestinationPath $tempZipPath
+          Write-Host "TempZipPath: $tempZipPath"
+          Write-Host "projectName: $projectName"
+          Write-Host "sourcePath: $(sourcePath)"
 
+          tar -v -a -c -f $tempZipPath -C "$(Build.SourcesDirectory)/apworld" "$projectName"
+          Write-Host "##vso[task.setvariable variable=projectName]$projectName"
+          # Rename to .apworld
+          Move-Item -Path $tempZipPath -Destination $finalPath -Force
+          
+          # List contents of the artifact staging directory for debugging
+          Write-Host "Files in Artifact Staging Directory after creating .apworld:"
+          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse | ForEach-Object { Write-Host $_.FullName }
     - task: DotNetCoreCLI@2
       inputs:
         command: 'publish'
