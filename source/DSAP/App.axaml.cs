@@ -154,6 +154,7 @@ public partial class App : Application
             Client.ItemReceived -= Client_ItemReceived;
             Client.MessageReceived -= Client_MessageReceived;
             Client.LocationCompleted -= Client_LocationCompleted;
+            Client.EnableLocationsCondition = null;
             if (_deathlinkService != null)
             {
                 _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
@@ -211,11 +212,13 @@ public partial class App : Application
             return;
 
         }
-        if (Client.Options.ContainsKey("enable_deathlink") && (bool)Client.Options["enable_deathlink"])
+        if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
         {
             _deathlinkService = Client.EnableDeathLink();
             _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
-            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
+            Log.Debug($"initializing deathlink");
+            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService),
+                (health) => _playerIsDead());
         }
 
         var bossLocations = Helpers.GetBossFlagLocations();
@@ -248,25 +251,56 @@ public partial class App : Application
     }
     private void SendDeathlink(DeathLinkService _deathlinkService)
     {
+        Log.Debug($"Attempting deathlink");
         if (!IsHandlingDeathlink)
         {
             Log.Logger.Information("Sending Deathlink. RIP.");
             _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
         }
 
+        IsHandlingDeathlink = false;
+        Log.Debug($"Disabled deathlink");
+
         //Restart deathlink when player is alive again
         Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
             () => {
-                IsHandlingDeathlink = false;
+                Log.Debug($"Re-enabling deathlink");
                 Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
                     () => SendDeathlink(_deathlinkService),
-                    (health) => Helpers.GetPlayerHP() <= 0);
+                    (health) => _playerIsDead());
             },
-            (health) => Helpers.GetPlayerHP() > 0);
+            (health) => Helpers.GetPlayerHP() > 0); // condition to re-enable deathlink
+    }
+    /// <summary>
+    /// Check if player is dead. Intended to be called after checking player hp == 0.
+    /// </summary>
+    /// <returns>True if player is both in game and has 0 hp</returns>
+    private bool _playerIsDead()
+    {
+        /* Deathlink Check Reasoning:
+            * This code is triggered once monitor finds hp <= 0.
+            * Check if we're loaded into game, then check once again if player hp is still 0 (instead of using (health) var).
+            * 
+            * This avoids the race condition for when:
+            * 1) Monitor triggers for hp=0 when not in game
+            * 2) Player loads into game (hp restored)
+            * 3) This condition is checked.
+            * 
+            * If they leave the game between the first check below and the second, it isn't a problem.
+            *   That's because the only case where they got to this code while in game is when they're already dead!
+            */
+        if (Helpers.IsInGame())
+        {
+            if (Helpers.GetPlayerHP() <= 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
     {
-        Log.Logger.Information("Deathlink received. RIP.");
+        Log.Logger.Information($"Deathlink received: {deathLink.Cause ?? deathLink.Source + "died."} RIP.");
         IsHandlingDeathlink = true;
         Memory.Write(Helpers.GetPlayerHPAddress(), 0);
     }
