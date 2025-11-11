@@ -14,5 +14,7 @@ namespace DSAP.Models
         public byte CumulateNumMax { get; set; }
         public byte Rarity { get; set; }
 
+        public short numPlaced { get; set; } = 0;
+
     }
 }

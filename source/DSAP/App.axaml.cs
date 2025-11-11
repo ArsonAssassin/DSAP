@@ -6,6 +6,7 @@ using Archipelago.Core.Models;
 using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using Archipelago.Core.Util.Overlay;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Avalonia;
@@ -13,7 +14,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using DSAP.Models;
-using Newtonsoft.Json;
 using ReactiveUI;
 using Serilog;
 using System;
@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static DSAP.Enums;
 using Color = Avalonia.Media.Color;
 using Location = Archipelago.Core.Models.Location;
@@ -31,7 +33,7 @@ public partial class App : Application
 {
     public static MainWindowViewModel Context;
     private DeathLinkService _deathlinkService;
-
+    private const bool DEBUG_TXTLOG = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
@@ -66,6 +68,7 @@ public partial class App : Application
     public void Start()
     {
         Context = new MainWindowViewModel("0.6.2");
+        
         Context.ClientVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
         Context.ConnectClicked += Context_ConnectClicked;
         Context.CommandReceived += (e, a) =>
@@ -73,6 +76,7 @@ public partial class App : Application
             if (string.IsNullOrWhiteSpace(a.Command)) return;
             Client?.SendMessage(a.Command);
         };
+
         Context.ConnectButtonEnabled = true;
 
     }
@@ -129,6 +133,19 @@ public partial class App : Application
     private async void Context_ConnectClicked(object? sender, ConnectClickedEventArgs e)
     {
         Context.ConnectButtonEnabled = false;
+
+        // debugging
+        if (DEBUG_TXTLOG)
+        {
+            Log.CloseAndFlush();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.File("log.txt",
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .CreateLogger();
+        }
+
+
         Log.Logger.Information("Connecting...");
         if (Client != null)
         {
@@ -137,6 +154,7 @@ public partial class App : Application
             Client.ItemReceived -= Client_ItemReceived;
             Client.MessageReceived -= Client_MessageReceived;
             Client.LocationCompleted -= Client_LocationCompleted;
+            Client.EnableLocationsCondition = null;
             if (_deathlinkService != null)
             {
                 _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
@@ -145,6 +163,7 @@ public partial class App : Application
             Client.CancelMonitors();
         }
         DarkSoulsClient client = new DarkSoulsClient();
+
         var connected = client.Connect();
         if (!connected)
         {
@@ -170,19 +189,36 @@ public partial class App : Application
         if (e.Slot == null) e.Slot = "Player1";
         await Client.Connect(e.Host, "Dark Souls Remastered");
 
+        if (!Client.IsConnected)
+        {
+            Log.Logger.Warning("Connect to AP Server failed");
+            Context.ConnectButtonEnabled = true;
+            return;
+
+        }
         Client.ItemReceived += Client_ItemReceived;
         Client.MessageReceived += Client_MessageReceived;
         Client.LocationCompleted += Client_LocationCompleted;
+        Client.EnableLocationsCondition = () => Helpers.IsInGame();
 
-        Client.IntializeOverlayService(new WindowsOverlayService());
+        //Client.IntializeOverlayService(new OverlayService());
 
-        await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+        await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
 
-        if (Client.Options.ContainsKey("enable_deathlink") && (bool)Client.Options["enable_deathlink"])
+        if (!Client.IsLoggedIn)
+        {
+            Log.Logger.Warning("Login failed");
+            Context.ConnectButtonEnabled = true;
+            return;
+
+        }
+        if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
         {
             _deathlinkService = Client.EnableDeathLink();
             _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
-            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService), (health) => Helpers.GetPlayerHP() <= 0);
+            Log.Debug($"initializing deathlink");
+            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService),
+                (health) => _playerIsDead());
         }
 
         var bossLocations = Helpers.GetBossFlagLocations();
@@ -195,12 +231,8 @@ public partial class App : Application
         var goalLocation = (Location)bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
         Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
 
-        Client.MonitorLocations(bossLocations);
-        Client.MonitorLocations(itemLocations);
-        Client.MonitorLocations(bonfireLocations);
-        Client.MonitorLocations(doorLocations);
-        // Client.MonitorLocations(fogWallLocations);
-        Client.MonitorLocations(miscLocations);
+        var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(miscLocations).ToList();
+        Client.MonitorLocations(fullLocationsList);
 
 
         //Helpers.MonitorLastBonfire((lastBonfire) =>
@@ -208,31 +240,67 @@ public partial class App : Application
         //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
         //});
 
+        if (DEBUG_TXTLOG)
+        { 
+            Log.CloseAndFlush();
+        }
+
         Context.ConnectButtonEnabled = true;
 
 
     }
     private void SendDeathlink(DeathLinkService _deathlinkService)
     {
+        Log.Debug($"Attempting deathlink");
         if (!IsHandlingDeathlink)
         {
             Log.Logger.Information("Sending Deathlink. RIP.");
             _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
         }
 
+        IsHandlingDeathlink = false;
+        Log.Debug($"Disabled deathlink");
+
         //Restart deathlink when player is alive again
         Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
             () => {
-                IsHandlingDeathlink = false;
+                Log.Debug($"Re-enabling deathlink");
                 Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
                     () => SendDeathlink(_deathlinkService),
-                    (health) => Helpers.GetPlayerHP() <= 0);
+                    (health) => _playerIsDead());
             },
-            (health) => Helpers.GetPlayerHP() > 0);
+            (health) => Helpers.GetPlayerHP() > 0); // condition to re-enable deathlink
+    }
+    /// <summary>
+    /// Check if player is dead. Intended to be called after checking player hp == 0.
+    /// </summary>
+    /// <returns>True if player is both in game and has 0 hp</returns>
+    private bool _playerIsDead()
+    {
+        /* Deathlink Check Reasoning:
+            * This code is triggered once monitor finds hp <= 0.
+            * Check if we're loaded into game, then check once again if player hp is still 0 (instead of using (health) var).
+            * 
+            * This avoids the race condition for when:
+            * 1) Monitor triggers for hp=0 when not in game
+            * 2) Player loads into game (hp restored)
+            * 3) This condition is checked.
+            * 
+            * If they leave the game between the first check below and the second, it isn't a problem.
+            *   That's because the only case where they got to this code while in game is when they're already dead!
+            */
+        if (Helpers.IsInGame())
+        {
+            if (Helpers.GetPlayerHP() <= 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
     {
-        Log.Logger.Information("Deathlink received. RIP.");
+        Log.Logger.Information($"Deathlink received: {deathLink.Cause ?? deathLink.Source + "died."} RIP.");
         IsHandlingDeathlink = true;
         Memory.Write(Helpers.GetPlayerHPAddress(), 0);
     }
@@ -243,7 +311,7 @@ public partial class App : Application
         {
             LogHint(e.Message);
         }
-        Log.Logger.Information(JsonConvert.SerializeObject(e.Message));
+        Log.Logger.Information(JsonSerializer.Serialize(e.Message, Helpers.GetJsonOptions()));
         Client.AddOverlayMessage(e.Message.ToString());
     }
     private void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
@@ -269,9 +337,21 @@ public partial class App : Application
         watch.Stop();
 
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
+        Client.AddOverlayMessage($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
 
-        HomewardBoneCommand();
-        Log.Logger.Information($"After Load screen, new item lots will be live.");
+        Log.Logger.Debug($"Player in game? {(Helpers.IsInGame() ? "yes" : "no")}");
+        Log.Logger.Debug($"chrtype = {Helpers.getChrType()}");
+        if (Helpers.IsInGame())
+        {
+            HomewardBoneCommand();
+            Log.Logger.Information($"After Load screen, new item lots will be live.");
+            Client.AddOverlayMessage($"After Load screen, new item lots will be live.");
+        }
+        else
+        {
+            Log.Logger.Information($"You are now safe to load your save.");
+            Client.AddOverlayMessage($"You are now safe to load you save.");
+        }
     }
     private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
     {
@@ -341,7 +421,7 @@ public partial class App : Application
             });
         }
     }
-    private static void OnConnected(object sender, EventArgs args)
+    private static void OnConnected(object sender, ConnectionChangedEventArgs args)
     {
         Log.Logger.Information("Connected to Archipelago");
         Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
@@ -359,16 +439,18 @@ public partial class App : Application
 
             //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();
             Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
-            foreach (var item in nonItemLotFlags) Log.Logger.Information($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
+            foreach (var item in nonItemLotFlags)
+            {
+                Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
+            }
             //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
             ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags);
 
-            foreach (var pair in ConditionRewardMap) Log.Logger.Warning($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
-            Log.Logger.Warning($"ConditionRewardMap has {ConditionRewardMap.Count} members");
+            foreach (var pair in ConditionRewardMap) Log.Logger.Verbose($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
+            Log.Logger.Debug($"ConditionRewardMap has {ConditionRewardMap.Count} members");
 
         }
         /* Set to only receive remote items and starting inventory */
-        Client.CurrentSession.ConnectionInfo.UpdateConnectionOptions(Client.CurrentSession.ConnectionInfo.Tags, Archipelago.MultiClient.Net.Enums.ItemsHandlingFlags.IncludeStartingInventory);
         ReplaceItems();
 
     }

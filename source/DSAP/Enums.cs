@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace DSAP
 {
@@ -36,6 +37,12 @@ namespace DSAP
             InfusableRestricted = 4,
             PyroFlame = 5,
             PyroFlameAscended = 6
+        }
+
+        public enum SpecialItemLotIds
+        {
+            WhiteSignSoapstone = 50000000,
+            KeyToTheSeal = 50000100
         }
     }
 }

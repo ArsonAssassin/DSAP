@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 using static DSAP.Enums;
 
 namespace DSAP.Models
@@ -14,9 +13,9 @@ namespace DSAP.Models
         public string Name { get; set; }
         public int Id { get; set; }
         public int StackSize { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ItemUpgrade UpgradeType { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public DSItemCategory Category { get; set; }
         public int ApId { get; set; }
 

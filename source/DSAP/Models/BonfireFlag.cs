@@ -1,10 +1,10 @@
-﻿using Archipelago.Core.Util;
-using Archipelago.Core.Json;
-using Newtonsoft.Json;
+﻿using Archipelago.Core.Json;
+using Archipelago.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DSAP.Models
