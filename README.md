@@ -7,6 +7,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Keys and progression items (e.g. Lordvessel) will be randomized into the item pool.
 * Other items (consumables, souls, unique items, equipment) will also be randomized into the item pool.
 * Undead Asylum is not randomized. This is intended behavior so as to not put the player into BK mode immediately.
+* Enemy loot and shop items are not yet randomized.
 
 # Artificial logic
 * While in an alpha state, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Most such rules are listed below.
@@ -46,15 +47,9 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * This will cause your game to reload as if you had used a homeward bone. This is necessary to update the items that are in the game.
 * You should now be ready to play.
 
-# Known issues
-* If you receive an item while on the main menu, it may get lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
-  * Furthermore, **you should close the client before quitting to menu or quitting the game.**
-* Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
-* v0.0.18.3: DSR game and DSAP.client.exe both crash upon connect - you must load into the game and be able to move your character around before connecting with the client.
-* v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Troubleshooting
-* If you encounter issues, first check the known issues listed above. Then, check what version you are on - the issue you have may be resolved by updating to a later version.
+* If you encounter issues, first check the known issues listed below. Then, check what version you are on - the issue you have may be resolved by updating to a later version.
 * If item lots are not replaced, or the client cannot connect, try running DSAP.client.exe as administrator. This program requires authorization to modify the memory of another process, so it may require elevated permissions depending on your system configuration.
 * After that, you may be able to find answers in the AP Discord channel for dark-souls-1.
   * If there are no answers, you can comment in the channel and include the version number of DSAP that you are using, the Archipelago version you are using, and a description of the issue.
@@ -62,3 +57,12 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 # Compatibility
 * This version has been tested with Dark Souls Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11.
+
+# Known issues
+* If you receive an item while on the main menu, it may get lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
+  * Furthermore, **you should close the client before quitting to menu or quitting the game.**
+* Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
+* v0.0.19.1 prerelease: Player does not receive deathlinks from other players.
+* v0.0.19.1 prerelease: While unhollowed/human, the player is detected as "not in game". This can result in no items or deathlinks being sent to other players.
+* v0.0.18.3: DSR game and DSAP.client.exe both crash upon connect - you must load into the game and be able to move your character around before connecting with the client.
+* v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
