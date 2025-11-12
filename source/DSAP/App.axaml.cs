@@ -456,16 +456,16 @@ public partial class App : Application
 
     private static void LogItem(Item item, int quantity)
     {
-        var messageToLog = new LogListItem(new List<TextSpan>()
-            {
-                new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = new SolidColorBrush(Color.FromRgb(255, 255, 255))},
-                new TextSpan(){Text = $"{item.Name}", TextColor = new SolidColorBrush(Color.FromRgb(200, 255, 200))},
-                new TextSpan(){Text = $"x{quantity.ToString()}", TextColor =new SolidColorBrush(Color.FromRgb(200, 255, 200))}
-            });
         lock (_lockObject)
         {
             RxApp.MainThreadScheduler.Schedule(() =>
             {
+                var messageToLog = new LogListItem(new List<TextSpan>()
+                {
+                    new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = new SolidColorBrush(Color.FromRgb(255, 255, 255))},
+                    new TextSpan(){Text = $"{item.Name}", TextColor = new SolidColorBrush(Color.FromRgb(200, 255, 200))},
+                    new TextSpan(){Text = $"x{quantity.ToString()}", TextColor =new SolidColorBrush(Color.FromRgb(200, 255, 200))}
+                });
                 Context.ItemList.Add(messageToLog);
             });
         }
@@ -473,20 +473,20 @@ public partial class App : Application
     private static void LogHint(LogMessage message)
     {
         var newMessage = message.Parts.Select(x => x.Text);
-
-        if (Context.HintList.Any(x => x.TextSpans.Select(y => y.Text) == newMessage))
-        {
-            return; //Hint already in list
-        }
-        List<TextSpan> spans = new List<TextSpan>();
-        foreach (var part in message.Parts)
-        {
-            spans.Add(new TextSpan() { Text = part.Text, TextColor = new SolidColorBrush(Color.FromRgb(part.Color.R, part.Color.G, part.Color.B) )});
-        }
         lock (_lockObject)
         {
             RxApp.MainThreadScheduler.Schedule(() =>
             {
+                if (Context.HintList.Any(x => x.TextSpans.Select(y => y.Text) == newMessage))
+                {
+                    return; //Hint already in list
+                }
+                List<TextSpan> spans = new List<TextSpan>();
+                foreach (var part in message.Parts)
+                {
+                    spans.Add(new TextSpan() { Text = part.Text, TextColor = new SolidColorBrush(Color.FromRgb(part.Color.R, part.Color.G, part.Color.B)) });
+                }
+
                 Context.HintList.Add(new LogListItem(spans));
             });
         }
