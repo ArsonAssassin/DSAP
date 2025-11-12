@@ -327,10 +327,10 @@ public partial class App : Application
         // Don't process deaths from ourself, if they come to us
         if (deathLink.Source != Client.CurrentSession.Players.ActivePlayer.Name )
         {
-            var deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
+            DateTime deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
             lock (_deathlinkLock)
             {
-                var playerInGame = Helpers.IsInGame();
+                bool playerInGame = Helpers.IsInGame();
 
                 // If player is in game, not already handling deathlink, and not in grace period, receive it for real.
                 if (playerInGame

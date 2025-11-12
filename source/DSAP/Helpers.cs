@@ -1021,7 +1021,7 @@ namespace DSAP
                 return true;
             return false;
         }        
-        public static ulong getIngameTime()
+        public static uint getIngameTime()
         {
             var bOffset = GetBaseBOffset();
             if (bOffset != 0)
