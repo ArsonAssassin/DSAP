@@ -11,8 +11,8 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 # Artificial logic
 * While in an alpha state, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Most such rules are listed below.
+* Access to The Catacombs is behind defeating Ornstein and Smough.
 * Access to the Great Hollow is behind Blighttown access + Lordvessel item.
-* Access to Tomb of the Giants is behind defeating Ornstein and Smough.
 * Access to Lost Izalith is behind Orange Charred Ring item.
 * Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins is behind Orenstein and Smough defeated + Key to the Seal item.
 * Access to Kiln of the First Flame is behind Lord Soul (Bed of Chaos).
