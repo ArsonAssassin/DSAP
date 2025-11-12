@@ -33,13 +33,16 @@ public partial class App : Application
 {
     public static MainWindowViewModel Context;
     private DeathLinkService _deathlinkService;
+    DateTime lastDeathLinkTime = DateTime.MinValue;
     private const bool DEBUG_TXTLOG = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
     private static Dictionary<int, ItemLot> ConditionRewardMap = new Dictionary<int, ItemLot>();
     private static readonly object _lockObject = new object();
+    private static readonly object _deathlinkLock = new object(); // lock that protects IsHandlingDeathLink and lastDeathLinkTime
     private bool IsHandlingDeathlink = false;
+    TimeSpan graceperiod = new TimeSpan(0, 0, 25);
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -252,24 +255,43 @@ public partial class App : Application
     private void SendDeathlink(DeathLinkService _deathlinkService)
     {
         Log.Debug($"Attempting deathlink");
-        if (!IsHandlingDeathlink)
-        {
-            Log.Logger.Information("Sending Deathlink. RIP.");
-            _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
-        }
 
-        IsHandlingDeathlink = false;
-        Log.Debug($"Disabled deathlink");
+        var deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
+        lock (_deathlinkLock)
+        {
+            // If we are neither already handling one nor in grace period, send it to everybody else.
+            if (!IsHandlingDeathlink
+                && lastDeathLinkTime + graceperiod < deathtime)
+            {
+                Log.Logger.Information("Sending Deathlink. RIP.");
+                lastDeathLinkTime = System.DateTime.Now;
+                _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
+            }
+            else if (IsHandlingDeathlink)
+            {
+                Log.Logger.Debug("Not sending Deathlink - still handling one we received.");
+            }
+            else 
+            {
+                Log.Logger.Information($"Not sending Deathlink - less than {graceperiod.TotalSeconds} seconds have passed since last Deathlink.");
+            }
+        }
 
         //Restart deathlink when player is alive again
         Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
-            () => {
+            () => {                
+                /* re-enable monitoring condition */
                 Log.Debug($"Re-enabling deathlink");
                 Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
                     () => SendDeathlink(_deathlinkService),
                     (health) => _playerIsDead());
+                lock (_deathlinkLock)
+                {
+                    /* mark that we are no longer mid-deathlink once hp is positive and hook has been reset */
+                    IsHandlingDeathlink = false;
+                }
             },
-            (health) => Helpers.GetPlayerHP() > 0); // condition to re-enable deathlink
+            (health) => Helpers.IsInGame() && Helpers.GetPlayerHP() > 0); // condition to re-enable deathlink
     }
     /// <summary>
     /// Check if player is dead. Intended to be called after checking player hp == 0.
@@ -300,9 +322,57 @@ public partial class App : Application
     }
     private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
     {
-        Log.Logger.Information($"Deathlink received: {deathLink.Cause ?? deathLink.Source + "died."} RIP.");
-        IsHandlingDeathlink = true;
-        Memory.Write(Helpers.GetPlayerHPAddress(), 0);
+        Log.Logger.Information($"Deathlink received: {deathLink.Cause ?? deathLink.Source + " died."} RIP.");
+
+        // Don't process deaths from ourself, if they come to us
+        if (deathLink.Source != Client.CurrentSession.Players.ActivePlayer.Name )
+        {
+            var deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
+            lock (_deathlinkLock)
+            {
+                var playerInGame = Helpers.IsInGame();
+
+                // If player is in game, not already handling deathlink, and not in grace period, receive it for real.
+                if (playerInGame
+                    && !IsHandlingDeathlink 
+                    && lastDeathLinkTime + graceperiod < deathtime)
+                {
+                    ulong whpp = Helpers.GetPlayerWritableHPAddress();
+                    Log.Logger.Debug($"whp address={whpp.ToString("X2")}");
+                    /* If we got an address */
+                    if (whpp != 0)
+                    {
+                        var whp = Memory.ReadInt(whpp);
+                        Log.Logger.Debug($"whp value={whp}");
+                        /* Extra guard rail: If it's not a real HP value, don't write it and instead error out */
+                        if (whp < 10000)
+                        {
+                            Memory.Write(whpp, 0);
+                            lastDeathLinkTime = System.DateTime.Now;
+                            IsHandlingDeathlink = true;
+                        }
+                        else
+                        {
+                            Log.Error($"Deathlink ignored - could not resolve hp location.");
+                        }
+                    }
+                    else
+                    {
+                        Log.Error($"Deathlink ignored - could not resolve hp location.");
+                    }
+
+                }
+                else /* log why we aren't doing deathlink */
+                {
+                    if (!playerInGame)
+                        Log.Information($"Deathlink ignored - player not in game");
+                    else if (IsHandlingDeathlink)
+                        Log.Information($"Deathlink ignored - already handling deathlink");
+                    else if (lastDeathLinkTime + graceperiod >= deathtime)
+                        Log.Information($"Deathlink ignored - less than {graceperiod.TotalSeconds} seconds have passed since previous Deathlink");
+                }
+            }
+        }
     }
 
     private void Client_MessageReceived(object? sender, Archipelago.Core.Models.MessageReceivedEventArgs e)
@@ -360,7 +430,7 @@ public partial class App : Application
         var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
         if (itemToReceive != null)
         {
-            Log.Logger.Verbose($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
+            Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
             if (itemToReceive.ApId == 11120000)
             {
                 RunLagTrap();

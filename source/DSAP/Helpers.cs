@@ -174,8 +174,10 @@ namespace DSAP
             IntPtr baseXAddress = (nint)(getBaseXAddress + offset + 7);
 
 
-            return (ulong)baseXAddress;
-        }
+            ulong pointerValue = Memory.ReadULong((ulong)baseXAddress);
+            
+            return pointerValue;
+        }   
         public static ulong GetChrBaseClassOffset()
         {
             var baseAddress = GetBaseAddress();       
@@ -234,6 +236,25 @@ namespace DSAP
             var pointer = Memory.ReadULong(next);
             next = OffsetPointer(pointer, 0x14);
             return next;
+        }
+        /// <summary>
+        /// Get the HP address to which writing will actually update the player's HP (for deathlink).
+        /// </summary>
+        /// <returns>The address, or 0 if any pointer value along the chain was 0.</returns>
+        internal static ulong GetPlayerWritableHPAddress()
+        {
+            var baseX = GetBaseXOffset();
+            if (baseX != 0)
+            {
+                var next = OffsetPointer(baseX, 0x68);
+                var pointer = Memory.ReadULong(next);
+                if (pointer != 0)
+                {
+                    next = OffsetPointer(pointer, 0x3e8);
+                    return next;
+                }
+            }
+            return 0;
         }
         private static ulong GetItemLotParamOffset()
         {
