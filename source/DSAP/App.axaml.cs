@@ -325,52 +325,51 @@ public partial class App : Application
         Log.Logger.Information($"Deathlink received: {deathLink.Cause ?? deathLink.Source + " died."} RIP.");
 
         // Don't process deaths from ourself, if they come to us
-        if (deathLink.Source != Client.CurrentSession.Players.ActivePlayer.Name )
-        {
-            DateTime deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
-            lock (_deathlinkLock)
-            {
-                bool playerInGame = Helpers.IsInGame();
+        if (deathLink.Source == Client.CurrentSession.Players.ActivePlayer.Name) return;
 
-                // If player is in game, not already handling deathlink, and not in grace period, receive it for real.
-                if (playerInGame
-                    && !IsHandlingDeathlink 
-                    && lastDeathLinkTime + graceperiod < deathtime)
+        DateTime deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
+        lock (_deathlinkLock)
+        {
+            bool playerInGame = Helpers.IsInGame();
+
+            // If player is in game, not already handling deathlink, and not in grace period, receive it for real.
+            if (playerInGame
+                && !IsHandlingDeathlink 
+                && lastDeathLinkTime + graceperiod < deathtime)
+            {
+                ulong whpp = Helpers.GetPlayerWritableHPAddress();
+                Log.Logger.Debug($"whp address={whpp.ToString("X2")}");
+                /* If we got an address */
+                if (whpp != 0)
                 {
-                    ulong whpp = Helpers.GetPlayerWritableHPAddress();
-                    Log.Logger.Debug($"whp address={whpp.ToString("X2")}");
-                    /* If we got an address */
-                    if (whpp != 0)
+                    var whp = Memory.ReadInt(whpp);
+                    Log.Logger.Debug($"whp value={whp}");
+                    /* Extra guard rail: If it's not a real HP value, don't write it and instead error out */
+                    if (whp < 10000)
                     {
-                        var whp = Memory.ReadInt(whpp);
-                        Log.Logger.Debug($"whp value={whp}");
-                        /* Extra guard rail: If it's not a real HP value, don't write it and instead error out */
-                        if (whp < 10000)
-                        {
-                            Memory.Write(whpp, 0);
-                            lastDeathLinkTime = System.DateTime.Now;
-                            IsHandlingDeathlink = true;
-                        }
-                        else
-                        {
-                            Log.Error($"Deathlink ignored - could not resolve hp location.");
-                        }
+                        Memory.Write(whpp, 0);
+                        lastDeathLinkTime = System.DateTime.Now;
+                        IsHandlingDeathlink = true;
                     }
                     else
                     {
                         Log.Error($"Deathlink ignored - could not resolve hp location.");
                     }
-
                 }
-                else /* log why we aren't doing deathlink */
+                else
                 {
-                    if (!playerInGame)
-                        Log.Information($"Deathlink ignored - player not in game");
-                    else if (IsHandlingDeathlink)
-                        Log.Information($"Deathlink ignored - already handling deathlink");
-                    else if (lastDeathLinkTime + graceperiod >= deathtime)
-                        Log.Information($"Deathlink ignored - less than {graceperiod.TotalSeconds} seconds have passed since previous Deathlink");
+                    Log.Error($"Deathlink ignored - could not resolve hp location.");
                 }
+
+            }
+            else /* log why we aren't doing deathlink */
+            {
+                if (!playerInGame)
+                    Log.Information($"Deathlink ignored - player not in game");
+                else if (IsHandlingDeathlink)
+                    Log.Information($"Deathlink ignored - already handling deathlink");
+                else if (lastDeathLinkTime + graceperiod >= deathtime)
+                    Log.Information($"Deathlink ignored - less than {graceperiod.TotalSeconds} seconds have passed since previous Deathlink");
             }
         }
     }

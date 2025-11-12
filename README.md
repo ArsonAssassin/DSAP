@@ -5,7 +5,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 # How it works
 * Each loose item on the ground is a "location" or "check", and can contain any item from the multiworld.
 * Keys and progression items (e.g. Lordvessel) will be randomized into the item pool.
-* Other items (consumables, souls, unique items, equipemnt) will also be randomized into the item pool.
+* Other items (consumables, souls, unique items, equipment) will also be randomized into the item pool.
 * Undead Asylum is not randomized. This is intended behavior so as to not put the player into BK mode immediately.
 
 # Artificial logic
@@ -25,7 +25,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Either run Generate.py or press the Generate button on the launcher to generate a seed.
 * When this has completed, you will have a zip file in your Archipelago/Output folder.
 * Host the output zip either using the Host option on the launcher or by uploading it to Archipelago.gg
-* **Back up your existing DSR saves** into another folder and label that folder appropriately.
+* Optional: Back up your existing DSR saves into another folder and label that folder appropriately.
 
 # Before you go back online
 * You must close this program, and then restart Dark Souls Remastered. 
