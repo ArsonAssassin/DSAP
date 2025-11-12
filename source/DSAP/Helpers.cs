@@ -1017,21 +1017,17 @@ namespace DSAP
         }
         public static bool IsInGame()
         {
-            if (getChrType() != 0)
+            if (getIngameTime() != 0)
                 return true;
             return false;
         }        
-        public static ulong getChrType()
+        public static ulong getIngameTime()
         {
-            if (GetBaseBOffset() != 0)
+            var bOffset = GetBaseBOffset();
+            if (bOffset != 0)
             {
-                var next = OffsetPointer(baseBCache, 0x10);
-                var pointer = Memory.ReadULong(next);
-                if (pointer != 0)
-                {
-                    next = OffsetPointer(pointer, 0xa4);
-                    return Memory.ReadUInt(next);
-                }   
+                var next = OffsetPointer(bOffset, 0xA4);
+                return Memory.ReadUInt(next);
             }
             return 0; 
         }

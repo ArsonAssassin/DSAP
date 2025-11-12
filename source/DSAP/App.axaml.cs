@@ -410,7 +410,7 @@ public partial class App : Application
         Client.AddOverlayMessage($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
 
         Log.Logger.Debug($"Player in game? {(Helpers.IsInGame() ? "yes" : "no")}");
-        Log.Logger.Debug($"chrtype = {Helpers.getChrType()}");
+        Log.Logger.Debug($"ingame time = {Helpers.getIngameTime()}");
         if (Helpers.IsInGame())
         {
             HomewardBoneCommand();
