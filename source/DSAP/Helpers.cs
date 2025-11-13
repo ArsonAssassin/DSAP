@@ -36,7 +36,7 @@ namespace DSAP
             var address = Memory.GetBaseAddress("DarkSoulsRemastered");
             if (address == 0)
             {
-                Log.Debug("Could not find Base Address");
+                Log.Logger.Debug("Could not find Base Address");
             }
             return (ulong)address;
         }
@@ -59,7 +59,7 @@ namespace DSAP
             try
             {
                 var baseAddress = GetBaseAddress();
-                Log.Debug($"Base address: 0x{baseAddress:X}");
+                Log.Logger.Debug($"Base address: 0x{baseAddress:X}");
 
                 byte[] pattern = { 0x48, 0x83, 0x3d, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8b, 0xf1 };
                 string mask = "xxx????xxxx";
@@ -68,19 +68,19 @@ namespace DSAP
 
                 if (getfrpgNetManAddress == IntPtr.Zero)
                 {
-                    Log.Error("Failed to find the signature pattern for FrpgNetMan");
+                    Log.Logger.Error("Failed to find the signature pattern for FrpgNetMan");
                     throw new Exception("Failed to find the signature pattern");
                 }
 
-                Log.Debug($"Found pattern at: 0x{getfrpgNetManAddress.ToInt64():X}");
+                Log.Logger.Debug($"Found pattern at: 0x{getfrpgNetManAddress.ToInt64():X}");
 
                 // Read the bytes at the pattern location to verify
                 byte[] bytes = Memory.ReadByteArray((ulong)getfrpgNetManAddress, 11);
-                Log.Debug($"Bytes at pattern: {BitConverter.ToString(bytes)}");
+                Log.Logger.Debug($"Bytes at pattern: {BitConverter.ToString(bytes)}");
 
                 // Read the 4-byte offset at position 3
                 int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getfrpgNetManAddress + 3), 4), 0);
-                Log.Debug($"Read offset value: 0x{offset:X}");
+                Log.Logger.Debug($"Read offset value: 0x{offset:X}");
 
                 // Try different pointer calculation methods
                 IntPtr method1 = new IntPtr(getfrpgNetManAddress.ToInt64() + offset + 7);
@@ -91,24 +91,24 @@ namespace DSAP
                 ulong value2 = Memory.ReadULong((ulong)method2);
                 ulong value3 = Memory.ReadULong((ulong)method3);
 
-                Log.Debug($"Method 1 (offset+7): Address=0x{method1.ToInt64():X}, Value=0x{value1:X}");
-                Log.Debug($"Method 2 (offset+3+4): Address=0x{method2.ToInt64():X}, Value=0x{value2:X}");
-                Log.Debug($"Method 3 (offset+8): Address=0x{method3.ToInt64():X}, Value=0x{value3:X}");
+                Log.Logger.Debug($"Method 1 (offset+7): Address=0x{method1.ToInt64():X}, Value=0x{value1:X}");
+                Log.Logger.Debug($"Method 2 (offset+3+4): Address=0x{method2.ToInt64():X}, Value=0x{value2:X}");
+                Log.Logger.Debug($"Method 3 (offset+8): Address=0x{method3.ToInt64():X}, Value=0x{value3:X}");
 
                 // Check if any method gives a likely valid pointer (usually in a specific memory range)
                 if (value3 > 0x10000000 && value3 < 0x7FFFFFFFFFFF)
                 {
-                    Log.Debug("Using Method 3");
+                    Log.Logger.Debug("Using Method 3");
                     return value3;
                 }
 
                 // If we're here, all methods failed to produce a reasonable pointer
-                Log.Error("Failed to resolve a valid FrpgNetMan pointer with any method");
+                Log.Logger.Error("Failed to resolve a valid FrpgNetMan pointer with any method");
                 throw new Exception("Failed to get valid FrpgNetMan pointer");
             }
             catch (Exception ex)
             {
-                Log.Error($"Error in GetFrpgNetManOffset: {ex.Message}");
+                Log.Logger.Error($"Error in GetFrpgNetManOffset: {ex.Message}");
                 throw;
             }
         }
@@ -413,7 +413,8 @@ namespace DSAP
             if (locationsIdList.Count == 0 || locationsTargetList.Count == 0
              || locationsIdList.Count != locationsTargetList.Count)
             {
-                Log.Logger.Error($"Slot Info: Location and Item id count mismatch");
+                Log.Logger.Error("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
+                App.Client.AddOverlayMessage("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
             }
             else
             {
@@ -451,7 +452,9 @@ namespace DSAP
                                 else
                                 {
                                     Log.Logger.Warning($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                                    App.Client.AddOverlayMessage($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
                                     Log.Logger.Warning($"Item at loc {locId} replaced with prism stone instead.");
+                                    App.Client.AddOverlayMessage($"Item at loc {locId} replaced with prism stone instead.");
                                     newLotItem = prismStoneLotItem;
                                 }
                             }
@@ -504,7 +507,7 @@ namespace DSAP
                 {
                     result[flag].Items.Add(prismStoneLotItem);
                 }
-                Log.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
+                Log.Logger.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
             }
 
             return result;
@@ -546,7 +549,8 @@ namespace DSAP
             if (locationsIdList.Count == 0 || locationsTargetList.Count == 0
              || locationsIdList.Count != locationsTargetList.Count)
             {
-                Log.Logger.Error($"Slot Info: Location and Item id count mismatch");
+                Log.Logger.Error("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
+                App.Client.AddOverlayMessage("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
             }
             else
             {
@@ -668,7 +672,7 @@ namespace DSAP
             var rowCount = Memory.ReadUShort(startAddress + 0xA);
             var foundItems = 0;
             const int rowSize = 148; // Size of each ItemLotParam
-            Log.Debug($"ItemParam list rowcount='{rowCount}'");
+            Log.Logger.Debug($"ItemParam list rowcount='{rowCount}'");
             var tasks = new List<Task>();
 
             /* Reset the "number of itemlots placed" per id */
@@ -686,7 +690,7 @@ namespace DSAP
                 if (Log.Logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
                 {
                     var itemlotparams = Memory.ReadObject<ItemLotParam>(currentAddress);
-                    Log.Verbose($"ilp '{i}'=" + itemlotparams.ToString());
+                    Log.Logger.Verbose($"ilp '{i}'=" + itemlotparams.ToString());
                 }
 
                 ItemLot newItemLot;
@@ -699,19 +703,20 @@ namespace DSAP
                     /* Check if we still have items to replace this location with */
                     short replaceidx = newItemLot.numPlaced;
                     newItemLot.numPlaced++;
-                    Log.Verbose($"Incremented lot id numplaced id={currentItemLotId}, curr = {itemLotIds[currentItemLotId].numPlaced}");
+                    Log.Logger.Verbose($"Incremented lot id numplaced id={currentItemLotId}, curr = {itemLotIds[currentItemLotId].numPlaced}");
 
                     if (newItemLot.numPlaced > newItemLot.Items.Count)
                     {
                         if (currentItemLotId == (int)Enums.SpecialItemLotIds.KeyToTheSeal
                          || currentItemLotId == (int)Enums.SpecialItemLotIds.WhiteSignSoapstone)
                         {
-                            Log.Debug($"Special lot detected, sending to additional locations for lot id={currentItemLotId}");
+                            Log.Logger.Debug($"Special lot detected, sending to additional locations for lot id={currentItemLotId}");
                             replaceidx = 0;
                         }
                         else
                         {
-                            Log.Warning($"More items detected than are placable, for lot id={currentItemLotId}");
+                            Log.Logger.Warning($"More items detected than are placable, for lot id={currentItemLotId}");
+                            App.Client.AddOverlayMessage($"More items detected than are placable, for lot id={currentItemLotId}");
                             continue; /* don't place anything there */
                         }
                     }
@@ -752,15 +757,16 @@ namespace DSAP
                         }
                         catch (Exception e)
                         {
-                            Log.Warning($"658 e:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
+                            Log.Logger.Warning($"Overwrite Exception:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
+                            App.Client.AddOverlayMessage($"Overwrite Exception:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
                         }
                     }));
 
-                    Log.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} has been overwritten at {currentAddress} to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
+                    Log.Logger.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} has been overwritten at {currentAddress} to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
                 }
                 else
                 {
-                    Log.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} not overwritten.");
+                    Log.Logger.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} not overwritten.");
                 }
 
             }
@@ -772,15 +778,16 @@ namespace DSAP
                     if (pair.Key != (int)Enums.SpecialItemLotIds.KeyToTheSeal
                      && pair.Key != (int)Enums.SpecialItemLotIds.WhiteSignSoapstone)
                     {
-                        Log.Warning($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
+                        Log.Logger.Warning($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
+                        App.Client.AddOverlayMessage($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
                     }
                 }
             }
             
-
             Task.WaitAll(tasks.ToArray());
 
-            Log.Information($"{foundItems} items overwritten");
+            Log.Logger.Information($"{foundItems} items overwritten");
+            App.Client.AddOverlayMessage($"{foundItems} items overwritten");
         }
         public static void OverwriteSingleItem(ulong address, ItemLotItem newItemLot, int position)
         {
@@ -789,7 +796,7 @@ namespace DSAP
             //uint category = Memory.ReadUInt(address + 0x20 + (ulong)(position * 4));
             //uint itemnum = Memory.ReadUInt(address + 0x8A + (ulong)position);
             //uint itemflagid = Memory.ReadUInt(address + 0x60 + (ulong)(position * 4));
-            //Log.Information($"id {id} cat {category} itemnum {itemnum} itemflag {itemflagid} overwritten");
+            //Log.Logger.Information($"id {id} cat {category} itemnum {itemnum} itemflag {itemflagid} overwritten");
 
             Memory.Write(address + (ulong)(position * 4), newItemLot.LotItemId);
             Memory.Write(address + 0x20 + (ulong)(position * 4), newItemLot.LotItemCategory);
@@ -860,15 +867,15 @@ namespace DSAP
             var lastBonfire = GetLastBonfire();
             if (lastBonfire == null)
             {
-                Log.Debug("No Last Bonfire found");
+                Log.Logger.Debug("No Last Bonfire found");
             }
-            else Log.Debug($"Last bonfire was {lastBonfire.id}:{lastBonfire.name} ");
+            else Log.Logger.Debug($"Last bonfire was {lastBonfire.id}:{lastBonfire.name} ");
             while (true)
             {
                 var currentLastBonfire = GetLastBonfire();
                 if (currentLastBonfire != lastBonfire)
                 {
-                    Log.Debug("Last Bonfire Changed");
+                    Log.Logger.Debug("Last Bonfire Changed");
                     lastBonfire = currentLastBonfire;
                     action?.Invoke(currentLastBonfire);
                 }
