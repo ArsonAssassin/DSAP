@@ -204,7 +204,7 @@ public partial class App : Application
         Client.LocationCompleted += Client_LocationCompleted;
         Client.EnableLocationsCondition = () => Helpers.IsInGame();
 
-        //Client.IntializeOverlayService(new OverlayService());
+        Client.IntializeOverlayService(new WindowsOverlayService());
 
         await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
 
@@ -381,7 +381,7 @@ public partial class App : Application
             LogHint(e.Message);
         }
         Log.Logger.Information(JsonSerializer.Serialize(e.Message, Helpers.GetJsonOptions()));
-        Client.AddOverlayMessage(e.Message.ToString());
+        Client.AddRichOverlayMessage(e.Message);
     }
     private void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
     {
@@ -419,7 +419,7 @@ public partial class App : Application
         else
         {
             Log.Logger.Information($"You are now safe to load your save.");
-            Client.AddOverlayMessage($"You are now safe to load you save.");
+            Client.AddOverlayMessage($"You are now safe to load your save.");
         }
     }
     private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
