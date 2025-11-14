@@ -256,7 +256,7 @@ stages:
         command: 'publish'
         publishWebProjects: false
         projects: '$(solution)'
-        arguments: '-f net8.0 -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:EnableCompressionInSingleFile=true /p:PublishAppxPackage=false'
+        arguments: '-c Release'
         zipAfterPublish: false
 
     - task: PowerShell@2
