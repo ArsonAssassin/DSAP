@@ -61,7 +61,7 @@ stages:
         targetType: 'inline'
         script: |
           Write-Host "Searching in: $(Build.SourcesDirectory)\source"
-          $csprojPath = Get-ChildItem -Path "$(Build.SourcesDirectory)\source" -Filter "*.csproj" -Recurse | Select-Object -First 1
+          $csprojPath = Get-ChildItem -Path "$(Build.SourcesDirectory)\source" -Filter "DSAP.Desktop.csproj" -Recurse | Select-Object -First 1
           
           if ($null -eq $csprojPath) {
               Write-Error "Could not find .csproj file in source directory"
