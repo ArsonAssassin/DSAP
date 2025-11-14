@@ -120,6 +120,7 @@ public partial class App : Application
         var result = Memory.ExecuteCommand(command);
 
         Log.Logger.Information($"Forced Load Screen - Items Reset.");
+        App.Client.AddOverlayMessage($"Forced Load Screen - Items Reset.");
     }
     public static bool IsValidPointer(ulong address)
     {
@@ -204,13 +205,17 @@ public partial class App : Application
         Client.LocationCompleted += Client_LocationCompleted;
         Client.EnableLocationsCondition = () => Helpers.IsInGame();
 
-        Client.IntializeOverlayService(new WindowsOverlayService());
+        Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+        {
+            YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
+        }));
 
         await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
 
         if (!Client.IsLoggedIn)
         {
             Log.Logger.Warning("Login failed");
+            Client.AddOverlayMessage("Login failed");
             Context.ConnectButtonEnabled = true;
             return;
 
@@ -219,7 +224,7 @@ public partial class App : Application
         {
             _deathlinkService = Client.EnableDeathLink();
             _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
-            Log.Debug($"initializing deathlink");
+            Log.Logger.Debug($"initializing deathlink");
             Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService),
                 (health) => _playerIsDead());
         }
@@ -254,7 +259,7 @@ public partial class App : Application
     }
     private void SendDeathlink(DeathLinkService _deathlinkService)
     {
-        Log.Debug($"Attempting deathlink");
+        Log.Logger.Debug($"Attempting deathlink");
 
         var deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
         lock (_deathlinkLock)
@@ -264,6 +269,7 @@ public partial class App : Application
                 && lastDeathLinkTime + graceperiod < deathtime)
             {
                 Log.Logger.Information("Sending Deathlink. RIP.");
+                Client.AddOverlayMessage("Sending Deathlink. RIP.");
                 lastDeathLinkTime = System.DateTime.Now;
                 _deathlinkService.SendDeathLink(new DeathLink(Client.CurrentSession.Players.ActivePlayer.Name));
             }
@@ -274,6 +280,7 @@ public partial class App : Application
             else 
             {
                 Log.Logger.Information($"Not sending Deathlink - less than {graceperiod.TotalSeconds} seconds have passed since last Deathlink.");
+                Client.AddOverlayMessage($"Not sending Deathlink - less than {graceperiod.TotalSeconds} seconds have passed since last Deathlink.");
             }
         }
 
@@ -281,7 +288,7 @@ public partial class App : Application
         Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
             () => {                
                 /* re-enable monitoring condition */
-                Log.Debug($"Re-enabling deathlink");
+                Log.Logger.Debug($"Re-enabling deathlink");
                 Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
                     () => SendDeathlink(_deathlinkService),
                     (health) => _playerIsDead());
@@ -323,6 +330,7 @@ public partial class App : Application
     private void _deathlinkService_OnDeathLinkReceived(DeathLink deathLink)
     {
         Log.Logger.Information($"Deathlink received: {deathLink.Cause ?? deathLink.Source + " died."} RIP.");
+        Client.AddOverlayMessage($"Deathlink received: {deathLink.Cause ?? deathLink.Source + " died."} RIP.");
 
         // Don't process deaths from ourself, if they come to us
         if (deathLink.Source == Client.CurrentSession.Players.ActivePlayer.Name) return;
@@ -353,23 +361,32 @@ public partial class App : Application
                     }
                     else
                     {
-                        Log.Error($"Deathlink ignored - could not resolve hp location.");
+                        Log.Logger.Error($"Deathlink ignored - could not resolve hp location.");
                     }
                 }
                 else
                 {
-                    Log.Error($"Deathlink ignored - could not resolve hp location.");
+                    Log.Logger.Error($"Deathlink ignored - could not resolve hp location.");
                 }
 
             }
             else /* log why we aren't doing deathlink */
             {
                 if (!playerInGame)
-                    Log.Information($"Deathlink ignored - player not in game");
+                {
+                    Log.Logger.Information($"Deathlink ignored - player not in game");
+                    Client.AddOverlayMessage($"Deathlink ignored - player not in game");
+                }
                 else if (IsHandlingDeathlink)
-                    Log.Information($"Deathlink ignored - already handling deathlink");
+                {
+                    Log.Logger.Information($"Deathlink ignored - already handling deathlink");
+                    Client.AddOverlayMessage($"Deathlink ignored - already handling deathlink");
+                }
                 else if (lastDeathLinkTime + graceperiod >= deathtime)
-                    Log.Information($"Deathlink ignored - less than {graceperiod.TotalSeconds} seconds have passed since previous Deathlink");
+                {
+                    Log.Logger.Information($"Deathlink ignored - less than {graceperiod.TotalSeconds} seconds have passed since previous Deathlink");
+                    Client.AddOverlayMessage($"Deathlink ignored - less than {graceperiod.TotalSeconds} seconds have passed since previous Deathlink");
+                }
             }
         }
     }
@@ -430,6 +447,8 @@ public partial class App : Application
         if (itemToReceive != null)
         {
             Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
+            Client.AddOverlayMessage($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
+
             if (itemToReceive.ApId == 11120000)
             {
                 RunLagTrap();
@@ -438,7 +457,8 @@ public partial class App : Application
         }
         else
         {
-            Log.Logger.Information("Couldnt find correct item");
+            Log.Logger.Warning($"Unable to identify receieved item {itemId}, receiving rubbish instead.");
+            Client.AddOverlayMessage($"Unable to identify receieved item {itemId}, receiving rubbish instead.");
             var filler = AllItems.First(x => x.Id == 380);
             AddItem((int)filler.Category, filler.Id, 1);
         }
@@ -527,5 +547,6 @@ public partial class App : Application
     private static void OnDisconnected(object sender, EventArgs args)
     {
         Log.Logger.Information("Disconnected from Archipelago");
+        Client.AddOverlayMessage("Disconnected from Archipelago");
     }
 }
