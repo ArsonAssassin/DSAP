@@ -19,7 +19,7 @@ parameters:
     default: false
 
 variables:
-  solution: '**/source/DSAP.Desktop.*.sln'
+  solution: '**\source\DSAP\*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
