@@ -61,7 +61,9 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 # Known issues
 * If you receive an item while on the main menu, it may get lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
   * Furthermore, **you should close the client before quitting to menu or quitting the game.**
+* Looting the "key item chest" in Firelink Shrine behind Frampt **will break logic for DSR**. In a vanilla playthrough, this chest is usually empty/already open, and only has items if you somehow don't have a key item you "should have", depending on where you are in the game. In a randomizer environment, those normal circumstances don't apply! As an example: if you loot this chest after looting the vanilla "Basement Key" location, it will have a Basement Key - but in AP randomizer that key can even be in another game!
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
+* v0.0.19.1 and lower: Some enemy drops (invaders, Havel, etc) are erroneously replaced with prism stones, but do not grant an AP item. The player should get the standard enemy drop in these locations instead.
 * v0.0.19.1 prerelease: Player does not receive deathlinks from other players.
 * v0.0.19.1 prerelease: While unhollowed/human, the player is detected as "not in game". This can result in no items or deathlinks being sent to other players.
 * v0.0.18.3: DSR game and DSAP.client.exe both crash upon connect - you must load into the game and be able to move your character around before connecting with the client.
