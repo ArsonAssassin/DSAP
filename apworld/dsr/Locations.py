@@ -689,7 +689,7 @@ location_tables = {
     DSRLocationData(11110370, f"DA: Archive Prison Extra Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "The Duke's Archives - After Archive Prison Extra Key": [    
-    DSRLocationData(11110371, f"DA: Large Soul of a Brave Warrior - In Reah's Cell", f"Firebomb", DSRLocationCategory.ITEM_LOT), 
+    # DSRLocationData(11110371, f"DA: Large Soul of a Brave Warrior - In Reah's Cell", f"Firebomb", DSRLocationCategory.ITEM_LOT), # does not exist
     DSRLocationData(11110372, f"DA: Maiden Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110679, f"DA: Maiden Robe", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110680, f"DA: Maiden Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),
