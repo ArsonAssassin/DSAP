@@ -22,7 +22,8 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Item pool is currently constructed as follows:
     1. First all guaranteed items and key items are added to the pool.
     2. Then the master key is added if it is enabled in the yaml options.
-    3. With what's left, 20% are consumables, 30% are specifically souls, 20% are materials (including embers), and the rest are weapons, armour, shields, spells or rings.
+    3. Then all embers are added to the pool.
+    4. With what's left, 20% are consumables, 30% are specifically souls, 20% are materials, and the rest are weapons, armour, shields, spells or rings.
   This means that not all items are guaranteed to be in the item pool.
 
 # Artificial Logic
