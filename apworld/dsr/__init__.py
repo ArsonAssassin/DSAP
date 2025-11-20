@@ -299,7 +299,7 @@ class DSRWorld(World):
         foo = BuildItemPool(itempoolSize, self.options)
         #print("Created item pool size: " + str(len(foo)))
 
-        removable_items = [item for item in itempool if item.classification != ItemClassification.progression]
+        removable_items = [item for item in itempool if item.classification != ItemClassification.progression and item.classification != ItemClassification.useful]
         #print("marked " + str(len(removable_items)) + " items as removable")
         
         for item in removable_items:
@@ -324,6 +324,7 @@ class DSRWorld(World):
 
     def create_item(self, name: str) -> Item:
         useful_categories = {
+            DSRItemCategory.EMBER,
         }
         data = self.item_name_to_id[name]
 

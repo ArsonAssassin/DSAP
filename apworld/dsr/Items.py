@@ -17,6 +17,7 @@ class DSRItemCategory(IntEnum):
     SHIELD = 9,
     TRAP = 10,
     BOSS_SOUL = 11
+    EMBER = 12
 
 
 class DSRItemData(NamedTuple):
@@ -304,16 +305,17 @@ _all_items = [DSRItemData(row[0], row[1], row[2]) for row in [
     ("Darkmoon Seance Ring", 4039, DSRItemCategory.RING),
     ("Calamity Ring", 4040, DSRItemCategory.RING),
 
-    ("Large Ember", 5000, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Very Large Ember", 5001, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Crystal Ember", 5002, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Large Magic Ember", 5003, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Enchanted Ember", 5004, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Divine Ember", 5005, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Large Divine Ember", 5006, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Dark Ember", 5007, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Large Flame Ember", 5008, DSRItemCategory.UPGRADE_MATERIAL),
-    ("Chaos Flame Ember", 5009, DSRItemCategory.UPGRADE_MATERIAL),
+    ("Large Ember", 5000, DSRItemCategory.EMBER),
+    ("Very Large Ember", 5001, DSRItemCategory.EMBER),
+    ("Crystal Ember", 5002, DSRItemCategory.EMBER),
+    ("Large Magic Ember", 5003, DSRItemCategory.EMBER),
+    ("Enchanted Ember", 5004, DSRItemCategory.EMBER),
+    ("Divine Ember", 5005, DSRItemCategory.EMBER),
+    ("Large Divine Ember", 5006, DSRItemCategory.EMBER),
+    ("Dark Ember", 5007, DSRItemCategory.EMBER),
+    ("Large Flame Ember", 5008, DSRItemCategory.EMBER),
+    ("Chaos Flame Ember", 5009, DSRItemCategory.EMBER),
+
     ("Titanite Shard", 5010, DSRItemCategory.UPGRADE_MATERIAL),
     ("Large Titanite Shard", 5011, DSRItemCategory.UPGRADE_MATERIAL),
     ("Green Titanite Shard", 5012, DSRItemCategory.UPGRADE_MATERIAL),
@@ -869,8 +871,13 @@ def BuildItemPool(count, options):
         masterKey = item_dictionary["Master Key"]
         item_pool.append(masterKey)
         remaining_count = remaining_count - 1
+
+    useful_items = [item for item in _all_items if item.category == DSRItemCategory.EMBER]
+    for item in useful_items:
+        item_pool.append(item)
+        remaining_count = remaining_count - 1
     
-    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM]]
+    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM, DSRItemCategory.EMBER]]
     
     pool_size = remaining_count
     

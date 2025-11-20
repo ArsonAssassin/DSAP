@@ -486,29 +486,29 @@ namespace DSAP
 
 
             /* Then, anything that is in this eventflags list, but wasn't an AP location sent to us, replace with prism stones */
-            Dictionary<int, int> addedItems = [];
-            foreach (var flag in eventflags.Where(x => !result.ContainsKey(x.Flag)).Select(x => x.Flag))
-            {
-                addedItems.TryAdd(flag, 0);
-                addedItems[flag] += 1;
-            }
-            foreach (var pair in addedItems)
-            {
-                int flag = pair.Key;
-                result.TryAdd(pair.Key, new ItemLot()
-                {
-                    Rarity = 1,
-                    GetItemFlagId = -1,
-                    CumulateNumFlagId = -1,
-                    CumulateNumMax = 0,
-                    Items = []
-                });
-                for (int i = 0; i < pair.Value; i++)
-                {
-                    result[flag].Items.Add(prismStoneLotItem);
-                }
-                Log.Logger.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
-            }
+            //Dictionary<int, int> addedItems = [];
+            //foreach (var flag in eventflags.Where(x => !result.ContainsKey(x.Flag)).Select(x => x.Flag))
+            //{
+            //    addedItems.TryAdd(flag, 0);
+            //    addedItems[flag] += 1;
+            //}
+            //foreach (var pair in addedItems)
+            //{
+            //    int flag = pair.Key;
+            //    result.TryAdd(pair.Key, new ItemLot()
+            //    {
+            //        Rarity = 1,
+            //        GetItemFlagId = -1,
+            //        CumulateNumFlagId = -1,
+            //        CumulateNumMax = 0,
+            //        Items = []
+            //    });
+            //    for (int i = 0; i < pair.Value; i++)
+            //    {
+            //        result[flag].Items.Add(prismStoneLotItem);
+            //    }
+            //    Log.Logger.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
+            //}
 
             return result;
         }
@@ -896,6 +896,12 @@ namespace DSAP
             var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
+        public static List<DarkSoulsItem> GetEmbers()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Embers.json");
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
+            return list;
+        }
         public static List<DarkSoulsItem> GetKeyItems()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.KeyItems.json");
@@ -1006,6 +1012,7 @@ namespace DSAP
             results = results.Concat(GetKeyItems()).ToList();
             results = results.Concat(GetRings()).ToList();
             results = results.Concat(GetUpgradeMaterials()).ToList();
+            results = results.Concat(GetEmbers()).ToList();
             results = results.Concat(GetSpells()).ToList();
             results = results.Concat(GetShields()).ToList();
             results = results.Concat(GetRangedWeapons()).ToList();

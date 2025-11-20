@@ -1680,6 +1680,38 @@
     "ApId": 11117214
   },
   {
+    "Name": "Elite Cleric Helm",
+    "Id": 640000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117215
+  },
+  {
+    "Name": "Elite Cleric Armor",
+    "Id": 641000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117216
+  },
+  {
+    "Name": "Elite Cleric Gauntlets",
+    "Id": 642000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117217
+  },
+  {
+    "Name": "Elite Cleric Leggings",
+    "Id": 643000,
+    "StackSize": 1,
+    "UpgradeType": "Armor",
+    "Category": "Armor",
+    "ApId": 11117218
+  },
+  {
     "Name": "Helm of Artorias",
     "Id": 660000,
     "StackSize": 1,
