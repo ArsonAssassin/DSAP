@@ -896,6 +896,12 @@ namespace DSAP
             var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
+        public static List<DarkSoulsItem> GetEmbers()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Embers.json");
+            var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
+            return list;
+        }
         public static List<DarkSoulsItem> GetKeyItems()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.KeyItems.json");
@@ -1006,6 +1012,7 @@ namespace DSAP
             results = results.Concat(GetKeyItems()).ToList();
             results = results.Concat(GetRings()).ToList();
             results = results.Concat(GetUpgradeMaterials()).ToList();
+            results = results.Concat(GetEmbers()).ToList();
             results = results.Concat(GetSpells()).ToList();
             results = results.Concat(GetShields()).ToList();
             results = results.Concat(GetRangedWeapons()).ToList();
