@@ -81,6 +81,8 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
   * A: Not supported yet. You must create your character before connecting with the DSAP client.
 * Q: Randomized enemies/enemizer?
   * A: Not included. Some players have had success with using a separate enemy randomizer. Randomizing bosses could introduce logic issues, but other enemy drops are not item "locations", so randomizing them should be fine.
+* Q: DLC?
+  * A: Not yet supported
 
 # Known issues
 * If you receive an item while on the main menu, it may get lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
