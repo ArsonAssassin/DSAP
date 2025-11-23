@@ -39,10 +39,12 @@ public partial class App : Application
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
     private static Dictionary<int, ItemLot> ConditionRewardMap = new Dictionary<int, ItemLot>();
+    private static Dictionary<string, Tuple<int, string>> SlotLocToItemUpgMap = [];
     private static readonly object _lockObject = new object();
     private static readonly object _deathlinkLock = new object(); // lock that protects IsHandlingDeathLink and lastDeathLinkTime
     private bool IsHandlingDeathlink = false;
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
+    public static DarkSoulsOptions DSOptions;
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -453,7 +455,20 @@ public partial class App : Application
             {
                 RunLagTrap();
             }
-            else AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+            else
+            {
+                Log.Logger.Verbose($"Attempting to upgrade item: '{itemToReceive.ApId}' {itemToReceive.Name} from loc {e.LocationId}.");
+                if (DSOptions.UpgradedWeaponsPercentage > 0
+                    && SlotLocToItemUpgMap.TryGetValue($"{e.Player.Slot}:{e.LocationId}", out var itemupg))
+                {
+                    if (itemupg.Item1 == itemToReceive.ApId) // if item apid matches
+                        itemToReceive = Helpers.UpgradeItem(itemToReceive, itemupg.Item2, true);
+                    else
+                        Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
+
+                }
+                AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+            }
         }
         else
         {
@@ -519,7 +534,20 @@ public partial class App : Application
         /* If we haven't yet initialized the dictionary, do so. */
         if (ItemLotReplacementMap.Count == 0)
         {
-            ItemLotReplacementMap = Helpers.BuildFlagToLotMap(Helpers.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList());
+            /* get slot info */
+            int currentSlot = App.Client.CurrentSession.ConnectionInfo.Slot;
+            var slotDataTask = App.Client.CurrentSession.DataStorage.GetSlotDataAsync(currentSlot);
+            slotDataTask.Wait();
+            Dictionary<string, object> slotData = slotDataTask.Result;
+
+            DSOptions = new DarkSoulsOptions(App.Client.Options);
+            Log.Logger.Debug($"{DSOptions.ToString()}");
+
+            SlotLocToItemUpgMap = Helpers.BuildSlotLocationToItemUpgMap(slotData, currentSlot);
+
+            var itemflags = Helpers.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList();
+            ItemLotReplacementMap = Helpers.BuildFlagToLotMap(itemflags, slotData, SlotLocToItemUpgMap);
+
             var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
             nonItemLotFlags.AddRange(Helpers.GetBonfireFlags().Cast<EventFlag>());
             nonItemLotFlags.AddRange(Helpers.GetDoorFlags().Cast<EventFlag>());
@@ -533,7 +561,7 @@ public partial class App : Application
                 Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
             }
             //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
-            ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags);
+            ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags, slotData, SlotLocToItemUpgMap);
 
             foreach (var pair in ConditionRewardMap) Log.Logger.Verbose($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
             Log.Logger.Debug($"ConditionRewardMap has {ConditionRewardMap.Count} members");
