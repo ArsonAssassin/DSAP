@@ -7,7 +7,7 @@ from Options import Toggle
 from worlds.AutoWorld import World, WebWorld
 from worlds.generic.Rules import set_rule, add_rule, add_item_rule
 
-from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildItemPool
+from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildItemPool, UpgradeEquipment
 from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories
 from .Options import DSROption
 
@@ -61,7 +61,7 @@ class DSRWorld(World):
         self.enabled_location_categories.add(DSRLocationCategory.BOSS),
         self.enabled_location_categories.add(DSRLocationCategory.ITEM_LOT),
         self.enabled_location_categories.add(DSRLocationCategory.BONFIRE),
-        self.enabled_location_categories.add(DSRLocationCategory.DOOR),
+        self.enabled_location_categories.add(DSRLocationCategory.DOOR)
 
     def create_regions(self):
         # Create Regions
@@ -296,7 +296,7 @@ class DSRWorld(World):
                 itempool.append(self.create_item(location.default_item_name))
         
         #print("Requesting itempool size: " + str(itempoolSize))
-        foo = BuildItemPool(itempoolSize, self.options)
+        foo = BuildItemPool(itempoolSize, self.options, self)
         #print("Created item pool size: " + str(len(foo)))
 
         removable_items = [item for item in itempool if item.classification != ItemClassification.progression and item.classification != ItemClassification.useful]
@@ -434,6 +434,7 @@ class DSRWorld(World):
         name_to_dsr_code = {item.name: item.dsr_code for item in item_dictionary.values()}
         # Create the mandatory lists to generate the player's output file
         items_id = []
+        items_upgrades = []
         items_address = []
         locations_id = []
         locations_address = []
@@ -442,8 +443,9 @@ class DSRWorld(World):
             if location.item.player == self.player:
                 #we are the receiver of the item
                 items_id.append(location.item.code)
-                items_address.append(name_to_dsr_code[location.item.name])
-
+                upgrade = UpgradeEquipment(location.item.code, self.options, self)
+                items_upgrades.append(upgrade)
+                items_address.append(f'{location.player}:{location.address}')
 
             if location.player == self.player:
                 #we are the sender of the location check
@@ -457,9 +459,14 @@ class DSRWorld(World):
         slot_data = {
             "options": {
                 "guaranteed_items": self.options.guaranteed_items.value,
-                "enable_deathlink": self.options.enable_deathlink.value,
                 "enable_masterkey": self.options.enable_masterkey.value,
-                "unique_souls": self.options.unique_souls.value
+                "unique_souls": self.options.unique_souls.value,
+                "upgraded_weapons_percentage": self.options.upgraded_weapons_percentage.value,
+                "upgraded_weapons_allowed_infusions": self.options.upgraded_weapons_allowed_infusions.value,
+                "upgraded_weapons_adjusted_levels": self.options.upgraded_weapons_adjusted_levels.value,
+                "upgraded_weapons_min_level": self.options.upgraded_weapons_min_level.value,
+                "upgraded_weapons_max_level": self.options.upgraded_weapons_max_level.value,
+                "enable_deathlink": self.options.enable_deathlink.value,
             },
             "seed": self.multiworld.seed_name,  # to verify the server's multiworld
             "slot": self.multiworld.player_name[self.player],  # to connect to server
@@ -468,7 +475,8 @@ class DSRWorld(World):
             "locationsAddress": locations_address,
             "locationsTarget": locations_target,
             "itemsId": items_id,
-            "itemsAddress": items_address
+            "itemsUpgrades": items_upgrades,
+            "itemsAddress": items_address,
         }
 
         return slot_data

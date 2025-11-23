@@ -11,6 +11,7 @@ namespace DSAP
     {
         public enum DSItemCategory
         {
+            AnyWeapon = 0x00000000,
             Armor = 0x10000000,
             Consumables = 0x40000000,
             KeyItems = 0x40000000,

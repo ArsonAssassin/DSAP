@@ -382,18 +382,18 @@ namespace DSAP
             ulong newAddress = (ptr & 0xFFFF0000) | newOffset;
             return newAddress;
         }
-        
-        /* Build a mapping of the location flag values in eventflags to the ItemLot that should come from there, for items in our own game.
-         * Then fill the rest of the eventflags locations with the default ItemLot ("Prism Stone").
-         * This is used for replacing item lots in our own game. */
-        public static Dictionary<int, ItemLot> BuildFlagToLotMap(List<EventFlag> eventflags)
+
+        /// <summary>
+        /// Build a mapping of the location flag values in eventflags to the ItemLot that should come from there, for items in our own game.
+        /// </summary>
+        /// <details>
+        /// This is used for replacing item lots in our own game.
+        /// </details>
+        /// <param name="eventflags">A list of location flags of which items will be found.</param>
+        /// <returns></returns>
+        public static Dictionary<int, ItemLot> BuildFlagToLotMap(List<EventFlag> eventflags, Dictionary<string, object> slotData, Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
-
-            var currentSlot = App.Client.CurrentSession.ConnectionInfo.Slot;
-            var slotDataTask = App.Client.CurrentSession.DataStorage.GetSlotDataAsync(currentSlot);
-            slotDataTask.Wait();
-            var slotData = slotDataTask.Result;
 
             var addonitems = 0;
 
@@ -418,7 +418,6 @@ namespace DSAP
             }
             else
             {
-                
                 /* Iterate over each pair of entries in the pair of lists */
                 for (int i = 0; i < locationsIdList.Count; i++)
                 {
@@ -437,16 +436,30 @@ namespace DSAP
                                 DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
                                 if (item != null)
                                 {
-                                    Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{item.Id}({item.Name})");
+                                    DarkSoulsItem repitem = item;
+                                    if (item.Category == Enums.DSItemCategory.AnyWeapon)
+                                    {
+                                        Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
+                                        if (App.DSOptions.UpgradedWeaponsPercentage > 0
+                                            && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
+                                        {
+                                            if (itemupg.Item1 == item.ApId) // if item apid matches
+                                                repitem = UpgradeItem(repitem, itemupg.Item2);
+                                            else
+                                                Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                        }
+                                    }
+
+                                    Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
                                     newLotItem = new ItemLotItem { 
                                         CumulateLotPoint = 0,
                                         CumulateReset = false,
                                         EnableLuck = false,
                                         GetItemFlagId = -1,
                                         LotItemBasePoint = 100,
-                                        LotItemCategory = (int)item.Category,
+                                        LotItemCategory = (int)repitem.Category,
                                         LotItemNum = 1,
-                                        LotItemId = item.Id
+                                        LotItemId = repitem.Id
                                     };
                                 }
                                 else
@@ -518,20 +531,14 @@ namespace DSAP
         /// </summary>
         /// <details>
         /// This is used for detecting non-item lot conditions in our own game(like a door opening) and rewarding the player with that item.
-        /// This is a separate method from the above similar method for two reasons:
-        ///    1) It needs to fill in EventFlag.id as the key instead of EventFlag.flag, and
-        ///    2) It doesn't need the "prism stone" fallback */
+        /// This is a separate method from the above similar method for one main reason:
+        ///    1) It needs to fill in EventFlag.id as the key instead of EventFlag.flag, so we can search by the "AP location id" instead of the DSR flag
         /// </details>
         /// <param name="eventflags">A list of location flags of which items will be found.</param>
         /// <returns></returns>
-        public static Dictionary<int, ItemLot> BuildIdToLotMap(List<EventFlag> eventflags)
+        public static Dictionary<int, ItemLot> BuildIdToLotMap(List<EventFlag> eventflags, Dictionary<string, object> slotData, Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
-
-            var currentSlot = App.Client.CurrentSession.ConnectionInfo.Slot;
-            var slotDataTask = App.Client.CurrentSession.DataStorage.GetSlotDataAsync(currentSlot);
-            slotDataTask.Wait();
-            var slotData = slotDataTask.Result;
 
             /* Get locationsId and locationsTarget into lists */
             List<int?> locationsIdList = new List<int?>();
@@ -569,7 +576,21 @@ namespace DSAP
                         DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
                         if (lot != null && item != null)
                         {
-                            Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{item.Id}({item.Name})");
+                            DarkSoulsItem repitem = item;
+                            if (item.Category == Enums.DSItemCategory.AnyWeapon)
+                            {
+                                Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
+                                if (App.DSOptions.UpgradedWeaponsPercentage > 0
+                                    && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
+                                {
+                                    if (itemupg.Item1 == item.ApId) // if item apid matches
+                                        repitem = UpgradeItem(repitem, itemupg.Item2);
+                                    else
+                                        Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                }
+                            }
+
+                            Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
                             var newitem = new ItemLotItem
                             {
                                 CumulateLotPoint = 0,
@@ -577,9 +598,9 @@ namespace DSAP
                                 EnableLuck = false,
                                 GetItemFlagId = -1,
                                 LotItemBasePoint = 100,
-                                LotItemCategory = (int)item.Category,
+                                LotItemCategory = (int)repitem.Category,
                                 LotItemNum = 1,
-                                LotItemId = item.Id
+                                LotItemId = repitem.Id
                             };
                             /* If it's already in the mapping, add the item to the list of items in the existing lot */
                             if (result.ContainsKey(lot.Id))
@@ -611,6 +632,66 @@ namespace DSAP
             /* Don't populate the rest of the flags with prism stones */
             return result;
         }
+        /// <summary>
+        /// Build a mapping of the slot:locationid key to itemid:upg value based on info stored in slotdata from the server.
+        /// </summary>
+        /// <details>
+        /// This is used later when replacing or receiving items - to know if they should be ugpraded.
+        /// This is needed because we don't have an individual ApId per possible upgrade, but it is deterministic from the generate.
+        /// </details>
+        /// <returns></returns>
+        public static Dictionary<string, Tuple<int, string>> BuildSlotLocationToItemUpgMap(Dictionary<string, object> slotData, int currentSlot)
+        {
+            Dictionary<string, Tuple<int, string>> result = [];
+            
+            /* Get itemsAddress, itemsId, and itemsUpgrades into lists */
+            List<string> itemsAddress = new List<string?>();
+            List<int?> itemsId = new List<int?>();
+            List<string?> itemsUpgrades = new List<string?>();
+
+            if (slotData.TryGetValue("itemsAddress", out object itemsAddress_temp))
+            {
+                itemsAddress.AddRange(JsonSerializer.Deserialize<string?[]>(itemsAddress_temp.ToString()));
+                if (slotData.TryGetValue("itemsId", out object itemsId_temp))
+                {
+                    itemsId.AddRange(JsonSerializer.Deserialize<int?[]>(itemsId_temp.ToString()));
+                    if (slotData.TryGetValue("itemsUpgrades", out object itemsUpgrades_temp))
+                    {
+                        itemsUpgrades.AddRange(JsonSerializer.Deserialize<string[]>(itemsUpgrades_temp.ToString()));
+                    }
+                }
+            }
+
+            if (itemsAddress.Count == 0 || itemsId.Count == 0 || itemsUpgrades.Count == 0
+             || itemsAddress.Count != itemsId.Count || itemsAddress.Count != itemsUpgrades.Count)
+            {
+                Log.Logger.Error("Cannot map item upgrades: itemsAddress, itemsId, itemsUpgrades count mismatch.");
+            }
+            else
+            {
+                /* Iterate over each pair of entries in the pair of lists */
+                for (int i = 0; i < itemsAddress.Count; i++)
+                {
+                    string address = itemsAddress[i];
+                    int? id = itemsId[i];
+                    string? upgrade = itemsUpgrades[i];
+
+                    /* skip it if there's no item id, no upgrade info, and it doesn't have a location address */
+                    if (id.HasValue && upgrade != null && !address.EndsWith(":None")) 
+                    {
+                        /* Now processing each potential items with upgrades */
+                        /* key = address ("1:4000") */
+                        /* value = item id , upgrade (8000, "Magic:5")*/
+                        result[address] = new (id.Value, upgrade);
+                    }
+                }
+            }
+            Log.Logger.Debug($"upgdict size = {result.Count}");
+
+            return result;
+        }
+
+
         public static List<ItemLot> GetItemLots()
         {
             List<ItemLot> itemLots = new List<ItemLot>();
@@ -955,6 +1036,52 @@ namespace DSAP
             var json = OpenEmbeddedResource("DSAP.Resources.SpellTools.json");
             var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
+        }
+        public static DarkSoulsItem UpgradeItem(DarkSoulsItem item, string itemupg, bool log = false)
+        {
+            if (itemupg != null)
+            {
+                Dictionary<String, int> infusionmap = new Dictionary<string, int>
+                {
+                    {"Normal", 0},
+                    {"Crystal", 1},
+                    {"Lightning", 2},
+                    {"Raw", 3},
+                    {"Magic", 4},
+                    {"Enchanted", 5},
+                    {"Divine", 6},
+                    {"Occult", 7},
+                    {"Fire", 8},
+                    {"Chaos", 9},
+                };
+
+                string[] tokens = itemupg.Split(':');
+                if (tokens.Count() == 2)
+                {
+                    var infusionMod= infusionmap[tokens[0]];
+                    var lvl = Int32.Parse(tokens[1]);
+                    DarkSoulsItem newitem = new DarkSoulsItem
+                    {
+                        Name = item.Name,
+                        Id = item.Id + lvl + 100 * infusionMod,
+                        StackSize = item.StackSize,
+                        UpgradeType = item.UpgradeType,
+                        Category = item.Category,
+                        ApId = item.ApId
+                    };
+                    if (log)
+                    {
+                        Log.Logger.Information($"Upgraded item {item.Name} to {itemupg}");
+                        App.Client.AddOverlayMessage($"Upgraded item {item.Name} to {itemupg}");
+                    }
+                        
+                    
+                    return newitem;
+                }
+            }
+            Log.Logger.Error($"Error upgrading item {item.Name}");
+            
+            return item;
         }
         public static List<DarkSoulsItem> GetUsableItems()
         {
