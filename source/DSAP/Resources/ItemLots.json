@@ -8,7 +8,7 @@
     "Name": "Undead Asylum F2 East Key",
     "Flag": 50000080,
     "Id": 11110007,
-    "IsEnabled":  false
+    "IsEnabled": false
   },
   {
     "Name": "Lordvessel",
@@ -19,6 +19,11 @@
     "Name": "Key to the Seal",
     "Flag": 50000100,
     "Id": 11110340
+  },
+  {
+    "Name": "RW: Gough's Greatbow - Kalameet reward",
+    "Flag": 50000511,
+    "Id": 11110751
   },
   {
     "Name": "Archive Tower Cell Key",
@@ -120,6 +125,26 @@
     "Name": "Orange Charred Ring",
     "Flag": 50001670,
     "Id": 11110423
+  },
+  {
+    "Name": "Guardian Soul",
+    "Flag": 50001680,
+    "Id": 11110723
+  },
+  {
+    "Name": "Soul of Artorias",
+    "Flag": 50001690,
+    "Id": 11110743
+  },
+  {
+    "Name": "Soul of Manus",
+    "Flag": 50001700,
+    "Id": 11110779
+  },
+  {
+    "Name": "Calamity Ring",
+    "Flag": 50001710,
+    "Id": 11110748
   },
   {
     "Name": "Purging Stone - Snuggly trade",
@@ -417,7 +442,7 @@
     "Flag": 51010090,
     "Id": 11110044
   },
-   {
+  {
     "Name": "Standard Bolt",
     "Flag": 51010090,
     "Id": 11110617
@@ -1088,219 +1113,304 @@
     "Id": 11110645
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)000",
     "Flag": 51210000,
     "Id": 11113318
   },
   {
-    "Name": "Humanity",
+    "Name": "OS: Humanity - Corpse Near Bonfire",
     "Flag": 51210010,
-    "Id": 11113319
+    "Id": 11110725
   },
   {
-    "Name": "Soul of a Proud Knight",
+    "Name": "RW: Soul of a Proud Knight - Behind Tower",
     "Flag": 51210020,
-    "Id": 11113320
+    "Id": 11110726
   },
   {
-    "Name": "Gold Coin - Oolacile Township",
+    "Name": "RW: Gold Coin - Down the Slope",
     "Flag": 51210030,
-    "Id": 11113321
+    "Id": 11110727
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "RW: Guardian Leggings",
+    "Flag": 51210040,
+    "Id": 11110728
+  },
+  {
+    "Name": "RW: Guardian Armor",
+    "Flag": 51210050,
+    "Id": 11110729
+  },
+  {
+    "Name": "RW: Elizabeth's Mushroom",
+    "Flag": 51210060,
+    "Id": 11110730
+  },
+  {
+    "Name": "RW: Guardian Helm",
+    "Flag": 51210070,
+    "Id": 11110731
+  },
+  {
+    "Name": "RW: Gough's Great Arrow",
+    "Flag": 51210080,
+    "Id": 11110732
+  },
+  {
+    "Name": "RW: Large Soul of a Proud Knight - Edge of Cliff",
     "Flag": 51210090,
-    "Id": 11113322
+    "Id": 11110733
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)100",
     "Flag": 51210100,
     "Id": 11113323
   },
   {
-    "Name": "Large Soul of a Proud Knight",
+    "Name": "OT: Large Soul of a Proud Knight - Early Oolacile Rooftop",
     "Flag": 51210110,
-    "Id": 11113324
+    "Id": 11110755
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)120",
     "Flag": 51210120,
     "Id": 11113325
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)130",
     "Flag": 51210130,
     "Id": 11113326
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)140",
     "Flag": 51210140,
     "Id": 11113327
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)150",
     "Flag": 51210150,
     "Id": 11113328
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "OT: Soul of a Brave Warrior - Wooden Platform",
     "Flag": 51210160,
-    "Id": 11113329
+    "Id": 11110760
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)170",
     "Flag": 51210170,
     "Id": 11113330
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)180",
     "Flag": 51210180,
     "Id": 11113331
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "OT: Soul of a Hero - Stair Ledge",
     "Flag": 51210190,
-    "Id": 11113332
+    "Id": 11110762
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)200",
     "Flag": 51210200,
     "Id": 11113333
   },
   {
-    "Name": "Rubbish",
+    "Name": "OT: Rubbish - Outside of Door",
     "Flag": 51210210,
-    "Id": 11113334
+    "Id": 11110752
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "RW: Soul of a Hero - Kalameet Arena",
     "Flag": 51210220,
-    "Id": 11113335
+    "Id": 11110736
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "RW: Soul of a Brave Warrior 2 - Kalameet Arena",
     "Flag": 51210230,
-    "Id": 11113336
+    "Id": 11110738
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "RW: Soul of a Brave Warrior 1 - Kalameet Arena",
     "Flag": 51210240,
-    "Id": 11113337
+    "Id": 11110737
   },
   {
-    "Name": "Gough's Great Arrow",
+    "Name": "RW: Gough's Great Arrow - Kalameet Arena",
     "Flag": 51210250,
-    "Id": 11113338
+    "Id": 11110749
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "OT: Soul of a Brave Warrior - By First Sorceress",
     "Flag": 51210260,
-    "Id": 11113339
+    "Id": 11110756
   },
   {
-    "Name": "White Titanite Slab",
+    "Name": "CotA: Sorcery: Dark Bead",
+    "Flag": 51210270,
+    "Id": 11110769
+  },
+  {
+    "Name": "CotA: Pyromancy: Black Flame",
+    "Flag": 51210280,
+    "Id": 11110770
+  },
+  {
+    "Name": "CotA: White Titanite Slab - On Ledge",
     "Flag": 51210290,
-    "Id": 11113340
+    "Id": 11110776
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "CotA: Soul of a Hero - Left Ledge Before Boss",
     "Flag": 51210300,
-    "Id": 11113341
+    "Id": 11110777
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)310",
     "Flag": 51210310,
     "Id": 11113342
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)320",
     "Flag": 51210320,
     "Id": 11113343
   },
   {
-    "Name": "Humanity",
+    "Name": "CotA: Humanity - Corpse after Prism Stone",
     "Flag": 51210330,
-    "Id": 11113344
+    "Id": 11110773
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "CotA: Help Me! Carving",
+    "Flag": 51210340,
+    "Id": 11110774
+  },
+  {
+    "Name": "RW: Guardian Gauntlets",
+    "Flag": 51210350,
+    "Id": 11110739
+  },
+  {
+    "Name": "Soul of a Lost Undead (?)360",
     "Flag": 51210360,
     "Id": 11113345
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)370",
     "Flag": 51210370,
     "Id": 11113346
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead (?)380",
     "Flag": 51210380,
     "Id": 11113347
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "RW: Soul of a Brave Warrior - Outside Elevator",
     "Flag": 51210390,
-    "Id": 11113348
+    "Id": 11110741
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "RW: Soul of a Brave Warrior - Up The Slope",
     "Flag": 51210400,
-    "Id": 11113349
+    "Id": 11110735
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead(?)410",
     "Flag": 51210410,
     "Id": 11113350
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "Soul of a Lost Undead(?)420",
     "Flag": 51210420,
     "Id": 11113351
   },
   {
-    "Name": "Soul of a Brave Warrior",
+    "Name": "OT: Soul of a Brave Warrior - Corpse in Corner of Statue Hallway",
     "Flag": 51210430,
-    "Id": 11113352
+    "Id": 11110767
   },
   {
-    "Name": "Twin Humanities",
+    "Name": "CotA: Twin Humanities - Under Pillar",
     "Flag": 51210440,
-    "Id": 11113353
+    "Id": 11110775
   },
   {
-    "Name": "Soul of a Hero",
+    "Name": "Soul of a Hero (?)450",
     "Flag": 51210450,
     "Id": 11113354
   },
   {
-    "Name": "Twin Humanities",
+    "Name": "OT: Twin Humanities - Drop onto Roof",
     "Flag": 51210460,
-    "Id": 11113355
+    "Id": 11110766
   },
   {
-    "Name": "Large Soul of a Brave Warrior",
+    "Name": "RW: Large Soul of a Brave Warrior - Back of Ravine",
     "Flag": 51210470,
-    "Id": 11113356
+    "Id": 11110734
   },
   {
-    "Name": "Blue Titanite Slab",
+    "Name": "RW: Blue Titanite Slab - Hidden Chest at Pool",
     "Flag": 51210500,
-    "Id": 11113357
+    "Id": 11110740
   },
   {
-    "Name": "Red Titanite Chunk",
+    "Name": "OT: Red Titanite Chunk - In Chest behind Illusory Wall",
     "Flag": 51210510,
-    "Id": 11113358
+    "Id": 11110763
   },
   {
-    "Name": "Soul of a Lost Undead",
+    "Name": "OT: Silver Pendant",
+    "Flag": 51210520,
+    "Id": 11110757
+  },
+  {
+    "Name": "Soul of a Lost Undead (?)530",
     "Flag": 51210530,
     "Id": 11113359
   },
   {
-    "Name": "Titanite Slab",
+    "Name": "OT: Sorcery: Dark Orb",
+    "Flag": 51210540,
+    "Id": 11110758
+  },
+  {
+    "Name": "RW: Titanite Slab - Kalameet's Arena Behind Waterfall",
     "Flag": 51210550,
-    "Id": 11113360
+    "Id": 11110750
+  },
+  {
+    "Name": "OT: Crest Key (Mimic B?)",
+    "Flag": 51210960,
+    "Id": 11110764
+  },
+  {
+    "Name": "CotA: Cleansing Greatshield",
+    "Flag": 51210910,
+    "Id": 11110772
+  },
+  {
+    "Name": "OT: Very Good! Carving - Mimic",
+    "Flag": 51210921,
+    "Id": 11110761
+  },
+  {
+    "Name": "OT: I'm Sorry Carving - Lone Sorceress",
+    "Flag": 51210960,
+    "Id": 11110759
+  },
+  {
+    "Name": "OT: Crest Key (Mimic A)",
+    "Flag": 51210981,
+    "Id": 11110764
+  },
+  {
+    "Name": "OT: Sorcery: Dark Fog",
+    "Flag": 51211000,
+    "Id": 11110765
   },
   {
     "Name": "Large Soul of a Nameless Soldier - Catacombs 1",
@@ -2267,17 +2377,17 @@
     "Flag": 51510660,
     "Id": 11110297
   },
-   {
+  {
     "Name": "Brass Armor",
     "Flag": 51510660,
     "Id": 11110669
   },
-   {
+  {
     "Name": "Brass Gauntlets",
     "Flag": 51510660,
     "Id": 11110670
   },
-   {
+  {
     "Name": "Brass Leggings",
     "Flag": 51510660,
     "Id": 11110671
@@ -2501,7 +2611,8 @@
     "Name": "Witch Gloves",
     "Flag": 51600360,
     "Id": 11110641
-  },{
+  },
+  {
     "Name": "Witch Skirt",
     "Flag": 51600360,
     "Id": 11110642
@@ -2863,7 +2974,7 @@
     "Name": "Hand Axe",
     "Flag": 51810260,
     "Id": 11113685,
-    "IsEnabled":  false
+    "IsEnabled": false
   },
   {
     "Name": "Cracked Round Shield",
