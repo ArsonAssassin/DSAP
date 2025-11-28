@@ -207,31 +207,31 @@
   },
   {
     "Name": "Oolacile - Sanctuary Garden",
-    "Id": 11110501,
+    "Id": 11110721,
     "Offset": "0x19",
     "AddressBit": 6
   },
   {
     "Name": "Oolacile - Sanctuary",
-    "Id": 11110505,
+    "Id": 11110724,
     "Offset": "0x19",
     "AddressBit": 5
   },
   {
     "Name": "Oolacile - Township",
-    "Id": 11110522,
+    "Id": 11110753,
     "Offset": "0x19",
     "AddressBit": 4
   },
   {
     "Name": "Oolacile - Township Dungeon",
-    "Id": 11110538,
+    "Id": 11110768,
     "Offset": "0x19",
     "AddressBit": 2
   },
   {
     "Name": "Chasm of the Abyss",
-    "Id": 11110551,
+    "Id": 11110780,
     "Offset": "0x19",
     "AddressBit": 3
   }

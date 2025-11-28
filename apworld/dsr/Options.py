@@ -8,6 +8,10 @@ class GuaranteedItemsOption(ItemDict):
     """Guarantees that the specified items will be in the item pool"""
     display_name = "Guaranteed Items"
 
+class EnableDlcOption(Toggle):
+    """Includes the DLC (Artorias of the Abyss) in the location pool"""
+    display_name = "Enable DLC"
+
 class EnableMasterKeyOption(Toggle):
     """Includes the Master Key in the item pool"""
     display_name = "Enable Master Key"
@@ -65,6 +69,7 @@ class EnableDeathlinkOption(Toggle):
 class DSROption(PerGameCommonOptions):
     #goal: GoalOption
     guaranteed_items: GuaranteedItemsOption
+    enable_dlc: EnableDlcOption
     enable_masterkey: EnableMasterKeyOption
     unique_souls: UniqueSoulOption
     upgraded_weapons_percentage: UpgradedWeaponsPercentage

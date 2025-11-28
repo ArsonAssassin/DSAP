@@ -364,11 +364,13 @@ public partial class App : Application
                     else
                     {
                         Log.Logger.Error($"Deathlink ignored - could not resolve hp location.");
+                        Client.AddOverlayMessage($"Deathlink ignored - could not resolve hp location.");
                     }
                 }
                 else
                 {
                     Log.Logger.Error($"Deathlink ignored - could not resolve hp location.");
+                    Client.AddOverlayMessage($"Deathlink ignored - could not resolve hp location.");
                 }
 
             }
@@ -464,7 +466,11 @@ public partial class App : Application
                     if (itemupg.Item1 == itemToReceive.ApId) // if item apid matches
                         itemToReceive = Helpers.UpgradeItem(itemToReceive, itemupg.Item2, true);
                     else
+                    {
                         Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
+                        Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
+                    }
+                        
 
                 }
                 AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
@@ -528,7 +534,9 @@ public partial class App : Application
     private static void OnConnected(object sender, ConnectionChangedEventArgs args)
     {
         Log.Logger.Information("Connected to Archipelago");
+        Client.AddOverlayMessage("Connected to Archipelago");
         Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
+        Client.AddOverlayMessage($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
         /* Make ready to receive items */
 
         /* If we haven't yet initialized the dictionary, do so. */
