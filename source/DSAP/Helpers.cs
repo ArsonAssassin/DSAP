@@ -446,7 +446,10 @@ namespace DSAP
                                             if (itemupg.Item1 == item.ApId) // if item apid matches
                                                 repitem = UpgradeItem(repitem, itemupg.Item2);
                                             else
+                                            {
                                                 Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                                App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                            }
                                         }
                                     }
 
@@ -586,7 +589,10 @@ namespace DSAP
                                     if (itemupg.Item1 == item.ApId) // if item apid matches
                                         repitem = UpgradeItem(repitem, itemupg.Item2);
                                     else
+                                    {
                                         Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                        App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                    }
                                 }
                             }
 
@@ -666,6 +672,9 @@ namespace DSAP
              || itemsAddress.Count != itemsId.Count || itemsAddress.Count != itemsUpgrades.Count)
             {
                 Log.Logger.Error("Cannot map item upgrades: itemsAddress, itemsId, itemsUpgrades count mismatch.");
+                Log.Logger.Error($"{itemsAddress.Count},{itemsId.Count},{itemsUpgrades.Count}");
+                App.Client.AddOverlayMessage("Cannot map item upgrades: itemsAddress, itemsId, itemsUpgrades count mismatch.");
+                App.Client.AddOverlayMessage($"{itemsAddress.Count},{itemsId.Count},{itemsUpgrades.Count}");
             }
             else
             {
@@ -869,6 +878,12 @@ namespace DSAP
 
             Log.Logger.Information($"{foundItems} items overwritten");
             App.Client.AddOverlayMessage($"{foundItems} items overwritten");
+
+            if (foundItems == 0)
+            {
+                Log.Logger.Error($"Failed to overwrite items. Retry: restart game & client and reconnect");
+                App.Client.AddOverlayMessage($"Failed to overwrite items. Retry: restart game & client and reconnect");
+            }
         }
         public static void OverwriteSingleItem(ulong address, ItemLotItem newItemLot, int position)
         {
@@ -1080,7 +1095,8 @@ namespace DSAP
                 }
             }
             Log.Logger.Error($"Error upgrading item {item.Name}");
-            
+            App.Client.AddOverlayMessage($"Error upgrading item {item.Name}");
+
             return item;
         }
         public static List<DarkSoulsItem> GetUsableItems()
