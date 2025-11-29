@@ -67,7 +67,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 # Troubleshooting
 * If you encounter issues, first check the known issues listed below. Then, check what version you are on - the issue you have may be resolved by updating to a later version.
-* If item lots are not replaced, or the client cannot connect, try running DSAP.client.exe as administrator. This program requires authorization to modify the memory of another process, so it may require elevated permissions depending on your system configuration.
+* If item lots are not replaced, or the client cannot connect, **try running DSAP.client.exe as administrator**. This program requires authorization to modify the memory of another process, so it may require elevated permissions depending on your system configuration.
 * After that, you may be able to find answers in the AP Discord channel for dark-souls-1.
   * If there are no answers, you can comment in the channel and include the version number of DSAP that you are using, the Archipelago version you are using, and a description of the issue.
   * If the program crashed, note the time of the error, then open "Event Viewer" from the start menu, go to Windows Logs->Application, and look for an "Error" level log entry. Right click the relevant entry to copy the details as text, and provide the file with your report. If there are multiple Error entries at the time of error, provide both.
