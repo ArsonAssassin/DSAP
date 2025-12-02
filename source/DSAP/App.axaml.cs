@@ -238,9 +238,6 @@ public partial class App : Application
         //var fogWallLocations = Helpers.GetFogWallFlagLocations();
         var miscLocations = Helpers.GetMiscFlagLocations();
 
-        var goalLocation = (Location)bossLocations.First(x => x.Name.Contains("Lord of Cinder"));
-        Memory.MonitorAddressBitForAction(goalLocation.Address, goalLocation.AddressBit, () => Client.SendGoalCompletion());
-
         var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(miscLocations).ToList();
         Client.MonitorLocations(fullLocationsList);
 
@@ -407,6 +404,11 @@ public partial class App : Application
     private void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
     {
         var locid = e.CompletedLocation.Id;
+        if (e.CompletedLocation.Name.Contains("Lord of Cinder"))
+        {
+            Client.SendGoalCompletion();
+        }
+
         /* If the check was in non-itemlot locations, give the player items for it */
         if (ConditionRewardMap.ContainsKey(locid))
         {
