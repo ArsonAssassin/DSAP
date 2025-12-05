@@ -595,6 +595,7 @@ location_tables = {
     DSRLocationData(11110303, f"PW: Soul of a Brave Warrior - Corpse Hanging out of Hole", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110304, f"PW: Soul of a Brave Warrior - Painted World Albino Rats", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110305, f"PW: Painting Guardian Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110330, f"PW: Gold Coin - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110708, f"PW: Painting Guardian Robe", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110709, f"PW: Painting Guardian Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110710, f"PW: Painting Guardian Waistcloth", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -631,7 +632,6 @@ location_tables = {
     DSRLocationData(11110675, f"PW: Black Cleric Robe", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110676, f"PW: Black Manchette", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110677, f"PW: Black Tights", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110330, f"PW: Gold Coin - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Upper New Londo Ruins": [
     DSRLocationData(11110332, f"NL: Soul of a Nameless Soldier - New Londo Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
