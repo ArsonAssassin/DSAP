@@ -218,7 +218,6 @@ class DSRWorld(World):
         create_connection("The Duke's Archives - After Archive Prison Extra Key", "The Duke's Archives - After Archive Tower Giant Door Key")
         create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - Giant Cell")
         create_connection("The Duke's Archives - After Archive Tower Giant Door Key", "Crystal Cave")
-        create_connection("The Duke's Archives", "The Duke's Archives - First Arena after Seath's Death")
         create_connection("Crystal Cave", "The Duke's Archives - First Arena after Seath's Death")
 
         create_connection("The Catacombs", "The Catacombs - Door 1")
@@ -415,7 +414,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Prison Extra Key -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Crystal Cave -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Anor Londo -> Painted World of Ariamis", self.player), lambda state: state.has("Peculiar Doll", self.player))
         set_rule(self.multiworld.get_entrance("Painted World of Ariamis -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
         set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
