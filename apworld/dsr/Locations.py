@@ -47,18 +47,19 @@ class DSRLocation(Location):
         table_order = [
             "Undead Asylum Cell",
             "Undead Asylum Cell Door",
-            "Northern Undead Asylum F2 East Door",
+            "Northern Undead Asylum - F2 East Door",
             "Northern Undead Asylum", 
             "Northern Undead Asylum - After F2 East Door",
-            "Undead Asylum Big Pilgrim Door",
+            "Northern Undead Asylum - Big Pilgrim Door",
             "Firelink Shrine", 
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Undead Parish", 
             "Firelink Shrine - After Undead Parish Elevator",
-            "Northern Undead Asylum - Second Visit F2 West Door",
-            "Northern Undead Asylum - Second Visit Snuggly Trades",
-            "Northern Undead Asylum - Second Visit Behind F2 West Door",
+            "Northern Undead Asylum Second Visit",
+            "Northern Undead Asylum Second Visit - F2 West Door",
+            "Northern Undead Asylum Second Visit - Behind F2 West Door",
+            "Northern Undead Asylum Second Visit - Snuggly Trades",
             "Undead Burg Basement Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
@@ -66,7 +67,9 @@ class DSRLocation(Location):
             "Depths", 
             "Depths - After Sewer Chamber Key",
             "Depths to Blighttown Door",
-            "Blighttown", 
+            "Upper Blighttown Depths Side", 
+            "Upper Blighttown VotD Side", 
+            "Lower Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
             "Door between Upper New Londo and Valley of the Drakes",
@@ -85,7 +88,7 @@ class DSRLocation(Location):
             "Lower New Londo Ruins", 
             "The Abyss", 
             "The Duke's Archives", 
-            "The Duke's Archives Cell Door",
+            "The Duke's Archives - Cell Door",
             "The Duke's Archives - Getting out of Cell",
             "The Duke's Archives - After Archive Prison Extra Key",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
@@ -142,7 +145,7 @@ location_tables = {
     DSRLocationData(11110007, f"UA: Undead Asylum F2 East Key", f"Undead Asylum F2 East Key", DSRLocationCategory.SKIP),
     DSRLocationData(11110554, f"UA: Undead Asylum Shortcut Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],     
-"Northern Undead Asylum F2 East Door": [
+"Northern Undead Asylum - F2 East Door": [
     DSRLocationData(11110008, f"UA: Undead Asylum F2 East Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],   
 "Northern Undead Asylum - After F2 East Door": [
@@ -150,7 +153,7 @@ location_tables = {
     DSRLocationData(11110010, f"UA: Big Pilgrim's Key", f"Big Pilgrim's Key", DSRLocationCategory.SKIP),
     DSRLocationData(11110012, f"UA: Soul of a Lost Undead - Outside Asylum", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Undead Asylum Big Pilgrim Door": [
+"Northern Undead Asylum - Big Pilgrim Door": [
     DSRLocationData(11110011, f"UA: Undead Asylum Big Pilgrim Door opened", f"Firebomb", DSRLocationCategory.DOOR),  
 ],
 "Firelink Shrine": [
@@ -225,16 +228,18 @@ location_tables = {
 "Firelink Shrine - After Undead Parish Elevator": [
     DSRLocationData(11110075, f"FS: Undead Asylum F2 West Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Northern Undead Asylum - Second Visit F2 West Door": [
-    DSRLocationData(11110076, f"UA2: Undead Asylum F2 West Door opened", f"Firebomb", DSRLocationCategory.DOOR),    
-],
-"Northern Undead Asylum - Second Visit Behind F2 West Door": [    
-    DSRLocationData(11110078, f"UA2: Rusted Iron Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-],
-"Northern Undead Asylum - Second Visit Snuggly Trades": [
+"Northern Undead Asylum Second Visit": [
     DSRLocationData(11110077, f"UA2: Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110079, f"UA2: Peculiar Doll", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110080, f"UA2: Stray Demon Defeated", f"Stray Demon Defeated", DSRLocationCategory.BOSS),
+],
+"Northern Undead Asylum Second Visit - F2 West Door": [
+    DSRLocationData(11110076, f"UA2: Undead Asylum F2 West Door opened", f"Firebomb", DSRLocationCategory.DOOR),    
+],
+"Northern Undead Asylum Second Visit - Behind F2 West Door": [    
+    DSRLocationData(11110078, f"UA2: Rusted Iron Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Northern Undead Asylum Second Visit - Snuggly Trades": [
     # DSRLocationData(11110081, f"Snuggly: Pendant -> Souvenir of Reprisal", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     # DSRLocationData(11110082, f"Snuggly: Rubbish -> Titanite Chunk", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     # DSRLocationData(11110083, f"Snuggly: Sunlight Medal -> White Titanite Chunk", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -318,7 +323,7 @@ location_tables = {
 "Depths to Blighttown Door": [
     DSRLocationData(11110130, f"DE: Depths -> Blighttown opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
-"Blighttown": [
+"Upper Blighttown Depths Side": [
     DSRLocationData(11110133, f"BT: Soul of a Proud Knight - Blighttown Entrance Dropoff", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110134, f"BT: Large Soul of a Nameless Soldier - Corpse at Left Ramp", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110135, f"BT: Blooming Purple Moss Clump - Suspended Walkway", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -335,13 +340,15 @@ location_tables = {
     DSRLocationData(11110143, f"BT: Eagle Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110144, f"BT: Pyromancy: Power Within", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110145, f"BT: Large Soul of a Nameless Soldier - Wall Hugger", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110595, f"BT: Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110146, f"BT: Wanderer Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110628, f"BT: Wanderer Coat", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110629, f"BT: Wanderer Manchette", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110630, f"BT: Wanderer Boots", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110147, f"BT: Falchion", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Lower Blighttown": [
     DSRLocationData(11110148, f"BT: Large Soul of a Proud Knight - Corpse below Ramp", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110595, f"BT: Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110149, f"BT: Dragon Scale - Blighttown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110150, f"BT: Butcher Knife", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110151, f"BT: Humanity - Maneater Mildred", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
@@ -364,6 +371,8 @@ location_tables = {
     DSRLocationData(11110560, f"BT: Soul of Quelaag", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110165, f"BT: Quelaag's Domain lit", f"Quelaag's Domain lit", DSRLocationCategory.BONFIRE),    
     DSRLocationData(11110556, f"BT: Bell of Awakening #2 rung", f"Bell of Awakening #2", DSRLocationCategory.EVENT),
+],
+"Upper Blighttown VotD Side": [
     DSRLocationData(11110166, f"BT: Soul of a Proud Knight - Blighttown Fire Keeper Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110167, f"BT: Fire Keeper Soul - Blighttown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110168, f"BT: Mask of the Sealer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -683,7 +692,7 @@ location_tables = {
     DSRLocationData(11110367, f"DA: Duke's Archives Cell lit", f"Duke's Archives Cell lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110369, f"DA: Archive Tower Cell Key", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],
-"The Duke's Archives Cell Door": [
+"The Duke's Archives - Cell Door": [
     DSRLocationData(11110368, f"DA: Duke's Archives Cell Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "The Duke's Archives - Getting out of Cell": [
