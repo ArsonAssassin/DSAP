@@ -71,18 +71,19 @@ class DSRWorld(World):
         our_regions = [
             "Undead Asylum Cell",
             "Undead Asylum Cell Door",
-            "Northern Undead Asylum F2 East Door",
+            "Northern Undead Asylum - F2 East Door",
             "Northern Undead Asylum", 
             "Northern Undead Asylum - After F2 East Door", 
-            "Undead Asylum Big Pilgrim Door",
+            "Northern Undead Asylum - Big Pilgrim Door",
             "Firelink Shrine", 
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Undead Parish", 
             "Firelink Shrine - After Undead Parish Elevator",
-            "Northern Undead Asylum - Second Visit F2 West Door",
-            "Northern Undead Asylum - Second Visit Snuggly Trades",
-            "Northern Undead Asylum - Second Visit Behind F2 West Door",
+            "Northern Undead Asylum Second Visit",
+            "Northern Undead Asylum Second Visit - F2 West Door",
+            "Northern Undead Asylum Second Visit - Behind F2 West Door",
+            "Northern Undead Asylum Second Visit - Snuggly Trades",
             "Undead Burg Basement Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
@@ -109,7 +110,7 @@ class DSRWorld(World):
             "Lower New Londo Ruins", 
             "The Abyss", 
             "The Duke's Archives", 
-            "The Duke's Archives Cell Door",
+            "The Duke's Archives - Cell Door",
             "The Duke's Archives - Getting out of Cell",
             "The Duke's Archives - After Archive Prison Extra Key",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
@@ -150,19 +151,19 @@ class DSRWorld(World):
         
         create_connection("Undead Asylum Cell", "Undead Asylum Cell Door") 
         create_connection("Undead Asylum Cell Door", "Northern Undead Asylum")
-        create_connection("Northern Undead Asylum", "Northern Undead Asylum F2 East Door")
-        create_connection("Northern Undead Asylum F2 East Door", "Northern Undead Asylum - After F2 East Door")
-        create_connection("Northern Undead Asylum - After F2 East Door", "Undead Asylum Big Pilgrim Door")
-        create_connection("Undead Asylum Big Pilgrim Door", "Firelink Shrine")
+        create_connection("Northern Undead Asylum", "Northern Undead Asylum - F2 East Door")
+        create_connection("Northern Undead Asylum - F2 East Door", "Northern Undead Asylum - After F2 East Door")
+        create_connection("Northern Undead Asylum - After F2 East Door", "Northern Undead Asylum - Big Pilgrim Door")
+        create_connection("Northern Undead Asylum - Big Pilgrim Door", "Firelink Shrine")
 
         create_connection("Firelink Shrine", "Upper Undead Burg")
         create_connection("Firelink Shrine", "The Catacombs")
         create_connection("Firelink Shrine", "Upper New Londo Ruins")
-        create_connection("Firelink Shrine - After Undead Parish Elevator", "Northern Undead Asylum - Second Visit Snuggly Trades")
+        create_connection("Firelink Shrine - After Undead Parish Elevator", "Northern Undead Asylum Second Visit")
         create_connection("Firelink Shrine", "Kiln of the First Flame")
         
-        create_connection("Northern Undead Asylum - Second Visit Snuggly Trades", "Northern Undead Asylum - Second Visit F2 West Door")
-        create_connection("Northern Undead Asylum - Second Visit F2 West Door", "Northern Undead Asylum - Second Visit Behind F2 West Door")
+        create_connection("Northern Undead Asylum Second Visit", "Northern Undead Asylum Second Visit - F2 West Door")
+        create_connection("Northern Undead Asylum Second Visit - F2 West Door", "Northern Undead Asylum Second Visit - Behind F2 West Door")
         
         create_connection("Upper Undead Burg", "Undead Burg Basement Door")
         create_connection("Upper Undead Burg", "Undead Parish")
@@ -212,8 +213,8 @@ class DSRWorld(World):
         create_connection("Anor Londo", "Painted World of Ariamis")
         create_connection("Painted World of Ariamis", "Painted World of Ariamis - After Annex Key")
 
-        create_connection("The Duke's Archives", "The Duke's Archives Cell Door")
-        create_connection("The Duke's Archives Cell Door", "The Duke's Archives - Getting out of Cell")
+        create_connection("The Duke's Archives", "The Duke's Archives - Cell Door")
+        create_connection("The Duke's Archives - Cell Door", "The Duke's Archives - Getting out of Cell")
         create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - After Archive Prison Extra Key")
         create_connection("The Duke's Archives - After Archive Prison Extra Key", "The Duke's Archives - After Archive Tower Giant Door Key")
         create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - Giant Cell")
@@ -357,8 +358,8 @@ class DSRWorld(World):
           
         set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Undead Asylum Cell Door", self.player), lambda state: state.has("Dungeon Cell Key", self.player))   
         #set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Northern Undead Asylum F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Undead Asylum Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Northern Undead Asylum - F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Northern Undead Asylum - Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
 
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Burg Basement Door", self.player), lambda state:state.has("Taurus Demon Defeated", self.player) and state.has ("Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))        
@@ -386,7 +387,7 @@ class DSRWorld(World):
         # set_rule(self.multiworld.get_location("Snuggly: Soul of Manus -> Sorcery: Pursuers", self.player), lambda state: state.has("Soul of Manus", self.player))
         
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum - Second Visit Snuggly Trades -> Northern Undead Asylum - Second Visit F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
+        set_rule(self.multiworld.get_entrance("Northern Undead Asylum Second Visit -> Northern Undead Asylum Second Visit - F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Depths", self.player), lambda state: state.has("Key to Depths", self.player))
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - After Residence Key", self.player), lambda state: state.has("Residence Key", self.player))
@@ -410,7 +411,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
         set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: state.has("Four Kings Defeated", self.player))
                 
-        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Prison Extra Key -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))

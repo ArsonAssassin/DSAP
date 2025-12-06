@@ -47,18 +47,19 @@ class DSRLocation(Location):
         table_order = [
             "Undead Asylum Cell",
             "Undead Asylum Cell Door",
-            "Northern Undead Asylum F2 East Door",
+            "Northern Undead Asylum - F2 East Door",
             "Northern Undead Asylum", 
             "Northern Undead Asylum - After F2 East Door",
-            "Undead Asylum Big Pilgrim Door",
+            "Northern Undead Asylum - Big Pilgrim Door",
             "Firelink Shrine", 
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Undead Parish", 
             "Firelink Shrine - After Undead Parish Elevator",
-            "Northern Undead Asylum - Second Visit F2 West Door",
-            "Northern Undead Asylum - Second Visit Snuggly Trades",
-            "Northern Undead Asylum - Second Visit Behind F2 West Door",
+            "Northern Undead Asylum Second Visit",
+            "Northern Undead Asylum Second Visit - F2 West Door",
+            "Northern Undead Asylum Second Visit - Behind F2 West Door",
+            "Northern Undead Asylum Second Visit - Snuggly Trades",
             "Undead Burg Basement Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
@@ -85,7 +86,7 @@ class DSRLocation(Location):
             "Lower New Londo Ruins", 
             "The Abyss", 
             "The Duke's Archives", 
-            "The Duke's Archives Cell Door",
+            "The Duke's Archives - Cell Door",
             "The Duke's Archives - Getting out of Cell",
             "The Duke's Archives - After Archive Prison Extra Key",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
@@ -142,7 +143,7 @@ location_tables = {
     DSRLocationData(11110007, f"UA: Undead Asylum F2 East Key", f"Undead Asylum F2 East Key", DSRLocationCategory.SKIP),
     DSRLocationData(11110554, f"UA: Undead Asylum Shortcut Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],     
-"Northern Undead Asylum F2 East Door": [
+"Northern Undead Asylum - F2 East Door": [
     DSRLocationData(11110008, f"UA: Undead Asylum F2 East Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],   
 "Northern Undead Asylum - After F2 East Door": [
@@ -150,7 +151,7 @@ location_tables = {
     DSRLocationData(11110010, f"UA: Big Pilgrim's Key", f"Big Pilgrim's Key", DSRLocationCategory.SKIP),
     DSRLocationData(11110012, f"UA: Soul of a Lost Undead - Outside Asylum", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Undead Asylum Big Pilgrim Door": [
+"Northern Undead Asylum - Big Pilgrim Door": [
     DSRLocationData(11110011, f"UA: Undead Asylum Big Pilgrim Door opened", f"Firebomb", DSRLocationCategory.DOOR),  
 ],
 "Firelink Shrine": [
@@ -225,16 +226,18 @@ location_tables = {
 "Firelink Shrine - After Undead Parish Elevator": [
     DSRLocationData(11110075, f"FS: Undead Asylum F2 West Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Northern Undead Asylum - Second Visit F2 West Door": [
-    DSRLocationData(11110076, f"UA2: Undead Asylum F2 West Door opened", f"Firebomb", DSRLocationCategory.DOOR),    
-],
-"Northern Undead Asylum - Second Visit Behind F2 West Door": [    
-    DSRLocationData(11110078, f"UA2: Rusted Iron Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-],
-"Northern Undead Asylum - Second Visit Snuggly Trades": [
+"Northern Undead Asylum Second Visit": [
     DSRLocationData(11110077, f"UA2: Crest Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110079, f"UA2: Peculiar Doll", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110080, f"UA2: Stray Demon Defeated", f"Stray Demon Defeated", DSRLocationCategory.BOSS),
+],
+"Northern Undead Asylum Second Visit - F2 West Door": [
+    DSRLocationData(11110076, f"UA2: Undead Asylum F2 West Door opened", f"Firebomb", DSRLocationCategory.DOOR),    
+],
+"Northern Undead Asylum Second Visit - Behind F2 West Door": [    
+    DSRLocationData(11110078, f"UA2: Rusted Iron Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Northern Undead Asylum Second Visit - Snuggly Trades": [
     # DSRLocationData(11110081, f"Snuggly: Pendant -> Souvenir of Reprisal", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     # DSRLocationData(11110082, f"Snuggly: Rubbish -> Titanite Chunk", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     # DSRLocationData(11110083, f"Snuggly: Sunlight Medal -> White Titanite Chunk", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -683,7 +686,7 @@ location_tables = {
     DSRLocationData(11110367, f"DA: Duke's Archives Cell lit", f"Duke's Archives Cell lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110369, f"DA: Archive Tower Cell Key", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],
-"The Duke's Archives Cell Door": [
+"The Duke's Archives - Cell Door": [
     DSRLocationData(11110368, f"DA: Duke's Archives Cell Door opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "The Duke's Archives - Getting out of Cell": [
