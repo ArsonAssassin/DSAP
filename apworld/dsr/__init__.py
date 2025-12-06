@@ -92,7 +92,9 @@ class DSRWorld(World):
             "Depths", 
             "Depths - After Sewer Chamber Key",
             "Depths to Blighttown Door",
-            "Blighttown", 
+            "Upper Blighttown Depths Side", 
+            "Upper Blighttown VotD Side", 
+            "Lower Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
             "Door between Upper New Londo and Valley of the Drakes",
@@ -193,14 +195,22 @@ class DSRWorld(World):
         create_connection("Depths", "Depths - After Sewer Chamber Key")
         create_connection("Depths", "Depths to Blighttown Door")
 
-        create_connection("Valley of the Drakes", "Blighttown")
+        create_connection("Valley of the Drakes", "Upper Blighttown VotD Side")
         create_connection("Valley of the Drakes", "Darkroot Basin")
         create_connection("Valley of the Drakes", "Valley of the Drakes - After Defeating Four Kings")
 
-        create_connection("Depths to Blighttown Door", "Blighttown")
-        create_connection("Blighttown", "Depths to Blighttown Door")
-        create_connection("Blighttown", "Demon Ruins")
-        create_connection("Blighttown", "The Great Hollow")
+        create_connection("Depths to Blighttown Door", "Upper Blighttown Depths Side")
+        
+        create_connection("Upper Blighttown Depths Side", "Depths to Blighttown Door")
+        create_connection("Upper Blighttown Depths Side", "Lower Blighttown")
+
+        create_connection("Lower Blighttown", "Upper Blighttown Depths Side")
+        create_connection("Lower Blighttown", "Upper Blighttown VotD Side")
+        create_connection("Lower Blighttown", "Demon Ruins")
+        create_connection("Lower Blighttown", "The Great Hollow")
+        
+        create_connection("Upper Blighttown VotD Side", "Lower Blighttown")
+        create_connection("Upper Blighttown VotD Side", "Valley of the Drakes")
 
         create_connection("The Great Hollow", "Ash Lake")
 
@@ -393,9 +403,9 @@ class DSRWorld(World):
 
         set_rule(self.multiworld.get_entrance("Depths -> Depths - After Sewer Chamber Key", self.player), lambda state: state.has("Sewer Chamber Key", self.player))
         set_rule(self.multiworld.get_entrance("Depths -> Depths to Blighttown Door", self.player), lambda state: state.has("Blighttown Key", self.player))
-        set_rule(self.multiworld.get_entrance("Blighttown -> Depths to Blighttown Door", self.player), lambda state: state.has("Depths -> Blighttown opened", self.player))
-        set_rule(self.multiworld.get_entrance("Blighttown -> Demon Ruins", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Depths to Blighttown Door", self.player), lambda state: state.has("Depths -> Blighttown opened", self.player))
+        set_rule(self.multiworld.get_entrance("Lower Blighttown -> Demon Ruins", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Lower Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
         
         set_rule(self.multiworld.get_location("UP: Bell of Awakening #1 rung", self.player), lambda state: state.has("Bell Gargoyles Defeated", self.player))
         set_rule(self.multiworld.get_location("BT: Bell of Awakening #2 rung", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))

@@ -67,7 +67,9 @@ class DSRLocation(Location):
             "Depths", 
             "Depths - After Sewer Chamber Key",
             "Depths to Blighttown Door",
-            "Blighttown", 
+            "Upper Blighttown Depths Side", 
+            "Upper Blighttown VotD Side", 
+            "Lower Blighttown", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
             "Door between Upper New Londo and Valley of the Drakes",
@@ -321,7 +323,7 @@ location_tables = {
 "Depths to Blighttown Door": [
     DSRLocationData(11110130, f"DE: Depths -> Blighttown opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
-"Blighttown": [
+"Upper Blighttown Depths Side": [
     DSRLocationData(11110133, f"BT: Soul of a Proud Knight - Blighttown Entrance Dropoff", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110134, f"BT: Large Soul of a Nameless Soldier - Corpse at Left Ramp", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110135, f"BT: Blooming Purple Moss Clump - Suspended Walkway", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -338,13 +340,15 @@ location_tables = {
     DSRLocationData(11110143, f"BT: Eagle Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110144, f"BT: Pyromancy: Power Within", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110145, f"BT: Large Soul of a Nameless Soldier - Wall Hugger", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110595, f"BT: Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110146, f"BT: Wanderer Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110628, f"BT: Wanderer Coat", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110629, f"BT: Wanderer Manchette", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110630, f"BT: Wanderer Boots", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110147, f"BT: Falchion", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Lower Blighttown": [
     DSRLocationData(11110148, f"BT: Large Soul of a Proud Knight - Corpse below Ramp", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110595, f"BT: Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110149, f"BT: Dragon Scale - Blighttown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110150, f"BT: Butcher Knife", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110151, f"BT: Humanity - Maneater Mildred", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
@@ -367,6 +371,8 @@ location_tables = {
     DSRLocationData(11110560, f"BT: Soul of Quelaag", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110165, f"BT: Quelaag's Domain lit", f"Quelaag's Domain lit", DSRLocationCategory.BONFIRE),    
     DSRLocationData(11110556, f"BT: Bell of Awakening #2 rung", f"Bell of Awakening #2", DSRLocationCategory.EVENT),
+],
+"Upper Blighttown VotD Side": [
     DSRLocationData(11110166, f"BT: Soul of a Proud Knight - Blighttown Fire Keeper Soul", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110167, f"BT: Fire Keeper Soul - Blighttown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110168, f"BT: Mask of the Sealer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
