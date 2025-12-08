@@ -30,6 +30,18 @@ namespace DSAP
             LotItemNum = 1,
             LotItemId = 370
         };
+        private static ItemLotItem rubbishLotItem = new ItemLotItem
+        {
+            CumulateLotPoint = 0,
+            CumulateReset = false,
+            EnableLuck = false,
+            GetItemFlagId = -1,
+            LotItemBasePoint = 100,
+            LotItemCategory = (int)DSAP.Enums.DSItemCategory.Consumables,
+            LotItemNum = 1,
+            LotItemId = 380
+        };
+        
 
         public static ulong GetBaseAddress()
         {
@@ -500,6 +512,28 @@ namespace DSAP
             Log.Logger.Debug($"replacement dict size = {result.Count}");
             Log.Logger.Debug($" {addonitems} addonitems");
 
+
+            /* Populate frampt chest with rubbish */
+            const int frampt_base = 50004000;
+            /* Iterate over each pair of entries in the pair of lists */
+            for (int i = 0; i <= 69; i++)
+            {
+                /* Skip estus flask + upgrades */
+                if (i >= 38 && i <= 45)
+                    continue;
+
+                int lotflag = frampt_base + i;
+                /* lot with only rubbish */
+                var newitemlot = new ItemLot
+                {
+                    Rarity = 1,
+                    GetItemFlagId = -1,
+                    CumulateNumFlagId = -1,
+                    CumulateNumMax = 0,
+                    Items = [rubbishLotItem]
+                };
+                result.Add(lotflag, newitemlot);
+            }
 
             /* Then, anything that is in this eventflags list, but wasn't an AP location sent to us, replace with prism stones */
             //Dictionary<int, int> addedItems = [];
