@@ -14,12 +14,6 @@ namespace DSAP.Models
         [JsonConverter(typeof(HexToUIntConverter))]
         public uint Offset { get; set; }
         public int AddressBit { get;set; }
-        public new ulong Flag 
-        {
-            get 
-            {
-                return Helpers.OffsetPointer(Helpers.GetEventFlagsOffset(), (int)Offset); 
-            }
-        }
+        public int Flag { get; set; }
     }
 }
