@@ -76,6 +76,7 @@ public partial class App : Application
         
         Context.ClientVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
         Context.ConnectClicked += Context_ConnectClicked;
+        Context.UnstuckClicked += Context_UnstuckClicked;
         Context.CommandReceived += (e, a) =>
         {
             if (string.IsNullOrWhiteSpace(a.Command)) return;
@@ -253,8 +254,37 @@ public partial class App : Application
         }
 
         Context.ConnectButtonEnabled = true;
+        Context.UnstuckButtonEnabled = true;
 
 
+    }
+    private void Context_UnstuckClicked(object? sender, EventArgs e)
+    {
+        Context.UnstuckButtonEnabled = false;
+        if (Helpers.IsInGame())
+        {
+            /* Get the flag for if firelink shrine is lit */
+            var isFSLit = Helpers.ReadBonfireFlag("Firelink Shrine");
+            if (isFSLit && Helpers.SetLastBonfireToFS())
+            {
+                /* Set last rested bonfire to FS */
+                HomewardBoneCommand();
+                Log.Logger.Information("Unstuck - player sent to Firelink Shrine.");
+                Client.AddOverlayMessage("Unstuck - player sent to Firelink Shrine.");
+            }
+            else /* FS not lit or it failed to set */
+            {
+                HomewardBoneCommand();
+                Log.Logger.Warning("Unstuck - Firelink Shrine not yet lit. Sending player to last bonfire.");
+                Client.AddOverlayMessage("Unstuck - Firelink Shrine not yet lit. Sending player to last bonfire.");
+            }
+        }
+        else
+        {
+            Log.Logger.Warning("Unstuck - Player is not in game. Unstuck will do nothing.");
+            Client.AddOverlayMessage("Unstuck - Player is not in game. Unstuck will do nothing.");
+        }
+        Context.UnstuckButtonEnabled = true;
     }
     private void SendDeathlink(DeathLinkService _deathlinkService)
     {

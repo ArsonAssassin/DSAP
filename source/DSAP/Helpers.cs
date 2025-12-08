@@ -30,6 +30,18 @@ namespace DSAP
             LotItemNum = 1,
             LotItemId = 370
         };
+        private static ItemLotItem rubbishLotItem = new ItemLotItem
+        {
+            CumulateLotPoint = 0,
+            CumulateReset = false,
+            EnableLuck = false,
+            GetItemFlagId = -1,
+            LotItemBasePoint = 100,
+            LotItemCategory = (int)DSAP.Enums.DSItemCategory.Consumables,
+            LotItemNum = 1,
+            LotItemId = 380
+        };
+        
 
         public static ulong GetBaseAddress()
         {
@@ -199,6 +211,9 @@ namespace DSAP
 
             int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getPFAddress + 3), 4), 0);
             IntPtr progressionFlagsAddress = getPFAddress + offset + 7;
+            Log.Logger.Verbose($"getpf={getPFAddress}");
+            Log.Logger.Verbose($"getpf offset={offset}");
+            Log.Logger.Verbose($"pf @ ={progressionFlagsAddress}");
 
             return (ulong)progressionFlagsAddress;
         }
@@ -290,6 +305,22 @@ namespace DSAP
             }
             return locations;
         }
+        public static bool ReadBonfireFlag(string name)
+        {
+            string result = "";
+            var lotFlags = GetBonfireFlagLocations();
+            Location thisLoc = (Location)lotFlags.FirstOrDefault(x => x.Name == name);
+
+            ulong Address = thisLoc.Address;
+            int AddressBit = thisLoc.AddressBit;
+
+            int wholebyte = Memory.ReadByte(Address);
+            int bit = 0;
+            if ((wholebyte & (1 << AddressBit)) != 0)
+                bit = 1;
+            Log.Logger.Debug($"Read Bonfire Flag for {name} at {Address}/0x{Address.ToString("X")} = {wholebyte}, bit [{AddressBit}]={bit}");
+            return bit == 1;
+        }
         public static List<ILocation> GetBossFlagLocations()
         {
             List<ILocation> locations = new List<ILocation>();
@@ -311,15 +342,21 @@ namespace DSAP
         {
             List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetBonfireFlags();
-            var baseAddress = GetEventFlagsOffset();
+            var offset = GetProgressionFlagOffset();
+            var baseAddress = (ulong)Memory.ReadInt(offset);
+            var baseAddress2 = (ulong)Memory.ReadInt(baseAddress);
+            Log.Logger.Verbose($"bfloc offset={offset},0x{offset.ToString("X")}");
+            Log.Logger.Verbose($"bfloc baseadd={baseAddress},0x{baseAddress.ToString("X")}");
+            Log.Logger.Verbose($"bfloc baseadd2={baseAddress2},0x{baseAddress2.ToString("X")}");
+
             foreach (var lot in lotFlags)
             {
                 locations.Add(new Location
                 {
                     Name = lot.Name,
-                    Id = lot.Id,
-                    Address = lot.Flag,
-                    AddressBit = lot.AddressBit
+                    Address = baseAddress2 + lot.Offset,
+                    AddressBit = lot.AddressBit,
+                    Id = lot.Id
                 });
             }
             return locations;
@@ -500,6 +537,28 @@ namespace DSAP
             Log.Logger.Debug($"replacement dict size = {result.Count}");
             Log.Logger.Debug($" {addonitems} addonitems");
 
+
+            /* Populate frampt chest with rubbish */
+            const int frampt_base = 50004000;
+            /* Iterate over each pair of entries in the pair of lists */
+            for (int i = 0; i <= 69; i++)
+            {
+                /* Skip estus flask + upgrades */
+                if (i >= 38 && i <= 45)
+                    continue;
+
+                int lotflag = frampt_base + i;
+                /* lot with only rubbish */
+                var newitemlot = new ItemLot
+                {
+                    Rarity = 1,
+                    GetItemFlagId = -1,
+                    CumulateNumFlagId = -1,
+                    CumulateNumMax = 0,
+                    Items = [rubbishLotItem]
+                };
+                result.Add(lotflag, newitemlot);
+            }
 
             /* Then, anything that is in this eventflags list, but wasn't an AP location sent to us, replace with prism stones */
             //Dictionary<int, int> addedItems = [];
@@ -942,6 +1001,22 @@ namespace DSAP
                 locations.Add(location);
             }
             return locations;
+        }
+        public static bool SetLastBonfireToFS()
+        {
+            var baseCoff = GetBaseCOffset();
+            if (baseCoff != 0)
+            {
+                var baseC = (ulong)Memory.ReadInt(baseCoff);
+                if (baseC != 0)
+                {
+                    var lastBonfireAddress = OffsetPointer(baseC, 0xB34);
+                    const int firelinkShrine_id = 1020980;
+                    Memory.Write(lastBonfireAddress, firelinkShrine_id);
+                    return true;
+                }
+            }
+            return false;
         }
         public static LastBonfire GetLastBonfire()
         {
