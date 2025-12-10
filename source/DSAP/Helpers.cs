@@ -938,6 +938,7 @@ namespace DSAP
                 }
 
             }
+            int discrepancy_warnings = 0;
             foreach (var pair in itemLotIds)
             {
                 var lot = pair.Value;
@@ -948,7 +949,13 @@ namespace DSAP
                     {
                         Log.Logger.Warning($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
                         App.Client.AddOverlayMessage($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
+                        discrepancy_warnings++;
                     }
+                }
+                if (discrepancy_warnings > 20)
+                { 
+                    Log.Logger.Error($"More than 20 discrepancies detected.");
+                    break;
                 }
             }
             
