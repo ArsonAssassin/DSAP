@@ -580,7 +580,7 @@ public partial class App : Application
             slotDataTask.Wait();
             Dictionary<string, object> slotData = slotDataTask.Result;
 
-            DSOptions = new DarkSoulsOptions(App.Client.Options);
+            DSOptions = new DarkSoulsOptions(App.Client.Options, slotData);
             Log.Logger.Debug($"{DSOptions.ToString()}");
 
             SlotLocToItemUpgMap = Helpers.BuildSlotLocationToItemUpgMap(slotData, currentSlot);

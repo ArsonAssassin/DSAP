@@ -709,22 +709,41 @@ namespace DSAP
         {
             Dictionary<string, Tuple<int, string>> result = [];
             
+            if (App.DSOptions.ApworldCompare("0.0.20.0") < 0) /* apworld is < 0.0.20.0, which introduces weapon upgrades */
+            {
+                Log.Logger.Warning($"Apworld version too low, skipping weapon upgrade mapping.");
+                return result;
+            }
+
+            if (App.DSOptions.UpgradedWeaponsPercentage == 0)
+            {
+                Log.Logger.Information($"Upgraded weapon percentage detected as 0, skipping weapon upgrades.");
+                return result;
+            }
+
             /* Get itemsAddress, itemsId, and itemsUpgrades into lists */
             List<string> itemsAddress = new List<string?>();
             List<int?> itemsId = new List<int?>();
             List<string?> itemsUpgrades = new List<string?>();
 
-            if (slotData.TryGetValue("itemsAddress", out object itemsAddress_temp))
+            try
             {
-                itemsAddress.AddRange(JsonSerializer.Deserialize<string?[]>(itemsAddress_temp.ToString()));
-                if (slotData.TryGetValue("itemsId", out object itemsId_temp))
+                if (slotData.TryGetValue("itemsAddress", out object itemsAddress_temp))
                 {
-                    itemsId.AddRange(JsonSerializer.Deserialize<int?[]>(itemsId_temp.ToString()));
-                    if (slotData.TryGetValue("itemsUpgrades", out object itemsUpgrades_temp))
+                    itemsAddress.AddRange(JsonSerializer.Deserialize<string?[]>(itemsAddress_temp.ToString()));
+                    if (slotData.TryGetValue("itemsId", out object itemsId_temp))
                     {
-                        itemsUpgrades.AddRange(JsonSerializer.Deserialize<string[]>(itemsUpgrades_temp.ToString()));
+                        itemsId.AddRange(JsonSerializer.Deserialize<int?[]>(itemsId_temp.ToString()));
+                        if (slotData.TryGetValue("itemsUpgrades", out object itemsUpgrades_temp))
+                        {
+                            itemsUpgrades.AddRange(JsonSerializer.Deserialize<string[]>(itemsUpgrades_temp.ToString()));
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error($"exception creating upg map: {e.Message} {e.ToString()}");
             }
 
             if (itemsAddress.Count == 0 || itemsId.Count == 0 || itemsUpgrades.Count == 0
@@ -919,6 +938,7 @@ namespace DSAP
                 }
 
             }
+            int discrepancy_warnings = 0;
             foreach (var pair in itemLotIds)
             {
                 var lot = pair.Value;
@@ -929,7 +949,13 @@ namespace DSAP
                     {
                         Log.Logger.Warning($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
                         App.Client.AddOverlayMessage($"Discrepancy: {lot.Items.Count} items in item lot {pair.Key}, but {lot.numPlaced} items placed.");
+                        discrepancy_warnings++;
                     }
+                }
+                if (discrepancy_warnings > 20)
+                { 
+                    Log.Logger.Error($"More than 20 discrepancies detected.");
+                    break;
                 }
             }
             
