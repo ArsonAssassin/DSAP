@@ -91,7 +91,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
 * v0.0.19.1 and lower: On reconnect, player can receive duplicate items. The items are specifically those from "door"-type location checks in their own world.
 * v0.0.19.1 and lower: Some enemy drops (invaders, Havel, etc) are erroneously replaced with prism stones, but do not grant an AP item. The player should get the standard enemy drop in these locations instead.
-* v0.0.19.1 prerelease: Player does not receive deathlinks from other players.
+* v0.0.19.1 and lower: Not receiving deathlinks - workaround for one cause of this is to close DSAP client, completely exit game to desktop, relaunch DSR + DSAP, load in with your character, and then reconnect with DSAP client.
 * v0.0.19.1 prerelease: While unhollowed/human, the player is detected as "not in game". This can result in no items or deathlinks being sent to other players.
 * v0.0.18.3: DSR game and DSAP.client.exe both crash upon connect - you must load into the game and be able to move your character around before connecting with the client.
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
