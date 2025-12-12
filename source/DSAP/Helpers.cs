@@ -21,12 +21,11 @@ namespace DSAP
         /* aka GameDataMan */
         private static AoBHelper BaseBAoB = new AoBHelper("BaseB",
                 [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0],
-                "xxx????xxxxxxxxx");
+                "xxx????xxxxxxxxx", 3, 4);
         /* AKA "WorldChrManImp" */
         private static AoBHelper BaseXAoB = new AoBHelper("BaseX",
                 [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x39, 0x48, 0x68, 0x0f, 0x94, 0xc0, 0xc3],
-                "xxx????xxxxxxxx"
-                );
+                "xxx????xxxxxxxx", 3, 4);
 
         private static ItemLotItem prismStoneLotItem = new ItemLotItem
         {
@@ -136,20 +135,7 @@ namespace DSAP
 
         public static ulong GetBaseBAddress()
         {
-            IntPtr getBaseBAddress = BaseBAoB.Address;
-            if (getBaseBAddress == IntPtr.Zero) /* If somehow still zero, error */
-            {
-                throw new Exception("Failed to find the signature pattern");
-            }
-
-            int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getBaseBAddress + 3), 4), 0);
-            if (offset != 0)
-            {
-                IntPtr baseBAddress = new IntPtr(getBaseBAddress.ToInt64() + offset + 7);
-                ulong pointerValue = Memory.ReadULong((ulong)baseBAddress);
-                return pointerValue;
-            }
-            return 0;
+            return (ulong)BaseBAoB.Address;
         }
         public static ulong GetBaseCOffset()
         {
@@ -166,20 +152,9 @@ namespace DSAP
 
         public static ulong GetBaseXAddress()
         {
-            var baseAddress = GetBaseAddress();
-
-            IntPtr getBaseXAddress = BaseXAoB.Address;
-            if (getBaseXAddress != IntPtr.Zero)
-            {
-                uint offset = BitConverter.ToUInt32(Memory.ReadByteArray((ulong)(getBaseXAddress + 3), 4), 0);
-                if (offset != 0)
-                {
-                    IntPtr baseXAddressPtr = (nint)(getBaseXAddress + offset + 7);
-                    ulong pointerValue = Memory.ReadULong((ulong)baseXAddressPtr);
-                    return pointerValue;
-                }
-            }
-            return 0;
+            IntPtr baseX = BaseXAoB.Address;
+            return (ulong)baseX;
+            
         }   
         public static ulong GetChrBaseClassOffset()
         {
