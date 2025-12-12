@@ -118,7 +118,7 @@ public partial class App : Application
     {
         var command = Helpers.HomewardBone();
 
-        Array.Copy(BitConverter.GetBytes(Helpers.GetBaseBOffset()), 0, command, 0x3, 4);
+        Array.Copy(BitConverter.GetBytes(Helpers.GetBaseBAddress()), 0, command, 0x3, 4);
 
         var result = Memory.ExecuteCommand(command);
 
@@ -390,8 +390,8 @@ public partial class App : Application
                     }
                     else
                     {
-                        Log.Logger.Error($"Deathlink ignored - could not resolve hp location.");
-                        Client.AddOverlayMessage($"Deathlink ignored - could not resolve hp location.");
+                        Log.Logger.Error($"Deathlink ignored - could not resolve hp location (bad hp value) {whp} @ {whpp}/0x{whpp.ToString("X")}.");
+                        Client.AddOverlayMessage($"Deathlink ignored - could not resolve hp location (bad hp value).");
                     }
                 }
                 else
