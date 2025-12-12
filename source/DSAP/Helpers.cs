@@ -17,8 +17,17 @@ using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
     public class Helpers
-    {
-        private static ulong baseBCache = 0; /* cache the BaseB pointer, to save on scanning */
+    {   
+        /* aka GameDataMan */
+        private static AoBHelper BaseBAoB = new AoBHelper("BaseB",
+                [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0],
+                "xxx????xxxxxxxxx");
+        /* AKA "WorldChrManImp" */
+        private static AoBHelper BaseXAoB = new AoBHelper("BaseX",
+                [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x39, 0x48, 0x68, 0x0f, 0x94, 0xc0, 0xc3],
+                "xxx????xxxxxxxx"
+                );
+
         private static ItemLotItem prismStoneLotItem = new ItemLotItem
         {
             CumulateLotPoint = 0,
@@ -125,44 +134,23 @@ namespace DSAP
             }
         }
 
-        public static ulong GetBaseBOffset()
+        public static ulong GetBaseBAddress()
         {
-            if (baseBCache != 0)
-            {
-                return baseBCache;
-            }
-            var baseAddress = GetBaseAddress();
-            byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
-            string mask = "xxx????xxxxxxxxx";
-            IntPtr getBaseBAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
-
-            if (getBaseBAddress == IntPtr.Zero)
+            IntPtr getBaseBAddress = BaseBAoB.Address;
+            if (getBaseBAddress == IntPtr.Zero) /* If somehow still zero, error */
             {
                 throw new Exception("Failed to find the signature pattern");
             }
 
             int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getBaseBAddress + 3), 4), 0);
-
-            IntPtr baseBAddress = new IntPtr(getBaseBAddress.ToInt64() + offset + 7);
-
-            ulong pointerValue = Memory.ReadULong((ulong)baseBAddress);
-
-            baseBCache = pointerValue;
-            return pointerValue; 
-
+            if (offset != 0)
+            {
+                IntPtr baseBAddress = new IntPtr(getBaseBAddress.ToInt64() + offset + 7);
+                ulong pointerValue = Memory.ReadULong((ulong)baseBAddress);
+                return pointerValue;
+            }
+            return 0;
         }
-        //public static ulong GetBaseBOffset()
-        //{
-        //    var baseAddress = GetBaseAddress();
-        //    byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0 };
-        //    string mask = "xxx????xxxxxxxxx";
-        //    IntPtr getBaseBAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
-
-        //    int offset = BitConverter.ToInt32(Memory.ReadByteArray((ulong)(getBaseBAddress + 3), 4), 0);
-        //    IntPtr baseBAddress = (getBaseBAddress + 7)+ offset;
-
-        //    return (ulong)baseBAddress;
-        //}
         public static ulong GetBaseCOffset()
         {
             var baseAddress = GetBaseAddress();
@@ -175,20 +163,23 @@ namespace DSAP
 
             return (ulong)progressionFlagsAddress;
         }
-        public static ulong GetBaseXOffset()
+
+        public static ulong GetBaseXAddress()
         {
             var baseAddress = GetBaseAddress();
-            byte[] pattern = { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x39, 0x48, 0x68, 0x0f, 0x94, 0xc0, 0xc3 };
-            string mask = "xxx????xxxxxxxx";
-            IntPtr getBaseXAddress = Memory.FindSignature((nint)baseAddress, 0x1000000, pattern, mask);
 
-            uint offset = BitConverter.ToUInt32(Memory.ReadByteArray((ulong)(getBaseXAddress + 3), 4), 0);
-            IntPtr baseXAddress = (nint)(getBaseXAddress + offset + 7);
-
-
-            ulong pointerValue = Memory.ReadULong((ulong)baseXAddress);
-            
-            return pointerValue;
+            IntPtr getBaseXAddress = BaseXAoB.Address;
+            if (getBaseXAddress != IntPtr.Zero)
+            {
+                uint offset = BitConverter.ToUInt32(Memory.ReadByteArray((ulong)(getBaseXAddress + 3), 4), 0);
+                if (offset != 0)
+                {
+                    IntPtr baseXAddressPtr = (nint)(getBaseXAddress + offset + 7);
+                    ulong pointerValue = Memory.ReadULong((ulong)baseXAddressPtr);
+                    return pointerValue;
+                }
+            }
+            return 0;
         }   
         public static ulong GetChrBaseClassOffset()
         {
@@ -246,7 +237,7 @@ namespace DSAP
         }
         internal static ulong GetPlayerHPAddress()
         {
-            var baseB = GetBaseBOffset();
+            var baseB = GetBaseBAddress();
             var next = OffsetPointer(baseB, 0x10);
             var pointer = Memory.ReadULong(next);
             next = OffsetPointer(pointer, 0x14);
@@ -258,7 +249,7 @@ namespace DSAP
         /// <returns>The address, or 0 if any pointer value along the chain was 0.</returns>
         internal static ulong GetPlayerWritableHPAddress()
         {
-            var baseX = GetBaseXOffset();
+            var baseX = GetBaseXAddress();
             if (baseX != 0)
             {
                 var next = OffsetPointer(baseX, 0x68);
@@ -412,12 +403,10 @@ namespace DSAP
             }
             return locations;
         }
-        public static ulong OffsetPointer(ulong ptr, int offset)
+        public static ulong OffsetPointer(ulong ptr, uint offset)
         {
-            ushort offsetWithin4GB = (ushort)(ptr & 0xFFFF);
-            ushort newOffset = (ushort)(offsetWithin4GB + offset);
-            ulong newAddress = (ptr & 0xFFFF0000) | newOffset;
-            return newAddress;
+            ulong newAddress = ptr;
+            return ptr + (ulong)offset;
         }
 
         /// <summary>
@@ -1281,10 +1270,10 @@ namespace DSAP
         }        
         public static uint getIngameTime()
         {
-            var bOffset = GetBaseBOffset();
-            if (bOffset != 0)
+            var baseB = GetBaseBAddress();
+            if (baseB != 0)
             {
-                var next = OffsetPointer(bOffset, 0xA4);
+                var next = OffsetPointer(baseB, 0xA4);
                 return Memory.ReadUInt(next);
             }
             return 0; 
