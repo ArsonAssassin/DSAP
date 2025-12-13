@@ -71,7 +71,6 @@ namespace DSAP.Models
                 if (this.Pointer != IntPtr.Zero)
                 {
                     ulong result = Memory.ReadULong((ulong)_pointer);
-                    Log.Logger.Debug($"{Key}_offset found: {result}/0x{result.ToString("X")}");
                     return (nint)result;
                 }
                 return IntPtr.Zero;
