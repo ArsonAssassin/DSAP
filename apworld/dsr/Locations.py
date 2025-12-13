@@ -935,7 +935,7 @@ location_tables = {
 "Oolacile Township": [    
     DSRLocationData(11110752, f"OT: Rubbish - Outside of Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110753, f"OT: Oolacile - Township lit", f"Oolacile - Township lit", DSRLocationCategory.BONFIRE),
-    # DSRLocationData(11110754, f"OT: ?Soul of a Hero - Behind left Stairs??", f"Firebomb", DSRLocationCategory.ITEM_LOT), # does this exist?
+    DSRLocationData(11110754, f"OT: Soul of a Hero - 2F Behind Stairs To Gough", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110755, f"OT: Large Soul of a Proud Knight - Early Oolacile Rooftop", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110756, f"OT: Soul of a Brave Warrior - By First Sorceress", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110758, f"OT: Sorcery: Dark Orb", f"Firebomb", DSRLocationCategory.ITEM_LOT),

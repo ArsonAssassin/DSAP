@@ -43,6 +43,7 @@ public partial class App : Application
     private static readonly object _lockObject = new object();
     private static readonly object _deathlinkLock = new object(); // lock that protects IsHandlingDeathLink and lastDeathLinkTime
     private bool IsHandlingDeathlink = false;
+    private bool deathlink_enabled = false;
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
     public static DarkSoulsOptions DSOptions;
     public override void Initialize()
@@ -77,14 +78,54 @@ public partial class App : Application
         Context.ClientVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
         Context.ConnectClicked += Context_ConnectClicked;
         Context.UnstuckClicked += Context_UnstuckClicked;
-        Context.CommandReceived += (e, a) =>
-        {
-            if (string.IsNullOrWhiteSpace(a.Command)) return;
-            Client?.SendMessage(a.Command);
-        };
+        Context.CommandReceived += Context_CommandReceived;
 
         Context.ConnectButtonEnabled = true;
 
+    }
+    public void Context_CommandReceived(object? sender, ArchipelagoCommandEventArgs a)
+    {
+        if (string.IsNullOrWhiteSpace(a.Command)) return;
+
+        string command = a.Command.Trim().ToLower();
+        Log.Logger.Debug($"command received: {command}");
+        if (command.StartsWith("/help"))
+        {
+            Log.Logger.Warning("--- DSAP commands: --- ");
+            Log.Logger.Warning(" /help - display this menu");
+            Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session)");
+            Log.Logger.Warning("--- End of DSAP commands. ---");
+            Client?.SendMessage(a.Command); /* send original command through client for the rest of /help - maybe player will have something if they are an admin. */
+        }
+        else if (command.StartsWith("/deathlink"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 1)
+            {
+                ToggleDeathlink();
+            }
+            else if (cmdparts.Length == 2)
+            {
+                if (cmdparts[1] == "on")
+                    SetDeathlink(true);
+                else if (cmdparts[1] == "off")
+                    SetDeathlink(false);
+                else if (cmdparts[1] == "toggle")
+                    ToggleDeathlink();
+                else
+                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [on, off, toggle].");
+            }
+            else
+            {
+                Log.Logger.Warning($"Invalid command: {a.Command} - too many arguments received. Format: !deathlink [on/off/toggle]");
+            }
+            /* Don't send !deathlink to normal processing */
+        }
+        else /* send any not-specifically-handled message to normal processing */
+        {
+            Client?.SendMessage(a.Command);
+        }
+            
     }
     public static void AddItem(int category, int id, int quantity)
     {
@@ -166,6 +207,7 @@ public partial class App : Application
             {
                 _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
                 _deathlinkService = null;
+                deathlink_enabled = false;
             }
             Client.CancelMonitors();
         }
@@ -225,11 +267,7 @@ public partial class App : Application
         }
         if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
         {
-            _deathlinkService = Client.EnableDeathLink();
-            _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
-            Log.Logger.Debug($"initializing deathlink");
-            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService),
-                (health) => _playerIsDead());
+            SetDeathlink(true);
         }
 
         var bossLocations = Helpers.GetBossFlagLocations();
@@ -290,6 +328,11 @@ public partial class App : Application
     {
         Log.Logger.Debug($"Attempting deathlink");
 
+        if (!deathlink_enabled)
+        {
+            Log.Logger.Warning("Deathlink not enabled. Canceling sending deathlink. This may occur if deathlink was turned off after being on.");
+            return;
+        }
         var deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
         lock (_deathlinkLock)
         {
@@ -361,6 +404,11 @@ public partial class App : Application
         Log.Logger.Information($"Deathlink received: {deathLink.Cause ?? deathLink.Source + " died."} RIP.");
         Client.AddOverlayMessage($"Deathlink received: {deathLink.Cause ?? deathLink.Source + " died."} RIP.");
 
+        if (!deathlink_enabled)
+        {
+            Log.Logger.Warning("Deathlink not enabled. Canceling receiving death. This may occur if deathlink was turned off after being on.");
+            return;
+        }
         // Don't process deaths from ourself, if they come to us
         if (deathLink.Source == Client.CurrentSession.Players.ActivePlayer.Name) return;
 
@@ -452,6 +500,49 @@ public partial class App : Application
         }
         Log.Logger.Debug($"Location Completed: {e.CompletedLocation.Name} at {e.CompletedLocation.Id}");
     }
+    private void ToggleDeathlink()
+    {
+        if (deathlink_enabled)
+            SetDeathlink(false);
+        else
+            SetDeathlink(true);
+    }
+    private void SetDeathlink(bool enable)
+    {
+        if (enable && !deathlink_enabled)
+        {
+            if (_deathlinkService == null)
+            {
+                _deathlinkService = Client.EnableDeathLink();
+            }
+            else
+            {
+                _deathlinkService.EnableDeathLink();
+            }
+            _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
+            Log.Logger.Information($"Initializing deathlink.");
+            deathlink_enabled = true;
+            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService),
+                (health) => _playerIsDead());
+        }
+        else if (!enable && deathlink_enabled)
+        {
+            Log.Logger.Information($"Disabling deathlink.");
+            deathlink_enabled = false;
+            if (_deathlinkService != null)
+            {
+                _deathlinkService.DisableDeathLink();
+                _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
+            }
+        }
+        else
+        {
+            if (deathlink_enabled)
+                Log.Logger.Warning("Deathlink is already enabled.");
+            else
+                Log.Logger.Warning("Deathlink is already disabled.");
+        }
+    }
     private static void ReplaceItems()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -510,8 +601,8 @@ public partial class App : Application
         }
         else
         {
-            Log.Logger.Warning($"Unable to identify receieved item {itemId}, receiving rubbish instead.");
-            Client.AddOverlayMessage($"Unable to identify receieved item {itemId}, receiving rubbish instead.");
+            Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
+            Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
             var filler = AllItems.First(x => x.Id == 380);
             AddItem((int)filler.Category, filler.Id, 1);
         }
