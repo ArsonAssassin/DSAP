@@ -12,6 +12,8 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 [Compatibility](#Compatibility)  
 [Frequently Asked Questions (FAQ)](#Frequently-Asked-Questions-FAQ)  
 [Known issues](#Known-issues)  
+[Changelog](#Changelog)
+[Roadmap](#Roadmap)
 
 # How it works
 * Every loose item on the ground, and some doors, are "locations" or "checks", and can each contain any item from the multiworld randomized item pool.
@@ -81,17 +83,48 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
   * A: Not supported yet. You must create your character before connecting with the DSAP client.
 * Q: Randomized enemies/enemizer?
   * A: Not included. Some players have had success with using a separate enemy randomizer. Randomizing bosses could introduce logic issues, but other enemy drops are not item "locations", so randomizing them should be fine.
-* Q: DLC?
-  * A: Not yet supported
+* Q: Is there a tracker?
+  * There is a poptracker pack available at https://github.com/routhken/Dark_Souls_Remastered_tracker/releases
 
 # Known issues
-* If you receive an item while on the main menu, it may get lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
+* If you receive an item while on the main menu, it will be lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
   * Furthermore, **you should close the client before quitting to menu or quitting the game.**
-* Looting the "key item chest" in Firelink Shrine behind Frampt **will break logic for DSR**. In a vanilla playthrough, this chest is usually empty/already open, and only has items if you somehow don't have a key item you "should have", depending on where you are in the game. In a randomizer environment, those normal circumstances don't apply! As an example: if you loot this chest after looting the vanilla "Basement Key" location, it will have a Basement Key - but in AP randomizer that key can even be in another game!
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
+* v0.0.19.1 and lower: Looting the "key item chest" in Firelink Shrine behind Frampt **will break logic for DSR**. In a vanilla playthrough, this chest is usually empty/already open, and only has items if you somehow don't have a key item you "should have", depending on where you are in the game. In a randomizer environment, those normal circumstances don't apply! As an example: if you loot this chest after looting the vanilla "Basement Key" location, it will have a Basement Key - but in AP randomizer that key can even be in another game! In v0.0.20+ it gives rubbish instead.
 * v0.0.19.1 and lower: On reconnect, player can receive duplicate items. The items are specifically those from "door"-type location checks in their own world.
 * v0.0.19.1 and lower: Some enemy drops (invaders, Havel, etc) are erroneously replaced with prism stones, but do not grant an AP item. The player should get the standard enemy drop in these locations instead.
-* v0.0.19.1 and lower: Not receiving deathlinks - workaround for one cause of this is to close DSAP client, completely exit game to desktop, relaunch DSR + DSAP, load in with your character, and then reconnect with DSAP client.
+* v0.0.19.1 and lower: Not receiving deathlinks - a potential workaround is to close DSAP client, completely exit game to desktop, relaunch DSR + DSAP, load in with your character, and then reconnect with DSAP client. This occurs when the game happens to load your player character information near enough to a 65k boundary (limit of a 2^16 "short" int), which could in some cases happen each time you load in. Anecdotally, restarting the game from desktop makes it most likely to allocate your memory in a better spot. This is fixed in v0.0.20+.
 * v0.0.19.1 prerelease: While unhollowed/human, the player is detected as "not in game". This can result in no items or deathlinks being sent to other players.
 * v0.0.18.3: DSR game and DSAP.client.exe both crash upon connect - you must load into the game and be able to move your character around before connecting with the client.
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
+
+# Changelog
+## Version 0.0.20 (upcoming)
+* Feature: Enable DLC (#50). Exclude-able as location group "All DLC areas" as noted below
+* Feature: Weapon Upgrades via yaml option (#48)
+* Feature: Add /deathlink command to toggle it post-seed creation, and /help command to list DSAP-specific commands (#68)
+* Feature: Add location groups (#62). Using this feature you can exclude whole groups of locations such as "All DLC areas" or "Painted World", "The Great Hollow", "Ash Lake", "Upper Blighttown Depths Side", etc.
+* Feature: Add item groups (#62). Not excludable yet, but you are now able to mark them as local or non-local.
+* Feature: Unstuck button (#64) - will teleport you to Firelink Shrine if you've at least reached there. Useful if stuck in the Duke's Archive without a key.
+* Feature: Compatibility support for 0.0.19.1 and warning/error messages for unsupported apworld versions
+* Fix: Goal detection now requires being in-game (#52)
+* Fix: Fixed Deathlink "desync" issue and potentially other random things failing due to incorrectly calculating addresses for their in-memory structures (#66)
+* Fix: No longer replacing every enemy lot (#47)
+* Fix: Embers are always added to the item pool, and only added once (#47)
+* Fix: Firelink Shrine Chest behind Frampt ("key item lost and found") replaced with rubbish to prevent accidentally breaking AP logic (#64)
+* Fix: Location - nonexistent DA: Reah's Cell location removed (#47)
+* Fix: Location - PW: Twin Humanities not being detected as "checked" fixed (#49)
+* Fix: Location - PW: Velka's Rapier now requires Annex Key (#49)
+* Fix: Location - PW: Gold Coin doesn't require Annex Key (#54)
+* Fix: Location - PW: "Next to Stairs" check hint text improved
+* Fix: Items - Elite Cleric Armor set added (#47)
+* Fix: Post-Seath Arena entry logic (#61)
+* General: Better error mesaging (#50, #65, #68, etc)
+
+# Roadmap
+## 0.0.21 (planned)
+* Feature: Item pool Balancing and options
+
+## 0.0.22 (planned)
+* Feature: Fog Gates as items
+* Feature: Starting Item randomization
