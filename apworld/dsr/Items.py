@@ -933,7 +933,7 @@ def BuildItemPool(count, options, world):
 
     bossList = [item for item in filler_items if item.category in [DSRItemCategory.BOSS_SOUL]]
     consumableList = [item for item in filler_items if item.category in [DSRItemCategory.CONSUMABLE] and "soul" not in item.name.lower() and "fire keeper" not in item.name.lower()]
-    soulList = [item for item in filler_items if "soul" in item.name.lower() and "fire keeper" not in item.name.lower() and item.category not in [DSRItemCategory.BOSS_SOUL]]
+    soulList = [item for item in filler_items if "soul" in item.name.lower() and "fire keeper" not in item.name.lower() and item.category in [DSRItemCategory.CONSUMABLE]]
     
     materialList = [item for item in filler_items if item.category in [DSRItemCategory.UPGRADE_MATERIAL]]
     
