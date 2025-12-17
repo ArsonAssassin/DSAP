@@ -26,6 +26,7 @@ using System.Text.Json.Serialization;
 using static DSAP.Enums;
 using Color = Avalonia.Media.Color;
 using Location = Archipelago.Core.Models.Location;
+using System.Threading.Tasks;
 
 namespace DSAP;
 
@@ -569,42 +570,72 @@ public partial class App : Application
     private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
     {
         LogItem(e.Item, 1);
-        var itemId = e.Item.Id;
-        var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
-        if (itemToReceive != null)
+        bool success = false;
+        if (Helpers.IsInGame())
         {
-            Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
-            Client.AddOverlayMessage($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
-
-            if (itemToReceive.ApId == 11120000)
+            var itemId = e.Item.Id;
+            var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
+            if (itemToReceive != null)
             {
-                RunLagTrap();
+                Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
+                Client.AddOverlayMessage($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
+
+                if (itemToReceive.ApId == 11120000)
+                {
+                    RunLagTrap();
+                }
+                else
+                {
+                    Log.Logger.Verbose($"Attempting to upgrade item: '{itemToReceive.ApId}' {itemToReceive.Name} from loc {e.LocationId}.");
+                    if (DSOptions.UpgradedWeaponsPercentage > 0
+                        && SlotLocToItemUpgMap.TryGetValue($"{e.Player.Slot}:{e.LocationId}", out var itemupg))
+                    {
+                        if (itemupg.Item1 == itemToReceive.ApId) // if item apid matches
+                            itemToReceive = Helpers.UpgradeItem(itemToReceive, itemupg.Item2, true);
+                        else
+                        {
+                            Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
+                            Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
+                        }
+
+
+                    }
+                    AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+                }
+                /* If after receiving item (or trap), player is still in game, then it received successfully */
+                if (Helpers.IsInGame())
+                {
+                    success = true;
+                }
             }
             else
             {
-                Log.Logger.Verbose($"Attempting to upgrade item: '{itemToReceive.ApId}' {itemToReceive.Name} from loc {e.LocationId}.");
-                if (DSOptions.UpgradedWeaponsPercentage > 0
-                    && SlotLocToItemUpgMap.TryGetValue($"{e.Player.Slot}:{e.LocationId}", out var itemupg))
-                {
-                    if (itemupg.Item1 == itemToReceive.ApId) // if item apid matches
-                        itemToReceive = Helpers.UpgradeItem(itemToReceive, itemupg.Item2, true);
-                    else
-                    {
-                        Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
-                        Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
-                    }
-                        
-
-                }
-                AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+                Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
+                Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
+                var filler = AllItems.First(x => x.Id == 380);
+                AddItem((int)filler.Category, filler.Id, 1);
             }
         }
-        else
+        e.Success = success;
+        /* If receive didn't work, schedule re-receive for when we are back in game */
+        if (!success)
         {
-            Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
-            Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
-            var filler = AllItems.First(x => x.Id == 380);
-            AddItem((int)filler.Category, filler.Id, 1);
+            Log.Logger.Warning($"Failed to receive item - Player not loaded into game. Will retry when player is once again in game.");
+            Client.AddOverlayMessage($"Failed to receive item - Player not loaded into game. Will retry when player is once again in game.");
+            
+            Task.Run(() =>
+            {
+                /* Check every second if player is in game again yet */
+                while(!Helpers.IsInGame())
+                {
+                    Task.Delay(1000);
+                }
+
+                Log.Logger.Warning($"Player once again detected as in game. Re-trying item receive.");
+                Client.AddOverlayMessage($"Player once again detected as in game. Re-trying item receive.");
+                /* Once finally in game, re-enable receives. */
+                Client.ReceiveReady();
+            });
         }
     }
 
