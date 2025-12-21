@@ -1,8 +1,7 @@
 ﻿using Archipelago.Core.Models;
 using Archipelago.Core.Util;
+using Archipelago.Core.Util.GPS;
 using DSAP.Models;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Serilog;
 using System;
 using System.Collections;
@@ -12,6 +11,8 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP
@@ -22,10 +23,18 @@ namespace DSAP
         private static AoBHelper BaseBAoB = new AoBHelper("BaseB",
                 [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0],
                 "xxx????xxxxxxxxx", 3, 4);
+        /* worlddataman? */
+        private static AoBHelper BaseEAoB = new AoBHelper("BaseE",
+                [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8B, 0x88, 0x98, 0x0B, 0x00, 0x00, 0x8B, 0x41, 0x3C, 0xC3],
+                "xxx????xxxxxxxxxxx", 3, 4);
         /* AKA "WorldChrManImp" */
         private static AoBHelper BaseXAoB = new AoBHelper("BaseX",
                 [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x39, 0x48, 0x68, 0x0f, 0x94, 0xc0, 0xc3],
                 "xxx????xxxxxxxx", 3, 4);
+        /* aka 141c8adc0 */
+        private static AoBHelper EmkAoB = new AoBHelper("EmkHead",
+                [0x48, 0x89, 0x05, 0x00, 0x00, 0x00, 0x00, 0xeb, 0x0b, 0x48, 0xc7, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8b, 0x5c, 0x24, 0x50],
+                "xxx????xxxxx????xxxxxxxxx", 3, 4);
 
         private static ItemLotItem prismStoneLotItem = new ItemLotItem
         {
@@ -149,13 +158,24 @@ namespace DSAP
 
             return (ulong)progressionFlagsAddress;
         }
+        public static ulong GetBaseEAddress()
+        {
+            IntPtr baseE = BaseEAoB.Address;
+            return (ulong)baseE;
 
+        }
         public static ulong GetBaseXAddress()
         {
             IntPtr baseX = BaseXAoB.Address;
             return (ulong)baseX;
             
-        }   
+        }
+        public static ulong GetEmkHeadAddress()
+        {
+            IntPtr emkHeadPtr = EmkAoB.Address;
+            return (ulong)emkHeadPtr;
+
+        }
         public static ulong GetChrBaseClassOffset()
         {
             var baseAddress = GetBaseAddress();       
@@ -240,7 +260,7 @@ namespace DSAP
         private static ulong GetItemLotParamOffset()
         {
             var soloParams = GetSoloParamOffset();
-
+            
             var foo = Memory.ReadULong(soloParams);
             var next = OffsetPointer(foo, 0x570);
             var foo2 = Memory.ReadULong(next);
@@ -391,10 +411,17 @@ namespace DSAP
         /// This is used for replacing item lots in our own game.
         /// </details>
         /// <param name="eventflags">A list of location flags of which items will be found.</param>
+        /// <param name="resultMap">A dictionary mapping itemlot flags to "item lots".</param>
+        /// <param name="specialResultMap">A dictionary mapping itemlot flags to "special items" (e.g. events, traps). </param>
         /// <returns></returns>
-        public static Dictionary<int, ItemLot> BuildFlagToLotMap(List<EventFlag> eventflags, Dictionary<string, object> slotData, Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
+        public static void BuildFlagToLotMap(out Dictionary<int, ItemLot> resultMap,
+            out Dictionary<int, ItemLot> specialResultMap,
+            List<EventFlag> eventflags,
+            Dictionary<string, object> slotData,
+            Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
+            Dictionary<int, ItemLot> specialResult = new Dictionary<int, ItemLot>();
 
             var addonitems = 0;
 
@@ -455,7 +482,8 @@ namespace DSAP
                                     }
 
                                     Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
-                                    newLotItem = new ItemLotItem { 
+                                    newLotItem = new ItemLotItem
+                                    {
                                         CumulateLotPoint = 0,
                                         CumulateReset = false,
                                         EnableLuck = false,
@@ -465,6 +493,25 @@ namespace DSAP
                                         LotItemNum = 1,
                                         LotItemId = repitem.Id
                                     };
+
+                                    if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
+                                    {
+                                        Log.Logger.Debug($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with prism stone.");
+                                        var newspecialitemlot = new ItemLot
+                                        {
+                                            Rarity = 1,
+                                            GetItemFlagId = -1,
+                                            CumulateNumFlagId = -1,
+                                            CumulateNumMax = 0,
+                                            Items = []
+                                        };
+
+                                        if (!specialResult.TryAdd(lot.Id, newspecialitemlot))
+                                            addonitems++;
+                                        specialResult[lot.Id].Items.Add(newLotItem);
+                                        
+                                        newLotItem = prismStoneLotItem;
+                                    }
                                 }
                                 else
                                 {
@@ -548,8 +595,9 @@ namespace DSAP
             //    }
             //    Log.Logger.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
             //}
-
-            return result;
+            specialResultMap = specialResult;
+            resultMap = result;
+            return;
         }
 
         /// <summary>
@@ -620,7 +668,7 @@ namespace DSAP
                             }
 
                             Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
-                            var newitem = new ItemLotItem
+                            ItemLotItem newitem = new ItemLotItem
                             {
                                 CumulateLotPoint = 0,
                                 CumulateReset = false,
@@ -631,6 +679,7 @@ namespace DSAP
                                 LotItemNum = 1,
                                 LotItemId = repitem.Id
                             };
+
                             /* If it's already in the mapping, add the item to the list of items in the existing lot */
                             if (result.ContainsKey(lot.Id))
                                 result[lot.Id].Items.Add(newitem);
@@ -1093,6 +1142,30 @@ namespace DSAP
             var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
+        public static List<DarkSoulsItem> GetDsrEventItems()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.DsrEvents.json");
+            var list = JsonSerializer.Deserialize<List<DsrEvent>>(json, GetJsonOptions());
+            List<DarkSoulsItem> newlist = list.Select(x => new DarkSoulsItem()
+            {
+                Name = x.Name,
+                Id = x.Id, // ap id of event item
+                StackSize = 1,
+                UpgradeType = Enums.ItemUpgrade.None,
+                Category = Enums.DSItemCategory.DsrEvent,
+                ApId = x.Id, // ap id of event item
+            }
+            ).ToList();
+            return newlist;
+        }
+        public static List<EmkController> GetDsrEventEmks()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.DsrEvents.json");
+            var list = JsonSerializer.Deserialize<List<DsrEvent>>(json, GetJsonOptions());
+            List<EmkController> newlist = list.Select(x => new EmkController(x.Name, x.Type,
+                x.Eventid, x.Eventslot, x.Id)).ToList();
+            return newlist;
+        }
         public static List<DarkSoulsItem> GetRangedWeapons()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.RangedWeapons.json");
@@ -1229,6 +1302,7 @@ namespace DSAP
             results = results.Concat(GetMeleeWeapons()).ToList();
             results = results.Concat(GetArmor()).ToList();
             results = results.Concat(GetTraps()).ToList();
+            results = results.Concat(GetDsrEventItems()).ToList();
 
             return results;
         }
@@ -1253,7 +1327,53 @@ namespace DSAP
             }
             return 0; 
         }
-
+        public static PositionData GetPosition()
+        {
+            Log.Logger.Debug("Getting position");
+            var PositionData = new PositionData();
+            if (IsInGame())
+            {
+                // map = worldnumber + area number. e.g. 10 + 02 => m10_02 = firelink shrine
+                ulong eoffset = GetBaseEAddress();
+                if (eoffset != 0)
+                {
+                    uint worldnumber = GetWorldNumber();
+                    uint areanumber = GetAreaNumber();
+                    Log.Logger.Debug($"Position update: got w/a {worldnumber} {areanumber}");
+                    if (worldnumber > 9 && worldnumber < 19 && areanumber >= 0 && areanumber < 3)
+                    {
+                        PositionData.MapId = (int)(1000000 * worldnumber + 10000 * areanumber);
+                        Log.Logger.Debug($"Got position: {PositionData.MapId}");
+                        return PositionData;
+                    }
+                }
+            }
+            PositionData.MapId = App.Client.GPSHandler?.MapId ?? 0;
+            Log.Logger.Debug($"Got position: {PositionData.MapId} (no update)");
+            return PositionData;
+        }
+        public static uint GetWorldNumber(ulong eOffset = 0) // E + A23
+        {
+            if (eOffset == 0)
+                eOffset = GetBaseEAddress();
+            if (eOffset != 0)
+            {
+                var next = OffsetPointer(eOffset, 0xA23);
+                return Memory.ReadByte(next);
+            }
+            return 0;
+        }
+        public static uint GetAreaNumber(ulong eOffset = 0) // E + A22
+        {
+            if (eOffset == 0)
+                eOffset = GetBaseEAddress();
+            if (eOffset != 0)
+            {
+                var next = OffsetPointer(eOffset, 0xA22);
+                return Memory.ReadByte(next);
+            }
+            return 0;
+        }
         public static (ulong, int) GetEventFlagOffset(int eventFlag)
         {
             string idString = eventFlag.ToString("D8");
@@ -1438,5 +1558,307 @@ namespace DSAP
             return new JsonSerializerOptions();
         }
 
+        static HashSet<Tuple<int, int>> PrevEvents = [];
+        static ulong prevEventHeadPtr = ulong.MinValue;
+        static ulong prevEventHead = ulong.MinValue;
+        internal static void CheckEventsList()
+        {
+            HashSet<Tuple<int, int>> ExistingEvents = [];
+
+            ulong eventhead_ptr = GetEmkHeadAddress();
+            if (eventhead_ptr != prevEventHeadPtr)
+                Log.Logger.Debug($"eventheadptr changed from {prevEventHeadPtr.ToString("X")} to {eventhead_ptr.ToString("X")}");
+            ulong eventhead = Memory.ReadULong((ulong)eventhead_ptr);
+            if (eventhead != prevEventHead)
+                Log.Logger.Debug($"eventhead changed from {prevEventHead.ToString("X")} to {eventhead.ToString("X")}");
+            prevEventHead = eventhead;
+            prevEventHeadPtr = eventhead_ptr;
+
+            // read every event into the hashset
+            // detect number of differences
+            int numevents = 0;
+            for (ulong thisEmk = eventhead; thisEmk != 0; thisEmk = Memory.ReadULong((ulong)thisEmk + 0x68))
+            {
+
+                numevents++;
+                if (numevents > 2000)
+                {
+                    Log.Logger.Warning($"c events:{numevents}");
+                    Log.Logger.Warning($"thisemk = :{thisEmk.ToString("X")}");
+                    break;
+                }
+
+                int eventid = Memory.ReadInt(thisEmk + 0x30);
+                int eventslot = Memory.ReadByte(thisEmk + 0x34);
+
+                ExistingEvents.Add(new Tuple<int,int>(eventid, eventslot));
+            }
+
+            if (!ExistingEvents.SetEquals(PrevEvents))
+            {
+                bool printedfirst = false;
+                int eventsRemoved = 0;
+                Tuple<int, int> lastemk = new Tuple<int, int>(0,0);
+                foreach (Tuple<int,int> emk in PrevEvents)
+                {
+                    if (!ExistingEvents.Contains(emk))
+                    {
+                        eventsRemoved++;
+                        if (!printedfirst)
+                        {
+                            Log.Logger.Debug($"(F) - {emk.Item1}:{emk.Item2}");
+                            printedfirst = true;
+                        }
+                        lastemk = emk;
+                    }
+                }
+                if (eventsRemoved > 1)
+                {
+                    Log.Logger.Debug($"(L) - {lastemk.Item1}:{lastemk.Item2}");
+                }
+                printedfirst = false;
+                int eventsAdded = 0;
+                lastemk = new Tuple<int, int>(0, 0);
+                foreach (Tuple<int, int> emk in ExistingEvents)
+                {
+                    if (!PrevEvents.Contains(emk))
+                    {
+                        eventsAdded++;
+                        if (!printedfirst)
+                        {
+                            Log.Logger.Debug($"(F) + {emk.Item1}:{emk.Item2}");
+                            printedfirst = true;
+                        }
+                        lastemk = emk;
+                    }
+                }
+                if (eventsAdded > 1)
+                {
+                    Log.Logger.Debug($"(L) + {lastemk.Item1}:{lastemk.Item2}");
+                }
+                Log.Logger.Debug($"Events from {PrevEvents.Count} to {ExistingEvents.Count} > - {eventsRemoved} + {eventsAdded}");
+                
+                PrevEvents = new HashSet<Tuple<int, int>>(ExistingEvents);
+            }
+        }
+
+        static uint cached_mapid3;
+        internal static void ManageEventsList(List<EmkController> emkControllers)
+        {
+            try
+            {
+                Log.Logger.Verbose("running eventlist");
+
+                if (emkControllers.Count == 0)
+                {
+                    return;
+                }
+                if (!IsInGame())
+                    return;
+                Dictionary<Tuple<int, int>, EmkController> emkdict = [];
+                List<EmkController> addingEmks = [];
+
+                foreach (EmkController emk in emkControllers)
+                {
+                    /* If player doesn't have key, or we've "saved ptr", examine it in list */
+                    if (!emk.HasKey || emk.Saved_Ptr != 0)
+                    {
+                        emkdict[new Tuple<int, int>(emk.Eventid, emk.Eventslot)] = emk;
+                    }
+                }
+
+                uint mapid3 = 0; // 3 digit map code
+                uint wnum = GetWorldNumber();
+                uint anum = GetAreaNumber();
+                if (wnum > 0)
+                    mapid3 = 10 * wnum + anum;
+                if (mapid3 != cached_mapid3)
+                    Log.Logger.Verbose($"mapid={mapid3}, w={wnum}, a={anum}");
+                cached_mapid3 = mapid3;
+
+                ulong eventhead_ptr = GetEmkHeadAddress();
+                if (eventhead_ptr == 0)
+                {
+                    Log.Logger.Verbose($"eventheadptr is null");
+                    ReleaseEvents(emkControllers);
+                    return;
+                }
+                ulong eventhead = Memory.ReadULong((ulong)eventhead_ptr);
+                if (eventhead == 0)
+                {
+                    Log.Logger.Verbose($"eventhead is null");
+                    ReleaseEvents(emkControllers);
+                    return;
+                }
+
+                if (emkdict.Count != 0)
+                {
+                    //Log.Logger.Information("Emks found, Managing event list");
+
+                    // prevptr is address of a ptr to the "current emk"
+                    // When "current emk" is pulled off list, it 
+                    ulong prevptr = eventhead_ptr;
+                    int numevents = 0;
+                    // check every event for if it is in the list
+                    for (ulong thisEmk = eventhead; thisEmk != 0; thisEmk = Memory.ReadULong((ulong)thisEmk + 0x68))
+                    {
+                        bool updatedEmk = true;
+                        while (thisEmk != null && updatedEmk) // loop as long as we are pulling off events
+                        {
+                            updatedEmk = false;
+                            numevents++;
+                            if (numevents > 2000) // sanity check
+                            {
+                                Log.Logger.Warning($"m events:{numevents}");
+                                Log.Logger.Warning($"thisemk = :{thisEmk.ToString("X")}");
+                                break;
+                            }
+
+                            int eventid = Memory.ReadInt(thisEmk + 0x30);
+                            int eventslot = Memory.ReadByte(thisEmk + 0x34);
+                            var t = new Tuple<int, int>(eventid, eventslot);
+                            if (emkdict.ContainsKey(t))
+                            {
+                                EmkController emk = emkdict[t];
+                                if (!emk.HasKey) /* Player doesn't have key -> pull it */
+                                {
+                                    // Only pull it if we're in the relevant map. This is to do less "pulls" in general!
+                                    if (emk.MapId3 == mapid3) /* Compare current mapid to event's valid mapid */
+                                    {
+                                        ulong nextptr = Memory.ReadULong(thisEmk + 0x68);
+                                        Memory.Write(prevptr, nextptr);
+                                        emk.Saved_Ptr = thisEmk;
+                                        emk.Deactivated = true;
+                                        thisEmk = nextptr;
+                                        updatedEmk = true;
+                                        Log.Logger.Debug($"Pulled event: {emk.Name} at {emk.Saved_Ptr.ToString("X")}");
+                                    }
+                                }
+                                else /* Player has event's key, but we found it in list? Destroy our "old" version, and stop interfering. */
+                                {
+                                    emk.Saved_Ptr = 0;
+                                    emk.Deactivated = false;
+                                    Log.Logger.Debug($"Un-pulled event: {emk.Name} at {emk.Saved_Ptr.ToString("X")}");
+                                }
+                            }
+                        }
+                        if (thisEmk == null) // reached end of list
+                            break;
+                        prevptr = thisEmk + 0x68; // save address of previous node's last spot when we move on.
+                    }
+                }
+
+                foreach (EmkController emk in emkControllers)
+                {
+                    /* If we have a saved ptr that we need to re-insert */
+                    if (emk.HasKey && emk.Saved_Ptr != 0)
+                    {
+                        /* If we're in the map for the event */
+                        if (emk.MapId3 == mapid3) /* Compare current mapid to event's valid mapid */
+                        {
+                            addingEmks.Add(emk);
+                            Log.Logger.Debug($"Re-adding event: {emk.Name} at {emk.Saved_Ptr.ToString("X")}");
+                        }
+                    }
+                }
+
+                if (addingEmks.Count > 0)
+                {
+                    var firstEmk = addingEmks.First();
+                    var lastEmk = addingEmks.Last();
+
+                    if (addingEmks.Count > 1)
+                    {
+                        // point our saved events each to the next one in sequence, creating a "saved event sequence"
+                        for (var i = 0; i < addingEmks.Count - 1; i++)
+                        {
+                            Memory.Write(addingEmks[i].Saved_Ptr + 0x68, addingEmks[i + 1].Saved_Ptr);
+                        }
+                    }
+                    eventhead_ptr = GetEmkHeadAddress();
+                    if (eventhead_ptr == 0)
+                    {
+                        Log.Logger.Warning($"eventheadptr is null");
+                        ReleaseEvents(emkControllers);
+                        return;
+                    }
+                    eventhead = Memory.ReadULong((ulong)eventhead_ptr);
+                    if (eventhead == 0)
+                    {
+                        Log.Logger.Warning($"eventhead is null");
+                        ReleaseEvents(emkControllers);
+                        return;
+                    }
+                    // point last saved event to event head
+                    Memory.Write(lastEmk.Saved_Ptr + 0x68, eventhead);
+                    // make our first saved event the head of the event list.
+                    Memory.Write(eventhead_ptr, firstEmk.Saved_Ptr);
+
+                    // clear all the event saved ptrs
+                    foreach (var emk in addingEmks)
+                    {
+                        emk.Deactivated = false;
+                        emk.Saved_Ptr = 0;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Exception in manageevents: {ex.Message}\n{ex.InnerException}\n{ex.Source}");
+            }
+        }
+        // Build a list of event controllers, which we use to lock events until player has received the items.
+        // We only add events to the list if their items are in the multiworld.
+        internal static List<EmkController> BuildEmkControllers(Dictionary<string, object> slotData)
+        {
+            List<EmkController> result = [];
+
+            if (App.DSOptions.ApworldCompare("0.0.20.1") < 0) /* apworld is < 0.0.20.1, which introduces events */
+            {
+                Log.Logger.Warning($"Apworld version too low, skipping fog wall lock processing.");
+                return result;
+            }
+
+            List<int?> itemsId = [];
+            try
+            {
+                if (slotData.TryGetValue("itemsId", out object itemsId_temp))
+                {
+                    itemsId.AddRange(JsonSerializer.Deserialize<int?[]>(itemsId_temp.ToString()));
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error($"exception creating fog map: {e.Message} {e.ToString()}");
+            }
+            var events = GetDsrEventEmks();
+            foreach (var item in itemsId)
+            {
+                EmkController? newemk = events.Find(x => x.ApId == item);
+                if (newemk != null)
+                {
+                    Log.Logger.Debug($"Adding {newemk.Name} to list. Id:slot={newemk.Eventid}:{newemk.Eventslot}");
+                    result.Add(newemk);
+                }
+            }
+
+            return result;
+        }
+        // Clear the saved ptrs of our list of "EmkControllers", because we detected there being no events in the list.
+        static void ReleaseEvents(List<EmkController> emkControllers)
+        {
+            int num_released = 0;
+            foreach (var controller in emkControllers)
+            {
+                if (controller.Saved_Ptr != 0 || controller.Deactivated == true)
+                {
+                    controller.Saved_Ptr = 0;
+                    controller.Deactivated = false;
+                }
+            }
+            if (num_released > 0)
+                Log.Logger.Debug($"Released all emks, {num_released} controllers affected.");
+        }
     }
 }

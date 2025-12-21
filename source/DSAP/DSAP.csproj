@@ -43,6 +43,7 @@
     <EmbeddedResource Include="Resources\Consumables.json" />
     <EmbeddedResource Include="Resources\Doors.json" />
     <EmbeddedResource Include="Resources\EnemyDrop.json" />
+    <EmbeddedResource Include="Resources\DsrEvents.json" />
     <EmbeddedResource Include="Resources\FogWalls.json" />
     <EmbeddedResource Include="Resources\ItemLots.json" />
     <EmbeddedResource Include="Resources\KeyItems.json" />

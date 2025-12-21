@@ -1,6 +1,7 @@
 import typing
 from dataclasses import dataclass
 from Options import Toggle, DefaultOnToggle, Option, Range, Choice, ItemDict, OptionList, DeathLink, PerGameCommonOptions
+from Options import OptionGroup
 
 
 
@@ -15,6 +16,18 @@ class EnableMasterKeyOption(Toggle):
 class UniqueSoulOption(Toggle):
     """Adds only one of each boss soul to the item pool"""
     display_name = "Singular Boss Souls"
+
+class FogwallLock(Toggle):
+    """Makes area fog walls uninteractable until you receive their items from the item pool"""
+    display_name = "Fogwall Lock" 
+
+class FogwallLockIncludeUA(Toggle):
+    """Includes Undead Asylum early fogwall in the pool. This can lead to extremely early BK mode."""
+    display_name = "Fogwall Lock Include Undead Asylum" 
+
+class BossFogwallLock(Toggle):
+    """Makes boss fog walls uninteractable until you receive their items from the item pool"""
+    display_name = "Boss Fogwall Lock" 
 
 class UpgradedWeaponsPercentage(Range):
     """Percentage of weapons (including shields) in the pool that will be replaced with upgraded versions, if possible."""
@@ -61,12 +74,32 @@ class EnableDeathlinkOption(Toggle):
     display_name = "Enable Deathlink"
 
 
+# Group relevant options
+option_groups = [
+    OptionGroup("Fogwall Lock", [
+        FogwallLock,
+        FogwallLockIncludeUA,
+        BossFogwallLock,
+        ]),
+    OptionGroup("Upgraded Weapons", [
+        UpgradedWeaponsPercentage,
+        UpgradedWeaponsAllowedInfusions,
+        UpgradedWeaponsAdjustedLevels,
+        UpgradedWeaponsMinLevel,
+        UpgradedWeaponsMaxLevel,
+        ])
+    ]
+
+
 @dataclass
 class DSROption(PerGameCommonOptions):
     #goal: GoalOption
     guaranteed_items: GuaranteedItemsOption
     enable_masterkey: EnableMasterKeyOption
     unique_souls: UniqueSoulOption
+    fogwall_lock: FogwallLock
+    fogwall_lock_include_ua: FogwallLockIncludeUA
+    boss_fogwall_lock: BossFogwallLock
     upgraded_weapons_percentage: UpgradedWeaponsPercentage
     upgraded_weapons_allowed_infusions: UpgradedWeaponsAllowedInfusions
     upgraded_weapons_adjusted_levels : UpgradedWeaponsAdjustedLevels

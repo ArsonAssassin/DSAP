@@ -7,6 +7,8 @@ namespace DSAP.Models
 {
     public class DarkSoulsOptions
     {
+        const string curr_version = "0.0.20.1";
+
         public uint apiver_major;
         public uint apiver_minor;
         public uint apiver_revision;
@@ -31,7 +33,6 @@ namespace DSAP.Models
                 if (substrs.Length > 3)
                     apiver_build = uint.Parse(substrs[3]);
 
-                const string curr_version = "0.0.20.0";
                 string[] substrs2 = curr_version.Split(".");
                 uint currmajor = uint.Parse(substrs2[0]);
                 uint currminor = uint.Parse(substrs2[1]);

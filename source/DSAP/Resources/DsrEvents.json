@@ -1,0 +1,314 @@
+﻿[
+  {
+    "Name": "UA: Fog Wall - Northern Undead Asylum",
+    "Id": 11111200,
+    "Flag": 11810090,
+    "Eventid": 11810090,
+    "Eventslot": 0,
+    "Type": "EarlyFogWall"
+  },
+  {
+    "Name": "UB: Fog Wall - Undead Burg",
+    "Id": 11111201,
+    "Flag": 11010090,
+    "Eventid": 11010090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "UP: Fog Wall - Undead Parish",
+    "Id": 11111202,
+    "Flag": 11010090,
+    "Eventid": 11010090,
+    "Eventslot": 1,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "DG: Fog Wall - Darkroot Garden",
+    "Id": 11111203,
+    "Flag": 11200090,
+    "Eventid": 11200090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "DE: Fog Wall - Depths Rat Room",
+    "Id": 11111204,
+    "Flag": 11000090,
+    "Eventid": 11000090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "BT: Fog Wall - Lower Blighttown Entrance",
+    "Id": 11111205,
+    "Flag": 11400091,
+    "Eventid": 11400090,
+    "Eventslot": 1,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "ASH: Fog Wall - Ash Lake Entrance",
+    "Id": 11111206,
+    "Flag": 0,
+    "Eventid": 11320090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "SF: Fog Wall - Sen's Fortress #1 (Outside Stairs)",
+    "Id": 11111207,
+    "Flag": 11500090,
+    "Eventid": 11500090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "SF: Fog Wall - Sen's Fortress #2 (Upper Entrance)",
+    "Id": 11111208,
+    "Flag": 11500091,
+    "Eventid": 11500090,
+    "Eventslot": 1,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "AL: Fog Wall - Anor Londo Rafters",
+    "Id": 11111209,
+    "Flag": 11510090,
+    "Eventid": 11510090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "AL: Fog Wall - Anor Londo Archers",
+    "Id": 11111210,
+    "Flag": 11510091,
+    "Eventid": 11510090,
+    "Eventslot": 1,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "DA: Fog Wall - Courtyard Entrance",
+    "Id": 11111211,
+    "Flag": 11700083,
+    "Eventid": 11700083,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "TC: Fog Wall - Catacombs",
+    "Id": 11111212,
+    "Flag": 11300090,
+    "Eventid": 11300090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "TotG: Fog Wall - Tomb of the Giants",
+    "Id": 11111213,
+    "Flag": 11310090,
+    "Eventid": 11310090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "NL: Fog Wall - New Londo (Upper)",
+    "Id": 11111214,
+    "Flag": 11600090,
+    "Eventid": 11600090,
+    "Eventslot": 0,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "NL: Fog Wall - New Londo (Lower)",
+    "Id": 11111215,
+    "Flag": 11600091,
+    "Eventid": 11600090,
+    "Eventslot": 1,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "PW: Fog Wall - Painted World",
+    "Id": 11111216,
+    "Flag": 11100091,
+    "Eventid": 11100090,
+    "Eventslot": 1,
+    "Type": "FogWall"
+  },
+  {
+    "Name": "UB: Fog Wall - Taurus Demon",
+    "Id": 11111230,
+    "Flag": 0,
+    "Eventid": 11015380,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "UB: Fog Wall - Capra Demon",
+    "Id": 11111231,
+    "Flag": 0,
+    "Eventid": 11015370,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "DE: Fog Wall - Gaping Dragon",
+    "Id": 11111232,
+    "Flag": 0,
+    "Eventid": 11005390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "BT: Fog Wall - Quelaag",
+    "Id": 11111233,
+    "Flag": 0,
+    "Eventid": 11405390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "UP: Fog Wall - Bell Gargoyles",
+    "Id": 11111234,
+    "Flag": 11015390,
+    "Eventid": 11015390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "SF: Fog Wall - Iron Golem",
+    "Id": 11111235,
+    "Flag": 0,
+    "Eventid": 11505390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "AL: Fog Wall - Ornstein and Smough",
+    "Id": 11111236,
+    "Flag": 0,
+    "Eventid": 11515390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "DA: Fog Wall - Seath First Encounter",
+    "Id": 11111237,
+    "Flag": 0,
+    "Eventid": 11705380,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "TC: Fog Wall - Pinwheel",
+    "Id": 11111238,
+    "Flag": 0,
+    "Eventid": 11305390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "TOTG: Fog Wall - Nito",
+    "Id": 11111239,
+    "Flag": 0,
+    "Eventid": 11315390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "NL: Fog Wall - Four Kings",
+    "Id": 11111240,
+    "Flag": 0,
+    "Eventid": 11605390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "DR: Fog Wall - Ceaseless Discharge",
+    "Id": 11111241,
+    "Flag": 0,
+    "Eventid": 11415370,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "DR: Fog Wall - Demon Firesage",
+    "Id": 11111242,
+    "Flag": 0,
+    "Eventid": 11415340,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "DR: Fog Wall - Centipede Demon",
+    "Id": 11111243,
+    "Flag": 0,
+    "Eventid": 11415380,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "LI: Fog Wall - Bed of Chaos",
+    "Id": 11111244,
+    "Flag": 0,
+    "Eventid": 11415390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "KoFF: Fog Wall - Gwyn",
+    "Id": 11111245,
+    "Flag": 0,
+    "Eventid": 11805390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "SG: Fog Wall - Sanctuary Guardian",
+    "Id": 11111246,
+    "Flag": 0,
+    "Eventid": 11215002,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "RW: Fog Wall - Artorias",
+    "Id": 11111247,
+    "Flag": 0,
+    "Eventid": 11215012,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "CotA: Fog Wall - Manus",
+    "Id": 11111248,
+    "Flag": 0,
+    "Eventid": 11215022,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "AL: Fog Wall - Gwyndolin",
+    "Id": 11111249,
+    "Flag": 0,
+    "Eventid": 11515380,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "DG: Fog Wall - Moonlight Butterfly",
+    "Id": 11111250,
+    "Flag": 0,
+    "Eventid": 11205380,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  },
+  {
+    "Name": "PW: Fog Wall - Crossbreed Priscilla",
+    "Id": 11111251,
+    "Flag": 0,
+    "Eventid": 11105390,
+    "Eventslot": 0,
+    "Type": "BossFogWall"
+  }
+]

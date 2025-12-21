@@ -36,9 +36,12 @@ public partial class App : Application
     private DeathLinkService _deathlinkService;
     DateTime lastDeathLinkTime = DateTime.MinValue;
     private const bool DEBUG_TXTLOG = false;
+    private const bool DO_NOT_CONNECT = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
+    private static Dictionary<int, ItemLot> SpecialItemLotsMap = new Dictionary<int, ItemLot>();
+    
     private static Dictionary<int, ItemLot> ConditionRewardMap = new Dictionary<int, ItemLot>();
     private static Dictionary<string, Tuple<int, string>> SlotLocToItemUpgMap = [];
     private static readonly object _lockObject = new object();
@@ -48,6 +51,7 @@ public partial class App : Application
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
     public static DarkSoulsOptions DSOptions;
     private static bool _goalSent = false;
+    static List<EmkController> EmkControllers = [];
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -99,6 +103,8 @@ public partial class App : Application
             Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session)");
             Log.Logger.Warning(" /goalcheck - Manually check if the goal has been completed, if for some reason it did not send [continued below].");
             Log.Logger.Warning("              Please report back with the screenshots + the resulting messages if you have to use this.");
+            Log.Logger.Warning(" /fog [Locked/Unlocked/All] - Display list of locked or unlocked fog walls, or status of all of them (default).");
+            Log.Logger.Warning(" /bossfog [Locked/Unlocked/All] - Display list of locked or unlocked boss fog walls, or status of all of them (default).");
             Log.Logger.Warning("--- End of DSAP commands. ---");
             Client?.SendMessage(a.Command); /* send original command through client for the rest of /help - maybe player will have something if they are an admin. */
         }
@@ -122,9 +128,57 @@ public partial class App : Application
             }
             else
             {
-                Log.Logger.Warning($"Invalid command: {a.Command} - too many arguments received. Format: !deathlink [on/off/toggle]");
+                Log.Logger.Warning($"Invalid command: {a.Command} - too many arguments received. Format: /deathlink [on/off/toggle]");
             }
-            /* Don't send !deathlink to normal processing */
+            /* Don't send /deathlink to normal processing */
+        }
+        else if (command.StartsWith("/fog"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 1)
+            {
+                ListFogWalls('A');
+            }
+            else if (cmdparts.Length == 2)
+            {
+                if (cmdparts[1].StartsWith("l"))
+                    ListFogWalls('L');
+                else if (cmdparts[1].StartsWith("u"))
+                    ListFogWalls('U');
+                else if (cmdparts[1].StartsWith("a"))
+                    ListFogWalls('A');
+                else
+                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [Locked, Unlocked, All], or [L, U, A].");
+            }
+            else
+            {
+                Log.Logger.Warning($"Invalid command: {a.Command} - too many arguments received. Format: /fog [Locked, Unlocked, All]");
+            }
+            /* Don't send /fog to normal processing */
+        }
+        else if (command.StartsWith("/bossfog"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 1)
+            {
+                ListBossFogWalls('A');
+            }
+            else if (cmdparts.Length == 2)
+            {
+                if (cmdparts[1].StartsWith("l"))
+                    ListBossFogWalls('L');
+                else if (cmdparts[1].StartsWith("u"))
+                    ListBossFogWalls('U');
+                else if (cmdparts[1].StartsWith("a"))
+                    ListBossFogWalls('A');
+                else
+                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [Locked, Unlocked, All], or [L, U, A].");
+            }
+            else
+            {
+                Log.Logger.Warning($"Invalid command: {a.Command} - too many arguments received. Format: /bossfog [Locked, Unlocked, All]");
+            }
+            /* Don't send /bossfog to normal processing */
         }
         else if (command.StartsWith("/goalcheck")) // check for goal conditions and print a bunch of diagnostics and values.
         {
@@ -249,6 +303,22 @@ public partial class App : Application
         }
     }
 
+    /* Add an abstract "item" which can be a trap, event, or normal item */
+    public static void AddAbstractItem(int category, int id)
+    {
+        if (category == (int)DSItemCategory.Trap)
+        {
+            RunLagTrap();
+        }
+        else if (category == (int)DSItemCategory.DsrEvent)
+        {
+            ReceiveEventItem(id);
+        }
+        else
+        {
+            AddItem(category, id, 1);
+        }
+    }
     public static void AddItem(int category, int id, int quantity)
     {
         var command = Helpers.GetItemCommand();
@@ -356,53 +426,61 @@ public partial class App : Application
             return;
         }
 
-        if (e.Host == null) e.Host = "localhost:38281";
-        if (e.Slot == null) e.Slot = "Player1";
-        await Client.Connect(e.Host, "Dark Souls Remastered");
 
-        if (!Client.IsConnected)
+        if (!DO_NOT_CONNECT)
         {
-            Log.Logger.Warning("Connect to AP Server failed");
-            Context.ConnectButtonEnabled = true;
-            return;
 
+            if (e.Host == null) e.Host = "localhost:38281";
+            if (e.Slot == null) e.Slot = "Player1";
+            await Client.Connect(e.Host, "Dark Souls Remastered");
+
+            if (!Client.IsConnected)
+            {
+                Log.Logger.Warning("Connect to AP Server failed");
+                Context.ConnectButtonEnabled = true;
+                return;
+
+            }
+            Client.ItemReceived += Client_ItemReceived;
+            Client.MessageReceived += Client_MessageReceived;
+            Client.LocationCompleted += Client_LocationCompleted;
+            Client.EnableLocationsCondition = () => Helpers.IsInGame();
+
+            Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+            {
+                YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
+            }));
+
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
+
+            if (!Client.IsLoggedIn)
+            {
+                Log.Logger.Warning("Login failed");
+                Client.AddOverlayMessage("Login failed");
+                Context.ConnectButtonEnabled = true;
+                return;
+
+            }
+            if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
+            {
+                SetDeathlink(true);
+            }
+
+            /* Look for event unlocks in full list of received items and locations */
+            DetectEventKeys();
+            
+            var bossLocations = Helpers.GetBossFlagLocations();
+            var itemLocations = Helpers.GetItemLotLocations();
+            var bonfireLocations = Helpers.GetBonfireFlagLocations();
+            var doorLocations = Helpers.GetDoorFlagLocations();
+            //var fogWallLocations = Helpers.GetFogWallFlagLocations();
+            var miscLocations = Helpers.GetMiscFlagLocations();
+
+            var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(miscLocations).ToList();
+            Client.MonitorLocations(fullLocationsList);
+
+            StartEmkWatchers(EmkControllers);
         }
-        Client.ItemReceived += Client_ItemReceived;
-        Client.MessageReceived += Client_MessageReceived;
-        Client.LocationCompleted += Client_LocationCompleted;
-        Client.EnableLocationsCondition = () => Helpers.IsInGame();
-
-        Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
-        {
-            YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
-        }));
-
-        await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
-
-        if (!Client.IsLoggedIn)
-        {
-            Log.Logger.Warning("Login failed");
-            Client.AddOverlayMessage("Login failed");
-            Context.ConnectButtonEnabled = true;
-            return;
-
-        }
-        if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
-        {
-            SetDeathlink(true);
-        }
-
-        var bossLocations = Helpers.GetBossFlagLocations();
-        var itemLocations = Helpers.GetItemLotLocations();
-        var bonfireLocations = Helpers.GetBonfireFlagLocations();
-        var doorLocations = Helpers.GetDoorFlagLocations();
-        //var fogWallLocations = Helpers.GetFogWallFlagLocations();
-        var miscLocations = Helpers.GetMiscFlagLocations();
-
-        var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(miscLocations).ToList();
-        Client.MonitorLocations(fullLocationsList);
-
-
         //Helpers.MonitorLastBonfire((lastBonfire) =>
         //{
         //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
@@ -412,6 +490,9 @@ public partial class App : Application
         { 
             Log.CloseAndFlush();
         }
+
+        //Client.GPSHandler = new Archipelago.Core.Util.GPS.GPSHandler(Helpers.GetPosition, 5000);
+        //Client.GPSHandler.Start();
 
         Context.ConnectButtonEnabled = true;
         Context.UnstuckButtonEnabled = true;
@@ -622,7 +703,18 @@ public partial class App : Application
             var itemLot = ConditionRewardMap[locid];
             foreach (var item in itemLot.Items)
             {
-                AddItem(item.LotItemCategory, item.LotItemId, 1);
+                AddAbstractItem(item.LotItemCategory, item.LotItemId);
+                Log.Logger.Debug($"Gave player {item.LotItemId}");
+            }
+        }
+        /* If the check was in special-itemlot locations, give the player items for it */
+        if (SpecialItemLotsMap.ContainsKey(locid))
+        {
+            Log.Logger.Debug($"Found location in 'special' checks");
+            var itemLot = SpecialItemLotsMap[locid];
+            foreach (var item in itemLot.Items)
+            {
+                AddAbstractItem(item.LotItemCategory, item.LotItemId);
                 Log.Logger.Debug($"Gave player {item.LotItemId}");
             }
         }
@@ -688,6 +780,58 @@ public partial class App : Application
                 Log.Logger.Warning("Deathlink is already disabled.");
         }
     }
+    private void ListFogWalls(char filter)
+    {
+        string status;
+        if (filter == 'L') status = "Locked";
+        else if (filter == 'U') status = "Unlocked";
+        else status = "All";
+
+        Log.Logger.Information($"-- List of {status} Fog walls -- ");
+        var emklist = EmkControllers.Where(x => x.Type == DsrEventType.FOGWALL || x.Type == DsrEventType.EARLYFOGWALL).OrderBy(x=>x.HasKey).ThenBy(x=>x.Name).ToList();
+        foreach (var emk in emklist)
+        {
+            if (filter == 'A'
+                || filter == 'U' && emk.HasKey == true
+                || filter == 'L' && emk.HasKey == false)
+            {
+                if (emk.HasKey) status = "Unlocked";
+                else status = "Locked";
+                Log.Logger.Information($"{status} -> {emk.Name}");
+            }
+        }
+        Log.Logger.Information($"-- End of List of {status} Fog walls -- ");
+        if (emklist.Count == 0)
+        {
+            Log.Logger.Information($"You do not have fog wall locking enabled");
+        }
+    }
+    private void ListBossFogWalls(char filter)
+    {
+        string status;
+        if (filter == 'L') status = "Locked";
+        else if (filter == 'U') status = "Unlocked";
+        else status = "All";
+
+        Log.Logger.Information($"-- List of {status} Boss Fog walls -- ");
+        var emklist = EmkControllers.Where(x => x.Type == DsrEventType.BOSSFOGWALL).OrderBy(x => x.HasKey).ThenBy(x => x.Name).ToList();
+        foreach (var emk in emklist)
+        {
+            if (filter == 'A'
+                || filter == 'U' && emk.HasKey == true
+                || filter == 'L' && emk.HasKey == false)
+            {
+                if (emk.HasKey) status = "Unlocked";
+                else status = "Locked";
+                Log.Logger.Information($"{status} -> {emk.Name}");
+            }
+        }
+        Log.Logger.Information($"-- End of List of {status} Boss Fog walls -- ");
+        if (emklist.Count == 0)
+        {
+            Log.Logger.Information($"You do not have boss fog wall locking enabled");
+        }
+    }
     private static void ReplaceItems()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -724,28 +868,22 @@ public partial class App : Application
                 Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 Client.AddOverlayMessage($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
 
-                if (itemToReceive.ApId == 11120000)
+                Log.Logger.Verbose($"Attempting to upgrade item: '{itemToReceive.ApId}' {itemToReceive.Name} from loc {e.LocationId}.");
+                if (DSOptions.UpgradedWeaponsPercentage > 0
+                    && SlotLocToItemUpgMap.TryGetValue($"{e.Player.Slot}:{e.LocationId}", out var itemupg))
                 {
-                    RunLagTrap();
-                }
-                else
-                {
-                    Log.Logger.Verbose($"Attempting to upgrade item: '{itemToReceive.ApId}' {itemToReceive.Name} from loc {e.LocationId}.");
-                    if (DSOptions.UpgradedWeaponsPercentage > 0
-                        && SlotLocToItemUpgMap.TryGetValue($"{e.Player.Slot}:{e.LocationId}", out var itemupg))
+                    if (itemupg.Item1 == itemToReceive.ApId) // if item apid matches
+                        itemToReceive = Helpers.UpgradeItem(itemToReceive, itemupg.Item2, true);
+                    else
                     {
-                        if (itemupg.Item1 == itemToReceive.ApId) // if item apid matches
-                            itemToReceive = Helpers.UpgradeItem(itemToReceive, itemupg.Item2, true);
-                        else
-                        {
-                            Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
-                            Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
-                        }
-
-
+                        Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
+                        Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
                     }
-                    AddItem((int)itemToReceive.Category, itemToReceive.Id, 1);
+
+
                 }
+                AddAbstractItem((int)itemToReceive.Category, itemToReceive.Id);
+
                 /* If after receiving item (or trap), player is still in game, then it received successfully */
                 if (Helpers.IsInGame())
                 {
@@ -757,7 +895,7 @@ public partial class App : Application
                 Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 var filler = AllItems.First(x => x.Id == 380);
-                AddItem((int)filler.Category, filler.Id, 1);
+                AddAbstractItem((int)filler.Category, filler.Id);
             }
         }
         e.Success = success;
@@ -782,7 +920,87 @@ public partial class App : Application
             });
         }
     }
-
+    private static void DetectEventKeys()
+    {
+        Log.Logger.Debug("detecting event keys in all items");
+        if (Client.CurrentSession.Items.AllItemsReceived.Count > 0)
+        {
+            var itemlistcopy = Client.CurrentSession.Items.AllItemsReceived.ToList();
+            foreach (var item in itemlistcopy)
+            {
+                var emk = EmkControllers.Find(x => x.ApId == item.ItemId);
+                if (emk != null)
+                {
+                    emk.Unlock();
+                }
+            }
+        }
+        if (Client.CurrentSession.Locations.AllLocationsChecked.Count > 0)
+        {
+            Log.Logger.Debug("detecting event keys in all locs");
+            var locationlistcopy = Client.CurrentSession.Locations.AllLocationsChecked;
+            foreach (var location in locationlistcopy)
+            {
+                /* search condition rewards map (doors, etc) */
+                if (ConditionRewardMap.ContainsKey(((int)location)))
+                {
+                    foreach (var item in ConditionRewardMap[((int)location)].Items)
+                    {
+                        if (item.LotItemCategory == (int)DSItemCategory.DsrEvent)
+                        {
+                            var emk = EmkControllers.Find(x => x.ApId == item.LotItemId);
+                            if (emk != null)
+                            {
+                                emk.Unlock();
+                            }
+                        }
+                    }
+                }
+                
+                /* then search special item lot map (floor items) */
+                if (SpecialItemLotsMap.ContainsKey(((int)location)))
+                {
+                    Log.Logger.Debug($"found loc {((int)location)} in special lot list");
+                    foreach (var item in SpecialItemLotsMap[((int)location)].Items)
+                    {
+                        if (item.LotItemCategory == (int)DSItemCategory.DsrEvent)
+                        {
+                            var emk = EmkControllers.Find(x => x.ApId == item.LotItemId);
+                            if (emk != null)
+                            {
+                                emk.Unlock();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    internal static void StartEmkWatchers(List<EmkController> emkControllers)
+    {
+        // every second, check the events list.
+        Task.Run(() =>
+        {
+            try
+            {
+                while (true)
+                {
+                    if (!Client.IsConnected)
+                    {
+                        Log.Logger.Error("Client disconnection detected - stopping event listener");
+                        return;
+                    }
+                    Helpers.CheckEventsList();
+                    Helpers.ManageEventsList(emkControllers);
+                    Task.Delay(1000).Wait();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Exception in events list: {ex.Message}\n{ex.InnerException}\n{ex.Source}");
+            }
+        });
+    }
     private static async void RunLagTrap()
     {
         using (var lagTrap = new LagTrap(TimeSpan.FromSeconds(20)))
@@ -790,6 +1008,22 @@ public partial class App : Application
             lagTrap.Start();
             await lagTrap.WaitForCompletionAsync();
         }
+    }
+    private static void ReceiveEventItem(int ApId)
+    {
+        /* Find the event in the EmkController list,
+         * and mark it as unlocked. */
+
+        EmkController? emk = EmkControllers.Find(x => x.ApId == ApId);
+        if (emk != null)
+        {
+            emk.Unlock();
+        }
+        else
+        {
+            Log.Logger.Error($"Error, received item {ApId}, but no emk controller found. Check that your AP world and client match.");
+        }
+        // On next event scan, it'll re-add it if needed
     }
 
     private static void LogItem(Item item, int quantity)
@@ -849,10 +1083,12 @@ public partial class App : Application
             DSOptions = new DarkSoulsOptions(App.Client.Options, slotData);
             Log.Logger.Debug($"{DSOptions.ToString()}");
 
+            EmkControllers = Helpers.BuildEmkControllers(slotData);
+
             SlotLocToItemUpgMap = Helpers.BuildSlotLocationToItemUpgMap(slotData, currentSlot);
 
             var itemflags = Helpers.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList();
-            ItemLotReplacementMap = Helpers.BuildFlagToLotMap(itemflags, slotData, SlotLocToItemUpgMap);
+            Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, out SpecialItemLotsMap, itemflags, slotData, SlotLocToItemUpgMap);
 
             var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
             nonItemLotFlags.AddRange(Helpers.GetBonfireFlags().Cast<EventFlag>());
@@ -861,6 +1097,7 @@ public partial class App : Application
             nonItemLotFlags.AddRange(Helpers.GetMiscFlags().Cast<EventFlag>());
 
             //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();
+            Log.Logger.Debug($"Special lot item count: {SpecialItemLotsMap.Count}");
             Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
             foreach (var item in nonItemLotFlags)
             {
