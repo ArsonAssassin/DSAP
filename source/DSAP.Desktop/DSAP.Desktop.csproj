@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <!--If you are willing to use Windows/MacOS native APIs you will need to create 3 projects.
@@ -15,8 +15,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.arsonassassin.dsap</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.0.19.1</ApplicationDisplayVersion>
-    <ApplicationVersion>0.0.19.1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.0.20.0</ApplicationDisplayVersion>
+    <ApplicationVersion>0.0.20.0</ApplicationVersion>
     <Version>0.0.19.1</Version>
     <!-- Single File Publishing Properties -->
     <PublishSingleFile>true</PublishSingleFile>
@@ -27,11 +27,9 @@
     <UseWindowsForms>false</UseWindowsForms>
     <UseWPF>false</UseWPF>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DSAP\DSAP.csproj" />
   </ItemGroup>
