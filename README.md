@@ -12,8 +12,8 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 [Compatibility](#Compatibility)  
 [Frequently Asked Questions (FAQ)](#Frequently-Asked-Questions-FAQ)  
 [Known issues](#Known-issues)  
-[Changelog](#Changelog)
-[Roadmap](#Roadmap)
+[Changelog](#Changelog)  
+[Roadmap](#Roadmap)  
 
 # How it works
 * Every loose item on the ground, and some doors, are "locations" or "checks", and can each contain any item from the multiworld randomized item pool.
@@ -97,9 +97,9 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
   * A: You probably have a full stack of Prism Stones in your inventory. This is the item we use to replace vanilla items when the Archipelago item is in another players' world. As long as you've "picked up" the item from the original location, leaving the dropped bag won't cause any issues. We technically check whether the item is still in the original location, not whether it is in your inventory. To prevent this, you can discard most/all of your prism stones when they get up to or close to 99.
 
 # Known issues
+* Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
 * v0.0.19.1 and lower: If you receive an item while on the main menu, it will be lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
   * Furthermore, **you should close the client before quitting to menu or quitting the game.**
-* Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
 * v0.0.19.1 and lower: Looting the "key item chest" in Firelink Shrine behind Frampt **will break logic for DSR**. In a vanilla playthrough, this chest is usually empty/already open, and only has items if you somehow don't have a key item you "should have", depending on where you are in the game. In a randomizer environment, those normal circumstances don't apply! As an example: if you loot this chest after looting the vanilla "Basement Key" location, it will have a Basement Key - but in AP randomizer that key can even be in another game! In v0.0.20+ it gives rubbish instead.
 * v0.0.19.1 and lower: On reconnect, player can receive duplicate items. The items are specifically those from "door"-type location checks in their own world.
 * v0.0.19.1 and lower: Some enemy drops (invaders, Havel, etc) are erroneously replaced with prism stones, but do not grant an AP item. The player should get the standard enemy drop in these locations instead.
