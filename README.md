@@ -111,6 +111,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 # Changelog
 ## Version 0.0.20 (upcoming)
 * Feature: Enable DLC (#50). Exclude-able as location group "All DLC areas" as noted below
+* Feature: Game overlay to display AP messages from the DSAP client while in game (including received and found items). Note: Overlay may not show up in streams of the game on discord, etc, as it uses another window (which may appear mostly blank in the alt-tab display).
 * Feature: Weapon Upgrades via yaml option (#48)
 * Feature: Add /deathlink command to toggle it post-seed creation, and /help command to list DSAP-specific commands (#68)
 * Feature: Add location groups (#62). Using this feature you can exclude whole groups of locations such as "All DLC areas" or "Painted World", "The Great Hollow", "Ash Lake", "Upper Blighttown Depths Side", etc. Excluding locationns does not prevent them being randomized at this point, but only makes it so they should not have items classified as useful or priority.
