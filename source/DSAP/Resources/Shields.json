@@ -187,7 +187,7 @@
     "Name": "Spiked Shield",
     "Id": 1470000,
     "StackSize": 1,
-    "UpgradeType": "Infusable",
+    "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
     "ApId": 11119023
   },
@@ -227,7 +227,7 @@
     "Name": "Pierce Shield",
     "Id": 1475000,
     "StackSize": 1,
-    "UpgradeType": "Infusable",
+    "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
     "ApId": 11119028
   },
@@ -299,7 +299,7 @@
     "Name": "Bonewheel Shield",
     "Id": 1506000,
     "StackSize": 1,
-    "UpgradeType": "Infusable",
+    "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
     "ApId": 11119037
   },

@@ -834,12 +834,12 @@ _all_items_base = [
     ("Warrior's Round Shield", 9020, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Iron Round Shield", 9021, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Spider Shield", 9022, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
-    ("Spiked Shield", 9023, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Infusable),
+    ("Spiked Shield", 9023, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Crystal Shield", 9024, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.NotUpgradable),
     ("Sunlight Shield", 9025, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Silver Knight Shield", 9026, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Unique),
     ("Black Knight Shield", 9027, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Unique),
-    ("Pierce Shield", 9028, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Infusable),
+    ("Pierce Shield", 9028, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Red and White Round Shield", 9029, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Caduceus Kite Shield", 9030, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Gargoyle's Shield", 9031, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
@@ -848,7 +848,7 @@ _all_items_base = [
     ("Giant Shield", 9034, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Stone Greatshield", 9035, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Unique),
     ("Havel's Greatshield", 9036, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Unique),
-    ("Bonewheel Shield", 9037, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Infusable),
+    ("Bonewheel Shield", 9037, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Greatshield of Artorias", 9038, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Unique),
     ("Effigy Shield", 9039, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Sanctus", 9040, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
@@ -879,13 +879,12 @@ infusion_types = [
     ("Chaos", 9, 5, 10)
     ]
 
-# No raw, occult, or chaos (for shields, crossbow, etc)
+# No raw, occult, enchanted, or chaos (for shields, crossbow, etc)
 restricted_infusion_types = [
     ("Normal", 0, 15, 0),
     ("Crystal", 1, 5, 10),
     ("Lightning", 2, 5, 10),
     ("Magic", 4, 10, 5),
-    ("Enchanted", 5, 5, 10),
     ("Divine", 6, 10, 5),
     ("Fire", 8, 10, 5),
     ]
