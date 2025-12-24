@@ -68,26 +68,36 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 
 # Troubleshooting
-* If you encounter issues, first check the known issues listed below. Then, check what version you are on - the issue you have may be resolved by updating to a later version.
+* If you encounter issues, first make sure your Dark Souls Remastered game is up to date (Main menu should show the text "App ver. 1.03.1" & "Regulation ver. 1.04"). If it is not, use the "verify game files" in Steam. It is recommended to also make sure any other residual mods are removed before doing so.
+* Then, check the known issues listed below. If your issue is in the list for your version, the issue you have may be resolved by updating to a later version.
 * If item lots are not replaced, or the client cannot connect, **try running DSAP.client.exe as administrator**. This program requires authorization to modify the memory of another process, so it may require elevated permissions depending on your system configuration.
-* After that, you may be able to find answers in the AP Discord channel for dark-souls-1.
-  * If there are no answers, you can comment in the channel and include the version number of DSAP that you are using, the Archipelago version you are using, and a description of the issue.
-  * If the program crashed, note the time of the error, then open "Event Viewer" from the start menu, go to Windows Logs->Application, and look for an "Error" level log entry. Right click the relevant entry to copy the details as text, and provide the file with your report. If there are multiple Error entries at the time of error, provide both.
+* If none of the above resolve your issues, you may be able to search for answers in the AP Discord channel for dark-souls-1.
+  * First check the pins. Then try searching the channel specifically to see if others have encountered your issue.
+  * If you don't find anything, please comment in the channel and include the version number of DSAP that you are using, the Archipelago version you are using, and a description of the issue, including context.
+  * If either DSAP or DSR crashed, note the time of the error, then open "Event Viewer" from the start menu, go to Windows Logs->Application, and look for an "Error" level log entry. Right click the relevant entry to copy the details as text, and provide the file with your report. If there are multiple Error entries at the time of error, provide both.
 
 # Compatibility
-* This version has been tested with Dark Souls Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago version 0.6.3.
+* This version has been tested with Dark Souls Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago version 0.6.3. 
 * Linux, even through Proton/Wine, is not yet supported
 
 # Frequently Asked Questions (FAQ)
-* Q: Randomized starting gear? 
-  * A: Not supported yet. You must create your character before connecting with the DSAP client.
-* Q: Randomized enemies/enemizer?
-  * A: Not included. Some players have had success with using a separate enemy randomizer. Randomizing bosses could introduce logic issues, but other enemy drops are not item "locations", so randomizing them should be fine.
+* Q: Can I use this with seamless co-op?
+  * A: Not yet, but it is being researched.
+* Q: Can I use this to randomize enemies?
+  * A: This mod will not randomize enemies, but some players have had success with external enemy and boss randomizers. That said, we cannot guarantee they will continue to work, and that future updates won't break compatibility.
+* Q: Does this work with Prepare to Die edition?
+  * A: No, The current release only works with Dark Souls Remastered. There may be potential to make it compatible with PTDE but not until we are feature-complete on remastered, as there isn't a way to legally obtain a new copy of PTDE anymore.
+* Q: Does this work on Linux?
+  * A: Not yet. The underlying client library doesn't support linux yet, as the way memory is read and written to is a bit different. Work is ongoing to add support but we're not there quite yet.
+* Q: Can I randomized starting gear? 
+  * A: Not yet - this is planned for the future. Currently, it is recommended to create your character before connecting with the DSAP client.
 * Q: Is there a tracker?
   * There is a poptracker pack available at https://github.com/routhken/Dark_Souls_Remastered_tracker/releases
+* Q: Why do i keep dropping items (yellow bags) on the floor?
+  * A: You probably have a full stack of Prism Stones in your inventory. This is the item we use to replace vanilla items when the Archipelago item is in another players' world. As long as you've "picked up" the item from the original location, leaving the dropped bag won't cause any issues. We technically check whether the item is still in the original location, not whether it is in your inventory. To prevent this, you can discard most/all of your prism stones when they get up to or close to 99.
 
 # Known issues
-* If you receive an item while on the main menu, it will be lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
+* v0.0.19.1 and lower: If you receive an item while on the main menu, it will be lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
   * Furthermore, **you should close the client before quitting to menu or quitting the game.**
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings.
 * v0.0.19.1 and lower: Looting the "key item chest" in Firelink Shrine behind Frampt **will break logic for DSR**. In a vanilla playthrough, this chest is usually empty/already open, and only has items if you somehow don't have a key item you "should have", depending on where you are in the game. In a randomizer environment, those normal circumstances don't apply! As an example: if you loot this chest after looting the vanilla "Basement Key" location, it will have a Basement Key - but in AP randomizer that key can even be in another game! In v0.0.20+ it gives rubbish instead.
@@ -103,15 +113,17 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Feature: Enable DLC (#50). Exclude-able as location group "All DLC areas" as noted below
 * Feature: Weapon Upgrades via yaml option (#48)
 * Feature: Add /deathlink command to toggle it post-seed creation, and /help command to list DSAP-specific commands (#68)
-* Feature: Add location groups (#62). Using this feature you can exclude whole groups of locations such as "All DLC areas" or "Painted World", "The Great Hollow", "Ash Lake", "Upper Blighttown Depths Side", etc.
+* Feature: Add location groups (#62). Using this feature you can exclude whole groups of locations such as "All DLC areas" or "Painted World", "The Great Hollow", "Ash Lake", "Upper Blighttown Depths Side", etc. Excluding locationns does not prevent them being randomized at this point, but only makes it so they should not have items classified as useful or priority.
 * Feature: Add item groups (#62). Not excludable yet, but you are now able to mark them as local or non-local.
 * Feature: Unstuck button (#64) - will teleport you to Firelink Shrine if you've at least reached there. Useful if stuck in the Duke's Archive without a key.
 * Feature: Compatibility support for 0.0.19.1 and warning/error messages for unsupported apworld versions
 * Fix: Goal detection now requires being in-game (#52)
+* Fix: Items should now only be sent while player is actually in game - and queued for sending when received while they aren't in game (#71)
 * Fix: Fixed Deathlink "desync" issue and potentially other random things failing due to incorrectly calculating addresses for their in-memory structures (#66)
 * Fix: No longer replacing every enemy lot (#47)
 * Fix: Embers are always added to the item pool, and only added once (#47)
 * Fix: Firelink Shrine Chest behind Frampt ("key item lost and found") replaced with rubbish to prevent accidentally breaking AP logic (#64)
+* Fix: Item pool - Soul spells added to pool instead of consumable soul items (#70)
 * Fix: Location - nonexistent DA: Reah's Cell location removed (#47)
 * Fix: Location - PW: Twin Humanities not being detected as "checked" fixed (#49)
 * Fix: Location - PW: Velka's Rapier now requires Annex Key (#49)
@@ -128,3 +140,6 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 ## 0.0.22 (planned)
 * Feature: Fog Gates as items
 * Feature: Starting Item randomization
+
+## At some point
+* Seamless co-op and "new save file" support
