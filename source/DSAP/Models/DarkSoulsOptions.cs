@@ -7,8 +7,8 @@ namespace DSAP.Models
 {
     public class DarkSoulsOptions
     {
-        const string curr_version = "0.0.20.1";
-
+        const string curr_version = "0.0.20.2";
+        public bool outofdate = false;
         public uint apiver_major;
         public uint apiver_minor;
         public uint apiver_revision;
@@ -48,12 +48,16 @@ namespace DSAP.Models
                     (apiver_major == currmajor && apiver_minor == currminor && apiver_revision > currrevision))
                 {
                     Log.Logger.Error("Apworld detected that is too advanced for the DSAP client. Upgrade your client.");
+                    Log.Logger.Error("Otherwise, expect errors and instability.");
+                    outofdate = true;
                 }
                 if ((apiver_major < currmajor) ||
                     (apiver_major == currmajor && apiver_minor < currminor) ||
                     (apiver_major == currmajor && apiver_minor == currminor && apiver_revision < currrevision))
                 {
                     Log.Logger.Error("Apworld detected that is too old for this version of the DSAP client.");
+                    Log.Logger.Error("Otherwise, expect errors and instability.");
+                    outofdate = true;
                 }
                 Log.Logger.Information($"Client api level {currmajor}.{currminor}.{currrevision}.{currbuild}, " +
                     $"apworld api level {apiver_major}.{apiver_minor}.{apiver_revision}.{apiver_build}");
@@ -62,12 +66,13 @@ namespace DSAP.Models
             }
             else
             {
-                Log.Logger.Warning("Seed generated on Apworld pre-v0.0.20.0 detected. Running in compatibility mode.");
-                Log.Logger.Warning("Only seeds generated with DSR apworld version 0.0.19.1+ are compatible with this client.");
+                Log.Logger.Error("Seed generated on Apworld pre-v0.0.20.0 detected. Expect failures.");
+                Log.Logger.Error("Only seeds generated with DSR apworld version 0.0.20.0+ are compatible with this client.");
                 apiver_major    = 0;
                 apiver_minor    = 0;
                 apiver_revision = 19;
                 apiver_build    = 1;
+                outofdate = true;
             }
 
 

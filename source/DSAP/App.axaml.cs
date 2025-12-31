@@ -1173,6 +1173,11 @@ public partial class App : Application
             Dictionary<string, object> slotData = slotDataTask.Result;
 
             DSOptions = new DarkSoulsOptions(App.Client.Options, slotData);
+            if (DSOptions.outofdate)
+            {
+                Client.AddOverlayMessage("Client or apworld out of data - instability and errors likely.");
+                Client.AddOverlayMessage("See client log for details.");
+            }
             Log.Logger.Debug($"{DSOptions.ToString()}");
 
             EmkControllers = Helpers.BuildEmkControllers(slotData);
