@@ -108,6 +108,20 @@ namespace DSAP.Models
             result += $"UpgradedWeaponsMaxLevel ={UpgradedWeaponsMaxLevel}";
             return result;
         }
+        
+        public string VersionInfoString()
+        {
+            const string curr_version = "0.0.20.0";
+            string[] substrs2 = curr_version.Split(".");
+            uint currmajor = uint.Parse(substrs2[0]);
+            uint currminor = uint.Parse(substrs2[1]);
+            uint currrevision = uint.Parse(substrs2[2]);
+            uint currbuild = 0;
+            if (substrs2.Length > 3)
+                currbuild = uint.Parse(substrs2[3]);
+            return $"Client api level {currmajor}.{currminor}.{currrevision}.{currbuild}, " +
+                    $"apworld api level {apiver_major}.{apiver_minor}.{apiver_revision}.{apiver_build}";
+        }
         /// <summary>
         /// Compares the given checkver to the apworld version.
         /// </summary>
