@@ -94,7 +94,10 @@ public partial class App : Application
         {
             Log.Logger.Warning("--- DSAP commands: --- ");
             Log.Logger.Warning(" /help - display this menu");
+            Log.Logger.Warning(" /diag - Print out some diagnostic information.");
             Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session)");
+            Log.Logger.Warning(" /goalcheck - Manually check if the goal has been completed, if for some reason it did not send [continued below].");
+            Log.Logger.Warning("              Please report back with the screenshots + the resulting messages if you have to use this.");
             Log.Logger.Warning("--- End of DSAP commands. ---");
             Client?.SendMessage(a.Command); /* send original command through client for the rest of /help - maybe player will have something if they are an admin. */
         }
@@ -122,12 +125,124 @@ public partial class App : Application
             }
             /* Don't send !deathlink to normal processing */
         }
+        else if (command.StartsWith("/goalcheck")) // check for goal conditions and print a bunch of diagnostics and values.
+        {
+            GoalCheck();
+        }
+        else if (command.StartsWith("/diag")) // print diagnostic info
+        {
+            PrintDiagnosticInfo();
+        }
         else /* send any not-specifically-handled message to normal processing */
         {
             Client?.SendMessage(a.Command);
         }
             
     }
+
+    private void GoalCheck()
+    {
+        Log.Logger.Warning("Beginning /goalcheck processing");
+        bool sendingGoal = false;
+        
+        // check if goal is completed
+        if (Helpers.IsInGame())
+        {
+            ulong baseb = Helpers.GetBaseBAddress();
+            Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
+            if (Client.CurrentSession.Locations.AllLocationsChecked.Contains(11110499))
+            {
+                Log.Logger.Warning("Gwyn, Lord of Cinder location (11110499) found as completed. Completing goal.");
+                sendingGoal = true;
+            }
+            if (Client.CurrentSession.Locations.AllLocationsChecked.Contains(11110500))
+            {
+                Log.Logger.Warning("Gwyn, Lord of Cinder location (11110500) found as completed. Completing goal.");
+                sendingGoal = true;
+            }
+            if (baseb > 0)
+            {
+                
+                int ngplus = Memory.ReadByte(baseb + 0x78);
+                Log.Logger.Warning($"ng+{ngplus}");
+                if (ngplus > 0)
+                {
+                    Log.Logger.Warning($"ng+{ngplus} detected. Completing goal.");
+                    if (!sendingGoal)
+
+                        sendingGoal = true;
+                }
+            }
+            else
+            {
+
+            }
+            var gwynloc = (Location)Helpers.GetBossFlagLocations().Where(x => x.Name == "Gwyn, Lord of Cinder").First();
+            if (gwynloc != null)
+            {
+                Log.Logger.Warning($"{gwynloc.Name} at {gwynloc.Address.ToString("X")}_{gwynloc.AddressBit.ToString("X")} type {gwynloc.CheckType}.");
+
+                bool result = gwynloc.Check();
+                if (result)
+                {
+                    Log.Logger.Warning("Gwyn bit on. Completing Goal.");
+                    sendingGoal = true;
+                }
+                bool gwynval = Memory.ReadBit(gwynloc.Address, gwynloc.AddressBit);
+                if (gwynval)
+                {
+                    Log.Logger.Warning("Gwyn bit read on. Completing Goal.");
+                    sendingGoal = true;
+                }
+                byte gwynbyte = Memory.ReadByte(gwynloc.Address);
+                Log.Logger.Warning($"Gwyn byte={gwynbyte.ToString("X")}");
+            }
+            else
+            {
+                Log.Logger.Warning("No Gwyn location found");
+            }
+
+            PrintDiagnosticInfo();
+            
+            if (Helpers.IsInGame())
+            {
+                if (sendingGoal)
+                {
+                    Client.SendGoalCompletion();
+                    Log.Logger.Warning("Goal sent.");
+                    Client.AddOverlayMessage($"Goal sent.");
+                }
+                else
+                {
+                    Log.Logger.Warning("Goal condition not detected. If this is unexpected, please report this to the developers.");
+                }
+
+                Log.Logger.Error("Please help us! Included in these messages are useful diagnostics.");
+                Log.Logger.Error("Please post a screenshot of this log in the AP discord's 'dark-souls' channel.");
+                Client.AddOverlayMessage($"Action required - see log for details.");
+            }
+            else
+            {
+                Log.Logger.Warning("Player not in game. Could not send goal.");
+            }
+        }
+        else
+        {
+            Log.Logger.Warning("Player not in game. Could not check for goal conditions.");
+        }
+        Log.Logger.Warning("Ending /goalcheck processing");
+    }
+
+    private void PrintDiagnosticInfo()
+    {
+        Log.Logger.Warning($"isc={Client.IsConnected}, ili={Client.IsLoggedIn}, irtri={Client.isReadyToReceiveItems}, ircs={Client.itemsReceivedCurrentSession},");
+        Log.Logger.Warning($"v={Client.CurrentSession.RoomState.Version},gv={Client.CurrentSession.RoomState.GeneratorVersion}," +
+            $"rist={Client.CurrentSession.RoomState.RoomInfoSendTime.ToShortTimeString()},ctime={DateTime.Now.ToUniversalTime().ToShortTimeString()},Slot={Client.CurrentSession.ConnectionInfo.Slot}");
+        Log.Logger.Warning($"locs={Client.CurrentSession.Locations.AllLocationsChecked.Count}/{Client.CurrentSession.Locations.AllLocations.Count}");
+        Log.Logger.Warning($"items received={Client.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap.Count},crm={ConditionRewardMap.Count}");
+        Log.Logger.Warning($"version info={DSOptions?.VersionInfoString()}");
+    }
+
     public static void AddItem(int category, int id, int quantity)
     {
         var command = Helpers.GetItemCommand();
@@ -485,6 +600,12 @@ public partial class App : Application
         var locid = e.CompletedLocation.Id;
         if (e.CompletedLocation.Name.Contains("Lord of Cinder"))
         {
+            Log.Logger.Information($"Sending Goal for location: {e.CompletedLocation.Name}");
+            Client.SendGoalCompletion();
+        }
+        else if (locid == 11110499) // hardcoded "Gwyn, Lord of Cinder" location
+        {
+            Log.Logger.Information($"Sending Goal for location id: {locid}");
             Client.SendGoalCompletion();
         }
 
