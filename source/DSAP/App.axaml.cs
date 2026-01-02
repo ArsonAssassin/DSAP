@@ -628,7 +628,7 @@ public partial class App : Application
                 /* Check every second if player is in game again yet */
                 while(!Helpers.IsInGame())
                 {
-                    Task.Delay(1000);
+                    Task.Delay(1000).Wait();
                 }
 
                 Log.Logger.Warning($"Player once again detected as in game. Re-trying item receive.");
