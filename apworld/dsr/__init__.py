@@ -1,5 +1,5 @@
 # world/dsr/__init__.py
-from typing import Dict, Set, List
+from typing import Dict, Set, List, ClassVar
 
 from BaseClasses import MultiWorld, Region, Item, Entrance, Tutorial, ItemClassification
 from Options import Toggle
@@ -11,6 +11,8 @@ from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, it
 from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories
 from .Groups import location_name_groups, item_name_groups
 from .Options import DSROption
+
+from settings import Group, FilePath
 
 class DSRWeb(WebWorld):
     bug_report_page = ""
@@ -27,6 +29,13 @@ class DSRWeb(WebWorld):
 
     tutorials = [setup_en]
 
+
+class DSRSettings(Group):
+    class UTPoptrackerPath(FilePath):
+        """Path to the user's DSR Poptracker Pack."""
+        description= "DSR Poptracker Pack zip file"
+        required = False
+    ut_poptracker_path: UTPoptrackerPath | str = UTPoptrackerPath()
 
 class DSRWorld(World):
     """
@@ -47,6 +56,12 @@ class DSRWorld(World):
     item_name_groups = item_name_groups
     item_descriptions = item_descriptions
     location_name_groups = location_name_groups
+    settings: ClassVar[DSRSettings]
+    tracker_world: ClassVar = {
+        "map_page_maps" : "maps/maps.json",
+        "map_page_locations" : "locations/locations.json",
+        "external_pack_key" : "ut_poptracker_path"
+    }
 
 
     def __init__(self, multiworld: MultiWorld, player: int):
