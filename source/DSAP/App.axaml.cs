@@ -161,7 +161,6 @@ public partial class App : Application
             {
                 
                 int ngplus = Memory.ReadByte(baseb + 0x78);
-                Log.Logger.Warning($"ng+{ngplus}");
                 if (ngplus > 0)
                 {
                     Log.Logger.Warning($"ng+{ngplus} detected. Completing goal.");
@@ -170,7 +169,7 @@ public partial class App : Application
             }
             else
             {
-
+                Log.Logger.Warning("baseb could not be resolved");
             }
             var gwynloc = (Location)Helpers.GetBossFlagLocations().Where(x => x.Name == "Gwyn, Lord of Cinder").First();
             if (gwynloc != null)
@@ -233,7 +232,21 @@ public partial class App : Application
             $"rist={Client.CurrentSession.RoomState.RoomInfoSendTime.ToShortTimeString()},ctime={DateTime.Now.ToUniversalTime().ToShortTimeString()},Slot={Client.CurrentSession.ConnectionInfo.Slot}");
         Log.Logger.Warning($"locs={Client.CurrentSession.Locations.AllLocationsChecked.Count}/{Client.CurrentSession.Locations.AllLocations.Count}");
         Log.Logger.Warning($"items received={Client.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap.Count},crm={ConditionRewardMap.Count}");
-        Log.Logger.Warning($"version info={DSOptions?.VersionInfoString()}");
+        Log.Logger.Warning($"version info={DSOptions?.VersionInfoString()}, cdv={Archipelago.Core.AvaloniaGUI.Utils.Helpers.GetAppVersion()}");
+        if (Helpers.IsInGame())
+        {
+            ulong baseb = Helpers.GetBaseBAddress();
+            Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
+            if (baseb > 0)
+            {
+                int ngplus = Memory.ReadByte(baseb + 0x78);
+                Log.Logger.Warning($"ng+={ngplus}");
+            }
+            else
+            {
+                Log.Logger.Warning("diag baseb could not be resolved");
+            }
+        }
     }
 
     public static void AddItem(int category, int id, int quantity)
