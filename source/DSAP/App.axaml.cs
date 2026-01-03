@@ -47,6 +47,7 @@ public partial class App : Application
     private bool deathlink_enabled = false;
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
     public static DarkSoulsOptions DSOptions;
+    private static bool _goalSent = false;
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -150,6 +151,8 @@ public partial class App : Application
         {
             ulong baseb = Helpers.GetBaseBAddress();
             Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
+            var locs = Client.CurrentSession.Locations.AllLocationsChecked.Where(x => x == 11110499 || x == 11110500);
+            foreach (var loc in locs)
             {
                 Log.Logger.Warning($"Lord of Cinder location ({loc}) found as completed. Completing goal.");
                 sendingGoal = true;
@@ -162,9 +165,7 @@ public partial class App : Application
                 if (ngplus > 0)
                 {
                     Log.Logger.Warning($"ng+{ngplus} detected. Completing goal.");
-                    if (!sendingGoal)
-
-                        sendingGoal = true;
+                    sendingGoal = true;
                 }
             }
             else
@@ -202,9 +203,7 @@ public partial class App : Application
             {
                 if (sendingGoal)
                 {
-                    Client.SendGoalCompletion();
-                    Log.Logger.Warning("Goal sent.");
-                    Client.AddOverlayMessage($"Goal sent.");
+                    SendGoal();
                 }
                 else
                 {
@@ -595,12 +594,12 @@ public partial class App : Application
         if (e.CompletedLocation.Name.Contains("Lord of Cinder"))
         {
             Log.Logger.Information($"Sending Goal for location: {e.CompletedLocation.Name}");
-            Client.SendGoalCompletion();
+            SendGoal();
         }
         else if (locid == 11110499) // hardcoded "Gwyn, Lord of Cinder" location
         {
             Log.Logger.Information($"Sending Goal for location id: {locid}");
-            Client.SendGoalCompletion();
+            SendGoal();
         }
 
         /* If the check was in non-itemlot locations, give the player items for it */
@@ -616,6 +615,23 @@ public partial class App : Application
         }
         Log.Logger.Debug($"Location Completed: {e.CompletedLocation.Name} at {e.CompletedLocation.Id}");
     }
+
+    private void SendGoal()
+    {
+        lock (_lockObject)
+        {
+            if (!_goalSent)
+            {
+                Client.SendGoalCompletion();
+                Log.Logger.Warning("Goal sent.");
+                Client.AddOverlayMessage($"Goal sent.");
+            }
+            else
+                Log.Logger.Information("Goal already sent.");
+            _goalSent = true;
+        }
+    }
+
     private void ToggleDeathlink()
     {
         if (deathlink_enabled)
