@@ -150,14 +150,8 @@ public partial class App : Application
         {
             ulong baseb = Helpers.GetBaseBAddress();
             Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
-            if (Client.CurrentSession.Locations.AllLocationsChecked.Contains(11110499))
             {
-                Log.Logger.Warning("Gwyn, Lord of Cinder location (11110499) found as completed. Completing goal.");
-                sendingGoal = true;
-            }
-            if (Client.CurrentSession.Locations.AllLocationsChecked.Contains(11110500))
-            {
-                Log.Logger.Warning("Gwyn, Lord of Cinder location (11110500) found as completed. Completing goal.");
+                Log.Logger.Warning($"Lord of Cinder location ({loc}) found as completed. Completing goal.");
                 sendingGoal = true;
             }
             if (baseb > 0)
