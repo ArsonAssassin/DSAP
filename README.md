@@ -109,12 +109,12 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
-## Version 0.0.20 (upcoming)
-* Feature: Enable DLC (#50). Exclude-able as location group "All DLC areas" as noted below
+## Version 0.0.20.0
+* Feature: Enable DLC (#50). Exclude-able as location group "All DLC regions" as noted below
 * Feature: Game overlay to display AP messages from the DSAP client while in game (including received and found items). Note: Overlay may not show up in streams of the game on discord, etc, as it uses another window (which may appear mostly blank in the alt-tab display).
 * Feature: Weapon Upgrades via yaml option (#48)
 * Feature: Add /deathlink command to toggle it post-seed creation, and /help command to list DSAP-specific commands (#68)
-* Feature: Add location groups (#62). Using this feature you can exclude whole groups of locations such as "All DLC areas" or "Painted World", "The Great Hollow", "Ash Lake", "Upper Blighttown Depths Side", etc. Excluding locationns does not prevent them being randomized at this point, but only makes it so they should not have items classified as useful or priority.
+* Feature: Add location groups (#62). Using this feature you can exclude whole groups of locations such as "All DLC regions" or "Painted World", "The Great Hollow", "Ash Lake", "Upper Blighttown Depths Side", etc. Excluding locationns does not prevent them being randomized at this point, but only makes it so they should not have items classified as useful or priority.
 * Feature: Add item groups (#62). Not excludable yet, but you are now able to mark them as local or non-local.
 * Feature: Unstuck button (#64) - will teleport you to Firelink Shrine if you've at least reached there. Useful if stuck in the Duke's Archive without a key.
 * Feature: Compatibility support for 0.0.19.1 and warning/error messages for unsupported apworld versions
@@ -136,10 +136,10 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 # Roadmap
 ## 0.0.21 (planned)
-* Feature: Item pool Balancing and options
+* Feature: Fog Gates as items
 
 ## 0.0.22 (planned)
-* Feature: Fog Gates as items
+* Feature: Item pool Balancing and options
 * Feature: Starting Item randomization
 
 ## At some point
