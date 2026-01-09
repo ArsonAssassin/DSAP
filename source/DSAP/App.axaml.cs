@@ -199,7 +199,13 @@ public partial class App : Application
     {
         Log.Logger.Warning("Beginning /goalcheck processing");
         bool sendingGoal = false;
-        
+
+        // Begin by stating what the goal is.
+        // Later, if there are other options, display the appropriate goal, and update the checks performed.
+        Log.Logger.Warning("Your goal is to defeat Gwyn, Lord of Cinder.");
+
+        PrintDiagnosticInfo();
+
         // check if goal is completed
         if (Helpers.IsInGame())
         {
@@ -249,8 +255,6 @@ public partial class App : Application
             {
                 Log.Logger.Warning("No Gwyn location found");
             }
-
-            PrintDiagnosticInfo();
             
             if (Helpers.IsInGame())
             {
@@ -281,6 +285,7 @@ public partial class App : Application
 
     private void PrintDiagnosticInfo()
     {
+        Log.Logger.Warning("Diagnostic info:");
         Log.Logger.Warning($"isc={Client.IsConnected}, ili={Client.IsLoggedIn}, irtri={Client.isReadyToReceiveItems}, ircs={Client.itemsReceivedCurrentSession},");
         Log.Logger.Warning($"v={Client.CurrentSession.RoomState.Version},gv={Client.CurrentSession.RoomState.GeneratorVersion}," +
             $"rist={Client.CurrentSession.RoomState.RoomInfoSendTime.ToShortTimeString()},ctime={DateTime.Now.ToUniversalTime().ToShortTimeString()},Slot={Client.CurrentSession.ConnectionInfo.Slot}");
