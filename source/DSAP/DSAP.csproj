@@ -18,7 +18,6 @@
     <None Remove="Resources\Consumables.json" />
     <None Remove="Resources\Doors.json" />
     <None Remove="Resources\EnemyDrop.json" />
-    <None Remove="Resources\FogWalls.json" />
     <None Remove="Resources\ItemLots.json" />
     <None Remove="Resources\KeyItems.json" />
     <None Remove="Resources\LastBonfire.json" />
@@ -44,7 +43,6 @@
     <EmbeddedResource Include="Resources\Doors.json" />
     <EmbeddedResource Include="Resources\EnemyDrop.json" />
     <EmbeddedResource Include="Resources\DsrEvents.json" />
-    <EmbeddedResource Include="Resources\FogWalls.json" />
     <EmbeddedResource Include="Resources\ItemLots.json" />
     <EmbeddedResource Include="Resources\KeyItems.json" />
     <EmbeddedResource Include="Resources\LastBonfire.json" />

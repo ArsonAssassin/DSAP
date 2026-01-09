@@ -13,7 +13,7 @@ namespace DSAP.Models
         public bool Deactivated; // Whether the event has been "deactivated"
         public string Name {  get; set; }
         public DsrEventType Type { get; set; }
-        public int ApId { get; set; }
+        public int ApId { get; set; } // AP item id that clears this event lock
         public int Eventid { get; set; }
         public int Eventslot { get; set; }
         public int MapId3 { get; set; } // 3-digit map+area id

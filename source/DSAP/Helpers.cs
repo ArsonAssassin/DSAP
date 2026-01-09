@@ -3,6 +3,7 @@ using Archipelago.Core.Util;
 using Archipelago.Core.Util.GPS;
 using DSAP.Models;
 using Serilog;
+using Silk.NET.OpenGL;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1149,11 +1150,11 @@ namespace DSAP
             List<DarkSoulsItem> newlist = list.Select(x => new DarkSoulsItem()
             {
                 Name = x.Name,
-                Id = x.Id, // ap id of event item
+                Id = x.Itemid, // ap id of event item
                 StackSize = 1,
                 UpgradeType = Enums.ItemUpgrade.None,
                 Category = Enums.DSItemCategory.DsrEvent,
-                ApId = x.Id, // ap id of event item
+                ApId = x.Itemid, // ap id of event item
             }
             ).ToList();
             return newlist;
@@ -1163,7 +1164,7 @@ namespace DSAP
             var json = OpenEmbeddedResource("DSAP.Resources.DsrEvents.json");
             var list = JsonSerializer.Deserialize<List<DsrEvent>>(json, GetJsonOptions());
             List<EmkController> newlist = list.Select(x => new EmkController(x.Name, x.Type,
-                x.Eventid, x.Eventslot, x.Id)).ToList();
+                x.Eventid, x.Eventslot, x.Itemid)).ToList();
             return newlist;
         }
         public static List<DarkSoulsItem> GetRangedWeapons()
@@ -1269,9 +1270,17 @@ namespace DSAP
         }
         public static List<FogWallFlag> GetFogWallFlags()
         {
-            var json = OpenEmbeddedResource("DSAP.Resources.FogWalls.json");
-            var list = JsonSerializer.Deserialize<List<FogWallFlag>>(json, GetJsonOptions());
-            return list;
+            var json = OpenEmbeddedResource("DSAP.Resources.DsrEvents.json");
+            List <Enums.DsrEventType> fogwalltypes = [Enums.DsrEventType.FOGWALL, Enums.DsrEventType.BOSSFOGWALL, Enums.DsrEventType.EARLYFOGWALL];
+            var list = JsonSerializer.Deserialize<List<DsrEvent>>(json, GetJsonOptions()).Where(x => fogwalltypes.Contains(x.Type));
+            List<FogWallFlag> newlist = list.Select(x => new FogWallFlag()
+            {
+                Name = x.Name,
+                Id = x.Locid, // apid of event location
+                Flag = x.Flag
+            }
+            ).ToList();
+            return newlist;
         }
         public static List<EventFlag> GetMiscFlags()
         {

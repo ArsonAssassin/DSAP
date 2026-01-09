@@ -74,11 +74,15 @@ class DSRWorld(World):
 
 
     def generate_early(self):
-        self.enabled_location_categories.add(DSRLocationCategory.EVENT),
-        self.enabled_location_categories.add(DSRLocationCategory.BOSS),
-        self.enabled_location_categories.add(DSRLocationCategory.ITEM_LOT),
-        self.enabled_location_categories.add(DSRLocationCategory.BONFIRE),
+        self.enabled_location_categories.add(DSRLocationCategory.EVENT)
+        self.enabled_location_categories.add(DSRLocationCategory.BOSS)
+        self.enabled_location_categories.add(DSRLocationCategory.ITEM_LOT)
+        self.enabled_location_categories.add(DSRLocationCategory.BONFIRE)
         self.enabled_location_categories.add(DSRLocationCategory.DOOR)
+        if (self.options.fogwall_sanity.value == True):
+            self.enabled_location_categories.add(DSRLocationCategory.FOG_WALL)
+        if (self.options.boss_fogwall_sanity.value == True):
+            self.enabled_location_categories.add(DSRLocationCategory.BOSS_FOG_WALL)
 
     def create_regions(self):
         # Create Regions
@@ -91,17 +95,19 @@ class DSRWorld(World):
             "Northern Undead Asylum - F2 East Door",
             "Northern Undead Asylum", 
             "Northern Undead Asylum - After Fog",
-            "Northern Undead Asylum - After F2 East Door", 
+            "Northern Undead Asylum - After F2 East Door",
             "Northern Undead Asylum - Big Pilgrim Door",
             "Firelink Shrine", 
-            "Upper Undead Burg - Before Fog",
+            "Upper Undead Burg - Before Fog", 
+            "Upper Undead Burg - Fog", 
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Upper Undead Burg - Taurus Demon",
             "Upper Undead Burg - After Taurus Demon",
             "Undead Parish - Before Fog", 
+            "Undead Parish - Fog", 
             "Undead Parish", 
-            "Undead Parish - Bell Gargoyles", 
+            "Undead Parish - Bell Gargoyles",
             "Firelink Shrine - After Undead Parish Elevator",
             "Northern Undead Asylum Second Visit",
             "Northern Undead Asylum Second Visit - F2 West Door",
@@ -120,6 +126,7 @@ class DSRWorld(World):
             "Depths to Blighttown Door",
             "Upper Blighttown Depths Side", 
             "Upper Blighttown VotD Side", 
+            "Lower Blighttown - Fog", 
             "Lower Blighttown", 
             "Lower Blighttown - Quelaag", 
             "Lower Blighttown - After Quelaag", 
@@ -133,7 +140,7 @@ class DSRWorld(World):
             "Darkroot Garden - Moonlight Butterfly",
             "Darkroot Garden - After Moonlight Butterfly",
             "The Great Hollow", 
-            "Ash Lake", 
+            "Ash Lake",
             "Sen's Fortress",
             "Sen's Fortress - After First Fog",
             "Sen's Fortress - After Second Fog",
@@ -165,7 +172,7 @@ class DSRWorld(World):
             "The Duke's Archives - After Archive Prison Extra Key",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
             "The Duke's Archives - Courtyard",
-            "The Duke's Archives - Giant Cell",
+            "The Duke's Archives - Giant Cell", 
             "Crystal Cave", 
             "Crystal Cave - After Seath", 
             "The Duke's Archives - First Arena after Seath's Death", 
@@ -188,7 +195,7 @@ class DSRWorld(World):
             "Tomb of the Giants - Behind Golden Fog Wall",
             "Tomb of the Giants - Nito",
             "Tomb of the Giants - After Nito",
-            "Kiln of the First Flame", 
+            "Kiln of the First Flame",
             "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
             "Sanctuary Garden - Santuary Guardian",
@@ -199,7 +206,7 @@ class DSRWorld(World):
             "Oolacile Township", 
             "Oolacile Township - Behind Light-Dispelled Walls",
             "Oolacile Township - After Crest Key",
-            "Chasm of the Abyss", 
+            "Chasm of the Abyss",
             "Chasm of the Abyss - Manus", 
             ]
         regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in our_regions})
@@ -230,7 +237,8 @@ class DSRWorld(World):
         create_connection("Northern Undead Asylum Second Visit", "Northern Undead Asylum Second Visit - F2 West Door")
         create_connection("Northern Undead Asylum Second Visit - F2 West Door", "Northern Undead Asylum Second Visit - Behind F2 West Door")
         
-        create_connection("Upper Undead Burg - Before Fog", "Upper Undead Burg")
+        create_connection("Upper Undead Burg - Before Fog", "Upper Undead Burg - Fog")
+        create_connection("Upper Undead Burg - Fog", "Upper Undead Burg")
         create_connection("Upper Undead Burg", "Undead Burg Basement Door")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Taurus Demon")
         create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - After Taurus Demon")
@@ -242,7 +250,8 @@ class DSRWorld(World):
         create_connection("Upper Undead Burg", "Watchtower Basement")
         create_connection("Darkroot Basin", "Watchtower Basement")
 
-        create_connection("Undead Parish - Before Fog", "Undead Parish")
+        create_connection("Undead Parish - Before Fog", "Undead Parish - Fog")
+        create_connection("Undead Parish - Fog", "Undead Parish")
         create_connection("Undead Parish", "Undead Parish - Bell Gargoyles")
         create_connection("Undead Parish", "Firelink Shrine - After Undead Parish Elevator")
         create_connection("Undead Parish", "Darkroot Garden - Before Fog")
@@ -284,8 +293,9 @@ class DSRWorld(World):
         create_connection("Depths to Blighttown Door", "Upper Blighttown Depths Side")
         
         create_connection("Upper Blighttown Depths Side", "Depths to Blighttown Door")
-        create_connection("Upper Blighttown Depths Side", "Lower Blighttown")
-
+        
+        create_connection("Upper Blighttown Depths Side", "Lower Blighttown - Fog")
+        create_connection("Lower Blighttown - Fog", "Lower Blighttown")
         create_connection("Lower Blighttown", "Upper Blighttown Depths Side")
         create_connection("Lower Blighttown", "Upper Blighttown VotD Side")
         create_connection("Lower Blighttown", "Demon Ruins - Early")
@@ -583,10 +593,15 @@ class DSRWorld(World):
         #normal
         # if (self.options.fogwall_lock.value == True):
         #     set_rule(self.multiworld.get_entrance("Upper Undead Burg - Before Fog -> Upper Undead Burg", self.player), lambda state: state.has ("UB: Fog Wall - Undead Burg", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Before Fog -> Upper Undead Burg", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("UB: Fog Wall - Undead Burg", self.player))
-        set_rule(self.multiworld.get_entrance("Undead Parish - Before Fog -> Undead Parish", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("UP: Fog Wall - Undead Parish", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Before Fog -> Upper Undead Burg - Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("UB: Fog Wall - Undead Burg", self.player))
+        set_rule(self.multiworld.get_entrance("Undead Parish - Before Fog -> Undead Parish - Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("UP: Fog Wall - Undead Parish", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Garden - Before Fog -> Darkroot Garden", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("DG: Fog Wall - Darkroot Garden", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("BT: Fog Wall - Lower Blighttown Entrance", self.player))
+        
+        # Depths fog doesn't affect entrance logic, but is itself only accessible with the fog item
+        set_rule(self.multiworld.get_location("DE: Fog Wall - Depths Rat Room", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("DE: Fog Wall - Depths Rat Room", self.player))
+        
+        set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown - Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("BT: Fog Wall - Lower Blighttown Entrance", self.player))
+
         set_rule(self.multiworld.get_entrance("The Great Hollow -> Ash Lake", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("ASH: Fog Wall - Ash Lake Entrance", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress -> Sen's Fortress - After First Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("SF: Fog Wall - Sen's Fortress #1 (Outside Stairs)", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress - After First Fog -> Sen's Fortress - After Second Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("SF: Fog Wall - Sen's Fortress #2 (Upper Entrance)", self.player))
@@ -594,10 +609,16 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Anor Londo -> Anor Londo - After First Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("AL: Fog Wall - Anor Londo Rafters", self.player))
         set_rule(self.multiworld.get_entrance("Anor Londo - After First Fog -> Anor Londo - After Second Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("AL: Fog Wall - Anor Londo Archers", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Tower Giant Door Key -> The Duke's Archives - Courtyard", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has("DA: Fog Wall - Courtyard Entrance", self.player))
-        # Catacombs fog does not affect logic
+        
+        # Catacombs fog does not affect entrance logic, but is itself only accessible with the fog item
+        set_rule(self.multiworld.get_location("TC: Fog Wall - Catacombs", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("TC: Fog Wall - Catacombs", self.player))
+
         set_rule(self.multiworld.get_entrance("Tomb of the Giants -> Tomb of the Giants - After White Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("TotG: Fog Wall - Tomb of the Giants", self.player))
         set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Upper New Londo Ruins - After Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("NL: Fog Wall - New Londo (Upper)", self.player))
-        # Lower new londo fog does not affect logic
+        
+        # Lower new londo fog does not affect entrance logic, but is itself only accessible with the fog item
+        set_rule(self.multiworld.get_location("NL: Fog Wall - New Londo (Lower)", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("NL: Fog Wall - New Londo (Lower)", self.player))
+
         set_rule(self.multiworld.get_entrance("Painted World of Ariamis -> Painted World of Ariamis - After Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("PW: Fog Wall - Painted World", self.player))
         
         #bosses

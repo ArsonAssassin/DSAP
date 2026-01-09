@@ -473,10 +473,10 @@ public partial class App : Application
             var itemLocations = Helpers.GetItemLotLocations();
             var bonfireLocations = Helpers.GetBonfireFlagLocations();
             var doorLocations = Helpers.GetDoorFlagLocations();
-            //var fogWallLocations = Helpers.GetFogWallFlagLocations();
+            var fogWallLocations = Helpers.GetFogWallFlagLocations();
             var miscLocations = Helpers.GetMiscFlagLocations();
 
-            var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(miscLocations).ToList();
+            var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(fogWallLocations).Union(miscLocations).ToList();
             Client.MonitorLocations(fullLocationsList);
 
             StartEmkWatchers(EmkControllers);
@@ -1093,7 +1093,7 @@ public partial class App : Application
             var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
             nonItemLotFlags.AddRange(Helpers.GetBonfireFlags().Cast<EventFlag>());
             nonItemLotFlags.AddRange(Helpers.GetDoorFlags().Cast<EventFlag>());
-            //nonItemLotFlags.AddRange(Helpers.GetFogWallFlags().Cast<EventFlag>());
+            nonItemLotFlags.AddRange(Helpers.GetFogWallFlags().Cast<EventFlag>());
             nonItemLotFlags.AddRange(Helpers.GetMiscFlags().Cast<EventFlag>());
 
             //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();

@@ -22,12 +22,22 @@ class FogwallLock(Toggle):
     display_name = "Fogwall Lock" 
 
 class FogwallLockIncludeUA(Toggle):
-    """Includes Undead Asylum early fogwall in the pool. This can lead to extremely early BK mode."""
+    """Includes Undead Asylum early fog wall in the pool. This can lead to extremely early BK mode."""
     display_name = "Fogwall Lock Include Undead Asylum" 
 
 class BossFogwallLock(Toggle):
     """Makes boss fog walls uninteractable until you receive their items from the item pool"""
     display_name = "Boss Fogwall Lock" 
+
+class FogwallSanity(Toggle):
+    """Makes fog walls a "check" - that is, they grant you items when you walk through them. 
+    Recommended value of true if Fogwall Lock is true."""
+    display_name = "Fogwall Sanity" 
+
+class BossFogwallSanity(Toggle):
+    """Makes boss fog walls a "check" - that is, they grant you items when you walk through them. 
+    Recommended value of true if Boss Fogwall Lock is true."""
+    display_name = "Boss Fogwall Sanity" 
 
 class UpgradedWeaponsPercentage(Range):
     """Percentage of weapons (including shields) in the pool that will be replaced with upgraded versions, if possible."""
@@ -40,7 +50,7 @@ class UpgradedWeaponsAllowedInfusions(OptionList):
     """Which infusions are allowed if UpgradedWeapons.
     Available infusion types are Normal, Raw, Magic, Fire, Divine, Chaos, Enchanted, Occult, Crystal, and Lightning.
     If "Normal" is removed, all upgraded weapons will have a different, available infusion."""
-    display_name = "Upgrade Weapons Allowed Infusions"
+    display_name = "Upgraded Weapons - Allowed Infusions"
     default = {"Normal", "Raw", "Magic", "Fire", "Divine", "Chaos", "Enchanted", "Occult", "Crystal", "Lightning"}
     valid_keys = ["Normal", "Raw", "Magic", "Fire", "Divine", "Chaos", "Enchanted", "Occult", "Crystal", "Lightning"]
 
@@ -56,7 +66,7 @@ class UpgradedWeaponsAdjustedLevels(Toggle):
 class UpgradedWeaponsMinLevel(Range):
     """Minimum upgrade value on upgraded weapons in the pool.
     This can exclude certain infusions if their calculated level cannot be at the minimum level. """
-    display_name = "Upgraded Weapons Minimum Level"
+    display_name = "Upgraded Weapons - Minimum Level"
     range_start = 0
     range_end = 15
     default = 0
@@ -64,7 +74,7 @@ class UpgradedWeaponsMinLevel(Range):
 
 class UpgradedWeaponsMaxLevel(Range):
     """Maximum upgrade plus value on upgraded weapons in the pool."""
-    display_name = "Upgraded Weapons Maximum Level"
+    display_name = "Upgraded Weapons - Maximum Level"
     range_start = 0
     range_end = 15
     default = 15
@@ -80,6 +90,10 @@ option_groups = [
         FogwallLock,
         FogwallLockIncludeUA,
         BossFogwallLock,
+        ]),
+    OptionGroup("Sanity", [
+        FogwallSanity,
+        BossFogwallSanity,
         ]),
     OptionGroup("Upgraded Weapons", [
         UpgradedWeaponsPercentage,
@@ -100,6 +114,8 @@ class DSROption(PerGameCommonOptions):
     fogwall_lock: FogwallLock
     fogwall_lock_include_ua: FogwallLockIncludeUA
     boss_fogwall_lock: BossFogwallLock
+    fogwall_sanity: FogwallSanity
+    boss_fogwall_sanity: BossFogwallSanity
     upgraded_weapons_percentage: UpgradedWeaponsPercentage
     upgraded_weapons_allowed_infusions: UpgradedWeaponsAllowedInfusions
     upgraded_weapons_adjusted_levels : UpgradedWeaponsAdjustedLevels
