@@ -1149,7 +1149,7 @@ namespace DSAP
             var list = JsonSerializer.Deserialize<List<DsrEvent>>(json, GetJsonOptions());
             List<DarkSoulsItem> newlist = list.Select(x => new DarkSoulsItem()
             {
-                Name = x.Name,
+                Name = x.Itemname,
                 Id = x.Itemid, // ap id of event item
                 StackSize = 1,
                 UpgradeType = Enums.ItemUpgrade.None,
@@ -1163,7 +1163,7 @@ namespace DSAP
         {
             var json = OpenEmbeddedResource("DSAP.Resources.DsrEvents.json");
             var list = JsonSerializer.Deserialize<List<DsrEvent>>(json, GetJsonOptions());
-            List<EmkController> newlist = list.Select(x => new EmkController(x.Name, x.Type,
+            List<EmkController> newlist = list.Select(x => new EmkController(x.Locname, x.Type,
                 x.Eventid, x.Eventslot, x.Itemid)).ToList();
             return newlist;
         }
@@ -1275,7 +1275,7 @@ namespace DSAP
             var list = JsonSerializer.Deserialize<List<DsrEvent>>(json, GetJsonOptions()).Where(x => fogwalltypes.Contains(x.Type));
             List<FogWallFlag> newlist = list.Select(x => new FogWallFlag()
             {
-                Name = x.Name,
+                Name = x.Locname,
                 Id = x.Locid, // apid of event location
                 Flag = x.Flag
             }

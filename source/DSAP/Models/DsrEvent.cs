@@ -5,7 +5,8 @@ namespace DSAP.Models
 {
     public class DsrEvent
     {
-        public string Name { get; set; }
+        public string Locname { get; set; }
+        public string Itemname { get; set; }
         public int Itemid { get; set; }
         public int Flag { get; set; }
         public int Locid { get; set; }
