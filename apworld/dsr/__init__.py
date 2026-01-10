@@ -587,71 +587,85 @@ class DSRWorld(World):
 
 
         # fogwall rules
+        def add_fog_rule(fogwall_item: str, from_region: str, to_region: str):
+            set_rule(self.multiworld.get_entrance(f"{from_region} -> {to_region}", self.player), 
+                lambda state: (self.options.fogwall_lock.value == False) or state.has (fogwall_item, self.player))
+
         #early 
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Northern Undead Asylum - After Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or (self.options.fogwall_lock_include_ua.value == False) or state.has ("UA: Fog Wall - Northern Undead Asylum", self.player))
         
         #normal
-        # if (self.options.fogwall_lock.value == True):
-        #     set_rule(self.multiworld.get_entrance("Upper Undead Burg - Before Fog -> Upper Undead Burg", self.player), lambda state: state.has ("UB: Fog Wall - Undead Burg", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Before Fog -> Upper Undead Burg - Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("UB: Fog Wall - Undead Burg", self.player))
-        set_rule(self.multiworld.get_entrance("Undead Parish - Before Fog -> Undead Parish - Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("UP: Fog Wall - Undead Parish", self.player))
-        set_rule(self.multiworld.get_entrance("Darkroot Garden - Before Fog -> Darkroot Garden", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("DG: Fog Wall - Darkroot Garden", self.player))
+        add_fog_rule("UB: Fog Wall - Undead Burg", "Upper Undead Burg - Before Fog", "Upper Undead Burg - Fog")
+        # add_fog_rule("UB: Fog Wall - Undead Burg", "Upper Undead Burg", "Upper Undead Burg - Fog")
+
+        add_fog_rule("UP: Fog Wall - Undead Parish", "Undead Parish - Before Fog", "Undead Parish - Fog")
+        # add_fog_rule("UP: Fog Wall - Undead Parish", "Undead Parish", "Undead Parish - Fog")
+
+        add_fog_rule("DG: Fog Wall - Darkroot Garden", "Darkroot Garden - Before Fog", "Darkroot Garden")
         
         # Depths fog doesn't affect entrance logic, but is itself only accessible with the fog item
         set_rule(self.multiworld.get_location("DE: Fog Wall - Depths Rat Room", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("DE: Fog Wall - Depths Rat Room", self.player))
-        
-        set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown - Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("BT: Fog Wall - Lower Blighttown Entrance", self.player))
 
-        set_rule(self.multiworld.get_entrance("The Great Hollow -> Ash Lake", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("ASH: Fog Wall - Ash Lake Entrance", self.player))
-        set_rule(self.multiworld.get_entrance("Sen's Fortress -> Sen's Fortress - After First Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("SF: Fog Wall - Sen's Fortress #1 (Outside Stairs)", self.player))
-        set_rule(self.multiworld.get_entrance("Sen's Fortress - After First Fog -> Sen's Fortress - After Second Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("SF: Fog Wall - Sen's Fortress #2 (Upper Entrance)", self.player))
+        add_fog_rule("BT: Fog Wall - Lower Blighttown Entrance", "Upper Blighttown Depths Side", "Lower Blighttown - Fog")
+        # add_fog_rule("BT: Fog Wall - Lower Blighttown Entrance", "Lower Blighttown", "Lower Blighttown - Fog")
 
-        set_rule(self.multiworld.get_entrance("Anor Londo -> Anor Londo - After First Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("AL: Fog Wall - Anor Londo Rafters", self.player))
-        set_rule(self.multiworld.get_entrance("Anor Londo - After First Fog -> Anor Londo - After Second Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("AL: Fog Wall - Anor Londo Archers", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Tower Giant Door Key -> The Duke's Archives - Courtyard", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has("DA: Fog Wall - Courtyard Entrance", self.player))
+        add_fog_rule("ASH: Fog Wall - Ash Lake Entrance", "The Great Hollow", "Ash Lake")
+
+        add_fog_rule("SF: Fog Wall - Sen's Fortress #1 (Outside Stairs)", "Sen's Fortress", "Sen's Fortress - After First Fog")
+        add_fog_rule("SF: Fog Wall - Sen's Fortress #2 (Upper Entrance)", "Sen's Fortress - After First Fog", "Sen's Fortress - After Second Fog")
+
+
+        add_fog_rule("AL: Fog Wall - Anor Londo Rafters", "Anor Londo", "Anor Londo - After First Fog")
+        add_fog_rule("AL: Fog Wall - Anor Londo Archers", "Anor Londo - After First Fog", "Anor Londo - After Second Fog")
+
+        add_fog_rule("DA: Fog Wall - Courtyard Entrance", "The Duke's Archives - After Archive Tower Giant Door Key", "The Duke's Archives - Courtyard")
         
         # Catacombs fog does not affect entrance logic, but is itself only accessible with the fog item
         set_rule(self.multiworld.get_location("TC: Fog Wall - Catacombs", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("TC: Fog Wall - Catacombs", self.player))
 
-        set_rule(self.multiworld.get_entrance("Tomb of the Giants -> Tomb of the Giants - After White Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("TotG: Fog Wall - Tomb of the Giants", self.player))
-        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Upper New Londo Ruins - After Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("NL: Fog Wall - New Londo (Upper)", self.player))
-        
+        add_fog_rule("TotG: Fog Wall - Tomb of the Giants", "Tomb of the Giants", "Tomb of the Giants - After White Fog")
+        add_fog_rule("NL: Fog Wall - New Londo (Upper)", "Upper New Londo Ruins", "Upper New Londo Ruins - After Fog")
+
         # Lower new londo fog does not affect entrance logic, but is itself only accessible with the fog item
         set_rule(self.multiworld.get_location("NL: Fog Wall - New Londo (Lower)", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("NL: Fog Wall - New Londo (Lower)", self.player))
 
-        set_rule(self.multiworld.get_entrance("Painted World of Ariamis -> Painted World of Ariamis - After Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("PW: Fog Wall - Painted World", self.player))
-        
+        add_fog_rule("PW: Fog Wall - Painted World", "Painted World of Ariamis", "Painted World of Ariamis - After Fog")
+
         #bosses
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Taurus Demon", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has ("UB: Fog Wall - Taurus Demon", self.player))
-        set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - Capra Demon", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has ("UB: Fog Wall - Capra Demon", self.player))
-        set_rule(self.multiworld.get_entrance("Undead Parish -> Undead Parish - Bell Gargoyles", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has ("UP: Fog Wall - Bell Gargoyles", self.player))
-        set_rule(self.multiworld.get_entrance("Darkroot Garden -> Darkroot Garden - Moonlight Butterfly", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has ("DG: Fog Wall - Moonlight Butterfly", self.player))
+        def add_boss_fog_rule(fogwall_item: str, from_region: str, to_region: str):
+            set_rule(self.multiworld.get_entrance(f"{from_region} -> {to_region}", self.player), 
+                lambda state: (self.options.boss_fogwall_lock.value == False) or state.has (fogwall_item, self.player))
 
-        set_rule(self.multiworld.get_entrance("Depths -> Depths - Gaping Dragon", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has ("DE: Fog Wall - Gaping Dragon", self.player))
-        set_rule(self.multiworld.get_entrance("Lower Blighttown -> Lower Blighttown - Quelaag", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has ("BT: Fog Wall - Quelaag", self.player))
-        set_rule(self.multiworld.get_entrance("Sen's Fortress - After Second Fog -> Sen's Fortress - Iron Golem", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has ("SF: Fog Wall - Iron Golem", self.player))
-        set_rule(self.multiworld.get_entrance("Anor Londo - After Second Fog -> Anor Londo - Ornstein and Smough", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("AL: Fog Wall - Ornstein and Smough", self.player))
-        set_rule(self.multiworld.get_entrance("Anor Londo - After Ornstein and Smough -> Anor Londo - Gwyndolin", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("AL: Fog Wall - Gwyndolin", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - After First Seath Encounter", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("DA: Fog Wall - Seath First Encounter", self.player))
+        add_boss_fog_rule("UB: Fog Wall - Taurus Demon", "Upper Undead Burg", "Upper Undead Burg - Taurus Demon")
+        add_boss_fog_rule("UB: Fog Wall - Capra Demon", "Lower Undead Burg", "Lower Undead Burg - Capra Demon")
+        add_boss_fog_rule("UP: Fog Wall - Bell Gargoyles", "Undead Parish", "Undead Parish - Bell Gargoyles")
+        add_boss_fog_rule("DG: Fog Wall - Moonlight Butterfly", "Darkroot Garden", "Darkroot Garden - Moonlight Butterfly")
 
-        set_rule(self.multiworld.get_entrance("The Catacombs - After Door 1 -> The Catacombs - Pinwheel", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("TC: Fog Wall - Pinwheel", self.player))
-        set_rule(self.multiworld.get_entrance("Tomb of the Giants - Behind Golden Fog Wall -> Tomb of the Giants - Nito", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("TotG: Fog Wall - Nito", self.player))
+        add_boss_fog_rule("DE: Fog Wall - Gaping Dragon", "Depths", "Depths - Gaping Dragon")
+        add_boss_fog_rule("BT: Fog Wall - Quelaag", "Lower Blighttown", "Lower Blighttown - Quelaag")
+        add_boss_fog_rule("SF: Fog Wall - Iron Golem", "Sen's Fortress - After Second Fog", "Sen's Fortress - Iron Golem")
+        add_boss_fog_rule("AL: Fog Wall - Ornstein and Smough", "Anor Londo - After Second Fog", "Anor Londo - Ornstein and Smough")
+        add_boss_fog_rule("AL: Fog Wall - Gwyndolin", "Anor Londo - After Ornstein and Smough", "Anor Londo - Gwyndolin")
+        add_boss_fog_rule("DA: Fog Wall - Seath First Encounter", "The Duke's Archives", "The Duke's Archives - After First Seath Encounter")
+
+        add_boss_fog_rule("TC: Fog Wall - Pinwheel", "The Catacombs - After Door 1", "The Catacombs - Pinwheel")
+        add_boss_fog_rule("TotG: Fog Wall - Nito", "Tomb of the Giants - Behind Golden Fog Wall", "Tomb of the Giants - Nito")
 
         # 4 kings defined above (because it also needs covenant of the abyss)
 
-        set_rule(self.multiworld.get_entrance("Demon Ruins - Early -> Demon Ruins - Ceaseless Discharge", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("DR: Fog Wall - Ceaseless Discharge", self.player))
+        add_boss_fog_rule("DR: Fog Wall - Ceaseless Discharge", "Demon Ruins - Early", "Demon Ruins - Ceaseless Discharge")
         # Demon Firesage boss fog is earlier, because of golden fog (lordvessel) requirement
-        set_rule(self.multiworld.get_entrance("Demon Ruins - After Demon Firesage -> Demon Ruins - Centipede Demon", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("DR: Fog Wall - Centipede Demon", self.player))
-        set_rule(self.multiworld.get_entrance("Lost Izalith -> Lost Izalith - Bed of Chaos", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("LI: Fog Wall - Bed of Chaos", self.player))
+        add_boss_fog_rule("DR: Fog Wall - Centipede Demon", "Demon Ruins - After Demon Firesage", "Demon Ruins - Centipede Demon")
+        add_boss_fog_rule("LI: Fog Wall - Bed of Chaos", "Lost Izalith", "Lost Izalith - Bed of Chaos")
 
-        set_rule(self.multiworld.get_entrance("Painted World of Ariamis - After Fog -> Painted World of Ariamis - Crossbreed Priscilla", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("PW: Fog Wall - Crossbreed Priscilla", self.player))
+        add_boss_fog_rule("PW: Fog Wall - Crossbreed Priscilla", "Painted World of Ariamis - After Fog", "Painted World of Ariamis - Crossbreed Priscilla")
 
-        set_rule(self.multiworld.get_entrance("Kiln of the First Flame -> Kiln of the First Flame - Gwyn", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("KoFF: Fog Wall - Gwyn", self.player))
+        add_boss_fog_rule("KoFF: Fog Wall - Gwyn", "Kiln of the First Flame", "Kiln of the First Flame - Gwyn")
 
         # dlc bosses
-        set_rule(self.multiworld.get_entrance("Sanctuary Garden -> Sanctuary Garden - Santuary Guardian", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("SG: Fog Wall - Sanctuary Guardian", self.player))
-        set_rule(self.multiworld.get_entrance("Royal Wood -> Royal Wood - Artorias", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("RW: Fog Wall - Artorias", self.player))
-        set_rule(self.multiworld.get_entrance("Chasm of the Abyss -> Chasm of the Abyss - Manus", self.player), lambda state: (self.options.boss_fogwall_lock.value == False) or state.has("CotA: Fog Wall - Manus", self.player))
+        add_boss_fog_rule("SG: Fog Wall - Sanctuary Guardian", "Sanctuary Garden", "Sanctuary Garden - Santuary Guardian")
+        add_boss_fog_rule("RW: Fog Wall - Artorias", "Royal Wood", "Royal Wood - Artorias")
+        add_boss_fog_rule("CotA: Fog Wall - Manus", "Chasm of the Abyss", "Chasm of the Abyss - Manus")
 
         # end of areas
 
