@@ -910,12 +910,12 @@ public partial class App : Application
             Log.Logger.Warning($"Failed to receive item - Player not loaded into game. Will retry when player is once again in game.");
             Client.AddOverlayMessage($"Failed to receive item - Player not loaded into game. Will retry when player is once again in game.");
             
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 /* Check every second if player is in game again yet */
                 while(!Helpers.IsInGame())
                 {
-                    Task.Delay(1000).Wait();
+                    await Task.Delay(1000);
                 }
 
                 Log.Logger.Warning($"Player once again detected as in game. Re-trying item receive.");
@@ -984,7 +984,7 @@ public partial class App : Application
     internal static void StartEmkWatchers(List<EmkController> emkControllers)
     {
         // every second, check the events list.
-        Task.Run(() =>
+        Task.Run(async () =>
         {
             try
             {
@@ -997,7 +997,7 @@ public partial class App : Application
                     }
                     Helpers.CheckEventsList();
                     Helpers.ManageEventsList(emkControllers);
-                    Task.Delay(1000).Wait();
+                    await Task.Delay(1000);
                 }
             }
             catch (Exception ex)
