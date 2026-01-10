@@ -249,7 +249,6 @@ class DSRWorld(World):
         create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - After Taurus Demon")
         create_connection_2way("Upper Undead Burg - After Taurus Demon", "Undead Parish - Before Fog")
 
-        create_connection("Upper Undead Burg", "Darkroot Basin")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Pine Resin Chest")
         
         create_connection_2way("Upper Undead Burg", "Watchtower Basement")
@@ -547,6 +546,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Anor Londo - Ornstein and Smough -> Anor Londo - After Ornstein and Smough", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
 
         set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
+        set_rule(self.multiworld.get_location("NL: Key to the Seal", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: state.has("Four Kings Defeated", self.player))
                 
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After First Seath Encounter -> The Duke's Archives - Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
