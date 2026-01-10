@@ -47,7 +47,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 # Usage
 1. When you start up the game, ensure you are **disconnected from the network**. It is recommended to configure Dark Souls Remastered's settings in System->Network Settings->Launch Setting="Start Offline", to avoid accidentally starting online.
-**WARNING: You should never connect to the FromSoft network while using this mod. If you are connected to the online Servers while using this mod, or with a save in which this mod was used, you will likely face account restrictions by FromSoft!!**
+**WARNING: You should never connect to the FromSoft network while using this mod. If you are connected to the online Servers while using this mod, or with a save in which this mod was used, you will likely face account restrictions (bans) by FromSoft!!**
 2. Run Dark Souls Remastered.
 3. Load into your save file created specifically for this seed/multiworld, or start a New Game, create your character, and proceed to the point where you are able to control and move your character.
     * **Be careful not load into a wrong save** - if it has locations checked that have not been checked in your save for this seed, you will end up sending checks you have not yet made, which would be a bummer and not fun.
@@ -102,6 +102,24 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
+## Version 0.0.20.2, or 0.0.21.0 (upcoming)
+* Version update -> 0.0.20.2. Client is compatible with 0.0.20.0-generated apworlds.
+* Feature: Add yaml option "fogwall_lock" - introduces AP items which are "keys" that you must acquire before you can go through fog walls. Default on.
+* Feature: Add yaml option "boss_fogwall_lock" - like above, but for boss fog walls. Does not include Asylum Demon (first encounter), Sif, or Seath (2nd encounter), as all of them do not have fog walls upon your first entry to their arena.
+* Feature: Add "Fogwall Sanity" and "Boss Fogwall Sanity" - get items when you pass through fog walls and the first time through boss fog walls, respectively.
+* Feature: Add Universal Tracker (UT) support for importing poptracker maps.
+* Feature: Added commands /fog and /bossfog for tracking which of the above keys you've acquired.
+* Feature: Added command /diag to collect diagnostic information. If you report a bug, you can include the screenshot from this output for more information.
+* Fix: Goal should now reliably send upon defeating Gwyn. Made SendGoal put its work on the scheduler to avoid a deadlock, and added a message for when it does try to send.
+* Fix: Various fixes to async processing.
+* Fix: Added command /goalcheck to re-try sending the goal if goal conditions have been met (either Gwyn is defeated or player is in NG+). If it works or doesn't work, please send us a screenshot with the results.
+* Fix: Logic - Removed Upper Undead Burg -> Darkroot Basin connection that does not go through the Watchtower Basement.
+* Fix: Logic - Add 2-way connections to relevant Entrances in the logic.
+* Fix: Logic - Corrected/adjusted many region connections
+* Fix: Logic - NL: Key to the Seal requires Lordvessel (don't require killing the NPC)
+* Fix: Logic - Make artificial logic only apply when both fogwall lock and boss fogwall lock options are off.
+
+
 ## Version 0.0.20.0
 * Feature: Enable DLC (#50). Exclude-able as location group "All DLC regions" as noted below
 * Feature: Game overlay to display AP messages from the DSAP client while in game (including received and found items). Note: Overlay may not show up in streams of the game on discord, etc, as it uses another window (which may appear mostly blank in the alt-tab display).
@@ -128,9 +146,6 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * General: Better error mesaging (#50, #65, #68, etc)
 
 # Roadmap
-## 0.0.21 (planned)
-* Feature: Fog Gates as items
-
 ## 0.0.22 (planned)
 * Feature: Item pool Balancing and options
 * Feature: Starting Item randomization

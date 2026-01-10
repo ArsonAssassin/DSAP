@@ -18,21 +18,25 @@ class UniqueSoulOption(Toggle):
     display_name = "Singular Boss Souls"
 
 class FogwallLock(Toggle):
-    """Makes area fog walls uninteractable until you receive their items from the item pool"""
+    """Makes area fog walls uninteractable until you receive their items from the item pool. Recommended to turn this on."""
     display_name = "Fogwall Lock" 
+    default = True
 
 class FogwallLockIncludeUA(Toggle):
-    """Includes Undead Asylum early fog wall in the pool. This can lead to extremely early BK mode."""
+    """Includes Undead Asylum early fog wall in the pool. If on, this will likely lead to extremely early BK mode."""
     display_name = "Fogwall Lock Include Undead Asylum" 
 
 class BossFogwallLock(Toggle):
-    """Makes boss fog walls uninteractable until you receive their items from the item pool"""
+    """Makes boss fog walls uninteractable until you receive their items from the item pool.
+    Does not include Asylum Demon (first encounter), Sif, or Seath (2nd encounter),
+    as all of them do not have fog walls upon your first entry to their arena."""
     display_name = "Boss Fogwall Lock" 
 
 class FogwallSanity(Toggle):
     """Makes fog walls a "check" - that is, they grant you items when you walk through them. 
     Recommended value of true if Fogwall Lock is true."""
     display_name = "Fogwall Sanity" 
+    default = True
 
 class BossFogwallSanity(Toggle):
     """Makes boss fog walls a "check" - that is, they grant you items when you walk through them. 
@@ -40,7 +44,8 @@ class BossFogwallSanity(Toggle):
     display_name = "Boss Fogwall Sanity" 
 
 class UpgradedWeaponsPercentage(Range):
-    """Percentage of weapons (including shields) in the pool that will be replaced with upgraded versions, if possible."""
+    """Percentage of weapons (including shields) in the pool that will be replaced with upgraded versions, if possible.
+    Choose a higher value for an easier time."""
     display_name = "Upgraded Weapons Percentage"
     range_start = 0
     range_end = 100
