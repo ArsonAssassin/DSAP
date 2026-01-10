@@ -535,7 +535,6 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Depths to Blighttown Door", self.player), lambda state: state.has("Depths -> Blighttown opened", self.player))
         set_rule(self.multiworld.get_entrance("Lower Blighttown - Quelaag -> Lower Blighttown - After Quelaag", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Lower Blighttown -> Demon Ruins - Early", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Lower Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
         
         set_rule(self.multiworld.get_location("UP: Bell of Awakening #1 rung", self.player), lambda state: state.has("Bell Gargoyles Defeated", self.player))
         # set_rule(self.multiworld.get_location("BT: Bell of Awakening #2 rung", self.player), lambda state: state.has("Chaos Witch Quelaag Defeated", self.player))
@@ -545,8 +544,8 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Anor Londo -> The Duke's Archives", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Anor Londo - Ornstein and Smough -> Anor Londo - After Ornstein and Smough", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
 
-        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
         set_rule(self.multiworld.get_location("NL: Key to the Seal", self.player), lambda state: state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Key to the Seal", self.player))
         set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: state.has("Four Kings Defeated", self.player))
                 
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After First Seath Encounter -> The Duke's Archives - Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
@@ -557,13 +556,14 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Crystal Cave -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Anor Londo - After First Fog -> Painted World of Ariamis", self.player), lambda state: state.has("Peculiar Doll", self.player))
         set_rule(self.multiworld.get_entrance("Painted World of Ariamis - After Fog -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
-        set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
         
         set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias", self.player) and ((self.options.boss_fogwall_lock.value == False) or state.has ("NL: Fog Wall - Four Kings", self.player)))
         
         set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins - Demon Firesage", self.player), lambda state: state.has("Lordvessel", self.player) and ((self.options.boss_fogwall_lock.value == False) or state.has ("DR: Fog Wall - Demon Firesage", self.player)))
         set_rule(self.multiworld.get_entrance("Demon Ruins - Early -> Demon Ruins", self.player), lambda state: state.has("Ceaseless Discharge Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Lost Izalith -> Demon Ruins Shortcut", self.player), lambda state: state.has("Bed of Chaos Defeated", self.player))
+
+        # some demon ruins checks require Orange Charred Ring
         set_rule(self.multiworld.get_entrance("Demon Ruins - After Demon Firesage -> Demon Ruins Shortcut", self.player), lambda state: state.has("Demon Ruins Shortcut opened", self.player))
         set_rule(self.multiworld.get_entrance("Demon Ruins - Centipede Demon -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and state.has("Centipede Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("The Catacombs - Pinwheel -> The Catacombs - After Pinwheel", self.player), lambda state: state.has("Pinwheel Defeated", self.player))
@@ -580,9 +580,15 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - Behind Light-Dispelled Walls", self.player), lambda state: state.has("Skull Lantern", self.player))
     
+        #important artificial logic
 
 
-        
+        #artificial logic
+        if (self.options.fogwall_lock == False and self.options.boss_fogwall_lock == False):
+            set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
+            set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
+            set_rule(self.multiworld.get_entrance("Lower Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
+
 
 
         # fogwall rules

@@ -4,7 +4,6 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 #### Table of Contents
 [How it Works](#How-it-works)  
-[Artificial Logic](#Artificial-Logic)  
 [Initial Setup](#Initial-Setup)  
 [Before you go back online](#Before-you-go-back-online)  
 [Usage](#Usage)  
@@ -15,6 +14,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 [Changelog](#Changelog)  
 [Roadmap](#Roadmap)  
 [Location Groups](#Location-Groups)
+[Artificial Logic Without Fogwall Locking](#Artificial-Logic-Without-Fogwall-Locking)  
 
 # How it works
 * Every loose item on the ground, and some doors, are "locations" or "checks", and can each contain any item from the multiworld randomized item pool.
@@ -28,14 +28,6 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
     3. Then all embers are added to the pool.
     4. With what's left, 20% are consumables, 30% are specifically souls, 20% are materials, and the rest are weapons, armour, shields, spells or rings.
   This means that not all items are guaranteed to be in the item pool.
-
-# Artificial Logic
-* While in an alpha state, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Most such rules are listed below.
-* Access to The Catacombs is behind defeating Ornstein and Smough.
-* Access to the Great Hollow is behind Blighttown access + Lordvessel item.
-* Access to Lost Izalith is behind Orange Charred Ring item.
-* Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins is behind Orenstein and Smough defeated + Key to the Seal item.
-* Access to Kiln of the First Flame is behind Lord Soul (Bed of Chaos).
 
 # Initial Setup
 1. Download the latest APWorld and Client from the releases page.
@@ -184,3 +176,9 @@ Upper New Londo Ruins
 Upper Undead Burg  
 Valley of the Drakes  
 Watchtower Basement  
+
+# Artificial Logic Without Fogwall Locking
+* If you disable the options for fogwall or boss fogwall locking, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Such rules are listed below.
+* Access to The Catacombs is behind defeating Ornstein and Smough.
+* Access to the Great Hollow is behind Blighttown access + Lordvessel item.
+* Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins is behind Orenstein and Smough defeated + Key to the Seal item.
