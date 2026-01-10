@@ -190,11 +190,63 @@ public partial class App : Application
         {
             PrintDiagnosticInfo();
         }
+        else if (command.StartsWith("/cef")) // check event flag
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 2)
+            {
+                int result = CheckEventFlag(Int32.Parse(cmdparts[1]));
+                Log.Logger.Information($"{cmdparts[1]}={result}");
+            }
+        }
+        else if (command.StartsWith("/mef")) // monitor event flag
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 2)
+                MonitorEventFlag(Int32.Parse(cmdparts[1]));
+        }
         else /* send any not-specifically-handled message to normal processing */
         {
             Client?.SendMessage(a.Command);
         }
-            
+
+    }
+
+    private int CheckEventFlag(int flagnum)
+    {
+        var baseAddress = Helpers.GetEventFlagsOffset();
+        Location newloc = new Location()
+        {
+            Address = baseAddress + Helpers.GetEventFlagOffset(flagnum).Item1,
+            AddressBit = Helpers.GetEventFlagOffset(flagnum).Item2
+        };
+        int result = newloc.Check() ? 1 : 0;
+        return result;
+    }
+    private void MonitorEventFlag(int flagnum)
+    {
+        int result = CheckEventFlag(flagnum);
+        Log.Logger.Information($"{flagnum}={result}");
+        Task.Run(async () =>
+        {
+            try
+            {
+                while (true)
+                {
+                    int result2 = CheckEventFlag(flagnum);
+                    if (result != result2)
+                    {
+                        result = result2;
+                        Log.Logger.Information($"{flagnum}={result}");
+                    }
+                    await Task.Delay(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Exception in event watcher: {ex.Message}\n{ex.InnerException}\n{ex.Source}");
+            }
+        });
     }
 
     private void GoalCheck()
@@ -487,6 +539,10 @@ public partial class App : Application
             Client.MonitorLocations(fullLocationsList);
 
             StartEmkWatchers(EmkControllers);
+        }
+        else
+        {
+            StartEventWatcher();
         }
         //Helpers.MonitorLastBonfire((lastBonfire) =>
         //{
@@ -991,6 +1047,27 @@ public partial class App : Application
             }
         }
     }
+
+    private void StartEventWatcher()
+    {
+        // every second, check the events list.
+        Task.Run(async () =>
+        {
+            try
+            {
+                while (true)
+                {
+                    Helpers.CheckEventsList();
+                    await Task.Delay(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Exception in event watcher: {ex.Message}\n{ex.InnerException}\n{ex.Source}");
+            }
+        });
+    }
+
     internal static void StartEmkWatchers(List<EmkController> emkControllers)
     {
         // every second, check the events list.
