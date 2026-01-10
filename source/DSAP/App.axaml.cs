@@ -27,6 +27,7 @@ using static DSAP.Enums;
 using Color = Avalonia.Media.Color;
 using Location = Archipelago.Core.Models.Location;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace DSAP;
 
@@ -51,6 +52,7 @@ public partial class App : Application
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
     public static DarkSoulsOptions DSOptions;
     private static bool _goalSent = false;
+    private readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
     static List<EmkController> EmkControllers = [];
     public override void Initialize()
     {
@@ -728,18 +730,26 @@ public partial class App : Application
 
     private void SendGoal()
     {
-        lock (_lockObject)
+        Task.Run(async () =>
         {
-            if (!_goalSent)
+            await _goalSemaphore.WaitAsync(); 
+            try
             {
-                Client.SendGoalCompletion();
-                Log.Logger.Warning("Goal sent.");
-                Client.AddOverlayMessage($"Goal sent.");
+                if (!_goalSent)
+                {
+                    Client.SendGoalCompletion();
+                    Log.Logger.Warning("Goal sent.");
+                    Client.AddOverlayMessage($"Goal sent.");
+                }
+                else
+                    Log.Logger.Information("Goal already sent.");
+                _goalSent = true;
             }
-            else
-                Log.Logger.Information("Goal already sent.");
-            _goalSent = true;
-        }
+            finally
+            {
+                _goalSemaphore.Release();
+            }
+        });
     }
 
     private void ToggleDeathlink()
