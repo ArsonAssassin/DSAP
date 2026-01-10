@@ -217,6 +217,11 @@ class DSRWorld(World):
             regions[from_region].exits.append(connection)
             connection.connect(regions[to_region])
             #print(f"Connecting {from_region} to {to_region} Using entrance: " + connection.name) 
+
+        def create_connection_2way(from_region: str, to_region: str):
+            create_connection(from_region, to_region)
+            create_connection(to_region, from_region)
+            
         create_connection("Menu", "Undead Asylum Cell")    
         
         create_connection("Undead Asylum Cell", "Undead Asylum Cell Door") 
@@ -237,27 +242,27 @@ class DSRWorld(World):
         create_connection("Northern Undead Asylum Second Visit", "Northern Undead Asylum Second Visit - F2 West Door")
         create_connection("Northern Undead Asylum Second Visit - F2 West Door", "Northern Undead Asylum Second Visit - Behind F2 West Door")
         
-        create_connection("Upper Undead Burg - Before Fog", "Upper Undead Burg - Fog")
-        create_connection("Upper Undead Burg - Fog", "Upper Undead Burg")
+        create_connection_2way("Upper Undead Burg - Before Fog", "Upper Undead Burg - Fog")
+        create_connection_2way("Upper Undead Burg - Fog", "Upper Undead Burg")
         create_connection("Upper Undead Burg", "Undead Burg Basement Door")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Taurus Demon")
         create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - After Taurus Demon")
-        create_connection("Upper Undead Burg - After Taurus Demon", "Undead Parish - Before Fog")
+        create_connection_2way("Upper Undead Burg - After Taurus Demon", "Undead Parish - Before Fog")
 
         create_connection("Upper Undead Burg", "Darkroot Basin")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Pine Resin Chest")
         
-        create_connection("Upper Undead Burg", "Watchtower Basement")
-        create_connection("Darkroot Basin", "Watchtower Basement")
+        create_connection_2way("Upper Undead Burg", "Watchtower Basement")
+        create_connection_2way("Darkroot Basin", "Watchtower Basement")
 
-        create_connection("Undead Parish - Before Fog", "Undead Parish - Fog")
-        create_connection("Undead Parish - Fog", "Undead Parish")
+        create_connection_2way("Undead Parish - Before Fog", "Undead Parish - Fog")
+        create_connection_2way("Undead Parish - Fog", "Undead Parish")
         create_connection("Undead Parish", "Undead Parish - Bell Gargoyles")
         create_connection("Undead Parish", "Firelink Shrine - After Undead Parish Elevator")
-        create_connection("Undead Parish", "Darkroot Garden - Before Fog")
+        create_connection_2way("Undead Parish", "Darkroot Garden - Before Fog")
         create_connection("Undead Parish", "Sen's Fortress")
 
-        create_connection("Darkroot Garden - Before Fog", "Darkroot Basin")
+        create_connection_2way("Darkroot Garden - Before Fog", "Darkroot Basin")
         create_connection("Darkroot Garden - Before Fog", "Darkroot Garden - Behind Artorias Door")
 
         create_connection("Darkroot Garden - Before Fog", "Darkroot Garden")
@@ -269,15 +274,13 @@ class DSRWorld(World):
         create_connection("Lower Undead Burg", "Lower Undead Burg - After Residence Key")
         create_connection("Lower Undead Burg", "Lower Undead Burg - Capra Demon")
         create_connection("Lower Undead Burg - Capra Demon", "Lower Undead Burg - After Capra Demon")
-        
-            
 
         create_connection("Upper New Londo Ruins", "Upper New Londo Ruins - After Fog")
         create_connection("Upper New Londo Ruins - After Fog", "New Londo Ruins Door to the Seal")
         create_connection("New Londo Ruins Door to the Seal", "Lower New Londo Ruins")
         
-        create_connection("Upper New Londo Ruins", "Door between Upper New Londo and Valley of the Drakes")
-        create_connection("Door between Upper New Londo and Valley of the Drakes", "Valley of the Drakes")
+        create_connection_2way("Upper New Londo Ruins", "Door between Upper New Londo and Valley of the Drakes")
+        create_connection_2way("Door between Upper New Londo and Valley of the Drakes", "Valley of the Drakes")
 
         create_connection("Lower New Londo Ruins", "Valley of the Drakes")
 
@@ -286,26 +289,22 @@ class DSRWorld(World):
         create_connection("Depths", "Depths - Gaping Dragon")
         create_connection("Depths - Gaping Dragon", "Depths - After Gaping Dragon")
 
-        create_connection("Valley of the Drakes", "Upper Blighttown VotD Side")
-        create_connection("Valley of the Drakes", "Darkroot Basin")
+        create_connection_2way("Valley of the Drakes", "Upper Blighttown VotD Side")
+        create_connection_2way("Valley of the Drakes", "Darkroot Basin")
         create_connection("Valley of the Drakes", "Valley of the Drakes - After Defeating Four Kings")
 
         create_connection("Depths to Blighttown Door", "Upper Blighttown Depths Side")
         
         create_connection("Upper Blighttown Depths Side", "Depths to Blighttown Door")
         
-        create_connection("Upper Blighttown Depths Side", "Lower Blighttown - Fog")
-        create_connection("Lower Blighttown - Fog", "Lower Blighttown")
-        create_connection("Lower Blighttown", "Upper Blighttown Depths Side")
-        create_connection("Lower Blighttown", "Upper Blighttown VotD Side")
+        create_connection_2way("Upper Blighttown Depths Side", "Lower Blighttown - Fog")
+        create_connection_2way("Lower Blighttown - Fog", "Lower Blighttown")
+        create_connection_2way("Lower Blighttown", "Upper Blighttown VotD Side")
         create_connection("Lower Blighttown", "Demon Ruins - Early")
         create_connection("Lower Blighttown", "The Great Hollow")
 
         create_connection("Lower Blighttown", "Lower Blighttown - Quelaag")
         create_connection("Lower Blighttown - Quelaag", "Lower Blighttown - After Quelaag")
-
-        create_connection("Upper Blighttown VotD Side", "Lower Blighttown")
-        create_connection("Upper Blighttown VotD Side", "Valley of the Drakes")
 
         create_connection("The Great Hollow", "Ash Lake")
 
@@ -496,7 +495,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Northern Undead Asylum - Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Burg Basement Door", self.player), lambda state:state.has("Taurus Demon Defeated", self.player) and state.has ("Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg - Taurus Demon -> Upper Undead Burg - After Taurus Demon", self.player), lambda state:state.has("Taurus Demon Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))        
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         
         # set_rule(self.multiworld.get_location("Snuggly: Pendant -> Souvenir of Reprisal", self.player), lambda state: state.has("Pendant", self.player))
@@ -529,7 +528,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - After Residence Key", self.player), lambda state: state.has("Residence Key", self.player))
         set_rule(self.multiworld.get_entrance("Lower Undead Burg - Capra Demon -> Lower Undead Burg - After Capra Demon", self.player), lambda state: state.has("Capra Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
-        set_rule(self.multiworld.get_entrance("Door between Upper New Londo and Valley of the Drakes -> Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
+        set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
 
         set_rule(self.multiworld.get_entrance("Depths -> Depths - After Sewer Chamber Key", self.player), lambda state: state.has("Sewer Chamber Key", self.player))
         set_rule(self.multiworld.get_entrance("Depths - Gaping Dragon -> Depths - After Gaping Dragon", self.player), lambda state: state.has("Gaping Dragon Defeated", self.player))
@@ -596,10 +595,10 @@ class DSRWorld(World):
         
         #normal
         add_fog_rule("UB: Fog Wall - Undead Burg", "Upper Undead Burg - Before Fog", "Upper Undead Burg - Fog")
-        # add_fog_rule("UB: Fog Wall - Undead Burg", "Upper Undead Burg", "Upper Undead Burg - Fog")
+        add_fog_rule("UB: Fog Wall - Undead Burg", "Upper Undead Burg", "Upper Undead Burg - Fog")
 
         add_fog_rule("UP: Fog Wall - Undead Parish", "Undead Parish - Before Fog", "Undead Parish - Fog")
-        # add_fog_rule("UP: Fog Wall - Undead Parish", "Undead Parish", "Undead Parish - Fog")
+        add_fog_rule("UP: Fog Wall - Undead Parish", "Undead Parish", "Undead Parish - Fog")
 
         add_fog_rule("DG: Fog Wall - Darkroot Garden", "Darkroot Garden - Before Fog", "Darkroot Garden")
         
@@ -607,7 +606,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_location("DE: Fog Wall - Depths Rat Room", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("DE: Fog Wall - Depths Rat Room", self.player))
 
         add_fog_rule("BT: Fog Wall - Lower Blighttown Entrance", "Upper Blighttown Depths Side", "Lower Blighttown - Fog")
-        # add_fog_rule("BT: Fog Wall - Lower Blighttown Entrance", "Lower Blighttown", "Lower Blighttown - Fog")
+        add_fog_rule("BT: Fog Wall - Lower Blighttown Entrance", "Lower Blighttown", "Lower Blighttown - Fog")
 
         add_fog_rule("ASH: Fog Wall - Ash Lake Entrance", "The Great Hollow", "Ash Lake")
 
