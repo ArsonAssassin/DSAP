@@ -1823,7 +1823,7 @@ namespace DSAP
         {
             List<EmkController> result = [];
 
-            if (App.DSOptions.ApworldCompare("0.0.20.1") < 0) /* apworld is < 0.0.20.1, which introduces events */
+            if (App.DSOptions.ApworldCompare("0.0.21.0") < 0) /* apworld is < 0.0.21.0, which introduces events */
             {
                 Log.Logger.Warning($"Apworld version too low, skipping fog wall lock processing.");
                 return result;

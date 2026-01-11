@@ -748,7 +748,7 @@ class DSRWorld(World):
             "itemsId": items_id,
             "itemsUpgrades": items_upgrades,
             "itemsAddress": items_address,
-            "apworld_api_version" : "0.0.20.2" # Manually set our apworld api level, for detecting compatibility with client
+            "apworld_api_version" : "0.0.21.0" # Manually set our apworld api level, for detecting compatibility with client
         }
 
         return slot_data

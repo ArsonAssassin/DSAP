@@ -17,7 +17,7 @@
     <!-- Versions -->
     <ApplicationDisplayVersion>0.0.20.0</ApplicationDisplayVersion>
     <ApplicationVersion>0.0.20.0</ApplicationVersion>
-    <Version>0.0.20.2</Version>
+    <Version>0.0.21.0</Version>
     <!-- Single File Publishing Properties -->
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
