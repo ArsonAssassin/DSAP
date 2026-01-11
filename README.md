@@ -113,10 +113,12 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Fix: Goal should now reliably send upon defeating Gwyn. Made SendGoal put its work on the scheduler to avoid a deadlock, and added a message for when it does try to send.
 * Fix: Various fixes to async processing.
 * Fix: Added command /goalcheck to re-try sending the goal if goal conditions have been met (either Gwyn is defeated or player is in NG+). If it works or doesn't work, please send us a screenshot with the results.
+* Fix: Logic - Added Kaathe entrance to the Lordvessel Altar/Kiln (was irrelevant before Fog Wall Lock)
+* Fix: Logic - 2 demon ruins items require Orange Charred Ring
 * Fix: Logic - Removed Upper Undead Burg -> Darkroot Basin connection that does not go through the Watchtower Basement.
 * Fix: Logic - Add 2-way connections to relevant Entrances in the logic.
 * Fix: Logic - Corrected/adjusted many region connections
-* Fix: Logic - NL: Key to the Seal requires Lordvessel (don't require killing the NPC)
+* Fix: Logic - NL: Key to the Seal now requires Lordvessel (no longer potentially require killing the NPC)
 * Fix: Logic - Make artificial logic only apply when both fogwall lock and boss fogwall lock options are off.
 
 

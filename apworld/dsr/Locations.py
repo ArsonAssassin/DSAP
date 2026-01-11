@@ -1021,7 +1021,6 @@ location_tables = {
 "Tomb of the Giants": [
     DSRLocationData(11110580, f"TotG: Large Soul of a Proud Knight - Right after Green Light Slide", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110581, f"TotG: Large Soul of a Proud Knight - Ledge Overlooking Pinwheel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110486, f"TotG: Soul of a Brave Warrior - Behind Bone Archer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110585, f"TotG: Large Soul of a Proud Knight - Giant Coffin Drop", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110473, f"TotG: Large Soul of a Proud Knight - Upper Giant Coffin", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110474, f"TotG: Humanity - Corpse on Ledge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -1040,6 +1039,7 @@ location_tables = {
     DSRLocationData(11110483, f"TotG: Tomb of the Giants lit", f"Tomb of the Giants lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110484, f"TotG: Covetous Silver Serpent Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110485, f"TotG: White Titanite Chunk - Drop from Halberd-wielding Black Knight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110486, f"TotG: Soul of a Brave Warrior - Behind Bone Archer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110582, f"TotG: Soul of a Brave Warrior - Lower Tomb of the Giants", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110487, f"TotG: Twinkling Titanite - Drop from Crystal Lizard near Paladin", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110488, f"TotG: Paladin Leeroy Loot", f"Firebomb", DSRLocationCategory.ENEMY_DROP),

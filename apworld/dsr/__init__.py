@@ -256,6 +256,7 @@ class DSRWorld(World):
 
         create_connection_2way("Undead Parish - Before Fog", "Undead Parish - Fog")
         create_connection_2way("Undead Parish - Fog", "Undead Parish")
+        create_connection("Undead Parish", "Undead Parish - Before Fog") # Lever->Gate, or drop near fog
         create_connection("Undead Parish", "Undead Parish - Bell Gargoyles")
         create_connection("Undead Parish", "Firelink Shrine - After Undead Parish Elevator")
         create_connection_2way("Undead Parish", "Darkroot Garden - Before Fog")
@@ -296,6 +297,7 @@ class DSRWorld(World):
         
         create_connection("Upper Blighttown Depths Side", "Depths to Blighttown Door")
         
+        create_connection("Upper Blighttown Depths Side", "Lower Blighttown") # Able to fall to bypass fog, by Whip
         create_connection_2way("Upper Blighttown Depths Side", "Lower Blighttown - Fog")
         create_connection_2way("Lower Blighttown - Fog", "Lower Blighttown")
         create_connection_2way("Lower Blighttown", "Upper Blighttown VotD Side")
@@ -352,6 +354,7 @@ class DSRWorld(World):
 
         create_connection("Lower New Londo Ruins", "The Abyss")
         create_connection("The Abyss", "The Abyss - After Four Kings")
+        create_connection("The Abyss - After Four Kings", "Kiln of the First Flame")
 
         create_connection("Demon Ruins - Early", "Demon Ruins")
         create_connection("Demon Ruins - Early", "Demon Ruins - Ceaseless Discharge")
@@ -564,6 +567,9 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Lost Izalith -> Demon Ruins Shortcut", self.player), lambda state: state.has("Bed of Chaos Defeated", self.player))
 
         # some demon ruins checks require Orange Charred Ring
+        set_rule(self.multiworld.get_location("DR: Large Soul of a Proud Knight - First Jump over the Lava", self.player), lambda state: state.has("Orange Charred Ring", self.player))
+        set_rule(self.multiworld.get_location("DR: Chaos Flame Ember", self.player), lambda state: state.has("Orange Charred Ring", self.player))
+
         set_rule(self.multiworld.get_entrance("Demon Ruins - After Demon Firesage -> Demon Ruins Shortcut", self.player), lambda state: state.has("Demon Ruins Shortcut opened", self.player))
         set_rule(self.multiworld.get_entrance("Demon Ruins - Centipede Demon -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and state.has("Centipede Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("The Catacombs - Pinwheel -> The Catacombs - After Pinwheel", self.player), lambda state: state.has("Pinwheel Defeated", self.player))
@@ -571,7 +577,17 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Tomb of the Giants - After White Fog -> Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Tomb of the Giants - Nito -> Tomb of the Giants - After Nito", self.player), lambda state: state.has("Gravelord Nito Defeated", self.player))
 
-        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) and state.has("Lordvessel", self.player))
+        # Frampt entrance to Kiln
+        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), 
+            lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) 
+            and state.has("Lordvessel", self.player)
+            and state.has("Bell of Awakening #1", self.player) and state.has("Bell of Awakening #2", self.player))
+
+        # Kaathe entrance to Kiln
+        set_rule(self.multiworld.get_entrance("The Abyss - After Four Kings -> Kiln of the First Flame", self.player), 
+            lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) 
+            and state.has("Lordvessel", self.player))
+        
               
         # DLC areas
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
@@ -580,10 +596,10 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - Behind Light-Dispelled Walls", self.player), lambda state: state.has("Skull Lantern", self.player))
     
-        #important artificial logic
+        # artificial logic - don't require jumping around fog wall without a "real" way to return
+        set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown", self.player), lambda state: state.has("Lordvessel", self.player))
 
-
-        #artificial logic
+        # artificial logic
         if (self.options.fogwall_lock == False and self.options.boss_fogwall_lock == False):
             set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
             set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
