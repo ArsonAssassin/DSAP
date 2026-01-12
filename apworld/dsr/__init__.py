@@ -573,7 +573,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Demon Ruins - After Demon Firesage -> Demon Ruins Shortcut", self.player), lambda state: state.has("Demon Ruins Shortcut opened", self.player))
         set_rule(self.multiworld.get_entrance("Demon Ruins - Centipede Demon -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and state.has("Centipede Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("The Catacombs - Pinwheel -> The Catacombs - After Pinwheel", self.player), lambda state: state.has("Pinwheel Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("The Catacombs - After Pinwheel -> Tomb of the Giants", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("The Catacombs - After Pinwheel -> Tomb of the Giants", self.player), lambda state: state.has("Skull Lantern", self.player))
         set_rule(self.multiworld.get_entrance("Tomb of the Giants - After White Fog -> Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
         set_rule(self.multiworld.get_entrance("Tomb of the Giants - Nito -> Tomb of the Giants - After Nito", self.player), lambda state: state.has("Gravelord Nito Defeated", self.player))
 
@@ -596,7 +596,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - Behind Light-Dispelled Walls", self.player), lambda state: state.has("Skull Lantern", self.player))
     
-        # artificial logic - don't require jumping around fog wall without a "real" way to return
+        # artificial logic - don't require jumping around BT fog wall without a "real" way to return
         set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown", self.player), lambda state: state.has("Lordvessel", self.player))
 
         # artificial logic
@@ -604,6 +604,7 @@ class DSRWorld(World):
             set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
             set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
             set_rule(self.multiworld.get_entrance("Lower Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
+            set_rule(self.multiworld.get_entrance("The Catacombs - After Pinwheel -> Tomb of the Giants", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Skull Lantern", self.player))
 
 
 

@@ -108,11 +108,12 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Feature: Add yaml option "boss_fogwall_lock" - like above, but for boss fog walls. Does not include Asylum Demon (first encounter), Sif, or Seath (2nd encounter), as all of them do not have fog walls upon your first entry to their arena.
 * Feature: Add "Fogwall Sanity" and "Boss Fogwall Sanity" - get items when you pass through fog walls and the first time through boss fog walls, respectively.
 * Feature: Add Universal Tracker (UT) support for importing poptracker maps.
-* Feature: Added commands /fog and /bossfog for tracking which of the above keys you've acquired.
+* Feature: Added commands /fog and /bossfog for tracking which of the above keys you've acquired. Also added /lock to view all lockable events (currently only bossfogs and fogs).
 * Feature: Added command /diag to collect diagnostic information. If you report a bug, you can include the screenshot from this output for more information.
 * Fix: Goal should now reliably send upon defeating Gwyn. Made SendGoal put its work on the scheduler to avoid a deadlock, and added a message for when it does try to send.
 * Fix: Various fixes to async processing.
 * Fix: Added command /goalcheck to re-try sending the goal if goal conditions have been met (either Gwyn is defeated or player is in NG+). If it works or doesn't work, please send us a screenshot with the results.
+* Fix: Logic - Require skull lantern for Tomb of the Giants.
 * Fix: Logic - Added Kaathe entrance to the Lordvessel Altar/Kiln (was irrelevant before Fog Wall Lock)
 * Fix: Logic - 2 demon ruins items require Orange Charred Ring
 * Fix: Logic - Removed Upper Undead Burg -> Darkroot Basin connection that does not go through the Watchtower Basement.
@@ -198,4 +199,5 @@ Watchtower Basement
 * If you disable the options for fogwall or boss fogwall locking, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Such rules are listed below.
 * Access to The Catacombs is behind defeating Ornstein and Smough.
 * Access to the Great Hollow is behind Blighttown access + Lordvessel item.
-* Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins is behind Orenstein and Smough defeated + Key to the Seal item.
+* Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins from Upper New Londo Ruins requires access to being able to defeat Orenstein and Smough (in addition to having the Key to the Seal - the default rule).
+* Access to Tomb of the Giants from after Pinwheel requires access to being able to defeat Ornstein and Smouth (in addition to having the Skull Lantern - the default rule).

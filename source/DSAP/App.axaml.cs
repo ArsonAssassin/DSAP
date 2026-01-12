@@ -100,11 +100,12 @@ public partial class App : Application
         if (command.StartsWith("/help"))
         {
             Log.Logger.Warning("--- DSAP commands: --- ");
-            Log.Logger.Warning(" /help - display this menu");
+            Log.Logger.Warning(" /help - Display this menu.");
             Log.Logger.Warning(" /diag - Print out some diagnostic information.");
-            Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session)");
+            Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session).");
             Log.Logger.Warning(" /goalcheck - Manually check if the goal has been completed, if for some reason it did not send [continued below].");
             Log.Logger.Warning("              Please report back with the screenshots + the resulting messages if you have to use this.");
+            Log.Logger.Warning(" /lock [Locked/Unlocked/All] - Display list of all locked or unlocked lockable events, or status of all of them (default).");
             Log.Logger.Warning(" /fog [Locked/Unlocked/All] - Display list of locked or unlocked fog walls, or status of all of them (default).");
             Log.Logger.Warning(" /bossfog [Locked/Unlocked/All] - Display list of locked or unlocked boss fog walls, or status of all of them (default).");
             Log.Logger.Warning("--- End of DSAP commands. ---");
@@ -136,51 +137,18 @@ public partial class App : Application
         }
         else if (command.StartsWith("/fog"))
         {
-            string[] cmdparts = command.Split(" ");
-            if (cmdparts.Length == 1)
-            {
-                ListFogWalls('A');
-            }
-            else if (cmdparts.Length == 2)
-            {
-                if (cmdparts[1].StartsWith("l"))
-                    ListFogWalls('L');
-                else if (cmdparts[1].StartsWith("u"))
-                    ListFogWalls('U');
-                else if (cmdparts[1].StartsWith("a"))
-                    ListFogWalls('A');
-                else
-                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [Locked, Unlocked, All], or [L, U, A].");
-            }
-            else
-            {
-                Log.Logger.Warning($"Invalid command: {a.Command} - too many arguments received. Format: /fog [Locked, Unlocked, All]");
-            }
-            /* Don't send /fog to normal processing */
+            ProcessListLocksCommand("/fog", command, "Fog Walls", x => x == DsrEventType.FOGWALL || x == DsrEventType.EARLYFOGWALL);
+            /* Don't send to normal processing */
         }
         else if (command.StartsWith("/bossfog"))
         {
-            string[] cmdparts = command.Split(" ");
-            if (cmdparts.Length == 1)
-            {
-                ListBossFogWalls('A');
-            }
-            else if (cmdparts.Length == 2)
-            {
-                if (cmdparts[1].StartsWith("l"))
-                    ListBossFogWalls('L');
-                else if (cmdparts[1].StartsWith("u"))
-                    ListBossFogWalls('U');
-                else if (cmdparts[1].StartsWith("a"))
-                    ListBossFogWalls('A');
-                else
-                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [Locked, Unlocked, All], or [L, U, A].");
-            }
-            else
-            {
-                Log.Logger.Warning($"Invalid command: {a.Command} - too many arguments received. Format: /bossfog [Locked, Unlocked, All]");
-            }
-            /* Don't send /bossfog to normal processing */
+            ProcessListLocksCommand("/bossfog", command, "Boss Fog Walls", x => x == DsrEventType.BOSSFOGWALL);
+            /* Don't send to normal processing */
+        }
+        else if (command.StartsWith("/lock"))
+        {
+            ProcessListLocksCommand("/lock", command, "Lockable Events", x => true);
+            /* Don't send to normal processing */
         }
         else if (command.StartsWith("/goalcheck")) // check for goal conditions and print a bunch of diagnostics and values.
         {
@@ -210,6 +178,31 @@ public partial class App : Application
             Client?.SendMessage(a.Command);
         }
 
+    }
+    // Process the command which will list all of a specific type of lock that is active.
+    // Based on the list of "relevant" EmkControllers (built on connect based on which of our DSR items are in the pool)
+    private void ProcessListLocksCommand(string shortCmd, string fullCmd, string displayableEventType, Func<DsrEventType, bool> condition)
+    {
+        string[] cmdparts = fullCmd.Split(" ");
+        if (cmdparts.Length == 1)
+        {
+            ListEventLocks(displayableEventType, 'A', condition);
+        }
+        else if (cmdparts.Length == 2)
+        {
+            if (cmdparts[1].StartsWith("l"))
+                ListEventLocks(displayableEventType, 'L', condition); 
+            else if (cmdparts[1].StartsWith("u"))
+                ListEventLocks(displayableEventType, 'U', condition); 
+            else if (cmdparts[1].StartsWith("a"))
+                ListEventLocks(displayableEventType, 'A', condition);
+            else
+                Log.Logger.Warning($"Invalid command: \"{fullCmd}\". Second argument must be one of [Locked, Unlocked, All], or [L, U, A].");
+        }
+        else
+        {
+            Log.Logger.Warning($"Invalid command: {fullCmd} - too many arguments received. Format: {shortCmd} [Locked, Unlocked, All]");
+        }
     }
 
     private int CheckEventFlag(int flagnum)
@@ -851,15 +844,15 @@ public partial class App : Application
                 Log.Logger.Warning("Deathlink is already disabled.");
         }
     }
-    private void ListFogWalls(char filter)
+    private void ListEventLocks(string displayableEventType, char filter, Func<DsrEventType, bool> condition)
     {
         string status;
         if (filter == 'L') status = "Locked";
         else if (filter == 'U') status = "Unlocked";
         else status = "All";
 
-        Log.Logger.Information($"-- List of {status} Fog walls -- ");
-        var emklist = EmkControllers.Where(x => x.Type == DsrEventType.FOGWALL || x.Type == DsrEventType.EARLYFOGWALL).OrderBy(x=>x.HasKey).ThenBy(x=>x.Name).ToList();
+        Log.Logger.Information($"-- List of {status} {displayableEventType} -- ");
+        var emklist = EmkControllers.Where(x=>condition(x.Type)).OrderBy(x => x.HasKey).ThenBy(x => x.Name).ToList();
         foreach (var emk in emklist)
         {
             if (filter == 'A'
@@ -871,36 +864,10 @@ public partial class App : Application
                 Log.Logger.Information($"{status} -> {emk.Name}");
             }
         }
-        Log.Logger.Information($"-- End of List of {status} Fog walls -- ");
+        Log.Logger.Information($"-- End of List of {status} {displayableEventType} -- ");
         if (emklist.Count == 0)
         {
-            Log.Logger.Information($"You do not have fog wall locking enabled");
-        }
-    }
-    private void ListBossFogWalls(char filter)
-    {
-        string status;
-        if (filter == 'L') status = "Locked";
-        else if (filter == 'U') status = "Unlocked";
-        else status = "All";
-
-        Log.Logger.Information($"-- List of {status} Boss Fog walls -- ");
-        var emklist = EmkControllers.Where(x => x.Type == DsrEventType.BOSSFOGWALL).OrderBy(x => x.HasKey).ThenBy(x => x.Name).ToList();
-        foreach (var emk in emklist)
-        {
-            if (filter == 'A'
-                || filter == 'U' && emk.HasKey == true
-                || filter == 'L' && emk.HasKey == false)
-            {
-                if (emk.HasKey) status = "Unlocked";
-                else status = "Locked";
-                Log.Logger.Information($"{status} -> {emk.Name}");
-            }
-        }
-        Log.Logger.Information($"-- End of List of {status} Boss Fog walls -- ");
-        if (emklist.Count == 0)
-        {
-            Log.Logger.Information($"You do not have boss fog wall locking enabled");
+            Log.Logger.Information($"You do not have {displayableEventType} locking enabled");
         }
     }
     private static void ReplaceItems()
