@@ -7,7 +7,8 @@ namespace DSAP.Models
 {
     public class DarkSoulsOptions
     {
-        const string curr_version = "0.0.21.0";
+        string curr_version = "0.0.0.0";
+        string extended_version = "";
         public bool outofdate = false;
         public uint apiver_major;
         public uint apiver_minor;
@@ -21,6 +22,14 @@ namespace DSAP.Models
         public uint UpgradedWeaponsMaxLevel { get; set; }
         public DarkSoulsOptions(Dictionary<string, object> optionsDict, Dictionary<string, object> slotData)
         {
+            string version = Archipelago.Core.AvaloniaGUI.Utils.Helpers.GetAppVersion();
+            string[] versplit = version.Split('+'); // pull off the "+" extension, e.g. 0.0.20.0+b13fc8aeb65f63b1eac8816
+            curr_version = versplit[0];
+            if (versplit.Length > 1)
+            {
+                extended_version = versplit[1];
+            }
+
             if (slotData.ContainsKey("apworld_api_version"))
             {
                 string apworld_api_version = Convert.ToString(slotData["apworld_api_version"]);
@@ -127,7 +136,6 @@ namespace DSAP.Models
         
         public string VersionInfoString()
         {
-            const string curr_version = "0.0.20.0";
             string[] substrs2 = curr_version.Split(".");
             uint currmajor = uint.Parse(substrs2[0]);
             uint currminor = uint.Parse(substrs2[1]);

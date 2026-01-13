@@ -17,10 +17,9 @@ class UniqueSoulOption(Toggle):
     """Adds only one of each boss soul to the item pool"""
     display_name = "Singular Boss Souls"
 
-class FogwallLock(Toggle):
+class FogwallLock(DefaultOnToggle):
     """Makes area fog walls uninteractable until you receive their items from the item pool. Recommended to turn this on."""
     display_name = "Fogwall Lock" 
-    default = True
 
 class FogwallLockIncludeUA(Toggle):
     """Includes Undead Asylum early fog wall in the pool. If on, this will likely lead to extremely early BK mode."""
@@ -32,11 +31,10 @@ class BossFogwallLock(Toggle):
     as all of them do not have fog walls upon your first entry to their arena."""
     display_name = "Boss Fogwall Lock" 
 
-class FogwallSanity(Toggle):
+class FogwallSanity(DefaultOnToggle):
     """Makes fog walls a "check" - that is, they grant you items when you walk through them. 
     Recommended value of true if Fogwall Lock is true."""
     display_name = "Fogwall Sanity" 
-    default = True
 
 class BossFogwallSanity(Toggle):
     """Makes boss fog walls a "check" - that is, they grant you items when you walk through them. 
@@ -59,14 +57,13 @@ class UpgradedWeaponsAllowedInfusions(OptionList):
     default = {"Normal", "Raw", "Magic", "Fire", "Divine", "Chaos", "Enchanted", "Occult", "Crystal", "Lightning"}
     valid_keys = ["Normal", "Raw", "Magic", "Fire", "Divine", "Chaos", "Enchanted", "Occult", "Crystal", "Lightning"]
 
-class UpgradedWeaponsAdjustedLevels(Toggle):
+class UpgradedWeaponsAdjustedLevels(DefaultOnToggle):
     """For upgraded weapons added to the pool, Whether to 'adjust' weapon levels for applying the ranges.
     When true, the min/max levels will apply to an calculated "level" of an infused weapon adjusted by:
      +5 for Raw/Magic/Fire/Divine
      +10 for Chaos/Enchanted/Occult/Crystal/Lightning 
     When false, the min/max levels will not be adjusted."""
     display_name = "Upgraded Weapons - Adjust Ranges"
-    default = True
 
 class UpgradedWeaponsMinLevel(Range):
     """Minimum upgrade value on upgraded weapons in the pool.

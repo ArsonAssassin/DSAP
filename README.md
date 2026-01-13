@@ -199,5 +199,5 @@ Watchtower Basement
 * If you disable the options for fogwall or boss fogwall locking, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Such rules are listed below.
 * Access to The Catacombs is behind defeating Ornstein and Smough.
 * Access to the Great Hollow is behind Blighttown access + Lordvessel item.
-* Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins from Upper New Londo Ruins requires access to being able to defeat Orenstein and Smough (in addition to having the Key to the Seal - the default rule).
+* Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins from Upper New Londo Ruins requires access to being able to defeat Ornstein and Smough (in addition to having the Key to the Seal - the default rule).
 * Access to Tomb of the Giants from after Pinwheel requires access to being able to defeat Ornstein and Smouth (in addition to having the Skull Lantern - the default rule).
