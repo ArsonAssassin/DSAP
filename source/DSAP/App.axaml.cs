@@ -333,13 +333,13 @@ public partial class App : Application
     private void PrintDiagnosticInfo()
     {
         Log.Logger.Warning("Diagnostic info:");
-        Log.Logger.Warning($"isc={Client.IsConnected}, ili={Client.IsLoggedIn}, irtri={Client.isReadyToReceiveItems}, ircs={Client.itemsReceivedCurrentSession},");
-        Log.Logger.Warning($"v={Client.CurrentSession.RoomState.Version},gv={Client.CurrentSession.RoomState.GeneratorVersion}," +
-            $"rist={Client.CurrentSession.RoomState.RoomInfoSendTime.ToShortTimeString()},ctime={DateTime.Now.ToUniversalTime().ToShortTimeString()},Slot={Client.CurrentSession.ConnectionInfo.Slot}");
-        Log.Logger.Warning($"locs={Client.CurrentSession.Locations.AllLocationsChecked.Count}/{Client.CurrentSession.Locations.AllLocations.Count}");
-        Log.Logger.Warning($"items received={Client.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap.Count},crm={ConditionRewardMap.Count}");
+        Log.Logger.Warning($"isc={Client?.IsConnected}, ili={Client?.IsLoggedIn}, irtri={Client?.isReadyToReceiveItems}, ircs={Client?.itemsReceivedCurrentSession},");
+        Log.Logger.Warning($"v={Client?.CurrentSession.RoomState.Version},gv={Client?.CurrentSession.RoomState.GeneratorVersion}," +
+            $"rist={Client?.CurrentSession.RoomState.RoomInfoSendTime.ToShortTimeString()},ctime={DateTime.Now.ToUniversalTime().ToShortTimeString()},Slot={Client?.CurrentSession.ConnectionInfo.Slot}");
+        Log.Logger.Warning($"locs={Client?.CurrentSession.Locations.AllLocationsChecked.Count}/{Client?.CurrentSession.Locations.AllLocations.Count}");
+        Log.Logger.Warning($"items received={Client?.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap?.Count},crm={ConditionRewardMap?.Count}");
         Log.Logger.Warning($"version info={DSOptions?.VersionInfoString()}, cdv={Archipelago.Core.AvaloniaGUI.Utils.Helpers.GetAppVersion()}");
-        if (Helpers.IsInGame())
+        if (Client != null && Helpers.IsInGame())
         {
             ulong baseb = Helpers.GetBaseBAddress();
             Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
