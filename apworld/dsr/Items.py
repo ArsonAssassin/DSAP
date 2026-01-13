@@ -17,7 +17,9 @@ class DSRItemCategory(IntEnum):
     SHIELD = 9,
     TRAP = 10,
     BOSS_SOUL = 11,
-    EMBER = 12
+    EMBER = 12,
+    FOGWALL = 13,
+    BOSSFOGWALL = 14
 
 class DSRWeaponType(IntEnum):
     Melee = 1,
@@ -154,6 +156,49 @@ _all_items_base = [
     ("Bell of Awakening #1", 1096, DSRItemCategory.EVENT),
     ("Bell of Awakening #2", 1097, DSRItemCategory.EVENT),
 
+    ("Fog Wall Key - Northern Undead Asylum", 1200, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Undead Burg", 1201, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Undead Parish", 1202, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Darkroot Garden", 1203, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Depths Rat Room", 1204, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Lower Blighttown Entrance", 1205, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Ash Lake Entrance", 1206, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Sen's Fortress #1 (Outside Stairs)", 1207, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Sen's Fortress #2 (Upper Entrance)", 1208, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Anor Londo #1 (Rafters)", 1209, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Anor Londo #2 (Archers)", 1210, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Duke's Archives Courtyard Entrance", 1211, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Catacombs", 1212, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Tomb of the Giants", 1213, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - New Londo (Upper)", 1214, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - New Londo (Lower)", 1215, DSRItemCategory.FOGWALL),
+    ("Fog Wall Key - Painted World", 1216, DSRItemCategory.FOGWALL),
+    
+
+    ("Boss Fog Wall Key - Taurus Demon", 1230, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Capra Demon", 1231, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Gaping Dragon", 1232, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Quelaag", 1233, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Bell Gargoyles", 1234, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Iron Golem", 1235, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Ornstein and Smough", 1236, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Seath First Encounter", 1237, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Pinwheel", 1238, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Nito", 1239, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Four Kings", 1240, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Ceaseless Discharge", 1241, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Demon Firesage", 1242, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Centipede Demon", 1243, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Bed of Chaos", 1244, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Gwyn", 1245, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Sanctuary Guardian", 1246, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Artorias", 1247, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Manus", 1248, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Gwyndolin", 1249, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Moonlight Butterfly", 1250, DSRItemCategory.BOSSFOGWALL),
+    ("Boss Fog Wall Key - Crossbreed Priscilla", 1251, DSRItemCategory.BOSSFOGWALL),
+    
+    
     ("Eye of Death", 2000, DSRItemCategory.CONSUMABLE),
     ("Cracked Red Eye Orb", 2001, DSRItemCategory.CONSUMABLE),
     ("Elizabeth's Mushroom", 2002, DSRItemCategory.CONSUMABLE),
@@ -856,7 +901,6 @@ _all_items_base = [
     ("Black Iron Greatshield", 9042, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Cleansing Greatshield", 9043, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Unique),
     
-    
     ("Lag Trap", 10000, DSRItemCategory.TRAP),
 ]
 
@@ -920,12 +964,27 @@ def BuildItemPool(count, options, world):
         item_pool.append(masterKey)
         remaining_count = remaining_count - 1
 
+    if(options.fogwall_lock.value == True):
+        earlyfogname = "Fog Wall Key - Northern Undead Asylum"
+        fogwalls = [item for item in _all_items if item.category in [DSRItemCategory.FOGWALL] and item.name != earlyfogname]
+        if (options.fogwall_lock_include_ua.value == True):
+            fogwalls.append(item_dictionary[earlyfogname])
+        for item in fogwalls:
+            item_pool.append(item)
+            remaining_count = remaining_count - 1
+
+    if (options.boss_fogwall_lock.value == True):
+        bossfogwalls = [item for item in _all_items if item.category in [DSRItemCategory.BOSSFOGWALL]]
+        for item in bossfogwalls:
+            item_pool.append(item)
+            remaining_count = remaining_count - 1
+
     useful_items = [item for item in _all_items if item.category == DSRItemCategory.EMBER]
     for item in useful_items:
         item_pool.append(item)
         remaining_count = remaining_count - 1
     
-    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM, DSRItemCategory.EMBER]]
+    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM, DSRItemCategory.EMBER, DSRItemCategory.FOGWALL, DSRItemCategory.BOSSFOGWALL]]
     
     pool_size = remaining_count
     

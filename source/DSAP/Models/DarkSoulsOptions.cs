@@ -7,6 +7,9 @@ namespace DSAP.Models
 {
     public class DarkSoulsOptions
     {
+        string curr_version = "0.0.0.0";
+        string extended_version = "";
+        public bool outofdate = false;
         public uint apiver_major;
         public uint apiver_minor;
         public uint apiver_revision;
@@ -19,6 +22,14 @@ namespace DSAP.Models
         public uint UpgradedWeaponsMaxLevel { get; set; }
         public DarkSoulsOptions(Dictionary<string, object> optionsDict, Dictionary<string, object> slotData)
         {
+            string version = Archipelago.Core.AvaloniaGUI.Utils.Helpers.GetAppVersion();
+            string[] versplit = version.Split('+'); // pull off the "+" extension, e.g. 0.0.20.0+b13fc8aeb65f63b1eac8816
+            curr_version = versplit[0];
+            if (versplit.Length > 1)
+            {
+                extended_version = versplit[1];
+            }
+
             if (slotData.ContainsKey("apworld_api_version"))
             {
                 string apworld_api_version = Convert.ToString(slotData["apworld_api_version"]);
@@ -31,7 +42,6 @@ namespace DSAP.Models
                 if (substrs.Length > 3)
                     apiver_build = uint.Parse(substrs[3]);
 
-                const string curr_version = "0.0.20.0";
                 string[] substrs2 = curr_version.Split(".");
                 uint currmajor = uint.Parse(substrs2[0]);
                 uint currminor = uint.Parse(substrs2[1]);
@@ -47,12 +57,26 @@ namespace DSAP.Models
                     (apiver_major == currmajor && apiver_minor == currminor && apiver_revision > currrevision))
                 {
                     Log.Logger.Error("Apworld detected that is too advanced for the DSAP client. Upgrade your client.");
+                    Log.Logger.Error("Otherwise, expect errors and instability.");
+                    outofdate = true;
                 }
+                /* is apworld gen'd with a lower version? */
                 if ((apiver_major < currmajor) ||
                     (apiver_major == currmajor && apiver_minor < currminor) ||
                     (apiver_major == currmajor && apiver_minor == currminor && apiver_revision < currrevision))
                 {
-                    Log.Logger.Error("Apworld detected that is too old for this version of the DSAP client.");
+                    // specific allowed backward compatibility. v0.0.21 client with v0.0.20 world
+                    if (currmajor == apiver_major && currminor == apiver_minor && 
+                        currrevision == 21 && apiver_revision == 20) 
+                    {
+                        /* it's ok */
+                    }
+                    else // otherwise, revision bump indicates issues.
+                    {
+                        Log.Logger.Error("Apworld detected that is too old for this version of the DSAP client.");
+                        Log.Logger.Error("Otherwise, expect errors and instability.");
+                        outofdate = true;
+                    }
                 }
                 Log.Logger.Information($"Client api level {currmajor}.{currminor}.{currrevision}.{currbuild}, " +
                     $"apworld api level {apiver_major}.{apiver_minor}.{apiver_revision}.{apiver_build}");
@@ -61,12 +85,13 @@ namespace DSAP.Models
             }
             else
             {
-                Log.Logger.Warning("Seed generated on Apworld pre-v0.0.20.0 detected. Running in compatibility mode.");
-                Log.Logger.Warning("Only seeds generated with DSR apworld version 0.0.19.1+ are compatible with this client.");
+                Log.Logger.Error("Seed generated on Apworld pre-v0.0.20.0 detected. Expect failures.");
+                Log.Logger.Error("Only seeds generated with DSR apworld version 0.0.20.0+ are compatible with this client.");
                 apiver_major    = 0;
                 apiver_minor    = 0;
                 apiver_revision = 19;
                 apiver_build    = 1;
+                outofdate = true;
             }
 
 
@@ -107,6 +132,19 @@ namespace DSAP.Models
             result += $"UpgradedWeaponsMinLevel={UpgradedWeaponsMinLevel},";
             result += $"UpgradedWeaponsMaxLevel ={UpgradedWeaponsMaxLevel}";
             return result;
+        }
+        
+        public string VersionInfoString()
+        {
+            string[] substrs2 = curr_version.Split(".");
+            uint currmajor = uint.Parse(substrs2[0]);
+            uint currminor = uint.Parse(substrs2[1]);
+            uint currrevision = uint.Parse(substrs2[2]);
+            uint currbuild = 0;
+            if (substrs2.Length > 3)
+                currbuild = uint.Parse(substrs2[3]);
+            return $"Client api level {currmajor}.{currminor}.{currrevision}.{currbuild}, " +
+                    $"apworld api level {apiver_major}.{apiver_minor}.{apiver_revision}.{apiver_build}";
         }
         /// <summary>
         /// Compares the given checkver to the apworld version.

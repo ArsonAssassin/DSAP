@@ -11,7 +11,9 @@ class DSRLocationCategory(IntEnum):
     BONFIRE = 3,
     DOOR = 4,
     ITEM_LOT = 5,
-    ENEMY_DROP = 6
+    ENEMY_DROP = 6,
+    FOG_WALL = 7,
+    BOSS_FOG_WALL = 8
 
 
 class DSRLocationData(NamedTuple):
@@ -49,12 +51,20 @@ class DSRLocation(Location):
             "Undead Asylum Cell Door",
             "Northern Undead Asylum - F2 East Door",
             "Northern Undead Asylum", 
+            "Northern Undead Asylum - After Fog",
             "Northern Undead Asylum - After F2 East Door",
             "Northern Undead Asylum - Big Pilgrim Door",
             "Firelink Shrine", 
+            "Upper Undead Burg - Before Fog", 
+            "Upper Undead Burg - Fog", 
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
+            "Upper Undead Burg - Taurus Demon",
+            "Upper Undead Burg - After Taurus Demon",
+            "Undead Parish - Before Fog", 
+            "Undead Parish - Fog", 
             "Undead Parish", 
+            "Undead Parish - Bell Gargoyles",
             "Firelink Shrine - After Undead Parish Elevator",
             "Northern Undead Asylum Second Visit",
             "Northern Undead Asylum Second Visit - F2 West Door",
@@ -63,56 +73,98 @@ class DSRLocation(Location):
             "Undead Burg Basement Door",
             "Lower Undead Burg", 
             "Lower Undead Burg - After Residence Key",
+            "Lower Undead Burg - Capra Demon",
+            "Lower Undead Burg - After Capra Demon",
             "Watchtower Basement",
             "Depths", 
             "Depths - After Sewer Chamber Key",
+            "Depths - Gaping Dragon",
+            "Depths - After Gaping Dragon",
             "Depths to Blighttown Door",
             "Upper Blighttown Depths Side", 
             "Upper Blighttown VotD Side", 
+            "Lower Blighttown - Fog", 
             "Lower Blighttown", 
+            "Lower Blighttown - Quelaag", 
+            "Lower Blighttown - After Quelaag", 
             "Valley of the Drakes", 
             "Valley of the Drakes - After Defeating Four Kings", 
             "Door between Upper New Londo and Valley of the Drakes",
             "Darkroot Basin", 
+            "Darkroot Garden - Before Fog",
             "Darkroot Garden", 
             "Darkroot Garden - Behind Artorias Door", 
+            "Darkroot Garden - Moonlight Butterfly",
+            "Darkroot Garden - After Moonlight Butterfly",
             "The Great Hollow", 
-            "Ash Lake", 
+            "Ash Lake",
             "Sen's Fortress",
+            "Sen's Fortress - After First Fog",
+            "Sen's Fortress - After Second Fog",
             "Sen's Fortress - After Cage Key",
-            "Anor Londo", 
+            "Sen's Fortress - Iron Golem",
+            "Sen's Fortress - After Iron Golem",
+            "Sen's Fortress - After Cage Key",
+            "Anor Londo",
+            "Anor Londo - After First Fog",
+            "Anor Londo - After Second Fog",
+            "Anor Londo - Ornstein and Smough",
+            "Anor Londo - After Ornstein and Smough",
+            "Anor Londo - Gwyndolin",
+            "Anor Londo - After Gwyndolin",
             "Painted World of Ariamis",
+            "Painted World of Ariamis - After Fog",
             "Painted World of Ariamis - After Annex Key",
+            "Painted World of Ariamis - Crossbreed Priscilla",
             "Upper New Londo Ruins",
+            "Upper New Londo Ruins - After Fog",
             "New Londo Ruins Door to the Seal",
             "Lower New Londo Ruins", 
             "The Abyss", 
+            "The Abyss - After Four Kings", 
             "The Duke's Archives", 
+            "The Duke's Archives - After First Seath Encounter",
             "The Duke's Archives - Cell Door",
             "The Duke's Archives - Getting out of Cell",
             "The Duke's Archives - After Archive Prison Extra Key",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
-            "The Duke's Archives - Giant Cell",
+            "The Duke's Archives - Courtyard",
+            "The Duke's Archives - Giant Cell", 
             "Crystal Cave", 
+            "Crystal Cave - After Seath", 
             "The Duke's Archives - First Arena after Seath's Death", 
-            "Demon Ruins",
-            "Demon Ruins - Behind Golden Fog Wall",
+            "Demon Ruins - Early",
+            "Demon Ruins - Ceaseless Discharge",
+            "Demon Ruins", 
+            "Demon Ruins - Demon Firesage",
+            "Demon Ruins - After Demon Firesage",
+            "Demon Ruins - Centipede Demon",
             "Demon Ruins Shortcut",
             "Lost Izalith", 
+            "Lost Izalith - Bed of Chaos", 
             "The Catacombs", 
             "The Catacombs - Door 1",
             "The Catacombs - After Door 1",
+            "The Catacombs - Pinwheel",
+            "The Catacombs - After Pinwheel",
             "Tomb of the Giants", 
+            "Tomb of the Giants - After White Fog", 
             "Tomb of the Giants - Behind Golden Fog Wall",
+            "Tomb of the Giants - Nito",
+            "Tomb of the Giants - After Nito",
             "Kiln of the First Flame",
+            "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
+            "Sanctuary Garden - Santuary Guardian",
             "Oolacile Sanctuary", 
             "Royal Wood", 
+            "Royal Wood - Artorias",
             "Royal Wood - After Hawkeye Gough",
             "Oolacile Township", 
             "Oolacile Township - Behind Light-Dispelled Walls",
             "Oolacile Township - After Crest Key",
-            "Chasm of the Abyss", 
+            "Chasm of the Abyss",
+            "Chasm of the Abyss - Manus", 
         ]
 
         output = {}
@@ -126,9 +178,11 @@ class DSRLocation(Location):
         self.item = item
         self.locked = True
         item.location = self
+
 location_skip_categories = {
-DSRLocationCategory.EVENT, DSRLocationCategory.SKIP, DSRLocationCategory.BOSS, DSRLocationCategory.BONFIRE
+    DSRLocationCategory.EVENT, DSRLocationCategory.SKIP, DSRLocationCategory.BOSS, DSRLocationCategory.BONFIRE
 }
+
 # Last id used = 781
 location_tables = {
 "Undead Asylum Cell": [
@@ -141,6 +195,9 @@ location_tables = {
     DSRLocationData(11110002, f"UA: Undead Asylum - Courtyard lit", f"Undead Asylum - Courtyard lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110003, f"UA: Undead Asylum - Boss Door opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110005, f"UA: Undead Asylum - Interior lit", f"Undead Asylum - Interior lit", DSRLocationCategory.BONFIRE),
+],
+"Northern Undead Asylum - After Fog": [
+    DSRLocationData(11110782, f"UA: Fog Wall - Northern Undead Asylum", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110006, f"UA: Estus Flask", f"Estus Flask", DSRLocationCategory.SKIP),
     DSRLocationData(11110007, f"UA: Undead Asylum F2 East Key", f"Undead Asylum F2 East Key", DSRLocationCategory.SKIP),
     DSRLocationData(11110554, f"UA: Undead Asylum Shortcut Door opened", f"Firebomb", DSRLocationCategory.DOOR),
@@ -179,11 +236,16 @@ location_tables = {
     DSRLocationData(11110032, f"FS: Soul of a Lost Undead - Aqueduct Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110033, f"FS: Soul of a Lost Undead - Sewer Rat", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],  
-"Upper Undead Burg": [
+"Upper Undead Burg - Before Fog": [
     DSRLocationData(11110568, f"UB: Soul of a Lost Undead - Window Corpse", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110034, f"UB: Large Soul of a Lost Undead - Barrel Drop", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110035, f"UB: Rubbish - Undead Burg", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110036, f"UB: Humanity - Undead Burg Entrance Wall", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],  
+"Upper Undead Burg - Fog": [
+    DSRLocationData(11110783, f"UB: Fog Wall - Undead Burg", f"Firebomb", DSRLocationCategory.FOG_WALL),
+],
+"Upper Undead Burg": [ # After fog
     DSRLocationData(11110037, f"UB: Soul of a Lost Undead - Upper Burg Fogwall House", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110038, f"UB: Wooden Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110039, f"UB: Undead Burg lit", f"Undead Burg lit", DSRLocationCategory.BONFIRE),
@@ -198,7 +260,12 @@ location_tables = {
     DSRLocationData(11110047, f"UB: Black Knight guarding Blue Tearstone Ring", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110048, f"UB: Blue Tearstone Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110050, f"UB: Crystal Lizard hidden in Barrel", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+],
+"Upper Undead Burg - Taurus Demon": [    
+    DSRLocationData(11110799, f"UB: Boss Fog Wall - Taurus Demon", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110053, f"UB: Taurus Demon Defeated", f"Taurus Demon Defeated", DSRLocationCategory.BOSS),
+],
+"Upper Undead Burg - After Taurus Demon": [
     DSRLocationData(11110054, f"UB: Large Soul of a Lost Undead - After Taurus", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110055, f"UB: White Sign Soapstone", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110056, f"UB: Claymore", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -209,11 +276,16 @@ location_tables = {
 "Upper Undead Burg - Pine Resin Chest": [
     DSRLocationData(11110060, f"UB: Gold Pine Resin - 3x Gold Pine Resin in Chest behind Locked Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Undead Parish": [
+"Undead Parish - Before Fog": [
     DSRLocationData(11110061, f"UP: Black Knight in Tower", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110062, f"UP: Alluring Skull", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110063, f"UP: Mystery Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110064, f"UP: Large Soul of a Lost Undead - Hollow Room Rafters", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Undead Parish - Fog": [
+    DSRLocationData(11110784, f"UP: Fog Wall - Undead Parish", f"Firebomb", DSRLocationCategory.FOG_WALL),
+],
+"Undead Parish": [ # After Fog
     DSRLocationData(11110065, f"UP: Knight Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110066, f"UP: Undead Parish lit", f"Undead Parish lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110067, f"UP: Halberd", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -222,6 +294,9 @@ location_tables = {
     DSRLocationData(11110070, f"UP: Fire Keeper Soul - Undead Parish", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110071, f"UP: Large Soul of a Nameless Soldier - Parish Window", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110072, f"UP: Humanity - Parish Barrel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Undead Parish - Bell Gargoyles": [
+    DSRLocationData(11110803, f"UP: Boss Fog Wall - Bell Gargoyles", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110073, f"UP: Bell Gargoyles Defeated", f"Bell Gargoyles Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110074, f"UP: Bell of Awakening #1 rung", f"Bell of Awakening #1", DSRLocationCategory.EVENT),
 ],
@@ -276,7 +351,12 @@ location_tables = {
     DSRLocationData(11110620, f"UB: Black Leather Boots", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110566, f"UB: Target Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110107, f"UB: Undead Burg Female Merchant Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
+],
+"Lower Undead Burg - Capra Demon": [
+    DSRLocationData(11110800, f"UB: Boss Fog Wall - Capra Demon", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110108, f"UB: Capra Demon Defeated", f"Capra Demon Defeated", DSRLocationCategory.BOSS),
+],
+"Lower Undead Burg - After Capra Demon": [
     DSRLocationData(11110109, f"UB: Key to Depths", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Lower Undead Burg - After Residence Key": [
@@ -309,12 +389,18 @@ location_tables = {
     DSRLocationData(11110125, f"DE: Heavy Crossbow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110624, f"DE: Heavy Bolt", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110126, f"DE: Depths Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
+    DSRLocationData(11110786, f"DE: Fog Wall - Depths Rat Room", f"Firebomb", DSRLocationCategory.FOG_WALL),
+],
+"Depths - Gaping Dragon": [
+    DSRLocationData(11110801, f"DE: Boss Fog Wall - Gaping Dragon", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110127, f"DE: Gaping Dragon Defeated", f"Gaping Dragon Defeated", DSRLocationCategory.BOSS),
-    DSRLocationData(11110128, f"DE: Blighttown Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110129, f"DE: Standard Helm", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110711, f"DE: Hard Leather Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110712, f"DE: Hard Leather Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110713, f"DE: Hard Leather Boots", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Depths - After Gaping Dragon": [
+    DSRLocationData(11110128, f"DE: Blighttown Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Depths - After Sewer Chamber Key": [
     DSRLocationData(11110131, f"DE: Depths Bonfire Room opened", f"Firebomb", DSRLocationCategory.DOOR),
@@ -341,13 +427,16 @@ location_tables = {
     DSRLocationData(11110144, f"BT: Pyromancy: Power Within", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110145, f"BT: Large Soul of a Nameless Soldier - Wall Hugger", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110595, f"BT: Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Lower Blighttown - Fog": [
+    DSRLocationData(11110787, f"BT: Fog Wall - Lower Blighttown Entrance", f"Firebomb", DSRLocationCategory.FOG_WALL),
+],
+"Lower Blighttown": [
     DSRLocationData(11110146, f"BT: Wanderer Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110628, f"BT: Wanderer Coat", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110629, f"BT: Wanderer Manchette", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110630, f"BT: Wanderer Boots", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110147, f"BT: Falchion", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-],
-"Lower Blighttown": [
     DSRLocationData(11110148, f"BT: Large Soul of a Proud Knight - Corpse below Ramp", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110149, f"BT: Dragon Scale - Blighttown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110150, f"BT: Butcher Knife", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
@@ -367,7 +456,12 @@ location_tables = {
     DSRLocationData(11110161, f"BT: Plank Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110162, f"BT: Twin Humanities - Great Hallow Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110163, f"BT: Large Titanite Shard - Near Quelana", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Lower Blighttown - Quelaag": [
+    DSRLocationData(11110802, f"BT: Boss Fog Wall - Quelaag", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110164, f"BT: Chaos Witch Quelaag Defeated", f"Chaos Witch Quelaag Defeated", DSRLocationCategory.BOSS),
+],
+"Lower Blighttown - After Quelaag": [
     DSRLocationData(11110560, f"BT: Soul of Quelaag", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110165, f"BT: Quelaag's Domain lit", f"Quelaag's Domain lit", DSRLocationCategory.BONFIRE),    
     DSRLocationData(11110556, f"BT: Bell of Awakening #2 rung", f"Bell of Awakening #2", DSRLocationCategory.EVENT),
@@ -427,11 +521,14 @@ location_tables = {
     #DSRLocationData(11110647, f"DB: Antiquated Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),#Commented out for now, since it's a missable NPC Interaction
     #DSRLocationData(11110648, f"DB: Antiquated Skirt", f"Firebomb", DSRLocationCategory.ITEM_LOT), #Commented out for now, since it's a missable NPC Interaction
 ],
-"Darkroot Garden": [
+"Darkroot Garden - Before Fog": [
     DSRLocationData(11110192, f"DG: Titanite Demon below Andre", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110193, f"DG: Large Soul of a Nameless Soldier - Darkroot Cliff", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110194, f"DG: Darkroot Garden lit", f"Darkroot Garden lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110195, f"DG: Large Soul of a Nameless Soldier - Darkroot Ambush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Darkroot Garden": [    
+    DSRLocationData(11110785, f"DG: Fog Wall - Darkroot Garden", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110196, f"DG: Elite Knight Helm", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110649, f"DG: Elite Knight Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110650, f"DG: Elite Knight Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -439,7 +536,12 @@ location_tables = {
     DSRLocationData(11110197, f"DG: Wolf Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110198, f"DG: Soul of a Proud Knight - Past Fake Trees", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110199, f"DG: Partizan", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Darkroot Garden - Moonlight Butterfly": [
+    DSRLocationData(11110819, f"DG: Boss Fog Wall - Moonlight Butterfly", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110200, f"DG: Moonlight Butterfly Defeated", f"Moonlight Butterfly Defeated", DSRLocationCategory.BOSS),
+],
+"Darkroot Garden - After Moonlight Butterfly": [
     DSRLocationData(11110557, f"DG: Soul of the Moonlight Butterfly", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110201, f"DG: Homeward Bone - Frozen Blacksmith", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110202, f"DG: Watchtower Basement Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -490,6 +592,7 @@ location_tables = {
     DSRLocationData(11110594, f"GH: Red Titanite Chunk - Near Top Branch Drop", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Ash Lake": [
+    DSRLocationData(11110788, f"ASH: Fog Wall - Ash Lake Entrance", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110226, f"ASH: Ash Lake lit", f"Ash Lake lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110227, f"ASH: Dragon Scale - Ash Lake Start", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110228, f"ASH: Dragon Scale - Ash Lake Water", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -498,8 +601,6 @@ location_tables = {
     DSRLocationData(11110231, f"ASH: Ash Lake - Stone Dragon lit", f"Ash Lake - Stone Dragon lit", DSRLocationCategory.BONFIRE),
 ],
 "Sen's Fortress": [
-    DSRLocationData(11110611, f"SF: Divine Blessing - Sen's Fortress", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110613, f"SF: Rare Ring of Sacrifice - Sen's Fortress", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110614, f"SF: Large Soul of a Proud Knight - Corpse after Ladder out of Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110232, f"SF: Sen's Fortress Main Gate opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110233, f"SF: Soul of a Brave Warrior - Sen's Fortress Entrance", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -512,6 +613,9 @@ location_tables = {
     DSRLocationData(11110240, f"SF: Large Titanite Shard - Sen's Fortress Trap Chest", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110241, f"SF: Ring of Steel Protection", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110242, f"SF: Shotel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Sen's Fortress - After First Fog": [
+    DSRLocationData(11110789, f"SF: Fog Wall - Sen's Fortress #1 (Outside Stairs)", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110243, f"SF: Covetous Gold Serpent Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110244, f"SF: Lightning Spear", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110246, f"SF: Large Soul of a Proud Knight - Sen's Fortress Ball Dropdown", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -522,15 +626,25 @@ location_tables = {
     DSRLocationData(11110248, f"SF: Sorcery: Hush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110249, f"SF: Slumbering Dragoncrest Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110250, f"SF: Large Titanite Shard - Guarded by Serpent Soldier", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Sen's Fortress - After Second Fog": [
+    DSRLocationData(11110790, f"SF: Fog Wall - Sen's Fortress #2 (Upper Entrance)", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110251, f"SF: Large Soul of a Brave Warrior - Sen's Fortress above Bonfire", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110252, f"SF: Sen's Fortress lit", f"Sen's Fortress lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110611, f"SF: Divine Blessing - Sen's Fortress", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110613, f"SF: Rare Ring of Sacrifice - Sen's Fortress", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110253, f"SF: Flame Stoneplate Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),    
     DSRLocationData(11110254, f"SF: Large Titanite Shard - Corpse bombed by Giant", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110255, f"SF: Ricard's Rapier", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110256, f"SF: Sniper Crossbow", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110661, f"SF: Sniper Bolt", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110257, f"SF: Cage Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Sen's Fortress - Iron Golem": [
+    DSRLocationData(11110804, f"SF: Boss Fog Wall - Iron Golem", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110258, f"SF: Iron Golem Defeated", f"Iron Golem Defeated", DSRLocationCategory.BOSS),
+],
+"Sen's Fortress - After Iron Golem": [
     DSRLocationData(11110259, f"SF: Core of an Iron Golem", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],
 "Sen's Fortress - After Cage Key": [
@@ -543,6 +657,9 @@ location_tables = {
     DSRLocationData(11110264, f"AL: Twinkling Titanite - Anor Londo", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110265, f"AL: Demon Titanite - Anor Londo Elevator", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110266, f"AL: Divine Blessing - Anor Londo Rafters", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Anor Londo - After First Fog": [
+    DSRLocationData(11110791, f"AL: Fog Wall - Anor Londo #1 (Rafters)", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110267, f"AL: Anor Londo - Darkmoon Tomb lit", f"Anor Londo - Darkmoon Tomb lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110268, f"AL: Ring of the Sun's Firstborn", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110269, f"AL: Sorcery: Great Magic Weapon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -552,8 +669,11 @@ location_tables = {
     DSRLocationData(11110664, f"AL: Black Iron Leggings", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110271, f"AL: Greatsword", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110272, f"AL: Black Iron Greatshield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110273, f"AL: Anor Londo - Residence lit", f"Anor Londo - Residence lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110274, f"AL: Soul of a Hero - Left Silver Archer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Anor Londo - After Second Fog": [
+    DSRLocationData(11110792, f"AL: Fog Wall - Anor Londo #2 (Archers)", f"Firebomb", DSRLocationCategory.FOG_WALL),
+    DSRLocationData(11110273, f"AL: Anor Londo - Residence lit", f"Anor Londo - Residence lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110275, f"AL: Sunlight Medal - Anor Londo", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110276, f"AL: Havel's Helm", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110665, f"AL: Havel's Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -578,11 +698,21 @@ location_tables = {
     DSRLocationData(11110290, f"AL: Hawk Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110291, f"AL: Anor Londo Giant Blacksmith Shortcut opened", f"Firebomb", DSRLocationCategory.DOOR),
     DSRLocationData(11110292, f"AL: Anor Londo Main Hall Door opened", f"Firebomb", DSRLocationCategory.DOOR),
+],
+"Anor Londo - Ornstein and Smough": [
+    DSRLocationData(11110805, f"AL: Boss Fog Wall - Ornstein and Smough", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110293, f"AL: Ornstein and Smough Defeated", f"Ornstein and Smough Defeated", DSRLocationCategory.BOSS),
+],
+"Anor Londo - After Ornstein and Smough": [
     DSRLocationData(11110561, f"AL: Soul of Ornstein", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110562, f"AL: Soul of Smough", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110294, f"AL: Lordvessel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Anor Londo - Gwyndolin": [
+    DSRLocationData(11110818, f"AL: Boss Fog Wall - Gwyndolin", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110295, f"AL: Gwyndolin Defeated", f"Gwyndolin Defeated", DSRLocationCategory.BOSS),
+],
+"Anor Londo - After Gwyndolin": [
     DSRLocationData(11110296, f"AL: Soul of Gwyndolin", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110297, f"AL: Brass Helm", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110669, f"AL: Brass Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -593,28 +723,31 @@ location_tables = {
 ],
 "Painted World of Ariamis": [
     DSRLocationData(11110299, f"PW: Painted World lit", f"Painted World lit", DSRLocationCategory.BONFIRE),
-    DSRLocationData(11110300, f"PW: Humanity - Painted World Hanging Body", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110571, f"PW: Soul of a Proud Knight - Corpse up First Staircase", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110572, f"PW: Soul of a Proud Knight - Corpse near Bonewheels", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110575, f"PW: Soul of a Proud Knight - By Hanging Corpse", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110573, f"PW: Ring of Sacrifice - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110576, f"PW: Soul of a Brave Warrior - Corpse at Backside Tower Corner", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110301, f"PW: Soul of a Proud Knight - Painted World Corvid Ambush", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110302, f"PW: Twin Humanities - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110303, f"PW: Soul of a Brave Warrior - Corpse Hanging out of Hole", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110304, f"PW: Soul of a Brave Warrior - Painted World Albino Rats", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110305, f"PW: Painting Guardian Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110330, f"PW: Gold Coin - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110306, f"PW: Egg Vermifuge - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110708, f"PW: Painting Guardian Robe", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110709, f"PW: Painting Guardian Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110710, f"PW: Painting Guardian Waistcloth", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110306, f"PW: Egg Vermifuge - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110308, f"PW: Large Soul of a Proud Knight - Ambush after Building", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110310, f"PW: Red Sign Soapstone", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110311, f"PW: Soul of a Brave Warrior - Painted World Tower", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110312, f"PW: Undead Dragon in Painted World", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110313, f"PW: Bloodshield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110314, f"PW: Large Soul of a Proud Knight - Painted World Undead Dragon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110330, f"PW: Gold Coin - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110576, f"PW: Soul of a Brave Warrior - Corpse at Backside Tower Corner", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110312, f"PW: Undead Dragon in Painted World", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+],
+"Painted World of Ariamis - After Fog": [
+    DSRLocationData(11110798, f"PW: Fog Wall - Painted World", f"Firebomb", DSRLocationCategory.FOG_WALL),
+    DSRLocationData(11110300, f"PW: Humanity - Painted World Hanging Body", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110572, f"PW: Soul of a Proud Knight - Corpse near Bonewheels", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110575, f"PW: Soul of a Proud Knight - By Hanging Corpse", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110573, f"PW: Ring of Sacrifice - Painted World", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110315, f"PW: Soul of a Proud Knight - Jeremiah 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110316, f"PW: Soul of a Proud Knight - Jeremiah 2", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110317, f"PW: Large Soul of a Proud Knight - Jeremiah", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -625,13 +758,16 @@ location_tables = {
     DSRLocationData(11110322, f"PW: Annex Key", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110323, f"PW: Humanity - Painted World Courtyard", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110324, f"PW: Large Titanite Shard", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+    DSRLocationData(11110574, f"PW: Soul of a Brave Warrior - Next to Ground Floor Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Painted World of Ariamis - Crossbreed Priscilla": [
+    DSRLocationData(11110820, f"PW: Boss Fog Wall - Crossbreed Priscilla", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110325, f"PW: Crossbreed Priscilla Defeated", f"Crossbreed Priscilla Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110326, f"PW: Soul of Priscilla", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110327, f"PW: Xanthous Crown", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110672, f"PW: Xanthous Overcoat", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110673, f"PW: Xanthous Gloves", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110674, f"PW: Xanthous Waistcloth", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
-    DSRLocationData(11110574, f"PW: Soul of a Brave Warrior - Next to Ground Floor Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Painted World of Ariamis - After Annex Key": [
     DSRLocationData(11110307, f"PW: Velka's Rapier", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -650,6 +786,9 @@ location_tables = {
     DSRLocationData(11110336, f"NL: Transient Curse - 2x Transient Curses from Corpse inside Pot behind Wall", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110337, f"NL: Parrying Dagger", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110338, f"NL: Transient Curse - Banshee", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Upper New Londo Ruins - After Fog": [
+    DSRLocationData(11110796, f"NL: Fog Wall - New Londo (Upper)", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110339, f"NL: Large Soul of a Nameless Soldier - Near Ladder Shortcut", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110340, f"NL: Key to the Seal", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110341, f"NL: Soul of a Proud Knight - New Londo Back Corridor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -665,6 +804,7 @@ location_tables = {
     DSRLocationData(11110348, f"NL: New Londo Ruins Door to the Seal opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "Lower New Londo Ruins": [
+    DSRLocationData(11110797, f"NL: Fog Wall - New Londo (Lower)", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110703, f"NL: Humanity - Lower New Londo Ruins", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110704, f"NL: Large Soul of a Proud Knight - Right Path after Stairs", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110349, f"NL: Large Soul of a Proud Knight - Corpse in Shed", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -677,7 +817,10 @@ location_tables = {
     DSRLocationData(11110356, f"NL: Titanite Chunk - Chest behind Illusory Wall", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "The Abyss": [
+    DSRLocationData(11110809, f"NL: Boss Fog Wall - Four Kings", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110357, f"TA: Four Kings Defeated", f"Four Kings Defeated", DSRLocationCategory.BOSS),
+],
+"The Abyss - After Four Kings": [
     DSRLocationData(11110358, f"TA: Bequeathed Lord Soul Shard (Four Kings)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110359, f"TA: The Abyss lit", f"The Abyss lit", DSRLocationCategory.BONFIRE),
 ],
@@ -689,6 +832,9 @@ location_tables = {
     DSRLocationData(11110364, f"DA: Twinkling Titanite - Archives Balcony", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110365, f"DA: Crystal Knight Shield", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110366, f"DA: Twinkling Titanite - Drop from Crystal Lizard in Tunnel", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+],
+"The Duke's Archives - After First Seath Encounter": [
+    DSRLocationData(11110806, f"DA: Boss Fog Wall - Seath First Encounter", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110367, f"DA: Duke's Archives Cell lit", f"Duke's Archives Cell lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110369, f"DA: Archive Tower Cell Key", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],
@@ -726,6 +872,9 @@ location_tables = {
     DSRLocationData(11110683, f"DA: Gauntlets of the Channelers", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110684, f"DA: Waistcloth of the Channelers", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110389, f"DA: Prism Stone - Duke's Archives", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"The Duke's Archives - Courtyard" :[
+    DSRLocationData(11110793, f"DA: Fog Wall - Duke's Archives Courtyard Entrance", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110390, f"DA: Crystalline Helm", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110685, f"DA: Crystalline Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110686, f"DA: Crystalline Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -744,6 +893,8 @@ location_tables = {
     DSRLocationData(11110398, f"CC: Blue Titanite Slab - Crystal Cave", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110399, f"CC: Soul of a Hero - Crystal Cave", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110400, f"CC: Seath the Scaleless Defeated", f"Seath the Scaleless Defeated", DSRLocationCategory.BOSS),
+],
+"Crystal Cave - After Seath": [
     DSRLocationData(11110401, f"CC: Bequeathed Lord Soul Shard (Seath)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110402, f"CC: Crystal Cave lit", f"Crystal Cave lit", DSRLocationCategory.BONFIRE),
 ],
@@ -751,13 +902,18 @@ location_tables = {
     DSRLocationData(11110403, f"DA: Large Magic Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110404, f"DA: Soul of a Great Hero - Seath Room", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Demon Ruins": [
+"Demon Ruins - Early": [
     DSRLocationData(11110405, f"DR: Demon Ruins - Entrance lit", f"Demon Ruins - Entrance lit", DSRLocationCategory.BONFIRE),
+],
+"Demon Ruins - Ceaseless Discharge": [
+    DSRLocationData(11110810, f"DR: Boss Fog Wall - Ceaseless Discharge", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110406, f"DR: Gold-Hemmed Black Hood", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110688, f"DR: Gold-Hemmed Black Cloak", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110689, f"DR: Gold-Hemmed Black Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110690, f"DR: Gold-Hemmed Black Skirt", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110407, f"DR: Ceaseless Discharge Defeated", f"Ceaseless Discharge Defeated", DSRLocationCategory.BOSS),
+],
+"Demon Ruins": [
     DSRLocationData(11110408, f"DR: Large Soul of a Proud Knight - First Jump over the Lava", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110409, f"DR: Chaos Flame Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110410, f"DR: Soul of a Proud Knight - Ceased Discharge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -768,13 +924,19 @@ location_tables = {
     DSRLocationData(11110415, f"DR: Large Flame Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110416, f"DR: Soul of a Brave Warrior - Capra Outside Firesage", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
-"Demon Ruins - Behind Golden Fog Wall": [
-    DSRLocationData(11110602, f"DR: Soul of a Brave Warrior - On Platform Below Roots to Centipede", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+"Demon Ruins - Demon Firesage": [
+    DSRLocationData(11110811, f"DR: Boss Fog Wall - Demon Firesage", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110417, f"DR: Demon Firesage Defeated", f"Demon Firesage Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110418, f"DR: Demon's Catalyst", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+],
+"Demon Ruins - After Demon Firesage": [
+    DSRLocationData(11110602, f"DR: Soul of a Brave Warrior - On Platform Below Roots to Centipede", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110419, f"DR: Soul of a Brave Warrior - Ruins/Domain shortcut", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110420, f"DR: Soul of a Brave Warrior - Chaos Door", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110421, f"DR: Demon Ruins - Catacombs lit", f"Demon Ruins - Catacombs lit", DSRLocationCategory.BONFIRE),
+],
+"Demon Ruins - Centipede Demon": [
+    DSRLocationData(11110812, f"DR: Boss Fog Wall - Centipede Demon", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110422, f"DR: Centipede Demon Defeated", f"Centipede Demon Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110423, f"DR: Orange Charred Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110424, f"DR: Green Titanite Shard - Centipede Demon", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -807,6 +969,9 @@ location_tables = {
     DSRLocationData(11110596, f"LI: Red Titanite Chunk - After Chaos Eater Pit", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110444, f"LI: Pyromancy: Chaos Fire Whip", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110563, f"LI: Izalith Catalyst", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+],
+"Lost Izalith - Bed of Chaos": [
+    DSRLocationData(11110813, f"LI: Boss Fog Wall - Bed of Chaos", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110445, f"LI: Bed of Chaos Defeated", f"Bed of Chaos Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110446, f"LI: Lord Soul (Bed of Chaos)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110447, f"LI: Lost Izalith - Heart of Chaos lit", f"Lost Izalith - Heart of Chaos lit", DSRLocationCategory.BONFIRE),
@@ -818,6 +983,7 @@ location_tables = {
     DSRLocationData(11110449, f"TC: Catacombs Door 1 opened", f"Firebomb", DSRLocationCategory.DOOR),
 ],
 "The Catacombs - After Door 1": [  
+    DSRLocationData(11110794, f"TC: Fog Wall - Catacombs", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110579, f"TC: Darkmoon Seance Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),  
     DSRLocationData(11110450, f"TC: Lucerne", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110451, f"TC: Large Soul of a Nameless Soldier - Room before First Rotating Bridge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -843,14 +1009,18 @@ location_tables = {
     DSRLocationData(11110695, f"TC: Traveling Gloves", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110696, f"TC: Holy Trousers", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110552, f"TC: Mace", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"The Catacombs - Pinwheel": [
+    DSRLocationData(11110807, f"TC: Boss Fog Wall - Pinwheel", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110470, f"TC: Pinwheel Defeated", f"Pinwheel Defeated", DSRLocationCategory.BOSS),
+],
+"The Catacombs - After Pinwheel": [
     DSRLocationData(11110471, f"TC: Rite of Kindling", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110472, f"TC: Soul of a Proud Knight - Above Pinwheel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],
 "Tomb of the Giants": [
     DSRLocationData(11110580, f"TotG: Large Soul of a Proud Knight - Right after Green Light Slide", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110581, f"TotG: Large Soul of a Proud Knight - Ledge Overlooking Pinwheel", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110486, f"TotG: Soul of a Brave Warrior - Behind Bone Archer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110585, f"TotG: Large Soul of a Proud Knight - Giant Coffin Drop", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110473, f"TotG: Large Soul of a Proud Knight - Upper Giant Coffin", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110474, f"TotG: Humanity - Corpse on Ledge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -858,51 +1028,66 @@ location_tables = {
     DSRLocationData(11110476, f"TotG: Large Soul of a Proud Knight - Patches Pit 1", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110477, f"TotG: Large Soul of a Proud Knight - Patches Pit 2", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110491, f"TotG: White Titanite Chunk - Patches Kick", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110492, f"TotG: White Titanite Chunk - Lower Tomb of the Giants", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110478, f"TotG: Skull Lantern", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110479, f"TotG: Eye of Death - Upper Giant Coffin", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110480, f"TotG: Large Divine Ember", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Tomb of the Giants - After White Fog": [
+    DSRLocationData(11110795, f"TotG: Fog Wall - Tomb of the Giants", f"Firebomb", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110481, f"TotG: Soul of a Brave Warrior - Lower Giant Coffin", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110482, f"TotG: Effigy Shield", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110483, f"TotG: Tomb of the Giants lit", f"Tomb of the Giants lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110484, f"TotG: Covetous Silver Serpent Ring", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110485, f"TotG: White Titanite Chunk - Drop from Halberd-wielding Black Knight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
+    DSRLocationData(11110486, f"TotG: Soul of a Brave Warrior - Behind Bone Archer", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110582, f"TotG: Soul of a Brave Warrior - Lower Tomb of the Giants", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110487, f"TotG: Twinkling Titanite - Drop from Crystal Lizard near Paladin", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110488, f"TotG: Paladin Leeroy Loot", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110489, f"TotG: Humanity - Paladin Leeroy", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+    DSRLocationData(11110492, f"TotG: White Titanite Chunk - Lower Tomb of the Giants", f"Firebomb", DSRLocationCategory.ITEM_LOT),
 ],                    
 "Tomb of the Giants - Behind Golden Fog Wall": [
     DSRLocationData(11110490, f"TotG: White Titanite Slab - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110583, f"TotG: Soul of a Hero - Pinwheel Clone Room Entryway", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110493, f"TotG: Soul of a Hero - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110494, f"TotG: Gravelord Nito Defeated", f"Gravelord Nito Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110584, f"TotG: White Titanite Chunk - Outside Nito", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110495, f"TotG: Lord Soul (Nito)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110496, f"TotG: Tomb of the Giants - Altar of the Gravelord lit", f"Tomb of the Giants - Altar of the Gravelord lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110497, f"TotG: Paladin Helm", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110697, f"TotG: Paladin Armor", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110698, f"TotG: Paladin Gauntlets", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110699, f"TotG: Paladin Leggings", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+],                    
+"Tomb of the Giants - Nito": [
+    DSRLocationData(11110808, f"TotG: Boss Fog Wall - Nito", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
+    DSRLocationData(11110494, f"TotG: Gravelord Nito Defeated", f"Gravelord Nito Defeated", DSRLocationCategory.BOSS),
+],                    
+"Tomb of the Giants - After Nito": [
+    DSRLocationData(11110495, f"TotG: Lord Soul (Nito)", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110496, f"TotG: Tomb of the Giants - Altar of the Gravelord lit", f"Tomb of the Giants - Altar of the Gravelord lit", DSRLocationCategory.BONFIRE),
 ],
 "Kiln of the First Flame": [ 
     DSRLocationData(11110498, f"KoFF: Black Knight Helm", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110700, f"KoFF: Black Knight Armor", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110701, f"KoFF: Black Knight Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110702, f"KoFF: Black Knight Leggings", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Kiln of the First Flame - Gwyn": [ 
+    DSRLocationData(11110814, f"KoFF: Boss Fog Wall - Gwyn", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110499, f"KoFF: Gwyn, Lord of Cinder Defeated", f"Gwyn, Lord of Cinder Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110500, f"KoFF: Soul of Gwyn, Lord of Cinder", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],
 "Sanctuary Garden": [     
     DSRLocationData(11110721, f"SG: Oolacile - Sanctuary Garden lit", f"Oolacile - Sanctuary Garden lit", DSRLocationCategory.BONFIRE),
+],
+"Sanctuary Garden - Santuary Guardian": [
+    DSRLocationData(11110815, f"SG: Boss Fog Wall - Sanctuary Guardian", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110722, f"SG: Sanctuary Guardian Defeated", f"Sanctuary Guardian Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110723, f"SG: Guardian Soul", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
 ],                         
 "Oolacile Sanctuary": [    
     DSRLocationData(11110724, f"OS: Sanctuary lit", f"Oolacile - Sanctuary lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110725, f"OS: Humanity - Corpse Near Bonfire", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-],                         
-"Royal Wood": [            
+],
+"Royal Wood": [
     DSRLocationData(11110726, f"RW: Soul of a Proud Knight - Behind Tower", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110727, f"RW: Gold Coin - Down the Slope", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110728, f"RW: Guardian Leggings", f"Firebomb", DSRLocationCategory.ITEM_LOT),
@@ -919,12 +1104,17 @@ location_tables = {
     DSRLocationData(11110739, f"RW: Guardian Gauntlets", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110740, f"RW: Blue Titanite Slab - Hidden Chest at Pool", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110741, f"RW: Soul of a Brave Warrior - Outside Elevator", f"Firebomb", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110742, f"RW: Knight Artorias Defeated", f"Artorias the Abysswalker Defeated", DSRLocationCategory.BOSS),
-    DSRLocationData(11110743, f"RW: Soul of Artorias", f"Firebomb", DSRLocationCategory.ENEMY_DROP),   
     DSRLocationData(11110744, f"RW: Twinkling Titanite - ?1Drop from Crystal Lizard Right Past Small Bridge", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110745, f"RW: Twinkling Titanite - ?2Drop from Crystal Lizard on Right Side", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110746, f"RW: Twinkling Titanite - ?3Drop from Crystal Lizard on Small Platform Before Kalameet", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+],
+"Royal Wood - Artorias": [
+    DSRLocationData(11110816, f"RW: Boss Fog Wall - Artorias", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
+    DSRLocationData(11110742, f"RW: Knight Artorias Defeated", f"Artorias the Abysswalker Defeated", DSRLocationCategory.BOSS),
+    DSRLocationData(11110743, f"RW: Soul of Artorias", f"Firebomb", DSRLocationCategory.ENEMY_DROP),   
 ],                        
+
+
 "Royal Wood - After Hawkeye Gough": [
     DSRLocationData(11110747, f"RW: Black Dragon Kalameet Defeated", f"Black Dragon Kalameet Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110748, f"RW: Calamity Ring", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
@@ -966,6 +1156,9 @@ location_tables = {
     DSRLocationData(11110775, f"CotA: Twin Humanities - Under Pillar", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110776, f"CotA: White Titanite Slab - On Ledge", f"Firebomb", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110777, f"CotA: Soul of a Hero - Left Ledge Before Boss", f"Firebomb", DSRLocationCategory.ITEM_LOT),
+],
+"Chasm of the Abyss - Manus": [   
+    DSRLocationData(11110817, f"CotA: Boss Fog Wall - Manus", f"Firebomb", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110778, f"CotA: Manus, Father of the Abyss Defeated", f"Manus, Father of the Abyss Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110779, f"CotA: Soul of Manus", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110780, f"CotA: Chasm of the Abyss lit", f"Chasm of the Abyss lit", DSRLocationCategory.BONFIRE),
