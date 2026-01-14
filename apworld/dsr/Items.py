@@ -1043,7 +1043,10 @@ def UpgradeEquipment(itemcode, options, world):
             if row[4] == DSRUpgradeType.Infusable: 
                 itype = world.random.choice([typ for typ in infusion_types if typ[0] in options.upgraded_weapons_allowed_infusions])
             elif row[4] == DSRUpgradeType.InfusableRestricted:
-                itype = world.random.choice([typ for typ in restricted_infusion_types if typ[0] in options.upgraded_weapons_allowed_infusions])
+                allowed_types = [typ for typ in restricted_infusion_types if typ[0] in options.upgraded_weapons_allowed_infusions]
+                if len(allowed_types) == 0: # Can't upgrade restricted items because none of its types are allowed
+                    break;
+                itype = world.random.choice(allowed_types)
             elif row[4] == DSRUpgradeType.Unique: 
                 if "Normal" not in options.upgraded_weapons_allowed_infusions:
                     break
