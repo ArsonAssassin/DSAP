@@ -81,12 +81,14 @@ public partial class App : Application
     }
     public void Start()
     {
-        Context = new MainWindowViewModel("0.6.2");
+        Context = new MainWindowViewModel("0.6.2 - 0.6.5");
         
         Context.ClientVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
         Context.ConnectClicked += Context_ConnectClicked;
         Context.UnstuckClicked += Context_UnstuckClicked;
         Context.CommandReceived += Context_CommandReceived;
+        Context.OverlayEnabled = true;
+        Context.AutoscrollEnabled = true;
 
         Context.ConnectButtonEnabled = true;
 
@@ -498,10 +500,33 @@ public partial class App : Application
             Client.LocationCompleted += Client_LocationCompleted;
             Client.EnableLocationsCondition = () => Helpers.IsInGame();
 
-            Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+            if (Context.OverlayEnabled)
             {
-                YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
-            }));
+                Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+                {
+                    YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
+                }));
+            }
+            else // otherwise set a task to poll it until it's enabled.
+            {
+                Task.Run(async () =>
+                {
+                    while (true)
+                    {
+                        await Task.Delay(2000);
+                        if (Context.OverlayEnabled)
+                        {
+                            Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+                            {
+                                YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
+                            }));
+                            Log.Logger.Information("Overlay Enabled.");
+                            Client.AddOverlayMessage("Overlay Enabled.");
+                            break;
+                        }
+                    }
+                });
+            }
 
             await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
 
