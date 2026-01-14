@@ -61,6 +61,8 @@ progression_items = [
 
 item_name_groups = {
     "Key items"         : [item.name for item in item_dictionary.values() if item.category in [DSRItemCategory.KEY_ITEM]] + ["Covenant of Artorias","Orange Charred Ring", "Skull Lantern"],
+    "Fog Wall Keys"     : [item.name for item in item_dictionary.values() if item.category in [DSRItemCategory.FOGWALL]],
+    "Boss Fog Wall Keys": [item.name for item in item_dictionary.values() if item.category in [DSRItemCategory.BOSSFOGWALL]],
     "Consumables"       : [item.name for item in item_dictionary.values() if item.category in [DSRItemCategory.CONSUMABLE] and "soul" not in item.name.lower() and "fire keeper" not in item.name.lower()],
     "Souls"             : [item.name for item in item_dictionary.values() if item.category in [DSRItemCategory.CONSUMABLE] and "soul" in item.name.lower() and "fire keeper" not in item.name.lower()],
     "Rings"             : [item.name for item in item_dictionary.values() if item.category in [DSRItemCategory.RING]],
@@ -94,12 +96,16 @@ item_name_groups = {
 location_name_groups = {
     "All Doors": set(),
     "All Item Lots": set(),
-    "All DLC regions": set()
+    "All DLC regions": set(),
+    "All Fog Walls": set(),
+    "All Boss Fog Walls": set()
 }
 
 category_to_loc_name_map = {
     "DOOR": "All Doors",
-    "ITEM_LOT": "All Item Lots"
+    "ITEM_LOT": "All Item Lots",
+    "FOG_WALL": "All Fog Walls",
+    "BOSS_FOG_WALL": "All Boss Fog Walls"
 }
 
 # regions to add to "All DLC regions" group

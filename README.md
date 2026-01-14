@@ -13,7 +13,8 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 [Known issues](#Known-issues)  
 [Changelog](#Changelog)  
 [Roadmap](#Roadmap)  
-[Location Groups](#Location-Groups)
+[Location Groups](#Location-Groups)  
+[Item Groups](#Item-Groups)  
 [Artificial Logic Without Fogwall Locking](#Artificial-Logic-Without-Fogwall-Locking)  
 
 # How it works
@@ -157,7 +158,10 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Seamless co-op and "new save file" support
 
 # Location Groups
+All Boss Fog Walls  
 All DLC regions  
+All Doors  
+All Fog Walls  
 All Item Lots  
 Anor Londo  
 Ash Lake  
@@ -194,6 +198,35 @@ Upper New Londo Ruins
 Upper Undead Burg  
 Valley of the Drakes  
 Watchtower Basement  
+
+# Item Groups
+Ammunition  
+Armor  
+Boss Fog Wall Keys  
+Boss Souls  
+Carvings  
+Catalysts  
+Consumables  
+Covenant Items  
+Embers  
+Fire Keeper Souls  
+Fog Wall Keys  
+Junk  
+Key items  
+Lord Souls  
+Melee Weapons  
+Multiplayer Items  
+Progression Items  
+Ranged Weapons  
+Rings  
+Shields  
+Souls  
+Spell Tools  
+Spells  
+Talismans  
+Traps  
+Upgrade Materials  
+Weapons  
 
 # Artificial Logic Without Fogwall Locking
 * If you disable the options for fogwall or boss fogwall locking, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Such rules are listed below.

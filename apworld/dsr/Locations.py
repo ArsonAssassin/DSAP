@@ -104,7 +104,6 @@ class DSRLocation(Location):
             "Sen's Fortress - After Cage Key",
             "Sen's Fortress - Iron Golem",
             "Sen's Fortress - After Iron Golem",
-            "Sen's Fortress - After Cage Key",
             "Anor Londo",
             "Anor Londo - After First Fog",
             "Anor Londo - After Second Fog",
