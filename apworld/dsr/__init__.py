@@ -1,5 +1,5 @@
 # world/dsr/__init__.py
-from typing import Dict, Set, List, ClassVar
+from typing import Dict, Set, List, ClassVar, TextIO
 
 from BaseClasses import MultiWorld, Region, Item, Entrance, Tutorial, ItemClassification
 from Options import Toggle, OptionError
@@ -707,6 +707,7 @@ class DSRWorld(World):
         name_to_dsr_code = {item.name: item.dsr_code for item in item_dictionary.values()}
         # Create the mandatory lists to generate the player's output file
         items_id = []
+        items_names = []
         items_upgrades = []
         items_address = []
         locations_id = []
@@ -716,6 +717,7 @@ class DSRWorld(World):
             if location.item.player == self.player:
                 #we are the receiver of the item
                 items_id.append(location.item.code)
+                items_names.append(location.item.name)
                 upgrade = UpgradeEquipment(location.item.code, self.options, self)
                 items_upgrades.append(upgrade)
                 items_address.append(f'{location.player}:{location.address}')
@@ -756,4 +758,17 @@ class DSRWorld(World):
             "apworld_api_version" : "0.0.21.0" # Manually set our apworld api level, for detecting compatibility with client
         }
 
+        self.items_id = items_id
+        self.items_names = items_names
+        self.items_upgrades = items_upgrades
+        self.items_address = items_address
+
         return slot_data
+
+    def write_spoiler(self, spoiler_handle: TextIO) -> None:
+        if (len(self.items_upgrades) > 0):
+            spoiler_handle.write(f"\nDSR weapon upgrades for {self.multiworld.player_name[self.player]}:\n")
+            for i in range(len(self.items_upgrades)):
+                if self.items_upgrades[i] == None or self.items_upgrades[i] == "":
+                    continue
+                spoiler_handle.write(f"\nitem {self.items_names[i]} at loc {self.items_address[i]} upgraded to {self.items_upgrades[i]}.")
