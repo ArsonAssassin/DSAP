@@ -74,10 +74,13 @@ class DSRWorld(World):
 
 
     def generate_early(self):
+        # if upgrade level max < min, reverse them
         if self.options.upgraded_weapons_percentage.value > 0 and self.options.upgraded_weapons_max_level.value < self.options.upgraded_weapons_min_level.value:
-            raise OptionError("Upgraded weapons level options are invalid - Max is less than Min.")
+            (self.options.upgraded_weapons_min_level, self.options.upgraded_weapons_max_level) = (self.options.upgraded_weapons_max_level, self.options.upgraded_weapons_min_level)
+
+        # If % > 0 but no allowed infusion types, default to normal
         if self.options.upgraded_weapons_percentage.value > 0 and len(self.options.upgraded_weapons_allowed_infusions.value) == 0:
-            raise OptionError("Upgraded weapons percentage specified > 0 but no allowed weapon infusions specified (not even Normal).")
+            self.options.upgraded_weapons_allowed_infusions.value = ['Normal']
 
         self.enabled_location_categories.add(DSRLocationCategory.EVENT)
         self.enabled_location_categories.add(DSRLocationCategory.BOSS)
