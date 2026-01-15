@@ -103,7 +103,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
-## Version 0.0.21.0 (upcoming)
+## Version 0.0.21.0
 * Version update -> 0.0.21.0. Client is compatible with 0.0.20.0-generated apworlds.
 * Feature: Add yaml option "fogwall_lock" - introduces AP items which are "keys" that you must acquire before you can go through fog walls. Default on.
 * Feature: Add yaml option "boss_fogwall_lock" - like above, but for boss fog walls. Does not include Asylum Demon (first encounter), Sif, or Seath (2nd encounter), as all of them do not have fog walls upon your first entry to their arena.
