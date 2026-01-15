@@ -111,6 +111,9 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * Feature: Add Universal Tracker (UT) support for importing poptracker maps.
 * Feature: Added commands /fog and /bossfog for tracking which of the above keys you've acquired. Also added /lock to view all lockable events (currently only bossfogs and fogs).
 * Feature: Added command /diag to collect diagnostic information. If you report a bug, you can include the screenshot from this output for more information.
+* Feature: Add Overlay toggle (on by default).
+* Feature: Autoscroll on by default.
+* Feature: Upgrade information is now in spoiler log. 
 * Fix: Goal should now reliably send upon defeating Gwyn. Made SendGoal put its work on the scheduler to avoid a deadlock, and added a message for when it does try to send.
 * Fix: Various fixes to async processing.
 * Fix: Added command /goalcheck to re-try sending the goal if goal conditions have been met (either Gwyn is defeated or player is in NG+). If it works or doesn't work, please send us a screenshot with the results.
