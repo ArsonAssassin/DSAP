@@ -275,8 +275,12 @@ namespace DSAP
             var baseBonfire = OffsetPointer(baseAddress, 0x5B);
             return baseBonfire;
         }
+        private static List<ILocation> CachedItemLotLocations = null;
         public static List<ILocation> GetItemLotLocations()
         {
+            if (CachedItemLotLocations != null)
+                return CachedItemLotLocations;
+
             List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetItemLotFlags();
             var baseAddress = GetEventFlagsOffset();
@@ -290,6 +294,7 @@ namespace DSAP
                     Id = lot.Id,
                 });
             }
+            CachedItemLotLocations = locations;
             return locations;
         }
         public static bool ReadBonfireFlag(string name)

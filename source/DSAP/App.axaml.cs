@@ -528,7 +528,7 @@ public partial class App : Application
                 });
             }
 
-            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, ItemsHandlingFlags.IncludeStartingInventory);
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
             if (!Client.IsLoggedIn)
             {
@@ -777,28 +777,6 @@ public partial class App : Application
             SendGoal();
         }
 
-        /* If the check was in non-itemlot locations, give the player items for it */
-        if (ConditionRewardMap.ContainsKey(locid))
-        {
-            Log.Logger.Debug($"Found location in 'other' checks");
-            var itemLot = ConditionRewardMap[locid];
-            foreach (var item in itemLot.Items)
-            {
-                AddAbstractItem(item.LotItemCategory, item.LotItemId);
-                Log.Logger.Debug($"Gave player {item.LotItemId}");
-            }
-        }
-        /* If the check was in special-itemlot locations, give the player items for it */
-        if (SpecialItemLotsMap.ContainsKey(locid))
-        {
-            Log.Logger.Debug($"Found location in 'special' checks");
-            var itemLot = SpecialItemLotsMap[locid];
-            foreach (var item in itemLot.Items)
-            {
-                AddAbstractItem(item.LotItemCategory, item.LotItemId);
-                Log.Logger.Debug($"Gave player {item.LotItemId}");
-            }
-        }
         Log.Logger.Debug($"Location Completed: {e.CompletedLocation.Name} at {e.CompletedLocation.Id}");
     }
 
@@ -922,6 +900,17 @@ public partial class App : Application
     {
         LogItem(e.Item, 1);
         bool success = false;
+
+        if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot)
+        {
+            var itemLocations = Helpers.GetItemLotLocations();
+            if (itemLocations.Any(x => x.Id == e.LocationId))
+            {
+                Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
+                return; // Don't need to receive item, player already did.
+            }
+        }
+
         if (Helpers.IsInGame())
         {
             var itemId = e.Item.Id;
