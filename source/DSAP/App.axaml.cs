@@ -51,6 +51,8 @@ public partial class App : Application
     private bool deathlink_enabled = false;
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
     public static DarkSoulsOptions DSOptions;
+    public static bool SaveidSet = false;
+    public static bool CheckSaveId = true;
     private static bool _goalSent = false;
     private readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
     static List<EmkController> EmkControllers = [];
@@ -112,6 +114,62 @@ public partial class App : Application
             Log.Logger.Warning(" /bossfog [Locked/Unlocked/All] - Display list of locked or unlocked boss fog walls, or status of all of them (default).");
             Log.Logger.Warning("--- End of DSAP commands. ---");
             Client?.SendMessage(a.Command); /* send original command through client for the rest of /help - maybe player will have something if they are an admin. */
+        }
+        else if (command.StartsWith("/resetsave"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 1)
+            {
+                Log.Logger.Warning("WARNING: You are attempting to reset your save.");
+                Log.Logger.Warning("This will resend any items received from non-item lot checks,");
+                Log.Logger.Warning("  and any received from other players or the server.");
+                Log.Logger.Warning("This will NOT send items in this seed which would be");
+                Log.Logger.Warning("  located at any item lots you have already picked up.");
+                Log.Logger.Warning("If you understand and wish to continue, type:");
+                Log.Logger.Warning("  /resetsave confirm");
+            }
+            else if (cmdparts.Length == 2)
+            {
+                if (cmdparts[1] == "confirm")
+                {
+                    Helpers.SetSavedSeedHash(0);
+                    Helpers.SetSavedSaveId(0);
+                    CheckSaveId = true;
+                }
+                else
+                {
+                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Try /resetsave");
+                }
+            }
+            else
+            {
+                Log.Logger.Warning($"Invalid command: \"{a.Command}\". Try /resetsave");
+            }
+        }
+        else if (command.StartsWith("/saveloaded"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 1)
+            {
+                Log.Logger.Warning("WARNING: You are indicating that you now loaded the correct save.");
+                Log.Logger.Warning("As an extra layer of confirmation, please type:");
+                Log.Logger.Warning("  /saveloaded confirm");
+            }
+            else if (cmdparts.Length == 2)
+            {
+                if (cmdparts[1] == "confirm")
+                {
+                    CheckSaveId = true;
+                }
+                else
+                {
+                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Try /saveloaded");
+                }
+            }
+            else
+            {
+                Log.Logger.Warning($"Invalid command: \"{a.Command}\". Try /saveloaded");
+            }   
         }
         else if (command.StartsWith("/deathlink"))
         {
@@ -341,8 +399,13 @@ public partial class App : Application
         Log.Logger.Warning($"locs={Client?.CurrentSession.Locations.AllLocationsChecked.Count}/{Client?.CurrentSession.Locations.AllLocations.Count}");
         Log.Logger.Warning($"items received={Client?.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap?.Count},crm={ConditionRewardMap?.Count}");
         Log.Logger.Warning($"version info={DSOptions?.VersionInfoString()}, cdv={Archipelago.Core.AvaloniaGUI.Utils.Helpers.GetAppVersion()}");
+        Log.Logger.Warning($"saveidset={SaveidSet}");
         if (Client != null && Helpers.IsInGame())
         {
+            ushort seedhash = Helpers.GetSavedSeedHash();
+            byte saveid = Helpers.GetSavedSaveId();
+            Log.Logger.Warning($"saved seedhash={seedhash}, saveid={saveid.ToString("X")}");
+
             ulong baseb = Helpers.GetBaseBAddress();
             Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
             if (baseb > 0)
@@ -498,7 +561,7 @@ public partial class App : Application
             Client.ItemReceived += Client_ItemReceived;
             Client.MessageReceived += Client_MessageReceived;
             Client.LocationCompleted += Client_LocationCompleted;
-            Client.EnableLocationsCondition = () => Helpers.IsInGame();
+            Client.EnableLocationsCondition = () => SaveidSet && Helpers.IsInGame();
 
             if (Context.OverlayEnabled)
             {
@@ -557,6 +620,7 @@ public partial class App : Application
             Client.MonitorLocations(fullLocationsList);
 
             StartEmkWatchers(EmkControllers);
+            StartInGameWatcher();
         }
         else
         {
@@ -580,6 +644,48 @@ public partial class App : Application
 
 
     }
+
+    private void StartInGameWatcher()
+    {
+        // Every second, if player is in game. If so, validate that they are in the same save 
+        Task.Run(async () =>
+        {
+            try
+            {
+                while (true)
+                {
+                    if (!Client.IsConnected)
+                    {
+                        Log.Logger.Error("Client disconnection detected - stopping ingame listener");
+                        return;
+                    }
+                    bool isInGame = Helpers.IsInGame();
+                    if (!isInGame)
+                    {
+                        if (SaveidSet)
+                        {
+                            SaveidSet = false;
+                            CheckSaveId = true;
+                        }
+                    }
+                    if (isInGame && !SaveidSet && CheckSaveId)
+                    {
+                        if (await CheckClientSave())
+                        {
+                            SaveidSet = true;
+                            await Client.ReceiveReady();
+                        }
+                    }
+                    await Task.Delay(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Exception in ingame listener: {ex.Message}\n{ex.InnerException}\n{ex.Source}");
+            }
+        });
+    }
+
     private void Context_UnstuckClicked(object? sender, EventArgs e)
     {
         Context.UnstuckButtonEnabled = false;
@@ -901,18 +1007,19 @@ public partial class App : Application
         LogItem(e.Item, 1);
         bool success = false;
 
-        if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot)
+        if (SaveidSet && Helpers.IsInGame())
         {
-            var itemLocations = Helpers.GetItemLotLocations();
-            if (itemLocations.Any(x => x.Id == e.LocationId))
+            // First, ignore any items which came from "item lots". Player already got them!
+            if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot)
             {
-                Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
-                return; // Don't need to receive item, player already did.
+                var itemLocations = Helpers.GetItemLotLocations();
+                if (itemLocations.Any(x => x.Id == e.LocationId))
+                {
+                    Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
+                    return; 
+                }
             }
-        }
 
-        if (Helpers.IsInGame())
-        {
             var itemId = e.Item.Id;
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
             if (itemToReceive != null)
@@ -960,7 +1067,7 @@ public partial class App : Application
             Task.Run(async () =>
             {
                 /* Check every second if player is in game again yet */
-                while(!Helpers.IsInGame())
+                while(!SaveidSet || !Helpers.IsInGame())
                 {
                     await Task.Delay(1000);
                 }
@@ -971,6 +1078,58 @@ public partial class App : Application
                 Client.ReceiveReady();
             });
         }
+    }
+    // Upon loading in, check if save slot is good.
+    private static async Task<bool> CheckClientSave()
+    {
+        //1) Check if seed hash is saved in flags.
+        //   If it's blank, fill it in. If it's mismatched and not blank, send error.
+        //2) Check if a "saveid" is saved in flags
+        //2a) If so, and it does not match "loaded saveid", proceed to 3.If it does match, done.
+        //2b) If not, request one.Save that into "saveid" flags.Then proceed.
+        //3) Then, send event "save id update". This should "reset" the "received items" list.
+
+        if (!Helpers.IsInGame())
+        {
+            return false;
+        }
+
+        bool success = false;
+        // Get seed saved in event flags
+        ushort seed = Helpers.GetSavedSeedHash();
+        ushort roomseed = Helpers.HashSeed(Client.CurrentSession.RoomState.Seed);
+        Log.Logger.Debug($"Roomseed={roomseed}.");
+        if (seed == 0) // No seed? save seed, and get a new saveid.
+        {
+            seed = roomseed;
+            Log.Logger.Debug($"No seed found. Setting seed {seed}.");
+            Helpers.SetSavedSeedHash(seed);
+
+            byte newsaveid = await Client.RequestNewSaveId();
+            Helpers.SetSavedSaveId(newsaveid);
+            success = await Client.UpdateSaveId(newsaveid);
+        }
+        else if (seed == roomseed) // "correct seed"
+        {
+            byte saveid = Helpers.GetSavedSaveId(); // check saveid
+            if (saveid == 0) // no saveid? Get a new saveid
+            {
+                byte newsaveid = await Client.RequestNewSaveId();
+                Helpers.SetSavedSaveId(newsaveid);
+                saveid = newsaveid;
+            }
+            success = await Client.UpdateSaveId(saveid);
+        }
+        else // seed doesn't match.
+        {
+            Log.Logger.Error($"Your saved seed hash {seed} does not match the room seed hash {roomseed}.");
+            Log.Logger.Error($"This means you loaded a save that was used in a different AP instance.");
+            Log.Logger.Warning($"If you want to reset your seed and have this save treated as a new save: Type /resetsave");
+            Log.Logger.Warning($"If you loaded the wrong save: Switch to a correct save, then type /saveloaded");
+            CheckSaveId = false; // don't keep sending message until user has /resetsave or /saveloaded
+            return false;
+        }
+        return success;
     }
     private static void DetectEventKeys()
     {
@@ -1142,8 +1301,11 @@ public partial class App : Application
         Client.AddOverlayMessage("Connected to Archipelago");
         Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
         Client.AddOverlayMessage($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
-        /* Make ready to receive items */
 
+        /* Initialize flag to off - to prevent receiving items until we have set the saveid */
+        SaveidSet = false; 
+
+        /* Make ready to receive items */
         /* If we haven't yet initialized the dictionary, do so. */
         if (ItemLotReplacementMap.Count == 0)
         {
