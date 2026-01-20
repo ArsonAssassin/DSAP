@@ -1012,11 +1012,16 @@ public partial class App : Application
             // First, ignore any items which came from "item lots". Player already got them!
             if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot)
             {
-                var itemLocations = Helpers.GetItemLotLocations();
-                if (itemLocations.Any(x => x.Id == e.LocationId))
+                // Except "special item lots" - where we need extra processing (e.g. fog wall keys, traps, etc).
+                if (!SpecialItemLotsMap.ContainsKey((int)e.LocationId)) 
                 {
-                    Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
-                    return; 
+                    // For non-special item lots, player already picked it up!
+                    var itemLocations = Helpers.GetItemLotLocations(); 
+                    if (itemLocations.Any(x => x.Id == e.LocationId))
+                    {
+                        Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
+                        return;
+                    }
                 }
             }
 
@@ -1038,8 +1043,6 @@ public partial class App : Application
                         Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
                         Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
                     }
-
-
                 }
                 AddAbstractItem((int)itemToReceive.Category, itemToReceive.Id);
 
