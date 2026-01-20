@@ -275,8 +275,12 @@ namespace DSAP
             var baseBonfire = OffsetPointer(baseAddress, 0x5B);
             return baseBonfire;
         }
+        private static List<ILocation> CachedItemLotLocations = null;
         public static List<ILocation> GetItemLotLocations()
         {
+            if (CachedItemLotLocations != null)
+                return CachedItemLotLocations;
+
             List<ILocation> locations = new List<ILocation>();
             var lotFlags = GetItemLotFlags();
             var baseAddress = GetEventFlagsOffset();
@@ -290,6 +294,7 @@ namespace DSAP
                     Id = lot.Id,
                 });
             }
+            CachedItemLotLocations = locations;
             return locations;
         }
         public static bool ReadBonfireFlag(string name)
@@ -497,7 +502,7 @@ namespace DSAP
 
                                     if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
                                     {
-                                        Log.Logger.Debug($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with prism stone.");
+                                        Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with prism stone.");
                                         var newspecialitemlot = new ItemLot
                                         {
                                             Rarity = 1,
@@ -1847,7 +1852,7 @@ namespace DSAP
                 EmkController? newemk = events.Find(x => x.ApId == item);
                 if (newemk != null)
                 {
-                    Log.Logger.Debug($"Adding {newemk.Name} to list. Id:slot={newemk.Eventid}:{newemk.Eventslot}");
+                    Log.Logger.Verbose($"Adding {newemk.Name} to list. Id:slot={newemk.Eventid}:{newemk.Eventslot}");
                     result.Add(newemk);
                 }
             }
@@ -1868,6 +1873,67 @@ namespace DSAP
             }
             if (num_released > 0)
                 Log.Logger.Debug($"Released all emks, {num_released} controllers affected.");
+        }
+
+        // Eventflag   Offset
+        // 960-967   = 123
+        // 968-975   = 122
+        // 976-983   = 121
+        // 984-991   = 120
+        // 992-999   = 127
+        // 1000-1007 = 131
+        // 1008-1015 = 130
+        // 1016-1023 = 129
+        // 1024-1031 = 128
+        // -> 3 bytes free, offset 124-126. Use first 2 for seed hash, 3rd for SaveId.
+        private static ulong GetSaveIdAddress()
+        {
+            var initoff = Helpers.GetEventFlagsOffset();
+            int flag = 960;
+            var off = Helpers.GetEventFlagOffset(flag).Item1 + 3; // 3rd byte after this one
+            // here we have 3 bytes of memory available.
+            Log.Logger.Debug($"saveid address = {(off + initoff).ToString("X")}");
+            return off + initoff;
+        }
+        private static ulong GetSaveSeedAddress()
+        {
+            var initoff = Helpers.GetEventFlagsOffset();
+            int flag = 960;
+            var off = Helpers.GetEventFlagOffset(flag).Item1 + 1; // 1st and 2nd byte after this one
+            // here we have 3 bytes of memory available.
+            Log.Logger.Debug($"Seed address = {(off + initoff).ToString("X")}");
+            return off + initoff;
+        }
+        internal static byte GetSavedSaveId()
+        {
+            ulong address = GetSaveIdAddress();
+            return Memory.ReadByte(address);
+        }
+
+        internal static void SetSavedSaveId(byte newsaveid)
+        {
+            ulong address = GetSaveIdAddress();
+            Memory.Write(address, newsaveid);
+        }
+        internal static ushort GetSavedSeedHash()
+        {
+            ulong address = GetSaveSeedAddress();
+            return Memory.ReadUShort(address);
+        }
+        internal static void SetSavedSeedHash(ushort seedhash)
+        {
+            ulong address = GetSaveSeedAddress();
+            Memory.Write(address, seedhash);
+        }
+        internal static ushort HashSeed(string seed)
+        {
+            uint result = 31719121;
+            foreach (char c in seed)
+            {
+                result ^= c;
+                result = UInt32.RotateLeft(result, 11);
+            }
+            return (ushort)(result % 65000 + 1); // ensure it is a short, but non-zero.
         }
     }
 }
