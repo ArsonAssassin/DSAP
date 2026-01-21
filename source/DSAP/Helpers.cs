@@ -1885,7 +1885,9 @@ namespace DSAP
         // 1008-1015 = 130
         // 1016-1023 = 129
         // 1024-1031 = 128
-        // -> 3 bytes free, offset 124-126. Use first 2 for seed hash, 3rd for SaveId.
+        // -> 3 bytes free, offset 124-126. Use [960]+1-2 for seed hash, [960]+3 for SaveId.
+        // This gap happens again every 1000 flags (until 9k), for each map's flags, in each category of flags
+        // -> use [1960]+1-3 for slot id
         private static ulong GetSaveIdAddress()
         {
             var initoff = Helpers.GetEventFlagsOffset();
@@ -1902,6 +1904,15 @@ namespace DSAP
             var off = Helpers.GetEventFlagOffset(flag).Item1 + 1; // 1st and 2nd byte after this one
             // here we have 3 bytes of memory available.
             Log.Logger.Debug($"Seed address = {(off + initoff).ToString("X")}");
+            return off + initoff;
+        }
+        private static ulong GetSaveSlotAddress()
+        {
+            var initoff = Helpers.GetEventFlagsOffset();
+            int flag = 1960;
+            var off = Helpers.GetEventFlagOffset(flag).Item1 + 1; // Up to 3 bytes
+            // here we have 3 bytes of memory available.
+            Log.Logger.Debug($"Slot address = {(off + initoff).ToString("X")}");
             return off + initoff;
         }
         internal static byte GetSavedSaveId()
@@ -1934,6 +1945,16 @@ namespace DSAP
                 result = UInt32.RotateLeft(result, 11);
             }
             return (ushort)(result % 65000 + 1); // ensure it is a short, but non-zero.
+        }
+        internal static ushort GetSavedSlot()
+        {
+            ulong address = GetSaveSlotAddress();
+            return Memory.ReadUShort(address);
+        }
+        internal static void SetSavedSlot(ushort slot)
+        {
+            ulong address = GetSaveSlotAddress();
+            Memory.Write(address, slot);
         }
     }
 }

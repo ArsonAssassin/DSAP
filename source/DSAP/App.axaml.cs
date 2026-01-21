@@ -56,6 +56,7 @@ public partial class App : Application
     private static bool _goalSent = false;
     private readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
     static List<EmkController> EmkControllers = [];
+    private static DarkSoulsClient dsrClient = null;
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -169,7 +170,28 @@ public partial class App : Application
             else
             {
                 Log.Logger.Warning($"Invalid command: \"{a.Command}\". Try /saveloaded");
-            }   
+            }
+        }
+        else if (command.StartsWith("/pid"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 2)
+            {
+                if (App.dsrClient == null)
+                {
+                    Log.Logger.Error("Connect first, then try again.");
+                    return;
+                }
+                int pid = int.Parse(cmdparts[1]);
+                if (App.dsrClient.ProcIds.Contains(pid))
+                {
+                    App.dsrClient.ProcId = pid;
+                }   
+                else
+                {
+                    Log.Logger.Error("Invalid pid, please try again.");
+                }
+            }
         }
         else if (command.StartsWith("/deathlink"))
         {
@@ -403,8 +425,10 @@ public partial class App : Application
         if (Client != null && Helpers.IsInGame())
         {
             ushort seedhash = Helpers.GetSavedSeedHash();
+            ushort slot = Helpers.GetSavedSlot();
+
             byte saveid = Helpers.GetSavedSaveId();
-            Log.Logger.Warning($"saved seedhash={seedhash}, saveid={saveid.ToString("X")}");
+            Log.Logger.Warning($"saved seedhash={seedhash}, slot={slot}, saveid={saveid.ToString("X")}");
 
             ulong baseb = Helpers.GetBaseBAddress();
             Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
@@ -520,9 +544,12 @@ public partial class App : Application
             }
             Client.CancelMonitors();
         }
-        DarkSoulsClient client = new DarkSoulsClient();
+        if (dsrClient == null)
+        {
+            dsrClient = new DarkSoulsClient();
+        }
 
-        var connected = client.Connect();
+        var connected = dsrClient.Connect();
         if (!connected)
         {
             Log.Logger.Error("Dark Souls not running, open Dark Souls before connecting!");
@@ -530,7 +557,7 @@ public partial class App : Application
             return;
         }
 
-        Client = new ArchipelagoClient(client);
+        Client = new ArchipelagoClient(dsrClient);
 
         AllItems = Helpers.GetAllItems();
         Client.Connected += OnConnected;
@@ -591,7 +618,7 @@ public partial class App : Application
                 });
             }
 
-            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, startReadyToReceiveItems : false);
 
             if (!Client.IsLoggedIn)
             {
@@ -1100,13 +1127,17 @@ public partial class App : Application
         bool success = false;
         // Get seed saved in event flags
         ushort seed = Helpers.GetSavedSeedHash();
+        ushort slot = Helpers.GetSavedSlot();
         ushort roomseed = Helpers.HashSeed(Client.CurrentSession.RoomState.Seed);
-        Log.Logger.Debug($"Roomseed={roomseed}.");
+        ushort connslot = (ushort)Client.CurrentSession.ConnectionInfo.Slot;
+        Log.Logger.Debug($"Roomseed={roomseed}, connslot={connslot}.");
         if (seed == 0) // No seed? save seed, and get a new saveid.
         {
             seed = roomseed;
+            slot = connslot;
             Log.Logger.Debug($"No seed found. Setting seed {seed}.");
             Helpers.SetSavedSeedHash(seed);
+            Helpers.SetSavedSlot(slot);
 
             byte newsaveid = await Client.RequestNewSaveId();
             Helpers.SetSavedSaveId(newsaveid);
@@ -1114,21 +1145,34 @@ public partial class App : Application
         }
         else if (seed == roomseed) // "correct seed"
         {
-            byte saveid = Helpers.GetSavedSaveId(); // check saveid
-            if (saveid == 0) // no saveid? Get a new saveid
+            if (slot == connslot)
             {
-                byte newsaveid = await Client.RequestNewSaveId();
-                Helpers.SetSavedSaveId(newsaveid);
-                saveid = newsaveid;
+                byte saveid = Helpers.GetSavedSaveId(); // check saveid
+                if (saveid == 0) // no saveid? Get a new saveid
+                {
+                    byte newsaveid = await Client.RequestNewSaveId();
+                    Helpers.SetSavedSaveId(newsaveid);
+                    saveid = newsaveid;
+                }
+                success = await Client.UpdateSaveId(saveid);
             }
-            success = await Client.UpdateSaveId(saveid);
+            else // seed matches, but slot does not
+            {
+                Log.Logger.Error($"Your saved slot # ({slot}) does not match the slot # you connected to ({connslot}).");
+                Log.Logger.Error($"This means you loaded a save that was used in a slot in this seed.");
+                Log.Logger.Warning("\nRECOMMENDED: Close DSAP and reconnect to the correct slot.");
+                Log.Logger.Warning("\nIf you want to reset the saved slot for this game save and have this save treated as a new save: Type /resetsave");
+                Log.Logger.Warning("If you loaded the wrong save: Switch to a correct save, then type /saveloaded");
+                CheckSaveId = false; // don't keep sending message until user has /resetsave or /saveloaded
+                return false;
+            }
         }
         else // seed doesn't match.
         {
-            Log.Logger.Error($"Your saved seed hash {seed} does not match the room seed hash {roomseed}.");
+            Log.Logger.Error($"Your saved seed hash ({seed}) does not match the room seed hash ({roomseed}).");
             Log.Logger.Error($"This means you loaded a save that was used in a different AP instance.");
-            Log.Logger.Warning($"If you want to reset your seed and have this save treated as a new save: Type /resetsave");
-            Log.Logger.Warning($"If you loaded the wrong save: Switch to a correct save, then type /saveloaded");
+            Log.Logger.Warning("\nIf you want to reset your seed and have this save treated as a new save: Type /resetsave");
+            Log.Logger.Warning("If you loaded the wrong save: Switch to a correct save, then type /saveloaded");
             CheckSaveId = false; // don't keep sending message until user has /resetsave or /saveloaded
             return false;
         }
