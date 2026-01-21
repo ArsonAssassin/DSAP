@@ -13,6 +13,7 @@ namespace DSAP
     {
         public bool IsConnected { get; set; }
         public int ProcId { get; set; } = 0;
+        public List<int> ProcIds { get; set; } = [];
         public string ProcessName { get; set; }
         public DarkSoulsClient()
         {
@@ -22,7 +23,7 @@ namespace DSAP
         {
             try
             {
-                ProcId = Memory.GetProcIdFromExe(ProcessName);
+                ProcIds = Memory.GetProcIdsFromExe(ProcessName);
             }
             catch
             {
@@ -31,18 +32,34 @@ namespace DSAP
                 return false;
             }
 
-            if (ProcId == 0)
+            if (ProcIds.Count == 0)
             {
                 Log.Error($"{ProcessName} not found.");
                 IsConnected = false;
                 return false;
             }
+
+            if (ProcIds.Count == 1)
+                ProcId = ProcIds[0];
+
+            // If there are multiple, wait for user to choose.
+            if (ProcIds.Count > 1 && ProcId == 0)
+            {
+                Log.Error($"Multiple instance of DSR detected. Choose one by typing /pid value. PID list:");
+                foreach (int id in ProcIds)
+                {
+                    Log.Error($"{id}");
+                }
+
+                IsConnected = false;
+                return false;
+            }
+
             /* Log first connection */
             if (!IsConnected)
                 Log.Information($"Connecting to {ProcessName}");
             IsConnected = true;
             return true;
         }
-
     }
 }

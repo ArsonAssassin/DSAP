@@ -56,6 +56,7 @@ public partial class App : Application
     private static bool _goalSent = false;
     private readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
     static List<EmkController> EmkControllers = [];
+    private static DarkSoulsClient dsrClient = null;
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -169,7 +170,28 @@ public partial class App : Application
             else
             {
                 Log.Logger.Warning($"Invalid command: \"{a.Command}\". Try /saveloaded");
-            }   
+            }
+        }
+        else if (command.StartsWith("/pid"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 2)
+            {
+                if (App.dsrClient == null)
+                {
+                    Log.Logger.Error("Connect first, then try again.");
+                    return;
+                }
+                int pid = int.Parse(cmdparts[1]);
+                if (App.dsrClient.ProcIds.Contains(pid))
+                {
+                    App.dsrClient.ProcId = pid;
+                }   
+                else
+                {
+                    Log.Logger.Error("Invalid pid, please try again.");
+                }
+            }
         }
         else if (command.StartsWith("/deathlink"))
         {
@@ -520,9 +542,12 @@ public partial class App : Application
             }
             Client.CancelMonitors();
         }
-        DarkSoulsClient client = new DarkSoulsClient();
+        if (dsrClient == null)
+        {
+            dsrClient = new DarkSoulsClient();
+        }
 
-        var connected = client.Connect();
+        var connected = dsrClient.Connect();
         if (!connected)
         {
             Log.Logger.Error("Dark Souls not running, open Dark Souls before connecting!");
@@ -530,7 +555,7 @@ public partial class App : Application
             return;
         }
 
-        Client = new ArchipelagoClient(client);
+        Client = new ArchipelagoClient(dsrClient);
 
         AllItems = Helpers.GetAllItems();
         Client.Connected += OnConnected;
