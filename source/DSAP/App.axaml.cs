@@ -618,7 +618,7 @@ public partial class App : Application
                 });
             }
 
-            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, startReadyToReceiveItems : false);
 
             if (!Client.IsLoggedIn)
             {
