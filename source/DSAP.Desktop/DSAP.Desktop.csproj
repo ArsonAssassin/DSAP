@@ -15,9 +15,9 @@
     <!-- App Identifier -->
     <ApplicationId>com.arsonassassin.dsap</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.0.21.0</ApplicationDisplayVersion>
-    <ApplicationVersion>0.0.21.0</ApplicationVersion>
-    <Version>0.0.21.0</Version>
+    <ApplicationDisplayVersion>0.0.21.1</ApplicationDisplayVersion>
+    <ApplicationVersion>0.0.21.1</ApplicationVersion>
+    <Version>0.0.21.1</Version>
     <!-- Single File Publishing Properties -->
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
