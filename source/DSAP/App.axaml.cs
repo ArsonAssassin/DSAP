@@ -652,6 +652,7 @@ public partial class App : Application
         else
         {
             StartEventWatcher();
+            Helpers.ListItemLots();
         }
         //Helpers.MonitorLastBonfire((lastBonfire) =>
         //{
