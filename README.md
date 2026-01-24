@@ -94,6 +94,7 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 # Known issues
 * Items will only ever be sent to one save. Fixing this, and potentially allowing for seamless co-op toleration, is planned for the near future.
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings. Randomized starting gear, and potentially gifts, is planned for the future.
+* Boss fog walls in the DLC do not correctly "Lock" with boss fog wall locks on.
 * v0.0.20.0 and lower: Goal may not send upon completion. It is recommended to upgrade the DSAP client to v0.0.21.0, connect, and run the /goalcheck command. v0.0.21.0 of the client is fully compatible with v0.0.20.0-generated apworlds.
 * v0.0.19.1 and lower: If you receive an item while on the main menu, it will be lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
   * Furthermore, **you should close the client before quitting to menu or quitting the game.**
