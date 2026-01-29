@@ -252,37 +252,73 @@ stages:
           Write-Host "Files in Artifact Staging Directory after creating .apworld:"
           Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse | ForEach-Object { Write-Host $_.FullName }
     - task: DotNetCoreCLI@2
+      displayName: 'Publish Win64'
       inputs:
         command: 'publish'
         publishWebProjects: false
         projects: '$(solution)'
-        arguments: '-c Release'
+        arguments: '-c Release -r win-x64 --self-contained true -p:PublishSingleFile=true'
         zipAfterPublish: false
-
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Linux x64'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(solution)'
+        arguments: '-c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true'
+        zipAfterPublish: false
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Mac x64 (Intel)'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(solution)'
+        arguments: '-c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true'
+        zipAfterPublish: false
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Mac x64 (ARM)'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(solution)'
+        arguments: '-c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true'
+        zipAfterPublish: false
     - task: PowerShell@2
       name: PackageApplication
       inputs:
         targetType: 'inline'
         script: |
-          $publishDir = "bin/release/net8.0/win-x64/publish"
-          Write-Host "Enumerating files in $(Build.SourcesDirectory)\source\DSAP.Desktop\$publishDir"
-          Get-Childitem -Path "$(Build.SourcesDirectory)/source" -Recurse | ForEach-Object { Write-Host $_.FullName }
-          $files = Get-ChildItem -Path "$(Build.SourcesDirectory)\source\DSAP.Desktop\$publishDir" -Include "*.exe", "*.pdb" -Recurse
-          if (-not $files) {
-              Write-Error "No files found in $publishDir"
-              exit 1
+          $platforms = @(
+            @{Runtime="win-x64"; Name="Windows-x64"},
+            @{Runtime="linux-x64"; Name="Linux-x64"},
+            @{Runtime="osx-x64"; Name="macOS-x64"},
+            @{Runtime="osx-arm64"; Name="macOS-ARM64"}
+          )
+          foreach ($platform in $platforms) {
+            $publishDir = "bin/release/net8.0/$($platform.Runtime)/publish"
+            Write-Host "Processing $($platform.Name) from $publishDir"
+            Write-Host "Enumerating files in $(Build.SourcesDirectory)\source\DSAP.Desktop\$publishDir"
+            Get-Childitem -Path "$(Build.SourcesDirectory)/source" -Recurse | ForEach-Object { Write-Host $_.FullName }
+            $files = Get-ChildItem -Path "$(Build.SourcesDirectory)\source\DSAP.Desktop\$publishDir" -Recurse
+            if (-not $files) {
+                Write-Error "No files found in $publishDir"
+                exit 1
+            }
+            # Create directory for files
+            $platformDir = "$(Build.ArtifactStagingDirectory)/app-$($platform.Runtime)"
+            New-Item -ItemType Directory -Path $platformDir -Force
+
+            $files | ForEach-Object {
+              Write-Host "Copying $($_.Name) to $platformDir"
+              Copy-Item -Path $_.FullName -Destination $platformDir
+            }
+            $zipName = "$(projectName)-$($platform.Name).zip"
+            Write-Host "Zipping $platformDir to $zipName"
+            # Create zip file
+            Compress-Archive -Path "$platformDir/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$zipName"
+            
+            Remove-Item -Path $platformDir -Recurse -Force
           }
-          # Create directory for files
-          New-Item -ItemType Directory -Path "$(Build.ArtifactStagingDirectory)/app" -Force
-          $files | ForEach-Object {
-            # Copy files to staging directory
-            Write-Host "Copying $($_.FullName) to $(Build.ArtifactStagingDirectory)/app"
-            Copy-Item -Path $_.FullName -Destination "$(Build.ArtifactStagingDirectory)/app"
-          }
-          Write-Host "Zipping $(Build.ArtifactStagingDirectory)/app/* to $(Build.ArtifactStagingDirectory)/$(projectName).zip"
-          # Create zip file
-          Compress-Archive -Path "$(Build.ArtifactStagingDirectory)/app/*" -DestinationPath "$(Build.ArtifactStagingDirectory)/$(projectName).zip"
-          
           # List all files in the artifact staging directory for debugging
           Write-Host "Files in Artifact Staging Directory before GitHub Release:"
           Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Recurse | ForEach-Object { Write-Host $_.FullName }
