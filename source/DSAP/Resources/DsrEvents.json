@@ -335,7 +335,7 @@
     "Itemname": "Boss Fog Wall Key - Sanctuary Guardian",
     "Itemid": 11111246,
     "Flag": 11215002,
-    "Eventid": 11215002,
+    "Eventid": 11215000,
     "Eventslot": 0,
     "Type": "BossFogWall"
   },
@@ -345,7 +345,7 @@
     "Itemname": "Boss Fog Wall Key - Artorias",
     "Itemid": 11111247,
     "Flag": 11215012,
-    "Eventid": 11215012,
+    "Eventid": 11215010,
     "Eventslot": 0,
     "Type": "BossFogWall"
   },
@@ -355,7 +355,7 @@
     "Itemname": "Boss Fog Wall Key - Manus",
     "Itemid": 11111248,
     "Flag": 11215022,
-    "Eventid": 11215022,
+    "Eventid": 11215020,
     "Eventslot": 0,
     "Type": "BossFogWall"
   },
