@@ -502,5 +502,158 @@
     "UpgradeType": "None",
     "Category": "Consumables",
     "ApId": 11112062
+  },
+  {
+    "Name": "Firebomb x6",
+    "Id": 292,
+    "StackLimit": 99,
+    "Quantity": 6,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112100
+  },
+  {
+    "Name": "Humanity x3",
+    "Id": 500,
+    "StackLimit": 99,
+    "Quantity": 3,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112101
+  },
+  {
+    "Name": "Cracked Red Eye Orb x4",
+    "Id": 111,
+    "StackLimit": 99,
+    "Quantity": 4,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112102
+  },
+  {
+    "Name": "Homeward Bone x6",
+    "Id": 330,
+    "StackLimit": 99,
+    "Quantity": 6,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112103
+  },
+  {
+    "Name": "Lloyd's Talisman x4",
+    "Id": 296,
+    "StackLimit": 99,
+    "Quantity": 4,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112104
+  },
+  {
+    "Name": "Throwing Knife x10",
+    "Id": 290,
+    "StackLimit": 99,
+    "Quantity": 10,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112105
+  },
+  {
+    "Name": "Black Firebomb x5",
+    "Id": 297,
+    "StackLimit": 99,
+    "Quantity": 5,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112106
+  },
+  {
+    "Name": "Gold Pine Resin x3",
+    "Id": 311,
+    "StackLimit": 99,
+    "Quantity": 3,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112107
+  },
+  {
+    "Name": "Alluring Skull x4",
+    "Id": 294,
+    "StackLimit": 99,
+    "Quantity": 4,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112108
+  },
+  {
+    "Name": "Blooming Purple Moss Clump x3",
+    "Id": 272,
+    "StackLimit": 99,
+    "Quantity": 3,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112109
+  },
+  {
+    "Name": "Sunlight Medal x3",
+    "Id": 375,
+    "StackLimit": 99,
+    "Quantity": 3,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112110
+  },
+  {
+    "Name": "Silver Coin x5",
+    "Id": 382,
+    "StackLimit": 99,
+    "Quantity": 5,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112111
+  },
+  {
+    "Name": "Transient Curse x2",
+    "Id": 312,
+    "StackLimit": 99,
+    "Quantity": 2,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112112
+  },
+  {
+    "Name": "Cracked Red Eye Orb x6",
+    "Id": 111,
+    "StackLimit": 99,
+    "Quantity": 6,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112113
+  },
+  {
+    "Name": "Prism Stone x20",
+    "Id": 370,
+    "StackLimit": 99,
+    "Quantity": 20,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112114
+  },
+  {
+    "Name": "Eye of Death x3",
+    "Id": 109,
+    "StackLimit": 99,
+    "Quantity": 3,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112115
+  },
+  {
+    "Name": "Humanity x2",
+    "Id": 500,
+    "StackLimit": 99,
+    "Quantity": 2,
+    "UpgradeType": "None",
+    "Category": "Consumables",
+    "ApId": 11112116
   }
 ]

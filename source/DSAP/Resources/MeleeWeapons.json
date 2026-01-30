@@ -1,866 +1,898 @@
 ﻿[
-    {
-        "Name": "Dagger",
-        "Id": 100000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118000
-    },
-    {
-        "Name": "Parrying Dagger",
-        "Id": 101000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118001
-    },
-    {
-        "Name": "Ghost Blade",
-        "Id": 102000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118002
-    },
-    {
-        "Name": "Bandit's Knife",
-        "Id": 103000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118003
-    },
-    {
-        "Name": "Priscilla's Dagger",
-        "Id": 104000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118004
-    },
-    {
-        "Name": "Shortsword",
-        "Id": 200000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118005
-    },
-    {
-        "Name": "Longsword",
-        "Id": 201000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118006
-    },
-    {
-        "Name": "Broadsword",
-        "Id": 202000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118007
-    },
-    {
-        "Name": "Broken Straight Sword",
-        "Id": 203000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118008
-    },
-    {
-        "Name": "Balder Side Sword",
-        "Id": 204000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118009
-    },
-    {
-        "Name": "Crystal Straight Sword",
-        "Id": 205000,
-        "StackSize": 1,
-        "UpgradeType": "None",
-        "Category": "MeleeWeapons",
-        "ApId": 11118010
-    },
-    {
-        "Name": "Sunlight Straight Sword",
-        "Id": 206000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118123
-    },
-    {
-        "Name": "Barbed Straight Sword",
-        "Id": 207000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118011
-    },
-    {
-        "Name": "Silver Knight Straight Sword",
-        "Id": 208000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118012
-    },
-    {
-        "Name": "Astora's Straight Sword",
-        "Id": 209000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118013
-    },
-    {
-        "Name": "Darksword",
-        "Id": 210000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118014
-    },
-    {
-        "Name": "Drake Sword",
-        "Id": 211000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118015
-    },
-    {
-        "Name": "Straight Sword Hilt",
-        "Id": 212000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118016
-    },
-    {
-        "Name": "Bastard Sword",
-        "Id": 300000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118017
-    },
-    {
-        "Name": "Claymore",
-        "Id": 301000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118018
-    },
-    {
-        "Name": "Man-serpent Greatsword",
-        "Id": 302000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118019
-    },
-    {
-        "Name": "Flamberge",
-        "Id": 303000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118020
-    },
-    {
-        "Name": "Crystal Greatsword",
-        "Id": 304000,
-        "StackSize": 1,
-        "UpgradeType": "None",
-        "Category": "MeleeWeapons",
-        "ApId": 11118021
-    },
-    {
-        "Name": "Stone Greatsword",
-        "Id": 306000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118022
-    },
-    {
-        "Name": "Greatsword of Artorias",
-        "Id": 307000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118023
-    },
-    {
-        "Name": "Moonlight Greatsword",
-        "Id": 309000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118024
-    },
-    {
-        "Name": "Black Knight Sword",
-        "Id": 310000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118025
-    },
-    {
-        "Name": "Greatsword of Artorias (Cursed)",
-        "Id": 311000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118124
-    },
-    {
-        "Name": "Great Lord Greatsword",
-        "Id": 314000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118026
-    },
-    {
-        "Name": "Zweihander",
-        "Id": 350000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118027
-    },
-    {
-        "Name": "Greatsword",
-        "Id": 351000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118028
-    },
-    {
-        "Name": "Demon Great Machete",
-        "Id": 352000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118029
-    },
-    {
-        "Name": "Dragon Greatsword",
-        "Id": 354000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118030
-    },
-    {
-        "Name": "Black Knight Greatsword",
-        "Id": 355000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118031
-    },
-    {
-        "Name": "Scimitar",
-        "Id": 400000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118032
-    },
-    {
-        "Name": "Falchion",
-        "Id": 401000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118033
-    },
-    {
-        "Name": "Shotel",
-        "Id": 402000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118034
-    },
-    {
-        "Name": "Jagged Ghost Blade",
-        "Id": 403000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118035
-    },
-    {
-        "Name": "Painting Guardian Sword",
-        "Id": 405000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118036
-    },
-    {
-        "Name": "Quelaag's Furysword",
-        "Id": 406000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118037
-    },
-    {
-        "Name": "Server",
-        "Id": 450000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118038
-    },
-    {
-        "Name": "Murakumo",
-        "Id": 451000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118039
-    },
-    {
-        "Name": "Gravelord Sword",
-        "Id": 453000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118040
-    },
-    {
-        "Name": "Uchigatana",
-        "Id": 500000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118041
-    },
-    {
-        "Name": "Washing Pole",
-        "Id": 501000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118042
-    },
-    {
-        "Name": "Iaito",
-        "Id": 502000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118043
-    },
-    {
-        "Name": "Chaos Blade",
-        "Id": 503000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118044
-    },
-    {
-        "Name": "Mail Breaker",
-        "Id": 600000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118045
-    },
-    {
-        "Name": "Rapier",
-        "Id": 601000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118046
-    },
-    {
-        "Name": "Estoc",
-        "Id": 602000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118047
-    },
-    {
-        "Name": "Velka's Rapier",
-        "Id": 603000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118048
-    },
-    {
-        "Name": "Ricard's Rapier",
-        "Id": 604000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118049
-    },
-    {
-        "Name": "Hand Axe",
-        "Id": 700000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118050
-    },
-    {
-        "Name": "Battle Axe",
-        "Id": 701000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118051
-    },
-    {
-        "Name": "Crescent Axe",
-        "Id": 702000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118052
-    },
-    {
-        "Name": "Butcher Knife",
-        "Id": 703000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118053
-    },
-    {
-        "Name": "Golem Axe",
-        "Id": 704000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118054
-    },
-    {
-        "Name": "Gargoyle Tail Axe",
-        "Id": 705000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118055
-    },
-    {
-        "Name": "Greataxe",
-        "Id": 750000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118056
-    },
-    {
-        "Name": "Demon's Greataxe",
-        "Id": 751000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118057
-    },
-    {
-        "Name": "Dragon King Greataxe",
-        "Id": 752000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118125
-    },
-    {
-        "Name": "Black Knight Greataxe",
-        "Id": 753000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118126
-    },
-    {
-        "Name": "Club",
-        "Id": 800000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118058
-    },
-    {
-        "Name": "Mace",
-        "Id": 801000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118059
-    },
-    {
-        "Name": "Morning Star",
-        "Id": 802000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118060
-    },
-    {
-        "Name": "Warpick",
-        "Id": 803000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118061
-    },
-    {
-        "Name": "Pickaxe",
-        "Id": 804000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118062
-    },
-    {
-        "Name": "Reinforced Club",
-        "Id": 809000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118063
-    },
-    {
-        "Name": "Blacksmith Hammer",
-        "Id": 810000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118064
-    },
-    {
-        "Name": "Blacksmith Giant Hammer",
-        "Id": 811000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118127
-    },
-    {
-        "Name": "Hammer of Vamos",
-        "Id": 812000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118065
-    },
-    {
-        "Name": "Great Club",
-        "Id": 850000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118066
-    },
-    {
-        "Name": "Grant",
-        "Id": 851000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118067
-    },
-    {
-        "Name": "Demon's Great Hammer",
-        "Id": 852000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118068
-    },
-    {
-        "Name": "Dragon Tooth",
-        "Id": 854000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118069
-    },
-    {
-        "Name": "Large Club",
-        "Id": 855000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118070
-    },
-    {
-        "Name": "Smough's Hammer",
-        "Id": 856000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118071
-    },
-    {
-        "Name": "Caestus",
-        "Id": 901000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118072
-    },
-    {
-        "Name": "Claw",
-        "Id": 902000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118073
-    },
-    {
-        "Name": "Dragon Bone Fist",
-        "Id": 903000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118074
-    },
-    {
-        "Name": "Dark Hand",
-        "Id": 904000,
-        "StackSize": 1,
-        "UpgradeType": "None",
-        "Category": "MeleeWeapons",
-        "ApId": 11118075
-    },
-    {
-        "Name": "Spear",
-        "Id": 1000000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118076
-    },
-    {
-        "Name": "Winged Spear",
-        "Id": 1001000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118077
-    },
-    {
-        "Name": "Partizan",
-        "Id": 1002000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118078
-    },
-    {
-        "Name": "Demon's Spear",
-        "Id": 1003000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118079
-    },
-    {
-        "Name": "Channeler's Trident",
-        "Id": 1004000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118080
-    },
-    {
-        "Name": "Silver Knight Spear",
-        "Id": 1006000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118081
-    },
-    {
-        "Name": "Pike",
-        "Id": 1050000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118082
-    },
-    {
-        "Name": "Dragonslayer Spear",
-        "Id": 1051000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118083
-    },
-    {
-        "Name": "Moonlight Butterfly Horn",
-        "Id": 1052000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118084
-    },
-    {
-        "Name": "Halberd",
-        "Id": 1100000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118085
-    },
-    {
-        "Name": "Giant's Halberd",
-        "Id": 1101000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118086
-    },
-    {
-        "Name": "Titanite Catch Pole",
-        "Id": 1102000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118087
-    },
-    {
-        "Name": "Gargoyle's Halberd",
-        "Id": 1103000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118088
-    },
-    {
-        "Name": "Black Knight Halberd",
-        "Id": 1105000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118089
-    },
-    {
-        "Name": "Lucerne",
-        "Id": 1106000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118090
-    },
-    {
-        "Name": "Scythe",
-        "Id": 1107000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118091
-    },
-    {
-        "Name": "Great Scythe",
-        "Id": 1150000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118092
-    },
-    {
-        "Name": "Lifehunt Scythe",
-        "Id": 1151000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118093
-    },
-    {
-        "Name": "Whip",
-        "Id": 1600000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118094
-    },
-    {
-        "Name": "Notched Whip",
-        "Id": 1601000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118095
-    },
-    {
-        "Name": "Gold Tracer",
-        "Id": 9010000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118128
-    },
-    {
-        "Name": "Dark Silver Tracer",
-        "Id": 9011000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118129
-    },
-    {
-        "Name": "Abyss Greatsword",
-        "Id": 9012000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118130
-    },
-    {
-        "Name": "Stone Greataxe",
-        "Id": 9015000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118131
-    },
-    {
-        "Name": "Four-pronged Plow",
-        "Id": 9016000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118132
-    },
-    {
-        "Name": "Guardian Tail",
-        "Id": 9019000,
-        "StackSize": 1,
-        "UpgradeType": "Infusable",
-        "Category": "MeleeWeapons",
-        "ApId": 11118133
-    },
-    {
-        "Name": "Obsidian Greatsword",
-        "Id": 9020000,
-        "StackSize": 1,
-        "UpgradeType": "Unique",
-        "Category": "MeleeWeapons",
-        "ApId": 11118134
-    }
+  {
+    "Name": "Dagger",
+    "Id": 100000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118000
+  },
+  {
+    "Name": "Parrying Dagger",
+    "Id": 101000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118001
+  },
+  {
+    "Name": "Ghost Blade",
+    "Id": 102000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118002
+  },
+  {
+    "Name": "Bandit's Knife",
+    "Id": 103000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118003
+  },
+  {
+    "Name": "Priscilla's Dagger",
+    "Id": 104000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118004
+  },
+  {
+    "Name": "Shortsword",
+    "Id": 200000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118005
+  },
+  {
+    "Name": "Longsword",
+    "Id": 201000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118006
+  },
+  {
+    "Name": "Broadsword",
+    "Id": 202000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118007
+  },
+  {
+    "Name": "Broken Straight Sword",
+    "Id": 203000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118008
+  },
+  {
+    "Name": "Balder Side Sword",
+    "Id": 204000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118009
+  },
+  {
+    "Name": "Crystal Straight Sword",
+    "Id": 205000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "MeleeWeapons",
+    "ApId": 11118010
+  },
+  {
+    "Name": "Sunlight Straight Sword",
+    "Id": 206000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118123
+  },
+  {
+    "Name": "Barbed Straight Sword",
+    "Id": 207000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118011
+  },
+  {
+    "Name": "Silver Knight Straight Sword",
+    "Id": 208000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118012
+  },
+  {
+    "Name": "Astora's Straight Sword",
+    "Id": 209000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118013
+  },
+  {
+    "Name": "Darksword",
+    "Id": 210000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118014
+  },
+  {
+    "Name": "Drake Sword",
+    "Id": 211000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118015
+  },
+  {
+    "Name": "Straight Sword Hilt",
+    "Id": 212000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118016
+  },
+  {
+    "Name": "Bastard Sword",
+    "Id": 300000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118017
+  },
+  {
+    "Name": "Claymore",
+    "Id": 301000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118018
+  },
+  {
+    "Name": "Man-serpent Greatsword",
+    "Id": 302000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118019
+  },
+  {
+    "Name": "Flamberge",
+    "Id": 303000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118020
+  },
+  {
+    "Name": "Crystal Greatsword",
+    "Id": 304000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "MeleeWeapons",
+    "ApId": 11118021
+  },
+  {
+    "Name": "Stone Greatsword",
+    "Id": 306000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118022
+  },
+  {
+    "Name": "Greatsword of Artorias",
+    "Id": 307000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118023
+  },
+  {
+    "Name": "Moonlight Greatsword",
+    "Id": 309000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118024
+  },
+  {
+    "Name": "Black Knight Sword",
+    "Id": 310000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118025
+  },
+  {
+    "Name": "Greatsword of Artorias (Cursed)",
+    "Id": 311000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118124
+  },
+  {
+    "Name": "Great Lord Greatsword",
+    "Id": 314000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118026
+  },
+  {
+    "Name": "Zweihander",
+    "Id": 350000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118027
+  },
+  {
+    "Name": "Greatsword",
+    "Id": 351000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118028
+  },
+  {
+    "Name": "Demon Great Machete",
+    "Id": 352000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118029
+  },
+  {
+    "Name": "Dragon Greatsword",
+    "Id": 354000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118030
+  },
+  {
+    "Name": "Black Knight Greatsword",
+    "Id": 355000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118031
+  },
+  {
+    "Name": "Scimitar",
+    "Id": 400000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118032
+  },
+  {
+    "Name": "Falchion",
+    "Id": 401000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118033
+  },
+  {
+    "Name": "Shotel",
+    "Id": 402000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118034
+  },
+  {
+    "Name": "Jagged Ghost Blade",
+    "Id": 403000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118035
+  },
+  {
+    "Name": "Painting Guardian Sword",
+    "Id": 405000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118036
+  },
+  {
+    "Name": "Quelaag's Furysword",
+    "Id": 406000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118037
+  },
+  {
+    "Name": "Server",
+    "Id": 450000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118038
+  },
+  {
+    "Name": "Murakumo",
+    "Id": 451000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118039
+  },
+  {
+    "Name": "Gravelord Sword",
+    "Id": 453000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118040
+  },
+  {
+    "Name": "Uchigatana",
+    "Id": 500000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118041
+  },
+  {
+    "Name": "Washing Pole",
+    "Id": 501000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118042
+  },
+  {
+    "Name": "Iaito",
+    "Id": 502000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118043
+  },
+  {
+    "Name": "Chaos Blade",
+    "Id": 503000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118044
+  },
+  {
+    "Name": "Mail Breaker",
+    "Id": 600000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118045
+  },
+  {
+    "Name": "Rapier",
+    "Id": 601000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118046
+  },
+  {
+    "Name": "Estoc",
+    "Id": 602000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118047
+  },
+  {
+    "Name": "Velka's Rapier",
+    "Id": 603000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118048
+  },
+  {
+    "Name": "Ricard's Rapier",
+    "Id": 604000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118049
+  },
+  {
+    "Name": "Hand Axe",
+    "Id": 700000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118050
+  },
+  {
+    "Name": "Battle Axe",
+    "Id": 701000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118051
+  },
+  {
+    "Name": "Crescent Axe",
+    "Id": 702000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118052
+  },
+  {
+    "Name": "Butcher Knife",
+    "Id": 703000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118053
+  },
+  {
+    "Name": "Golem Axe",
+    "Id": 704000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118054
+  },
+  {
+    "Name": "Gargoyle Tail Axe",
+    "Id": 705000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118055
+  },
+  {
+    "Name": "Greataxe",
+    "Id": 750000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118056
+  },
+  {
+    "Name": "Demon's Greataxe",
+    "Id": 751000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118057
+  },
+  {
+    "Name": "Dragon King Greataxe",
+    "Id": 752000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118125
+  },
+  {
+    "Name": "Black Knight Greataxe",
+    "Id": 753000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118126
+  },
+  {
+    "Name": "Club",
+    "Id": 800000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118058
+  },
+  {
+    "Name": "Mace",
+    "Id": 801000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118059
+  },
+  {
+    "Name": "Morning Star",
+    "Id": 802000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118060
+  },
+  {
+    "Name": "Warpick",
+    "Id": 803000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118061
+  },
+  {
+    "Name": "Pickaxe",
+    "Id": 804000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118062
+  },
+  {
+    "Name": "Reinforced Club",
+    "Id": 809000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118063
+  },
+  {
+    "Name": "Blacksmith Hammer",
+    "Id": 810000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118064
+  },
+  {
+    "Name": "Blacksmith Giant Hammer",
+    "Id": 811000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118127
+  },
+  {
+    "Name": "Hammer of Vamos",
+    "Id": 812000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118065
+  },
+  {
+    "Name": "Great Club",
+    "Id": 850000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118066
+  },
+  {
+    "Name": "Grant",
+    "Id": 851000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118067
+  },
+  {
+    "Name": "Demon's Great Hammer",
+    "Id": 852000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118068
+  },
+  {
+    "Name": "Dragon Tooth",
+    "Id": 854000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118069
+  },
+  {
+    "Name": "Large Club",
+    "Id": 855000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118070
+  },
+  {
+    "Name": "Smough's Hammer",
+    "Id": 856000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118071
+  },
+  {
+    "Name": "Caestus",
+    "Id": 901000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118072
+  },
+  {
+    "Name": "Claw",
+    "Id": 902000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118073
+  },
+  {
+    "Name": "Dragon Bone Fist",
+    "Id": 903000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118074
+  },
+  {
+    "Name": "Dark Hand",
+    "Id": 904000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "MeleeWeapons",
+    "ApId": 11118075
+  },
+  {
+    "Name": "Spear",
+    "Id": 1000000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118076
+  },
+  {
+    "Name": "Winged Spear",
+    "Id": 1001000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118077
+  },
+  {
+    "Name": "Partizan",
+    "Id": 1002000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118078
+  },
+  {
+    "Name": "Demon's Spear",
+    "Id": 1003000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118079
+  },
+  {
+    "Name": "Channeler's Trident",
+    "Id": 1004000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118080
+  },
+  {
+    "Name": "Silver Knight Spear",
+    "Id": 1006000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118081
+  },
+  {
+    "Name": "Pike",
+    "Id": 1050000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118082
+  },
+  {
+    "Name": "Dragonslayer Spear",
+    "Id": 1051000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118083
+  },
+  {
+    "Name": "Moonlight Butterfly Horn",
+    "Id": 1052000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118084
+  },
+  {
+    "Name": "Halberd",
+    "Id": 1100000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118085
+  },
+  {
+    "Name": "Giant's Halberd",
+    "Id": 1101000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118086
+  },
+  {
+    "Name": "Titanite Catch Pole",
+    "Id": 1102000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118087
+  },
+  {
+    "Name": "Gargoyle's Halberd",
+    "Id": 1103000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118088
+  },
+  {
+    "Name": "Black Knight Halberd",
+    "Id": 1105000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118089
+  },
+  {
+    "Name": "Lucerne",
+    "Id": 1106000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118090
+  },
+  {
+    "Name": "Scythe",
+    "Id": 1107000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118091
+  },
+  {
+    "Name": "Great Scythe",
+    "Id": 1150000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118092
+  },
+  {
+    "Name": "Lifehunt Scythe",
+    "Id": 1151000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118093
+  },
+  {
+    "Name": "Whip",
+    "Id": 1600000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118094
+  },
+  {
+    "Name": "Notched Whip",
+    "Id": 1601000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118095
+  },
+  {
+    "Name": "Gold Tracer",
+    "Id": 9010000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118128
+  },
+  {
+    "Name": "Dark Silver Tracer",
+    "Id": 9011000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118129
+  },
+  {
+    "Name": "Abyss Greatsword",
+    "Id": 9012000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118130
+  },
+  {
+    "Name": "Stone Greataxe",
+    "Id": 9015000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118131
+  },
+  {
+    "Name": "Four-pronged Plow",
+    "Id": 9016000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118132
+  },
+  {
+    "Name": "Guardian Tail",
+    "Id": 9019000,
+    "StackSize": 1,
+    "UpgradeType": "Infusable",
+    "Category": "MeleeWeapons",
+    "ApId": 11118133
+  },
+  {
+    "Name": "Obsidian Greatsword",
+    "Id": 9020000,
+    "StackSize": 1,
+    "UpgradeType": "Unique",
+    "Category": "MeleeWeapons",
+    "ApId": 11118134
+  },
+  {
+    "Name": "Lightning Spear",
+    "Id": 1000200,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "MeleeWeapons",
+    "ApId": 11118300
+  },
+  {
+    "Name": "Enchanted Falchion",
+    "Id": 401500,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "MeleeWeapons",
+    "ApId": 11118301
+  },
+  {
+    "Name": "Occult Club",
+    "Id": 800700,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "MeleeWeapons",
+    "ApId": 11118302
+  },
+  {
+    "Name": "Crystal Halberd",
+    "Id": 1100100,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "MeleeWeapons",
+    "ApId": 11118303
+  }
 ]

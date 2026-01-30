@@ -496,7 +496,7 @@ namespace DSAP
                                         GetItemFlagId = -1,
                                         LotItemBasePoint = 100,
                                         LotItemCategory = (int)repitem.Category,
-                                        LotItemNum = 1,
+                                        LotItemNum = (byte)repitem.Quantity,
                                         LotItemId = repitem.Id
                                     };
 
@@ -682,7 +682,7 @@ namespace DSAP
                                 GetItemFlagId = -1,
                                 LotItemBasePoint = 100,
                                 LotItemCategory = (int)repitem.Category,
-                                LotItemNum = 1,
+                                LotItemNum = (byte)repitem.Quantity,
                                 LotItemId = repitem.Id
                             };
 
