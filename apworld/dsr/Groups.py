@@ -5,7 +5,10 @@ from .Items import item_dictionary, DSRItemCategory, DSRWeaponType, _all_items_b
 
 multiplayer_items = [
     "Eye of Death",
+    "Eye of Death x3",
     "Cracked Red Eye Orb",
+    "Cracked Red Eye Orb x4",
+    "Cracked Red Eye Orb x6",
     "Indictment",
     "White Sign Soapstone",
     "Red Sign Soapstone",
@@ -25,6 +28,7 @@ multiplayer_items = [
 
 covenant_items = [
     "Sunlight Medal",
+    "Sunlight Medal x3",
     "Cat Covenant Ring",
     "Souvenir of Reprisal",
 ]
@@ -90,7 +94,7 @@ item_name_groups = {
     "Carvings"          : [item for item in item_dictionary.keys() if "carving" in item.lower()],
     "Multiplayer Items" : [item for item in multiplayer_items],
     "Covenant Items"    : [item for item in covenant_items],
-    "Junk"              : [item for item in item_dictionary.keys() if "carving" in item.lower()] + [item for item in multiplayer_items] + [item for item in covenant_items] + ["Pendant"]
+    "Junk"              : [item for item in item_dictionary.keys() if "carving" in item.lower()] + [item for item in multiplayer_items] + [item for item in covenant_items] + ["Pendant"] + ["Prism Stone x20"]
 }
 
 location_name_groups = {

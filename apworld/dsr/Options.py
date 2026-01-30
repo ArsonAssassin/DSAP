@@ -9,36 +9,35 @@ class GuaranteedItemsOption(ItemDict):
     """Guarantees that the specified items will be in the item pool"""
     display_name = "Guaranteed Items"
 
-class EnableMasterKeyOption(Toggle):
-    """Includes the Master Key in the item pool"""
-    display_name = "Enable Master Key"
+class ExcludedLocationBehaviorOption(Choice):
+    """How to choose items for excluded locations in DSR.
 
-class UniqueSoulOption(Toggle):
-    """Adds only one of each boss soul to the item pool"""
-    display_name = "Singular Boss Souls"
-
-class FogwallLock(DefaultOnToggle):
-    """Makes area fog walls uninteractable until you receive their items from the item pool. Recommended to turn this on."""
-    display_name = "Fogwall Lock" 
-
-class FogwallLockIncludeUA(Toggle):
-    """Includes Undead Asylum early fog wall in the pool. If on, this will likely lead to extremely early BK mode."""
-    display_name = "Fogwall Lock Include Undead Asylum" 
-
-class BossFogwallLock(Toggle):
-    """Makes boss fog walls uninteractable until you receive their items from the item pool.
-    Does not include Asylum Demon (first encounter), Sif, or Seath (2nd encounter),
-    as all of them do not have fog walls upon your first entry to their arena."""
-    display_name = "Boss Fogwall Lock" 
+    - **Forbid Useful:** Neither progression items nor useful items can be placed in excluded
+      locations.
+    - **Do Not Randomize:** Excluded locations always contain the same item as in vanilla
+      Dark Souls: Remastered.
+    """
+    display_name = "Excluded Locations Behavior"
+    option_forbid_useful = 2
+    option_do_not_randomize = 3
+    default = 2
 
 class FogwallSanity(DefaultOnToggle):
-    """Makes fog walls a "check" - that is, they grant you items when you walk through them. 
-    Recommended value of true if Fogwall Lock is true."""
+    """Makes area fog walls uninteractable until you receive their items from the item pool. 
+    Fog walls will also give checks when you pass through them.
+    The Undead Asylum fog wall will not be locked, to avoid super-early BK.
+    Recommended to turn this on."""
     display_name = "Fogwall Sanity" 
 
 class BossFogwallSanity(Toggle):
-    """Makes boss fog walls a "check" - that is, they grant you items when you walk through them. 
-    Recommended value of true if Boss Fogwall Lock is true."""
+    """Makes boss fog walls uninteractable until you receive their items from the item pool.
+    Boss fog walls will also give checks when you pass through them.
+    The following will be neither locations nor checks as they all do not have fog walls
+    upon your first entry into their arena:
+      Asylum Demon (first encounter),
+      Sif,
+      Seath (2nd encounter), and
+      Kalameet."""
     display_name = "Boss Fogwall Sanity" 
 
 class UpgradedWeaponsPercentage(Range):
@@ -88,11 +87,6 @@ class EnableDeathlinkOption(Toggle):
 
 # Group relevant options
 option_groups = [
-    OptionGroup("Fogwall Lock", [
-        FogwallLock,
-        FogwallLockIncludeUA,
-        BossFogwallLock,
-        ]),
     OptionGroup("Sanity", [
         FogwallSanity,
         BossFogwallSanity,
@@ -111,11 +105,7 @@ option_groups = [
 class DSROption(PerGameCommonOptions):
     #goal: GoalOption
     guaranteed_items: GuaranteedItemsOption
-    enable_masterkey: EnableMasterKeyOption
-    unique_souls: UniqueSoulOption
-    fogwall_lock: FogwallLock
-    fogwall_lock_include_ua: FogwallLockIncludeUA
-    boss_fogwall_lock: BossFogwallLock
+    excluded_location_behavior: ExcludedLocationBehaviorOption
     fogwall_sanity: FogwallSanity
     boss_fogwall_sanity: BossFogwallSanity
     upgraded_weapons_percentage: UpgradedWeaponsPercentage

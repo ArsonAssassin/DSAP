@@ -19,7 +19,9 @@ class DSRItemCategory(IntEnum):
     BOSS_SOUL = 11,
     EMBER = 12,
     FOGWALL = 13,
-    BOSSFOGWALL = 14
+    BOSSFOGWALL = 14,
+    FILLER = 15,
+    NOTHING = 16
 
 class DSRWeaponType(IntEnum):
     Melee = 1,
@@ -52,7 +54,9 @@ class DSRItem(Item):
         return {item_data.name: (base_id + item_data.dsr_code if item_data.dsr_code is not None else None) for item_data in _all_items}
 
 key_item_names = {
-"Covenant of Artorias","Orange Charred Ring", "Pendant", "Skull Lantern", "Fire Keeper Soul (Anastacia of Astora)", "Fire Keeper Soul (Darkmoon Knightess)", "Fire Keeper Soul (Daughter of Chaos)", "Fire Keeper Soul (New Londo)", "Fire Keeper Soul (Blighttown)", "Fire Keeper Soul (Duke's Archives)", "Fire Keeper Soul (Undead Parish)"
+"Covenant of Artorias","Orange Charred Ring", "Skull Lantern", 
+"Fire Keeper Soul (Anastacia of Astora)", "Fire Keeper Soul (Darkmoon Knightess)", "Fire Keeper Soul (Daughter of Chaos)",
+"Fire Keeper Soul (New Londo)", "Fire Keeper Soul (Blighttown)", "Fire Keeper Soul (Duke's Archives)", "Fire Keeper Soul (Undead Parish)"
 }
 
 _all_items_base = [    
@@ -155,6 +159,8 @@ _all_items_base = [
     ("Oolacile - Township lit", 1095, DSRItemCategory.EVENT),
     ("Bell of Awakening #1", 1096, DSRItemCategory.EVENT),
     ("Bell of Awakening #2", 1097, DSRItemCategory.EVENT),
+    ("Dusk Rescued", 1098, DSRItemCategory.EVENT),
+
 
     ("Fog Wall Key - Northern Undead Asylum", 1200, DSRItemCategory.FOGWALL),
     ("Fog Wall Key - Undead Burg", 1201, DSRItemCategory.FOGWALL),
@@ -197,7 +203,6 @@ _all_items_base = [
     ("Boss Fog Wall Key - Gwyndolin", 1249, DSRItemCategory.BOSSFOGWALL),
     ("Boss Fog Wall Key - Moonlight Butterfly", 1250, DSRItemCategory.BOSSFOGWALL),
     ("Boss Fog Wall Key - Crossbreed Priscilla", 1251, DSRItemCategory.BOSSFOGWALL),
-    
     
     ("Eye of Death", 2000, DSRItemCategory.CONSUMABLE),
     ("Cracked Red Eye Orb", 2001, DSRItemCategory.CONSUMABLE),
@@ -255,7 +260,7 @@ _all_items_base = [
     ("Soul of Gwyn, Lord of Cinder", 2053, DSRItemCategory.BOSS_SOUL),
     ("Core of an Iron Golem", 2054, DSRItemCategory.BOSS_SOUL),
     ("Soul of Ornstein", 2055, DSRItemCategory.BOSS_SOUL),
-    ("Soul of Moonlight Butterfly", 2056, DSRItemCategory.BOSS_SOUL),
+    ("Soul of the Moonlight Butterfly", 2056, DSRItemCategory.BOSS_SOUL),
     ("Soul of Smough", 2057, DSRItemCategory.BOSS_SOUL),
     ("Soul of Priscilla", 2058, DSRItemCategory.BOSS_SOUL),
     ("Soul of Gwyndolin", 2059, DSRItemCategory.BOSS_SOUL),
@@ -284,6 +289,26 @@ _all_items_base = [
     ("Binoculars", 2082, DSRItemCategory.CONSUMABLE),
     ("Dragon Head Stone", 2083, DSRItemCategory.CONSUMABLE),
     ("Dragon Torso Stone", 2084, DSRItemCategory.CONSUMABLE),
+    
+    # Items with more than 1 quantity below
+    ("Firebomb x6", 2100, DSRItemCategory.CONSUMABLE),
+    ("Humanity x3", 2101, DSRItemCategory.CONSUMABLE),
+    ("Cracked Red Eye Orb x4", 2102, DSRItemCategory.CONSUMABLE),
+    ("Homeward Bone x6", 2103, DSRItemCategory.CONSUMABLE),
+    ("Lloyd's Talisman x4", 2104, DSRItemCategory.CONSUMABLE),
+    ("Throwing Knife x10", 2105, DSRItemCategory.CONSUMABLE),
+    ("Black Firebomb x5", 2106, DSRItemCategory.CONSUMABLE),
+    ("Gold Pine Resin x3", 2107, DSRItemCategory.CONSUMABLE),
+    ("Alluring Skull x4", 2108, DSRItemCategory.CONSUMABLE),
+    ("Blooming Purple Moss Clump x3", 2109, DSRItemCategory.CONSUMABLE),
+    ("Sunlight Medal x3", 2110, DSRItemCategory.CONSUMABLE),
+    ("Silver Coin x5", 2111, DSRItemCategory.CONSUMABLE),
+    ("Transient Curse x2", 2112, DSRItemCategory.CONSUMABLE),
+    ("Cracked Red Eye Orb x6", 2113, DSRItemCategory.CONSUMABLE),
+    ("Prism Stone x20", 2114, DSRItemCategory.CONSUMABLE),
+    ("Eye of Death x3", 2115, DSRItemCategory.CONSUMABLE),
+    ("Humanity x2", 2116, DSRItemCategory.CONSUMABLE),
+    
 
     ("Peculiar Doll", 3000, DSRItemCategory.KEY_ITEM),
     ("Basement Key", 3001, DSRItemCategory.KEY_ITEM),
@@ -389,6 +414,11 @@ _all_items_base = [
     ("Dragon Scale", 5021, DSRItemCategory.UPGRADE_MATERIAL),
     ("Demon Titanite", 5022, DSRItemCategory.UPGRADE_MATERIAL),
     ("Twinkling Titanite", 5023, DSRItemCategory.UPGRADE_MATERIAL),
+
+    ("Large Titanite Shard x2", 5100, DSRItemCategory.UPGRADE_MATERIAL),
+    ("Demon Titanite x2", 5101, DSRItemCategory.UPGRADE_MATERIAL),
+    ("Green Titanite Shard x2", 5102, DSRItemCategory.UPGRADE_MATERIAL),
+
 
     ("Sorcery: Soul Arrow", 6000, DSRItemCategory.SPELL),
     ("Sorcery: Great Soul Arrow", 6001, DSRItemCategory.SPELL),
@@ -546,7 +576,7 @@ _all_items_base = [
     ("Sorcerer Boots", 7080, DSRItemCategory.ARMOR),
     ("Tattered Cloth Hood", 7081, DSRItemCategory.ARMOR),
     ("Tattered Cloth Robe", 7082, DSRItemCategory.ARMOR),
-    ("Tattered Cloth Machette", 7083, DSRItemCategory.ARMOR),
+    ("Tattered Cloth Manchette", 7083, DSRItemCategory.ARMOR),
     ("Heavy Boots", 7084, DSRItemCategory.ARMOR),
     ("Pharis's Hat", 7085, DSRItemCategory.ARMOR),
     ("Leather Armor", 7086, DSRItemCategory.ARMOR),
@@ -808,6 +838,11 @@ _all_items_base = [
     ("Guardian Tail", 8133, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Infusable),
     ("Obsidian Greatsword", 8134, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Unique),
 
+    ("Lightning Spear", 8300, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.NotUpgradable),
+    ("Enchanted Falchion", 8301, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.NotUpgradable),
+    ("Occult Club", 8302, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.NotUpgradable),
+    ("Crystal Halberd", 8303, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.NotUpgradable),
+
     ("Short Bow", 8096, DSRItemCategory.WEAPON, DSRWeaponType.Ranged, DSRUpgradeType.Infusable),
     ("Longbow", 8097, DSRItemCategory.WEAPON, DSRWeaponType.Ranged, DSRUpgradeType.Infusable),
     ("Black Bow of Pharis", 8098, DSRItemCategory.WEAPON, DSRWeaponType.Ranged, DSRUpgradeType.Infusable),
@@ -834,6 +869,16 @@ _all_items_base = [
     ("Sniper Bolt", 8147, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
     ("Wood Bolt", 8148, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
     ("Lightning Bolt", 8149, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+
+    # Bigger quantities of arrows
+    ("Standard Bolt x16", 8200, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+    ("Heavy Bolt x11", 8201, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+    ("Sniper Bolt x12", 8202, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+    ("Feather Arrow x16", 8203, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+    ("Large Arrow x16", 8204, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+    ("Gough's Great Arrow x8", 8205, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+    ("Gough's Great Arrow x3", 8206, DSRItemCategory.WEAPON, DSRWeaponType.RangedAmmunition, DSRUpgradeType.NotUpgradable),
+
 
     ("Sorcerer's Catalyst", 8106, DSRItemCategory.WEAPON, DSRWeaponType.SpellTool, DSRUpgradeType.NotUpgradable),
     ("Beatrice's Catalyst", 8107, DSRItemCategory.WEAPON, DSRWeaponType.SpellTool, DSRUpgradeType.NotUpgradable),
@@ -901,6 +946,10 @@ _all_items_base = [
     ("Black Iron Greatshield", 9042, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Cleansing Greatshield", 9043, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.Unique),
     
+    ("Door Filler", 9900, DSRItemCategory.FILLER),
+    ("Fogwall Filler", 9901, DSRItemCategory.FILLER),
+    ("Nothing", 9902, DSRItemCategory.NOTHING),
+
     ("Lag Trap", 10000, DSRItemCategory.TRAP),
 ]
 
@@ -941,39 +990,23 @@ unique_infusion_types = [
 
 item_dictionary = {item_data.name: item_data for item_data in _all_items}
 
-
-def BuildItemPool(count, options, world):
+def BuildRequiredItemPool(world, count):
     item_pool = []
-    included_itemcount = 0
+    remaining_count = count
 
-    if options.guaranteed_items.value:
-        for item_name, item_quant in options.guaranteed_items.value.items():
-            item = item_dictionary[item_name]
-            item_pool += [item] * item_quant
-            included_itemcount += item_quant
-    remaining_count = count - included_itemcount
-    
     key_items = [item for item in _all_items if item.name in key_item_names or item.category == DSRItemCategory.KEY_ITEM]
     for item in key_items:
         if item.name not in ["Dungeon Cell Key", "Estus Flask", "Undead Asylum F2 East Key", "Big Pilgrim's Key", "Master Key"]:
             item_pool.append(item)
             remaining_count = remaining_count - 1
-    
-    if(options.enable_masterkey.value == True):
-        masterKey = item_dictionary["Master Key"]
-        item_pool.append(masterKey)
-        remaining_count = remaining_count - 1
 
-    if(options.fogwall_lock.value == True):
-        earlyfogname = "Fog Wall Key - Northern Undead Asylum"
-        fogwalls = [item for item in _all_items if item.category in [DSRItemCategory.FOGWALL] and item.name != earlyfogname]
-        if (options.fogwall_lock_include_ua.value == True):
-            fogwalls.append(item_dictionary[earlyfogname])
+    if(world.options.fogwall_sanity.value == True):
+        fogwalls = [item for item in _all_items if item.category in [DSRItemCategory.FOGWALL] and item.name != "Fog Wall Key - Northern Undead Asylum"]
         for item in fogwalls:
             item_pool.append(item)
             remaining_count = remaining_count - 1
 
-    if (options.boss_fogwall_lock.value == True):
+    if (world.options.boss_fogwall_sanity.value == True):
         bossfogwalls = [item for item in _all_items if item.category in [DSRItemCategory.BOSSFOGWALL]]
         for item in bossfogwalls:
             item_pool.append(item)
@@ -983,47 +1016,16 @@ def BuildItemPool(count, options, world):
     for item in useful_items:
         item_pool.append(item)
         remaining_count = remaining_count - 1
-    
-    filler_items = [item for item in _all_items if item.category not in [DSRItemCategory.EVENT, DSRItemCategory.KEY_ITEM, DSRItemCategory.EMBER, DSRItemCategory.FOGWALL, DSRItemCategory.BOSSFOGWALL]]
-    
-    pool_size = remaining_count
-    
 
-    bossList = [item for item in filler_items if item.category in [DSRItemCategory.BOSS_SOUL]]
-    consumableList = [item for item in filler_items if item.category in [DSRItemCategory.CONSUMABLE] and "soul" not in item.name.lower() and "fire keeper" not in item.name.lower()]
-    soulList = [item for item in filler_items if "soul" in item.name.lower() and "fire keeper" not in item.name.lower() and item.category in [DSRItemCategory.CONSUMABLE]]
-    
-    materialList = [item for item in filler_items if item.category in [DSRItemCategory.UPGRADE_MATERIAL]]
-    
-    if (options.unique_souls.value == True):
-        for item in bossList:
-            item_pool.append(item)
-            remaining_count = remaining_count - 1
-    else:
-        soulList.extend(bossList)
+    world.random.shuffle(item_pool)
+    return item_pool
 
-    consumable_count = int(pool_size * 0.2)
-    for i in range(consumable_count):        
-        item = world.random.choice(consumableList)
-        item_pool.append(item)        
-    remaining_count = remaining_count - consumable_count
-    
-    soul_count = int(pool_size * 0.3)
-    for i in range(soul_count):        
-        item = world.random.choice(soulList)
-        item_pool.append(item)        
-    remaining_count = remaining_count - soul_count
-    
-    material_count = int(pool_size * 0.2)
-    for i in range(material_count):        
-        item = world.random.choice(materialList)
-        item_pool.append(item)        
-    remaining_count = remaining_count - material_count
-    
-    itemList = [item for item in filler_items if item.category in [DSRItemCategory.WEAPON, DSRItemCategory.ARMOR, DSRItemCategory.SHIELD, DSRItemCategory.SPELL, DSRItemCategory.RING]]
-    for i in range(remaining_count):
-        item = world.random.choice(itemList)
-        item_pool.append(item)    
+def BuildGuaranteedItemPool(world):
+    item_pool = []
+    if world.options.guaranteed_items.value:
+        for item_name, item_quant in world.options.guaranteed_items.value.items():
+            item = item_dictionary[item_name]
+            item_pool += [item] * item_quant
     world.random.shuffle(item_pool)
     return item_pool
 

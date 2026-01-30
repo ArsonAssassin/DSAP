@@ -198,5 +198,68 @@
     "UpgradeType": "None",
     "Category": "RangedWeapons",
     "ApId": 11118149
+  },
+  {
+    "Name": "Standard Bolt x16",
+    "Id": 2100000,
+    "StackSize": 999,
+    "Quantity": 16,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118200
+  },
+  {
+    "Name": "Heavy Bolt x11",
+    "Id": 2101000,
+    "StackSize": 999,
+    "Quantity": 11,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118201
+  },
+  {
+    "Name": "Sniper Bolt x12",
+    "Id": 2102000,
+    "StackSize": 999,
+    "Quantity": 12,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118202
+  },
+  {
+    "Name": "Feather Arrow x16",
+    "Id": 2002000,
+    "StackSize": 999,
+    "Quantity": 16,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118203
+  },
+  {
+    "Name": "Large Arrow x16",
+    "Id": 2001000,
+    "StackSize": 999,
+    "Quantity": 16,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118204
+  },
+  {
+    "Name": "Gough's Great Arrow x8",
+    "Id": 2008000,
+    "StackSize": 999,
+    "Quantity": 8,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118205
+  },
+  {
+    "Name": "Gough's Great Arrow x3",
+    "Id": 2008000,
+    "StackSize": 999,
+    "Quantity": 3,
+    "UpgradeType": "None",
+    "Category": "RangedWeapons",
+    "ApId": 11118206
   }
 ]

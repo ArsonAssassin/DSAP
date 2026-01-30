@@ -445,7 +445,7 @@ public partial class App : Application
     }
 
     /* Add an abstract "item" which can be a trap, event, or normal item */
-    public static void AddAbstractItem(int category, int id)
+    public static void AddAbstractItem(int category, int id, int quantity)
     {
         if (category == (int)DSItemCategory.Trap)
         {
@@ -457,7 +457,7 @@ public partial class App : Application
         }
         else
         {
-            AddItem(category, id, 1);
+            AddItem(category, id, quantity);
         }
     }
     public static void AddItem(int category, int id, int quantity)
@@ -652,6 +652,7 @@ public partial class App : Application
         else
         {
             StartEventWatcher();
+            Helpers.ListItemLots();
         }
         //Helpers.MonitorLastBonfire((lastBonfire) =>
         //{
@@ -1071,7 +1072,7 @@ public partial class App : Application
                         Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
                     }
                 }
-                AddAbstractItem((int)itemToReceive.Category, itemToReceive.Id);
+                AddAbstractItem((int)itemToReceive.Category, itemToReceive.Id, itemToReceive.Quantity);
 
                 /* If after receiving item (or trap), player is still in game, then it received successfully */
                 if (Helpers.IsInGame())
@@ -1084,7 +1085,7 @@ public partial class App : Application
                 Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 var filler = AllItems.First(x => x.Id == 380);
-                AddAbstractItem((int)filler.Category, filler.Id);
+                AddAbstractItem((int)filler.Category, filler.Id, 1);
             }
         }
         e.Success = success;

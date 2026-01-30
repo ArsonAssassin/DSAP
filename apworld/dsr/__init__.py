@@ -7,7 +7,7 @@ from Options import Toggle, OptionError
 from worlds.AutoWorld import World, WebWorld
 from worlds.generic.Rules import set_rule, add_rule, add_item_rule
 
-from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildItemPool, UpgradeEquipment
+from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildRequiredItemPool, BuildGuaranteedItemPool, UpgradeEquipment
 from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories
 from .Groups import location_name_groups, item_name_groups
 from .Options import DSROption, option_groups
@@ -64,6 +64,10 @@ class DSRWorld(World):
         "external_pack_key" : "ut_poptracker_path"
     }
 
+    gc = 0
+    bc = 0
+
+
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
@@ -71,6 +75,7 @@ class DSRWorld(World):
         self.locked_locations = []
         self.main_path_locations = []
         self.enabled_location_categories = set()
+        self.all_excluded_locations = set()
 
 
     def generate_early(self):
@@ -86,11 +91,14 @@ class DSRWorld(World):
         self.enabled_location_categories.add(DSRLocationCategory.BOSS)
         self.enabled_location_categories.add(DSRLocationCategory.ITEM_LOT)
         self.enabled_location_categories.add(DSRLocationCategory.BONFIRE)
-        self.enabled_location_categories.add(DSRLocationCategory.DOOR)
+        # self.enabled_location_categories.add(DSRLocationCategory.DOOR)
         if (self.options.fogwall_sanity.value == True):
             self.enabled_location_categories.add(DSRLocationCategory.FOG_WALL)
         if (self.options.boss_fogwall_sanity.value == True):
             self.enabled_location_categories.add(DSRLocationCategory.BOSS_FOG_WALL)
+
+        self.all_excluded_locations.update(self.options.exclude_locations.value)
+
 
     def create_regions(self):
         # Create Regions
@@ -218,6 +226,8 @@ class DSRWorld(World):
             ]
         regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in our_regions})
        
+        print("created " + str(self.gc) + " real and "+ str(self.bc) + " fake locations")
+
         # Connect Regions
         def create_connection(from_region: str, to_region: str):
             connection = Entrance(self.player, f"{from_region} -> {to_region}", regions[from_region])
@@ -392,78 +402,162 @@ class DSRWorld(World):
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
         #print("location table size: " + str(len(location_table)))
+        
         for location in location_table:
             #print("Creating location: " + location.name)
-            if location.category in self.enabled_location_categories and location.category not in location_skip_categories:# [DSRLocationCategory.EVENT, DSRLocationCategory.DOOR]:
-                #print("Adding location: " + location.name + " with default item " + location.default_item)
+
+            if (location.category in self.enabled_location_categories and 
+                location.category not in location_skip_categories # [DSRLocationCategory.EVENT, DSRLocationCategory.DOOR]:
+                and not (self.options.excluded_location_behavior == "do_not_randomize" and location.name in self.all_excluded_locations)): 
+                self.gc = self.gc + 1
+                default_item = location.default_item
+                if (location.category in [DSRLocationCategory.FOG_WALL, DSRLocationCategory.BOSS_FOG_WALL]):
+                    default_item = "Fogwall Filler"
+                # print("Adding location: " + location.name + " with default item " + location.default_item)
                 new_location = DSRLocation(
                     self.player,
                     location.name,
                     location.category,
-                    location.default_item,
+                    default_item,
                     self.location_name_to_id[location.name],
                     new_region
                 )
             else:
+                self.bc = self.bc + 1
+                default_item = location.default_item
+                if (location.category in [DSRLocationCategory.FOG_WALL, DSRLocationCategory.BOSS_FOG_WALL, 
+                                          DSRLocationCategory.DOOR]):
+                    default_item = "Nothing"
+                    print("Placing event: " + default_item + " in location: " + location.name)
+
                 # Replace non-randomized progression items with events
-                event_item = self.create_item(location.default_item)
-                #if event_item.classification != ItemClassification.progression:
+                event_item = self.create_item(default_item)
+                # if event_item.classification != ItemClassification.progression:
                 #    continue
-                #print("Adding Location: " + location.name + " as an event with default item " + location.default_item)
+                # print("Adding Location: " + location.name + " as an event with default item " + default_item)
                 new_location = DSRLocation(
                     self.player,
                     location.name,
                     location.category,
-                    location.default_item,
+                    default_item,
                     None,
                     new_region
                 )
                 event_item.code = None
                 new_location.place_locked_item(event_item)
-                #print("Placing event: " + event_item.name + " in location: " + location.name)
+                
 
             new_region.locations.append(new_location)
-        #print("created " + str(len(new_region.locations)) + " locations")
+        
+        # print("created " + str(len(new_region.locations)) + " locations")
         self.multiworld.regions.append(new_region)
         #print("adding region: " + region_name)
         return new_region
 
 
     def create_items(self):
-        skip_items: List[DSRItem] = []
+        skip_itemlocs: List[DSRItem, Location] = []
+        skipitempool: List[DSRItem] = []
         itempool: List[DSRItem] = []
         itempoolSize = 0
         
-        #print("Creating items")
+        # print("Creating items")
         for location in self.multiworld.get_locations(self.player):            
             item_data = item_dictionary[location.default_item_name]
-            if item_data.category in [DSRItemCategory.SKIP] or location.category in location_skip_categories:# [DSRLocationCategory.EVENT]:                
-                #print("Adding skip item: " + location.default_item_name)
-                skip_items.append(self.create_item(location.default_item_name))
+            if item_data.category in [DSRItemCategory.SKIP] or location.category in location_skip_categories: # [DSRLocationCategory.EVENT]:
+                # print("Adding skip item: " + location.default_item_name + " for location: " + location.name)
+                skip_itemlocs.append((self.create_item(location.default_item_name), location))
+                skipitempool.append(self.create_item(location.default_item_name))
             elif location.category in self.enabled_location_categories:
-                #print("Adding item: " + location.default_item_name)
-                itempoolSize += 1
-                itempool.append(self.create_item(location.default_item_name))
+                if self.options.excluded_location_behavior == "do_not_randomize" and location.name in self.all_excluded_locations:
+                    # print("Adding skip item: " + location.default_item_name + " for location: " + location.name)
+                    skip_itemlocs.append((self.create_item(location.default_item_name), location))
+                    skipitempool.append(self.create_item(location.default_item_name))
+                else:
+                    #print("Adding item: " + location.default_item_name)
+                    itempoolSize += 1
+                    itempool.append(self.create_item(location.default_item_name))
         
-        #print("Requesting itempool size: " + str(itempoolSize))
-        foo = BuildItemPool(itempoolSize, self.options, self)
-        #print("Created item pool size: " + str(len(foo)))
+        # print("Requesting itempool size: " + str(itempoolSize))
+        # foo = BuildItemPool(itempoolSize, self.options, self)
+        # print("Created item pool size: " + str(len(foo)))
 
-        removable_items = [item for item in itempool if item.classification != ItemClassification.progression and item.classification != ItemClassification.useful]
-        #print("marked " + str(len(removable_items)) + " items as removable")
-        
+        # Add any Key + useful items
+        rip = BuildRequiredItemPool(self, itempoolSize)
+        crip = [self.create_item(item.name) for item in rip]
+        disabled_items = [self.create_item(loc.default_item) for loc in location_dictionary.values() if loc.category not in self.enabled_location_categories]
+        StillRequiredPool = [item for item in crip if item not in itempool and item not in skipitempool and item not in disabled_items]
+        guaranteedpool = BuildGuaranteedItemPool(self)
+
+        filler_items = [item for item in itempool if item_dictionary[item.name].category in [DSRItemCategory.FILLER]]
+        junk_items = [item for item in itempool if item.name in item_name_groups["Junk"]]
+        removable_items = filler_items + junk_items
+
+        # print("marked " + str(len(removable_items)) + " items as removable")
+        # print("marked " + str(len(filler_items)) + " items as filler")
+        # print("marked " + str(len(junk_items)) + " items as non filler")
+        # for item in junk_items:
+        #     print("junk:" + item.name)
+        # print("itempool size " + str(len(itempool)) + "itempoolsize=" + str(itempoolSize))
+        # print("skip_itemlocs size " + str(len(skip_itemlocs)))
+        # print("rip size " + str(len(rip)))
+        # print("StillRequiredPool size " + str(len(StillRequiredPool)))
+        # print("disabled items " + str(len(disabled_items)))
+        # for item in disabled_items:
+        #     print("disabled:" + item.name)
+        # for item in StillRequiredPool:
+        #     print("StillRequiredPool item: " + str(item))
+        # for item in skipitempool:
+        #     print("skip item: " + str(item))
+        limited_pool = [item for item in StillRequiredPool if item_dictionary[item.name].category not in [DSRItemCategory.FOGWALL, DSRItemCategory.BOSSFOGWALL]]
+        for item in limited_pool:
+            print("non-fogwall required item: " + str(item))
+
+        # Replace "Soul of a Lost Undead" if needed
+        if len(StillRequiredPool) + len(guaranteedpool) > len(removable_items):
+            print("Adding " + str(len([item for item in itempool if item.name == 'Soul of a Lost Undead'])) +" Souls of a Lost Undead to removable items")
+            removable_items += [item for item in itempool if item.name == 'Soul of a Lost Undead']
+            print("now " + str(len(removable_items)) + " are removable")
+
+        # Replace "Large Soul of a Lost Undead" if needed
+        if len(StillRequiredPool) > len(removable_items):
+            print("Adding " + str(len([item for item in itempool if item.name == 'Large Soul of a Lost Undead'])) +" Large Souls of a Lost Undead to removable items")
+            removable_items += [item for item in itempool if item.name == 'Large Soul of a Lost Undead']
+            print("now " + str(len(removable_items)) + " are removable")
+
         for item in removable_items:
-            #print("removable item: " + item.name)
+            if len(StillRequiredPool) > 0:
+                # print("removable item: " + item.name)
+                itempool.remove(item)
+                itempool.append(self.create_item(StillRequiredPool.pop().name))
+            elif len(guaranteedpool) > 0:
+                itempool.remove(item)
+                itempool.append(self.create_item(guaranteedpool.pop().name))
+            else:
+                break
+
+        filler_items = [item for item in itempool if item_dictionary[item.name].category in [DSRItemCategory.FILLER]]
+        junk_items = [item for item in itempool if item.name in item_name_groups["Junk"]]
+        removable_items = filler_items + junk_items
+
+        filler_items = [item for item in itempool if item_dictionary[item.name].category in [DSRItemCategory.FILLER]]
+        junk_items = [item for item in itempool if item.name in item_name_groups["Junk"]]
+        removable_items = filler_items + junk_items
+        print("leftover removable items: " + str(len(removable_items)))
+        print("leftover filler items: " + str(len(filler_items)))
+
+        for item in removable_items:
+            # print("removable item: " + item.name)
             itempool.remove(item)
-            itempool.append(self.create_item(foo.pop().name))
+            itempool.append(self.create_item("Soul of a Proud Knight"))
 
         # Add regular items to itempool
         self.multiworld.itempool += itempool
 
         # Handle SKIP items separately
-        for skip_item in skip_items:
-            location = next(loc for loc in self.multiworld.get_locations(self.player) if loc.default_item_name == skip_item.name)
-            location.place_locked_item(skip_item)
+        for skip_item_loc in skip_itemlocs:
+            location = skip_item_loc[1]
+            location.place_locked_item(skip_item_loc[0])    
             #self.multiworld.itempool.append(skip_item)
             #print("Placing skip item: " + skip_item.name + " in location: " + location.name)
         
@@ -497,7 +591,7 @@ class DSRWorld(World):
             for location in region.locations:
                     set_rule(location, lambda state: True)        
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Gwyn, Lord of Cinder Defeated", self.player)
-          
+
         set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Undead Asylum Cell Door", self.player), lambda state: state.has("Dungeon Cell Key", self.player))   
         #set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After Fog -> Northern Undead Asylum - F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
@@ -530,11 +624,15 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum Second Visit -> Northern Undead Asylum Second Visit - F2 West Door", self.player), lambda state: state.has("Undead Asylum F2 West Key", self.player))
         set_rule(self.multiworld.get_entrance("Darkroot Garden - Before Fog -> Darkroot Garden - Behind Artorias Door", self.player), lambda state: state.has("Crest of Artorias", self.player))
+        # Else no rule - player can access without problem
+
         set_rule(self.multiworld.get_entrance("Darkroot Garden - Moonlight Butterfly -> Darkroot Garden - After Moonlight Butterfly", self.player), lambda state: state.has("Moonlight Butterfly Defeated", self.player))
 
 
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Depths", self.player), lambda state: state.has("Key to Depths", self.player))
+        
         set_rule(self.multiworld.get_entrance("Lower Undead Burg -> Lower Undead Burg - After Residence Key", self.player), lambda state: state.has("Residence Key", self.player))
+            
         set_rule(self.multiworld.get_entrance("Lower Undead Burg - Capra Demon -> Lower Undead Burg - After Capra Demon", self.player), lambda state: state.has("Capra Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Upper New Londo Ruins -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
         set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Door between Upper New Londo and Valley of the Drakes", self.player), lambda state: state.has("Key to New Londo Ruins", self.player) or state.has("Master Key", self.player))
@@ -562,14 +660,15 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Prison Extra Key -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
+        set_rule(self.multiworld.get_location("DA: Broken Pendant", self.player), lambda state: state.has("Dusk Rescued", self.player))
         set_rule(self.multiworld.get_entrance("Crystal Cave -> Crystal Cave - After Seath", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Crystal Cave -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Anor Londo - After First Fog -> Painted World of Ariamis", self.player), lambda state: state.has("Peculiar Doll", self.player))
         set_rule(self.multiworld.get_entrance("Painted World of Ariamis - After Fog -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
         
-        set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias", self.player) and ((self.options.boss_fogwall_lock.value == False) or state.has ("Boss Fog Wall Key - Four Kings", self.player)))
+        set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias", self.player) and ((self.options.boss_fogwall_sanity.value == False) or state.has ("Boss Fog Wall Key - Four Kings", self.player)))
         
-        set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins - Demon Firesage", self.player), lambda state: state.has("Lordvessel", self.player) and ((self.options.boss_fogwall_lock.value == False) or state.has ("Boss Fog Wall Key - Demon Firesage", self.player)))
+        set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins - Demon Firesage", self.player), lambda state: state.has("Lordvessel", self.player) and ((self.options.boss_fogwall_sanity.value == False) or state.has ("Boss Fog Wall Key - Demon Firesage", self.player)))
         set_rule(self.multiworld.get_entrance("Demon Ruins - Early -> Demon Ruins", self.player), lambda state: state.has("Ceaseless Discharge Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Lost Izalith -> Demon Ruins Shortcut", self.player), lambda state: state.has("Bed of Chaos Defeated", self.player))
 
@@ -598,6 +697,7 @@ class DSRWorld(World):
               
         # DLC areas
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
+
         set_rule(self.multiworld.get_entrance("Sanctuary Garden - Santuary Guardian -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
@@ -607,7 +707,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown", self.player), lambda state: state.has("Lordvessel", self.player))
 
         # artificial logic
-        if (self.options.fogwall_lock == False and self.options.boss_fogwall_lock == False):
+        if (self.options.fogwall_sanity == False and self.options.boss_fogwall_sanity == False):
             set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
             set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
             set_rule(self.multiworld.get_entrance("Lower Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
@@ -618,10 +718,10 @@ class DSRWorld(World):
         # fogwall rules
         def add_fog_rule(fogwall_item: str, from_region: str, to_region: str):
             set_rule(self.multiworld.get_entrance(f"{from_region} -> {to_region}", self.player), 
-                lambda state: (self.options.fogwall_lock.value == False) or state.has (fogwall_item, self.player))
+                lambda state: (self.options.fogwall_sanity.value == False) or state.has (fogwall_item, self.player))
 
-        #early 
-        set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Northern Undead Asylum - After Fog", self.player), lambda state: (self.options.fogwall_lock.value == False) or (self.options.fogwall_lock_include_ua.value == False) or state.has ("Fog Wall Key - Northern Undead Asylum", self.player))
+        #early - removed
+        # set_rule(self.multiworld.get_entrance("Northern Undead Asylum -> Northern Undead Asylum - After Fog", self.player), lambda state: (self.options.fogwall_sanity.value == False) or (self.options.fogwall_sanity_include_ua.value == False) or state.has ("Fog Wall Key - Northern Undead Asylum", self.player))
         
         #normal
         add_fog_rule("Fog Wall Key - Undead Burg", "Upper Undead Burg - Before Fog", "Upper Undead Burg - Fog")
@@ -633,7 +733,7 @@ class DSRWorld(World):
         add_fog_rule("Fog Wall Key - Darkroot Garden", "Darkroot Garden - Before Fog", "Darkroot Garden")
         
         # Depths fog doesn't affect entrance logic, but is itself only accessible with the fog item
-        set_rule(self.multiworld.get_location("DE: Fog Wall - Depths Rat Room", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("Fog Wall Key - Depths Rat Room", self.player))
+        set_rule(self.multiworld.get_location("DE: Fog Wall - Depths Rat Room", self.player), lambda state: (self.options.fogwall_sanity.value == False) or state.has ("Fog Wall Key - Depths Rat Room", self.player))
 
         add_fog_rule("Fog Wall Key - Lower Blighttown Entrance", "Upper Blighttown Depths Side", "Lower Blighttown - Fog")
         add_fog_rule("Fog Wall Key - Lower Blighttown Entrance", "Lower Blighttown", "Lower Blighttown - Fog")
@@ -650,20 +750,20 @@ class DSRWorld(World):
         add_fog_rule("Fog Wall Key - Duke's Archives Courtyard Entrance", "The Duke's Archives - After Archive Tower Giant Door Key", "The Duke's Archives - Courtyard")
         
         # Catacombs fog does not affect entrance logic, but is itself only accessible with the fog item
-        set_rule(self.multiworld.get_location("TC: Fog Wall - Catacombs", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("Fog Wall Key - Catacombs", self.player))
+        set_rule(self.multiworld.get_location("TC: Fog Wall - Catacombs", self.player), lambda state: (self.options.fogwall_sanity.value == False) or state.has ("Fog Wall Key - Catacombs", self.player))
 
         add_fog_rule("Fog Wall Key - Tomb of the Giants", "Tomb of the Giants", "Tomb of the Giants - After White Fog")
         add_fog_rule("Fog Wall Key - New Londo (Upper)", "Upper New Londo Ruins", "Upper New Londo Ruins - After Fog")
 
         # Lower new londo fog does not affect entrance logic, but is itself only accessible with the fog item
-        set_rule(self.multiworld.get_location("NL: Fog Wall - New Londo (Lower)", self.player), lambda state: (self.options.fogwall_lock.value == False) or state.has ("Fog Wall Key - New Londo (Lower)", self.player))
+        set_rule(self.multiworld.get_location("NL: Fog Wall - New Londo (Lower)", self.player), lambda state: (self.options.fogwall_sanity.value == False) or state.has ("Fog Wall Key - New Londo (Lower)", self.player))
 
         add_fog_rule("Fog Wall Key - Painted World", "Painted World of Ariamis", "Painted World of Ariamis - After Fog")
 
         #bosses
         def add_boss_fog_rule(fogwall_item: str, from_region: str, to_region: str):
             set_rule(self.multiworld.get_entrance(f"{from_region} -> {to_region}", self.player), 
-                lambda state: (self.options.boss_fogwall_lock.value == False) or state.has (fogwall_item, self.player))
+                lambda state: (self.options.boss_fogwall_sanity.value == False) or state.has (fogwall_item, self.player))
 
         add_boss_fog_rule("Boss Fog Wall Key - Taurus Demon", "Upper Undead Burg", "Upper Undead Burg - Taurus Demon")
         add_boss_fog_rule("Boss Fog Wall Key - Capra Demon", "Lower Undead Burg", "Lower Undead Burg - Capra Demon")
@@ -737,11 +837,8 @@ class DSRWorld(World):
         slot_data = {
             "options": {
                 "guaranteed_items": self.options.guaranteed_items.value,
-                "enable_masterkey": self.options.enable_masterkey.value,
-                "unique_souls": self.options.unique_souls.value,
-                "fogwall_lock": self.options.fogwall_lock.value,
-                "fogwall_lock_include_ua": self.options.fogwall_lock_include_ua.value,
-                "boss_fogwall_lock": self.options.boss_fogwall_lock.value,
+                "fogwall_sanity": self.options.fogwall_sanity.value,
+                "boss_fogwall_sanity": self.options.boss_fogwall_sanity.value,
                 "upgraded_weapons_percentage": self.options.upgraded_weapons_percentage.value,
                 "upgraded_weapons_allowed_infusions": self.options.upgraded_weapons_allowed_infusions.value,
                 "upgraded_weapons_adjusted_levels": self.options.upgraded_weapons_adjusted_levels.value,
@@ -758,7 +855,7 @@ class DSRWorld(World):
             "itemsId": items_id,
             "itemsUpgrades": items_upgrades,
             "itemsAddress": items_address,
-            "apworld_api_version" : "0.0.21.0" # Manually set our apworld api level, for detecting compatibility with client
+            "apworld_api_version" : "0.0.22.0" # Manually set our apworld api level, for detecting compatibility with client
         }
 
         self.items_id = items_id
@@ -769,9 +866,14 @@ class DSRWorld(World):
         return slot_data
 
     def write_spoiler(self, spoiler_handle: TextIO) -> None:
+        wrote_items = False
         if (len(self.items_upgrades) > 0):
             spoiler_handle.write(f"\nDSR weapon upgrades for {self.multiworld.player_name[self.player]}:\n")
             for i in range(len(self.items_upgrades)):
                 if self.items_upgrades[i] == None or self.items_upgrades[i] == "":
                     continue
                 spoiler_handle.write(f"\nitem {self.items_names[i]} at loc {self.items_address[i]} upgraded to {self.items_upgrades[i]}.")
+                wrote_items = True
+            if not wrote_items:
+                spoiler_handle.write("\nNo items upgraded")
+            spoiler_handle.write("\n") # Spacing

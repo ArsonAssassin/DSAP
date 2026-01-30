@@ -16,19 +16,20 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 [Location Groups](#Location-Groups)  
 [Item Groups](#Item-Groups)  
 [Artificial Logic Without Fogwall Locking](#Artificial-Logic-Without-Fogwall-Locking)  
+[Co-op Toleration](#Co-op-Toleration)  
 
 # How it works
-* Every loose item on the ground, and some doors, are "locations" or "checks", and can each contain any item from the multiworld randomized item pool.
-* Keys and progression items (e.g. Lordvessel) will be randomized into the item pool.
-* Other items (consumables, souls, unique items, equipment) will also be randomized into the item pool.
+* Every loose item on the ground, and potentially fog walls, are "locations" or "checks", and can each contain any item from the multiworld randomized item pool.
+* All items in those locations will be randomized into the item pool.
+* Keys and progression items (e.g. Lordvessel) will be forced into the item pool, unless they drop or are shoppable from non-randomized locations.
 * Undead Asylum is not randomized. This is intended behavior so as to not put the player into BK mode immediately.
-* Enemy loot and shop items are not yet randomized.
+* Enemy loot and shop items are not yet randomized. Some bosses are exceptions to this.
 * Item pool is currently constructed as follows:
-    1. First all guaranteed items and key items are added to the pool.
-    2. Then the master key is added if it is enabled in the yaml options.
-    3. Then all embers are added to the pool.
-    4. With what's left, 20% are consumables, 30% are specifically souls, 20% are materials, and the rest are weapons, armour, shields, spells or rings.
-  This means that not all items are guaranteed to be in the item pool.
+    1. First all items from randomized are added to the pool.
+    2. Then, key items and embers will replace any filler items. This includes any "Fog Wall Keys", if either fogwall_sanity is on.
+    3. Then, Guaranteed items are added to the pool.
+    4. If there are any Filler or Junk items left over, they are replaced with Souls of a Proud Knight (2000 souls each).
+* If locations are excluded and excluded_locations_behavior is set to "do_not_randomize", then the items in those locations will not be added to the pool, and those locations will have their vanilla items. Even with fogwall_sanity on, fog walls excluded in this manner this will provide nothing, as fog walls do not provide items in the base game.
 
 # Initial Setup
 1. Download the latest APWorld and Client from the releases page.
@@ -76,13 +77,13 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 
 # Frequently Asked Questions (FAQ)
 * Q: Can I use this with seamless co-op?
-  * A: Not yet, but it is being researched.
+  * A: Toleration has been added for multiple players. See "Co-op Toleration" section below.
 * Q: Can I use this to randomize enemies?
   * A: This mod will not randomize enemies, but some players have had success with external enemy and boss randomizers. That said, we cannot guarantee they will continue to work, and that future updates won't break compatibility.
 * Q: Does this work with Prepare to Die edition?
   * A: No, The current release only works with Dark Souls Remastered. There may be potential to make it compatible with PTDE but not until we are feature-complete on remastered, as there isn't a way to legally obtain a new copy of PTDE anymore.
 * Q: Does this work on Linux?
-  * A: Not yet. The underlying client library doesn't support linux yet, as the way memory is read and written to is a bit different. Work is ongoing to add support but we're not there quite yet.
+  * A: We are working on it.
 * Q: Can I randomized starting gear? 
   * A: Not yet - this is planned for the future. Currently, it is recommended to create your character before connecting with the DSAP client.
 * Q: Is there a tracker?
@@ -92,9 +93,9 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
   * A: You probably have a full stack of Prism Stones in your inventory. This is the item we use to replace vanilla items when the Archipelago item is in another players' world. As long as you've "picked up" the item from the original location, leaving the dropped bag won't cause any issues. We technically check whether the item is still in the original location, not whether it is in your inventory. To prevent this, you can discard most/all of your prism stones when they get up to or close to 99.
 
 # Known issues
-* Items will only ever be sent to one save. Fixing this, and potentially allowing for seamless co-op toleration, is planned for the near future.
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings. Randomized starting gear, and potentially gifts, is planned for the future.
 * Boss fog walls in the DLC do not correctly "Lock" with boss fog wall locks on.
+* v0.0.21.0 and lower: Items will only ever be sent to one save. This is fixed in v0.0.22.0+.
 * v0.0.20.0 and lower: Goal may not send upon completion. It is recommended to upgrade the DSAP client to v0.0.21.0, connect, and run the /goalcheck command. v0.0.21.0 of the client is fully compatible with v0.0.20.0-generated apworlds.
 * v0.0.19.1 and lower: If you receive an item while on the main menu, it will be lost, requiring admin intervention. **For safety, you should only run the client once loaded into game.**
   * Furthermore, **you should close the client before quitting to menu or quitting the game.**
@@ -107,6 +108,18 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
+## Version 0.0.22.0 (upcoming)
+* Version update -> 0.0.22.0. Both Apworld and Client have updated. This Client version will NOT be compatible with earlier versions of the apworld.
+* Feature: Item pool is now generated based on the vanilla item pool, with slight modifications. You can actually get rings, and the Zweihander now!
+* Feature: Multi-save support! Now you (or somebody else!) can start a new character on your slot without risk of losing items! Note: Most local items will still have to be re-acquired in the new save. Same-slot seamless co-op play may also be possible (not thoroughly tested) - see the [Co-op Toleration](#Co-op-Toleration) section below.
+* Feature: "Excluded Location Behavior" yaml option added, to allow for not randomizing excluded areas at all, instead of just making them have non-priority, non-useful randomized items.
+* Update: Yaml options simplified - Fogwall Lock and Fogwall Sanity options to just Fogwall Sanity (same for the Boss equivalents).
+* Update: Yaml option for "Locked Undead Asylum Fog Wall" was removed, and not folded into any other option.
+* Update: Yaml option for "Singular Boss Souls" was removed, due to being irrelevant.
+* Update: Yaml option for "Enable Master Key" was removed, due to being confusing.
+* Fix: Account for shop items and un-randomized drops for being in logic, instead of also adding them to the pool
+* Fix: Massive reduction of bandwidth and game data storage usage
+
 ## Version 0.0.21.0
 * Version update -> 0.0.21.0. Client is compatible with 0.0.20.0-generated apworlds.
 * Feature: Add yaml option "fogwall_lock" - introduces AP items which are "keys" that you must acquire before you can go through fog walls. Default on.
@@ -157,12 +170,18 @@ Archipelago implementation for Dark Souls Remastered by ArsonAssassin
 * General: Better error mesaging (#50, #65, #68, etc)
 
 # Roadmap
-## 0.0.22 (planned)
-* Feature: Item pool Balancing and options
+## v0.1.0 (planned)
 * Feature: Starting Item randomization
 
+## v0.2.0 (planned)
+* Feature: Shop Items randomized
+
+## v1.0.0 (planned)
+* Feature: Enemy drops randomized
+
 ## At some point
-* Seamless co-op and "new save file" support
+* Linux support
+* Traps
 
 # Location Groups
 All Boss Fog Walls  
@@ -241,3 +260,14 @@ Weapons
 * Access to the Great Hollow is behind Blighttown access + Lordvessel item.
 * Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins from Upper New Londo Ruins requires access to being able to defeat Ornstein and Smough (in addition to having the Key to the Seal - the default rule).
 * Access to Tomb of the Giants from after Pinwheel requires access to being able to defeat Ornstein and Smouth (in addition to having the Skull Lantern - the default rule).
+
+# Co-op Toleration
+As of v0.0.22.0, using the Seamless Co-op mod may work with DSAP. It has not been very thoroughly tested, and if there are any crashes or instability caused by the Seamless Co-op mod itself, we cannot do much about it. Please read the information below.
+* Q: How to set it up?
+  * A: **Both players should always connect with the DSAP client to the same slot** once they load into the game after creating their characters.
+        This must be done before doing any checks, so it is recommended to do so **before hosting or joining** the host's session.
+        On first connect, you will need to head to the Undead Asylum bonfire and get your co-op items before joining the other's session.
+* Q: What items are shared?
+  * A: Any items sent by other slots will be sent to both players. Any fog wall keys found in this slot's own world will be sent to both players. Any checks the co-op players get for other slots will be sent immediately when the first player picks it up or makes the check.
+* Q: What items aren't shared?
+  * A: Everything else - any items that the player would normally get the item popup for in-game will need to be received by each player. For boss kills, when the boss is killed with both players in the session, they will both get the item. For items on the ground, each player will have to pick them up individually.

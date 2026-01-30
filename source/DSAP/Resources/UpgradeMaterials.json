@@ -110,5 +110,29 @@
     "UpgradeType": "None",
     "Category": "UpgradeMaterials",
     "ApId": 11115023
+  },
+  {
+    "Name": "Large Titanite Shard x2",
+    "Id": 1010,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "UpgradeMaterials",
+    "ApId": 11115100
+  },
+  {
+    "Name": "Demon Titanite",
+    "Id": 1120,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "UpgradeMaterials",
+    "ApId": 11115101
+  },
+  {
+    "Name": "Green Titanite Shard x2",
+    "Id": 1020,
+    "StackLimit": 99,
+    "UpgradeType": "None",
+    "Category": "UpgradeMaterials",
+    "ApId": 11115102
   }
 ]

@@ -1383,11 +1383,6 @@
     "Id": 11110750
   },
   {
-    "Name": "OT: Crest Key (Mimic B?)",
-    "Flag": 51210960,
-    "Id": 11110764
-  },
-  {
     "Name": "CotA: Cleansing Greatshield",
     "Flag": 51210910,
     "Id": 11110772
@@ -1403,7 +1398,7 @@
     "Id": 11110759
   },
   {
-    "Name": "OT: Crest Key (Mimic A)",
+    "Name": "OT: Crest Key (Mimic)",
     "Flag": 51210981,
     "Id": 11110764
   },

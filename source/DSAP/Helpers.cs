@@ -496,7 +496,7 @@ namespace DSAP
                                         GetItemFlagId = -1,
                                         LotItemBasePoint = 100,
                                         LotItemCategory = (int)repitem.Category,
-                                        LotItemNum = 1,
+                                        LotItemNum = (byte)repitem.Quantity,
                                         LotItemId = repitem.Id
                                     };
 
@@ -682,7 +682,7 @@ namespace DSAP
                                 GetItemFlagId = -1,
                                 LotItemBasePoint = 100,
                                 LotItemCategory = (int)repitem.Category,
-                                LotItemNum = 1,
+                                LotItemNum = (byte)repitem.Quantity,
                                 LotItemId = repitem.Id
                             };
 
@@ -1955,6 +1955,25 @@ namespace DSAP
         {
             ulong address = GetSaveSlotAddress();
             Memory.Write(address, slot);
+        }
+        public static void ListItemLots()
+        {
+            var startAddress = GetItemLotParamOffset();
+            var dataOffset = Memory.ReadUInt(startAddress + 0x4);
+            var rowCount = Memory.ReadUShort(startAddress + 0xA);
+            var foundItems = 0;
+            const int rowSize = 148; // Size of each ItemLotParam
+            Log.Logger.Information($"ItemParam list rowcount='{rowCount}'");
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
+                var currentItemLotId = Memory.ReadInt(currentAddress + 0x80);  // GetItemFlagId is at offset 0x80
+
+                var itemlotparams = Memory.ReadObject<ItemLotParam>(currentAddress);
+                Log.Logger.Information($"ilp '{i}'=" + itemlotparams.ToString(App.AllItems));
+
+            }
         }
     }
 }
