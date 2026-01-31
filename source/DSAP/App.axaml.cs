@@ -54,7 +54,7 @@ public partial class App : Application
     public static bool SaveidSet = false;
     public static bool CheckSaveId = true;
     private static bool _goalSent = false;
-    private readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
+    private static readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
     static List<EmkController> EmkControllers = [];
     private static DarkSoulsClient dsrClient = null;
     public override void Initialize()
@@ -415,7 +415,7 @@ public partial class App : Application
     private void PrintDiagnosticInfo()
     {
         Log.Logger.Warning("Diagnostic info:");
-        Log.Logger.Warning($"isc={Client?.IsConnected}, ili={Client?.IsLoggedIn}, irtri={Client?.isReadyToReceiveItems}, ircs={Client?.itemsReceivedCurrentSession},");
+        Log.Logger.Warning($"isc={Client?.IsConnected}, ili={Client?.IsLoggedIn}, ircs={Client?.ItemManager?.itemsReceivedCurrentSession},");
         Log.Logger.Warning($"v={Client?.CurrentSession.RoomState.Version},gv={Client?.CurrentSession.RoomState.GeneratorVersion}," +
             $"rist={Client?.CurrentSession.RoomState.RoomInfoSendTime.ToShortTimeString()},ctime={DateTime.Now.ToUniversalTime().ToShortTimeString()},Slot={Client?.CurrentSession.ConnectionInfo.Slot}");
         Log.Logger.Warning($"locs={Client?.CurrentSession.Locations.AllLocationsChecked.Count}/{Client?.CurrentSession.Locations.AllLocations.Count}");
@@ -532,17 +532,24 @@ public partial class App : Application
         {
             Client.Connected -= OnConnected;
             Client.Disconnected -= OnDisconnected;
-            Client.ItemReceived -= Client_ItemReceived;
+            if (Client.ItemManager != null)
+            {
+                Client.ItemManager.ItemReceived -= Client_ItemReceived;
+            }
             Client.MessageReceived -= Client_MessageReceived;
-            Client.LocationCompleted -= Client_LocationCompleted;
-            Client.EnableLocationsCondition = null;
+
+            if (Client.LocationManager != null)
+            {
+                Client.LocationManager.LocationCompleted -= Client_LocationCompleted;
+                Client.LocationManager.EnableLocationsCondition = null;
+                Client.LocationManager.CancelMonitors();
+            }
             if (_deathlinkService != null)
             {
                 _deathlinkService.OnDeathLinkReceived -= _deathlinkService_OnDeathLinkReceived;
                 _deathlinkService = null;
                 deathlink_enabled = false;
             }
-            Client.CancelMonitors();
         }
         if (dsrClient == null)
         {
@@ -585,11 +592,8 @@ public partial class App : Application
                 return;
 
             }
-            Client.ItemReceived += Client_ItemReceived;
             Client.MessageReceived += Client_MessageReceived;
-            Client.LocationCompleted += Client_LocationCompleted;
-            Client.EnableLocationsCondition = () => SaveidSet && Helpers.IsInGame();
-
+            
             if (Context.OverlayEnabled)
             {
                 Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
@@ -618,7 +622,7 @@ public partial class App : Application
                 });
             }
 
-            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null, startReadyToReceiveItems : false);
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
             if (!Client.IsLoggedIn)
             {
@@ -626,7 +630,6 @@ public partial class App : Application
                 Client.AddOverlayMessage("Login failed");
                 Context.ConnectButtonEnabled = true;
                 return;
-
             }
             if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
             {
@@ -644,7 +647,7 @@ public partial class App : Application
             var miscLocations = Helpers.GetMiscFlagLocations();
 
             var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(fogWallLocations).Union(miscLocations).ToList();
-            Client.MonitorLocations(fullLocationsList);
+            Client.MonitorLocationsAsync(fullLocationsList);
 
             StartEmkWatchers(EmkControllers);
             StartInGameWatcher();
@@ -897,7 +900,7 @@ public partial class App : Application
         Log.Logger.Information(JsonSerializer.Serialize(e.Message, Helpers.GetJsonOptions()));
         Client.AddRichOverlayMessage(e.Message);
     }
-    private void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
+    private static void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
     {
         var locid = e.CompletedLocation.Id;
         if (e.CompletedLocation.Name.Contains("Lord of Cinder"))
@@ -914,7 +917,7 @@ public partial class App : Application
         Log.Logger.Debug($"Location Completed: {e.CompletedLocation.Name} at {e.CompletedLocation.Id}");
     }
 
-    private void SendGoal()
+    private static void SendGoal()
     {
         Task.Run(async () =>
         {
@@ -1349,6 +1352,11 @@ public partial class App : Application
         Client.AddOverlayMessage("Connected to Archipelago");
         Log.Logger.Information($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
         Client.AddOverlayMessage($"Playing {Client.CurrentSession.ConnectionInfo.Game} as {Client.CurrentSession.Players.GetPlayerName(Client.CurrentSession.ConnectionInfo.Slot)}");
+
+        Client.ItemManager.ItemReceived += Client_ItemReceived;
+        Client.LocationManager.LocationCompleted += Client_LocationCompleted;
+        Client.LocationManager.EnableLocationsCondition = () => SaveidSet && Helpers.IsInGame();
+
 
         /* Initialize flag to off - to prevent receiving items until we have set the saveid */
         SaveidSet = false; 
