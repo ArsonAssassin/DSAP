@@ -813,9 +813,6 @@ class DSRWorld(World):
         items_names = []
         items_upgrades = []
         items_address = []
-        locations_id = []
-        locations_address = []
-        locations_target = []
         for location in self.multiworld.get_filled_locations():
             if location.item.player == self.player:
                 #we are the receiver of the item
@@ -824,15 +821,6 @@ class DSRWorld(World):
                 upgrade = UpgradeEquipment(location.item.code, self.options, self)
                 items_upgrades.append(upgrade)
                 items_address.append(f'{location.player}:{location.address}')
-
-            if location.player == self.player:
-                #we are the sender of the location check
-                locations_address.append(item_dictionary[location_dictionary[location.name].default_item].dsr_code)
-                locations_id.append(location.address)
-                if location.item.player == self.player:
-                    locations_target.append(name_to_dsr_code[location.item.name])
-                else:
-                    locations_target.append(0)
 
         slot_data = {
             "options": {
@@ -849,9 +837,6 @@ class DSRWorld(World):
             "seed": self.multiworld.seed_name,  # to verify the server's multiworld
             "slot": self.multiworld.player_name[self.player],  # to connect to server
             "base_id": self.base_id,  # to merge location and items lists
-            "locationsId": locations_id,
-            "locationsAddress": locations_address,
-            "locationsTarget": locations_target,
             "itemsId": items_id,
             "itemsUpgrades": items_upgrades,
             "itemsAddress": items_address,

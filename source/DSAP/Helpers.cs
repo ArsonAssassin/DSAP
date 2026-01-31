@@ -1,6 +1,7 @@
 ﻿using Archipelago.Core.Models;
 using Archipelago.Core.Util;
 using Archipelago.Core.Util.GPS;
+using Archipelago.MultiClient.Net.Models;
 using DSAP.Models;
 using Serilog;
 using Silk.NET.OpenGL;
@@ -423,132 +424,106 @@ namespace DSAP
         public static void BuildFlagToLotMap(out Dictionary<int, ItemLot> resultMap,
             out Dictionary<int, ItemLot> specialResultMap,
             List<EventFlag> eventflags,
-            Dictionary<string, object> slotData,
-            Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
+            Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap,
+            Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
             Dictionary<int, ItemLot> specialResult = new Dictionary<int, ItemLot>();
 
             var addonitems = 0;
 
-            /* Get locationsId and locationsTarget into lists */
-            List<int?> locationsIdList = new List<int?>();
-            List<int> locationsTargetList = new List<int>();
-
-            if (slotData.TryGetValue("locationsId", out object locationsId))
+            int i = 0;
+            foreach (var (k, v) in scoutedLocationInfo)
             {
-                locationsIdList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsId.ToString()));
-                if (slotData.TryGetValue("locationsTarget", out object locationsTarget))
+                i++;
+                int locId = ((int)k);
+                string target = v.Player.Name;
+                EventFlag? lot = eventflags.Find(x => x.Id == locId);
+                if (lot != null) /* found a location in our "item lots" */
                 {
-                    locationsTargetList.AddRange(JsonSerializer.Deserialize<int[]>(locationsTarget.ToString()));
-                }
-            }
-
-            if (locationsIdList.Count == 0 || locationsTargetList.Count == 0
-             || locationsIdList.Count != locationsTargetList.Count)
-            {
-                Log.Logger.Error("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-                App.Client.AddOverlayMessage("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-            }
-            else
-            {
-                /* Iterate over each pair of entries in the pair of lists */
-                for (int i = 0; i < locationsIdList.Count; i++)
-                {
-                    int target = locationsTargetList[i];
-                    int? locId = locationsIdList[i];
-                    if (locId != null) /* full list of locations in our game */
+                    ItemLotItem newLotItem = new ItemLotItem { };
+                    if (v.Player.Slot == App.Client.CurrentSession.ConnectionInfo.Slot) // it is us
                     {
-                        EventFlag? lot = eventflags.Find(x => x.Id == locId);
-                        if (lot != null) /* found a location in our "item lots" */
-                        {
-                            ItemLotItem newLotItem = new ItemLotItem { };
-                            if (target != 0) /* found an item in our game  */
-                            {
-                                /* Found an item of our own, located in our own game. 
+                        /* Found an item of our own, located in our own game. 
                                  * Validate that it's in the eventflags we've been given, and find the matching item. */
-                                DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
-                                if (item != null)
+                        DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == v.ItemId);
+                        if (item != null)
+                        {
+                            DarkSoulsItem repitem = item;
+                            if (item.Category == Enums.DSItemCategory.AnyWeapon)
+                            {
+                                Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
+                                if (App.DSOptions.UpgradedWeaponsPercentage > 0
+                                    && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
                                 {
-                                    DarkSoulsItem repitem = item;
-                                    if (item.Category == Enums.DSItemCategory.AnyWeapon)
+                                    if (itemupg.Item1 == item.ApId) // if item apid matches
+                                        repitem = UpgradeItem(repitem, itemupg.Item2);
+                                    else
                                     {
-                                        Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
-                                        if (App.DSOptions.UpgradedWeaponsPercentage > 0
-                                            && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
-                                        {
-                                            if (itemupg.Item1 == item.ApId) // if item apid matches
-                                                repitem = UpgradeItem(repitem, itemupg.Item2);
-                                            else
-                                            {
-                                                Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                                App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                            }
-                                        }
+                                        Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                        App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
                                     }
-
-                                    Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
-                                    newLotItem = new ItemLotItem
-                                    {
-                                        CumulateLotPoint = 0,
-                                        CumulateReset = false,
-                                        EnableLuck = false,
-                                        GetItemFlagId = -1,
-                                        LotItemBasePoint = 100,
-                                        LotItemCategory = (int)repitem.Category,
-                                        LotItemNum = (byte)repitem.Quantity,
-                                        LotItemId = repitem.Id
-                                    };
-
-                                    if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
-                                    {
-                                        Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with prism stone.");
-                                        var newspecialitemlot = new ItemLot
-                                        {
-                                            Rarity = 1,
-                                            GetItemFlagId = -1,
-                                            CumulateNumFlagId = -1,
-                                            CumulateNumMax = 0,
-                                            Items = []
-                                        };
-
-                                        if (!specialResult.TryAdd(lot.Id, newspecialitemlot))
-                                            addonitems++;
-                                        specialResult[lot.Id].Items.Add(newLotItem);
-                                        
-                                        newLotItem = prismStoneLotItem;
-                                    }
-                                }
-                                else
-                                {
-                                    Log.Logger.Warning($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                                    App.Client.AddOverlayMessage($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                                    Log.Logger.Warning($"Item at loc {locId} replaced with prism stone instead.");
-                                    App.Client.AddOverlayMessage($"Item at loc {locId} replaced with prism stone instead.");
-                                    newLotItem = prismStoneLotItem;
                                 }
                             }
-                            else /* item not in own game, put a prism stone instead */
+
+                            Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
+                            newLotItem = new ItemLotItem
                             {
-                                Log.Logger.Verbose($"Item {i} target = {target}");
+                                CumulateLotPoint = 0,
+                                CumulateReset = false,
+                                EnableLuck = false,
+                                GetItemFlagId = -1,
+                                LotItemBasePoint = 100,
+                                LotItemCategory = (int)repitem.Category,
+                                LotItemNum = (byte)repitem.Quantity,
+                                LotItemId = repitem.Id
+                            };
+
+                            if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
+                            {
+                                Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with prism stone.");
+                                var newspecialitemlot = new ItemLot
+                                {
+                                    Rarity = 1,
+                                    GetItemFlagId = -1,
+                                    CumulateNumFlagId = -1,
+                                    CumulateNumMax = 0,
+                                    Items = []
+                                };
+
+                                if (!specialResult.TryAdd(lot.Id, newspecialitemlot))
+                                    addonitems++;
+                                specialResult[lot.Id].Items.Add(newLotItem);
+
                                 newLotItem = prismStoneLotItem;
                             }
-                            
-                            /* add the found location->item to the replacement dictionary */
-                            var newitemlot = new ItemLot
-                            {
-                                Rarity = 1,
-                                GetItemFlagId = -1,
-                                CumulateNumFlagId = -1,
-                                CumulateNumMax = 0,
-                                Items = []
-                            };
-                            if (!result.TryAdd(lot.Flag, newitemlot))
-                                addonitems++;
-                            result[lot.Flag].Items.Add(newLotItem);
                         }
-                        
+                        else
+                        {
+                            Log.Logger.Warning($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                            App.Client.AddOverlayMessage($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                            Log.Logger.Warning($"Item at loc {locId} replaced with prism stone instead.");
+                            App.Client.AddOverlayMessage($"Item at loc {locId} replaced with prism stone instead.");
+                            newLotItem = prismStoneLotItem;
+                        }
                     }
+                    else /* item not in own game, put a prism stone instead */
+                    {
+                        Log.Logger.Verbose($"Item {i} target = {target}");
+                        newLotItem = prismStoneLotItem;
+                    }
+                    /* add the found location->item to the replacement dictionary */
+                    var newitemlot = new ItemLot
+                    {
+                        Rarity = 1,
+                        GetItemFlagId = -1,
+                        CumulateNumFlagId = -1,
+                        CumulateNumMax = 0,
+                        Items = []
+                    };
+                    if (!result.TryAdd(lot.Flag, newitemlot))
+                        addonitems++;
+                    result[lot.Flag].Items.Add(newLotItem);
                 }
             }
             Log.Logger.Debug($"replacement dict size = {result.Count}");
@@ -558,7 +533,7 @@ namespace DSAP
             /* Populate frampt chest with rubbish */
             const int frampt_base = 50004000;
             /* Iterate over each pair of entries in the pair of lists */
-            for (int i = 0; i <= 69; i++)
+            for (i = 0; i <= 69; i++)
             {
                 /* Skip estus flask + upgrades */
                 if (i >= 38 && i <= 45)
@@ -616,99 +591,71 @@ namespace DSAP
         /// </details>
         /// <param name="eventflags">A list of location flags of which items will be found.</param>
         /// <returns></returns>
-        public static Dictionary<int, ItemLot> BuildIdToLotMap(List<EventFlag> eventflags, Dictionary<string, object> slotData, Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
+        public static Dictionary<int, ItemLot> BuildIdToLotMap(List<EventFlag> eventflags,
+                                                               Dictionary<long, ScoutedItemInfo> scoutedLocationInfo,
+                                                               Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
-
-            /* Get locationsId and locationsTarget into lists */
-            List<int?> locationsIdList = new List<int?>();
-            List<int?> locationsTargetList = new List<int?>();
-
-            if (slotData.TryGetValue("locationsId", out object locationsId))
+            int i = 0;
+            foreach (var (k, v) in scoutedLocationInfo)
             {
-                locationsIdList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsId.ToString()));
-                if (slotData.TryGetValue("locationsTarget", out object locationsTarget))
+                i++;
+                int locId = ((int)k);
+                string target = v.Player.Name;
+                EventFlag? lot = eventflags.Find(x => x.Id == locId);
+                DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == v.ItemId);
+                if (lot != null && item != null)
                 {
-                    locationsTargetList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsTarget.ToString()));
-                }
-            }
-
-            if (locationsIdList.Count == 0 || locationsTargetList.Count == 0
-             || locationsIdList.Count != locationsTargetList.Count)
-            {
-                Log.Logger.Error("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-                App.Client.AddOverlayMessage("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-            }
-            else
-            {
-                /* Iterate over each pair of entries in the pair of lists */
-                for (int i = 0; i < locationsIdList.Count; i++)
-                {
-                    int? target = locationsTargetList[i];
-                    int? locId = locationsIdList[i];
-
-                    if (locId != null && target != null && target != 0)
+                    DarkSoulsItem repitem = item;
+                    if (item.Category == Enums.DSItemCategory.AnyWeapon)
                     {
-                        /* Found an item of our own, located in our own game. 
-                         * Validate that it's in the eventflags we've been given, and find the matching item. */
-
-                        EventFlag? lot = eventflags.Find(x => x.Id == locId);
-                        DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
-                        if (lot != null && item != null)
+                        Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
+                        if (App.DSOptions.UpgradedWeaponsPercentage > 0
+                            && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
                         {
-                            DarkSoulsItem repitem = item;
-                            if (item.Category == Enums.DSItemCategory.AnyWeapon)
-                            {
-                                Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
-                                if (App.DSOptions.UpgradedWeaponsPercentage > 0
-                                    && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
-                                {
-                                    if (itemupg.Item1 == item.ApId) // if item apid matches
-                                        repitem = UpgradeItem(repitem, itemupg.Item2);
-                                    else
-                                    {
-                                        Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                        App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                    }
-                                }
-                            }
-
-                            Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
-                            ItemLotItem newitem = new ItemLotItem
-                            {
-                                CumulateLotPoint = 0,
-                                CumulateReset = false,
-                                EnableLuck = false,
-                                GetItemFlagId = -1,
-                                LotItemBasePoint = 100,
-                                LotItemCategory = (int)repitem.Category,
-                                LotItemNum = (byte)repitem.Quantity,
-                                LotItemId = repitem.Id
-                            };
-
-                            /* If it's already in the mapping, add the item to the list of items in the existing lot */
-                            if (result.ContainsKey(lot.Id))
-                                result[lot.Id].Items.Add(newitem);
+                            if (itemupg.Item1 == item.ApId) // if item apid matches
+                                repitem = UpgradeItem(repitem, itemupg.Item2);
                             else
                             {
-                                /* add the found location->item to the replacement dictionary */
-                                var newitemlot = new ItemLot
-                                {
-                                    Rarity = 1,
-                                    GetItemFlagId = -1,
-                                    CumulateNumFlagId = -1,
-                                    CumulateNumMax = 0,
-                                    Items = new List<ItemLotItem>([newitem])
-                                };
-                                result.Add(lot.Id, newitemlot);
+                                Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
+                                App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
                             }
                         }
-                        else
-                        {
-                            Log.Logger.Verbose($"Item {i} {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                        }
-
                     }
+
+                    Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
+                    ItemLotItem newitem = new ItemLotItem
+                    {
+                        CumulateLotPoint = 0,
+                        CumulateReset = false,
+                        EnableLuck = false,
+                        GetItemFlagId = -1,
+                        LotItemBasePoint = 100,
+                        LotItemCategory = (int)repitem.Category,
+                        LotItemNum = (byte)repitem.Quantity,
+                        LotItemId = repitem.Id
+                    };
+
+                    /* If it's already in the mapping, add the item to the list of items in the existing lot */
+                    if (result.ContainsKey(lot.Id))
+                        result[lot.Id].Items.Add(newitem);
+                    else
+                    {
+                        /* add the found location->item to the replacement dictionary */
+                        var newitemlot = new ItemLot
+                        {
+                            Rarity = 1,
+                            GetItemFlagId = -1,
+                            CumulateNumFlagId = -1,
+                            CumulateNumMax = 0,
+                            Items = new List<ItemLotItem>([newitem])
+                        };
+                        result.Add(lot.Id, newitemlot);
+                    }
+                }
+                else
+                {
+                    Log.Logger.Verbose($"Item {i} {locId} lotnull {lot == null}, {target} itemnull {item == null}");
                 }
             }
             Log.Logger.Debug($"idToLotMap size = {result.Count}");

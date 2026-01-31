@@ -6,9 +6,11 @@ using Archipelago.Core.Models;
 using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using Archipelago.Core.Util.Overlay;
-using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.Packets;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -23,11 +25,11 @@ using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 using static DSAP.Enums;
 using Color = Avalonia.Media.Color;
 using Location = Archipelago.Core.Models.Location;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace DSAP;
 
@@ -530,7 +532,7 @@ public partial class App : Application
         Log.Logger.Information("Connecting...");
         if (Client != null)
         {
-            Client.Connected -= OnConnected;
+            Client.Connected -= OnConnectedAsync;
             Client.Disconnected -= OnDisconnected;
             if (Client.ItemManager != null)
             {
@@ -567,7 +569,7 @@ public partial class App : Application
         Client = new ArchipelagoClient(dsrClient);
 
         AllItems = Helpers.GetAllItems();
-        Client.Connected += OnConnected;
+        Client.Connected += OnConnectedAsync;
         Client.Disconnected += OnDisconnected;
         var isOnline = Helpers.GetIsPlayerOnline();
         if (isOnline)
@@ -1346,7 +1348,7 @@ public partial class App : Application
             });
         }
     }
-    private static void OnConnected(object sender, ConnectionChangedEventArgs args)
+    private static async void OnConnectedAsync(object sender, ConnectionChangedEventArgs args)
     {
         Log.Logger.Information("Connected to Archipelago");
         Client.AddOverlayMessage("Connected to Archipelago");
@@ -1384,7 +1386,11 @@ public partial class App : Application
             SlotLocToItemUpgMap = Helpers.BuildSlotLocationToItemUpgMap(slotData, currentSlot);
 
             var itemflags = Helpers.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList();
-            Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, out SpecialItemLotsMap, itemflags, slotData, SlotLocToItemUpgMap);
+            var locids = Client.CurrentSession.Locations.AllLocations.ToArray();
+
+            Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
+
+            Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, out SpecialItemLotsMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
 
             var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
             nonItemLotFlags.AddRange(Helpers.GetBonfireFlags().Cast<EventFlag>());
@@ -1400,7 +1406,7 @@ public partial class App : Application
                 Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
             }
             //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
-            ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags, slotData, SlotLocToItemUpgMap);
+            ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags, scoutedLocationInfo, SlotLocToItemUpgMap);
 
             foreach (var pair in ConditionRewardMap) Log.Logger.Verbose($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
             Log.Logger.Debug($"ConditionRewardMap has {ConditionRewardMap.Count} members");
