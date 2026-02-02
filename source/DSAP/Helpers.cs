@@ -37,7 +37,10 @@ namespace DSAP
         private static AoBHelper EmkAoB = new AoBHelper("EmkHead",
                 [0x48, 0x89, 0x05, 0x00, 0x00, 0x00, 0x00, 0xeb, 0x0b, 0x48, 0xc7, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8b, 0x5c, 0x24, 0x50],
                 "xxx????xxxxx????xxxxxxxxx", 3, 4);
-
+        private static AoBHelper SoloParamAob = new AoBHelper("SoloParam",
+                [ 0x4C, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x63, 0xC9, 0x48, 0x8D, 0x04, 0xC9 ],
+                "xxx????xxxxxxx", 3, 4);
+        
         private static ItemLotItem prismStoneLotItem = new ItemLotItem
         {
             CumulateLotPoint = 0,
@@ -261,10 +264,9 @@ namespace DSAP
         }
         private static ulong GetItemLotParamOffset()
         {
-            var soloParams = GetSoloParamOffset();
-            
-            var foo = Memory.ReadULong(soloParams);
-            var next = OffsetPointer(foo, 0x570);
+            var foo = SoloParamAob.Address;
+            Log.Logger.Information($"foo {foo.ToString("X")}");
+            var next = OffsetPointer(((ulong)foo), 0x570);
             var foo2 = Memory.ReadULong(next);
             next = OffsetPointer(foo2, 0x38);
             var foo3 = Memory.ReadULong(next);
@@ -1922,5 +1924,346 @@ namespace DSAP
 
             }
         }
+        public static void SetItemLot()
+        {
+            var startAddress = GetItemLotParamOffset();
+
+            var dataOffset = Memory.ReadUInt(startAddress + 0x4);
+            var rowCount = Memory.ReadUShort(startAddress + 0xA);
+            var rowSize = 148;
+
+            var paramTableBytes = Memory.ReadByteArray(startAddress + (ulong)(12 * rowCount), 0x30);
+            var itemlotflag = GetItemLotFlags().Find(x => x.Name.ToLower().Contains("well"));
+
+            ItemLotItem experimentalLotItem = new ItemLotItem
+            {
+                CumulateLotPoint = 0,
+                CumulateReset = false,
+                EnableLuck = false,
+                GetItemFlagId = -1,
+                LotItemBasePoint = 100,
+                LotItemCategory = (int)DSAP.Enums.DSItemCategory.Consumables,
+                LotItemNum = 1,
+                LotItemId = 9015
+            };
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                var tableOffset = i * 12;
+
+                var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
+                var itemLot = ReadItemLot(currentAddress);
+                if (itemLot.GetItemFlagId == itemlotflag.Flag)
+                {
+                    OverwriteSingleItem(currentAddress, experimentalLotItem, 0);
+                }
+            }
+            Location loc = (Location)Helpers.GetItemLotLocations().Find(x => x.Name.ToLower().Contains("well"));
+            SetEventFlag(itemlotflag.Flag, 0);
+            return;
+        }
+        public static void ChangePrismStoneText()
+        {
+            var item = GetAllItems().Find(x => x.Name.ToLower().Contains("prism stone"));
+            uint itemid = (uint)item.Id;
+            //uint itemid = 9014;
+
+            ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
+            ulong GoodsMsgsStart = Memory.ReadULong(MsgMan + 0x380);
+            ulong GoodsCaptionMsgsStart = Memory.ReadULong(MsgMan + 0x378);
+            ulong GoodsInfoMsgStart = Memory.ReadULong(MsgMan + 0x328);
+            ulong itemNameStrLoc = FindMsg(GoodsMsgsStart, itemid);
+            ulong itemCaptionStrLoc = FindMsg(GoodsCaptionMsgsStart, itemid);
+            ulong itemInfoStrLoc = FindMsg(GoodsInfoMsgStart, itemid);
+
+            UpdateItemText(itemNameStrLoc, 100, "AP Item\0");
+            UpdateItemText(itemCaptionStrLoc, 100, "This is an item that belongs to another world...\0");
+            UpdateItemText(itemInfoStrLoc, 500, "*narrator voice* We're not sure how this got here. \nBest hold on to it. \n\nJust in case.\0");
+
+            ulong equipGoodsParamResCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
+            upgradeGoods(equipGoodsParamResCap);
+            return;
+        }
+
+        private static void upgradeGoods(ulong resCap)
+        {
+            uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
+            ulong old_buffer = Memory.ReadULong(resCap + 0x38);
+            uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
+            ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
+            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+
+            ushort new_entries = 1;
+
+            uint goods_param_size = 0x5c;
+            ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
+
+            ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
+            uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
+            ushort addl_str_length = 10;
+            uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
+
+            uint new_buffer_size = (uint)(old_buffer_size + (0xc + goods_param_size + addl_str_length) * new_entries);
+            uint new_buffer_alloc_size = (uint)(new_buffer_size + (0x8 * new_entries) + 0x10 + 0xf);
+
+            ulong new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size);
+            ulong new_buffer = new_allocated_buffer + 0x10;
+            Log.Logger.Information($"Allocated {new_buffer_size} bytes at {new_buffer.ToString("X")}");
+
+            /* first, read highest numbered param in list */
+            uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
+            /* Then, copy the header + pointer structs */
+            byte[] basebytes = Memory.ReadByteArray(old_buffer, old_buffer_params_offset);
+            Memory.WriteByteArray(new_buffer, basebytes);
+            /* Then, copy the params */
+            uint old_buffer_params_length = (uint)(goods_param_size * old_buffer_num_entries);
+            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)old_buffer_params_length);
+            Memory.WriteByteArray(new_buffer + new_buffer_params_offset, basebytes2);
+            /* Then, copy the strings */
+            uint old_buffer_strings_length = old_buffer_size - old_buffer_string_offset;
+            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_offset, (int)old_buffer_strings_length);
+            Memory.WriteByteArray(new_buffer + new_buffer_string_offset, basebytes3);
+
+            /* old buffer ends on the last string - last null terminator (shift-jis) */
+            byte[] parambytes = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)goods_param_size);
+            uint new_string_loc = (uint)(new_buffer + new_buffer_string_offset + old_buffer_strings_length);
+
+
+            for (uint i = 0; i < old_buffer_num_entries; i++)
+            {
+                uint currloc = (uint)(new_buffer + 0x30 + i * 0xc);
+                uint poff = Memory.ReadUInt(currloc + 0x4);
+                uint soff = Memory.ReadUInt(currloc + 0x8);
+                poff = poff + 0xc;
+                soff = soff + 0xc + goods_param_size;
+                Memory.Write(currloc + 0x4, poff);
+                Memory.Write(currloc + 0x8, soff);
+            }
+
+            /* then add the new pointer structs, params, and strings, and pointers to each. */
+            for (uint i = 0; i < new_entries; i++)
+            {
+                byte[] stringbytes = Encoding.ASCII.GetBytes($"AP {i}\0");
+                uint newid = highest_id + 1 + i;
+                uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
+                Memory.Write(currloc + 0x0, newid);
+
+                uint new_param_loc = (uint)(new_buffer + new_buffer_params_offset + (old_buffer_num_entries + i) * goods_param_size);
+                Memory.WriteByteArray(new_param_loc, parambytes);
+                Memory.Write(currloc + 0x4, new_param_loc-new_buffer);
+
+                Memory.WriteByteArray(new_string_loc, stringbytes);
+                Memory.Write(currloc + 0x8, new_string_loc - new_buffer);
+                new_string_loc += (uint)stringbytes.Length;
+
+                Log.Logger.Information($"Added id={newid} to equipParamGoods");
+            }
+            ulong post_string_loc = new_string_loc;
+            ulong saved_len = post_string_loc - new_buffer;
+            /* Then fix up the offsets */
+            Memory.Write(new_buffer + 0x0, new_buffer_string_offset);
+            Memory.Write(new_buffer + 0x4, new_buffer_params_offset);
+            Memory.Write(new_buffer + 0xA, new_buffer_num_entries);
+
+            //Memory.Write(new_allocated_buffer, new_buffer_size);
+            Memory.Write(new_allocated_buffer, saved_len);
+
+            // copy over the endtable
+            ulong new_endtable_loc = new_buffer + ((saved_len + 0xf) & 0xFFFFFFFFFFFFFFF0);
+            ulong old_endtable_loc = old_buffer + ((old_buffer_size + 0xf) & 0xFFFFFFFFFFFFFFF0);
+            byte[] old_endtable = Memory.ReadByteArray(old_endtable_loc, 8*old_buffer_num_entries);
+            Memory.WriteByteArray(new_endtable_loc, old_endtable);
+            // add our new entries to the endtable
+            for (uint i = 0; i < new_entries; i++)
+            {
+                uint curr_endtable_loc = (uint)(new_endtable_loc + 8 * (i + old_buffer_num_entries));
+                Memory.Write(curr_endtable_loc, highest_id + i + 1);
+                Memory.Write(curr_endtable_loc + 0x4, old_buffer_num_entries + i);
+            }
+
+            /* Then switch out the pointer */
+            Memory.Write(resCap + 0x38, new_buffer);
+            Memory.Write(resCap + 0x30, saved_len);
+        }
+
+        private static void upgradeGoodsOld(ulong resCap)
+        {
+            uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
+            ulong old_buffer = Memory.ReadULong(resCap + 0x38);
+            uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
+            ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
+            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+
+            ushort new_entries = 0;
+
+            uint goods_param_size = 0x5c;
+            ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
+
+            ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
+            uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
+            ushort addl_str_length = 10;
+
+            uint new_buffer_size = (uint)(old_buffer_size + (0xc + goods_param_size + addl_str_length) * new_entries);
+
+            ulong new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_size + 0x10);
+            ulong new_buffer = new_allocated_buffer + 0x10;
+            Log.Logger.Information($"Allocated {new_buffer_size} bytes at {new_buffer.ToString("X")}");
+
+            /* first, read highest numbered param in list */
+            uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
+            /* Then, copy the header + pointer structs */
+            byte[] basebytes = Memory.ReadByteArray(old_buffer, old_buffer_params_offset);
+            Memory.WriteByteArray(new_buffer, basebytes);
+            /* Then, copy the params */
+            uint old_buffer_params_length = (uint)(goods_param_size * old_buffer_num_entries);
+            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)old_buffer_params_length);
+            Memory.WriteByteArray(new_buffer + new_buffer_params_offset, basebytes2);
+            /* Then, copy the strings */
+            uint old_buffer_strings_length = old_buffer_size - old_buffer_string_offset;
+            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_offset, (int)old_buffer_strings_length);
+            Memory.WriteByteArray(new_buffer + new_buffer_string_offset, basebytes3);
+
+            /* old buffer ends on the last string - last null terminator (shift-jis) */
+            byte[] parambytes = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)goods_param_size);
+            uint new_string_loc = (uint)(new_buffer + new_buffer_string_offset + old_buffer_strings_length);
+
+
+            for (uint i = 0; i < old_buffer_num_entries; i++)
+            {
+                uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
+                uint poff = Memory.ReadUInt(currloc + 0x4);
+                uint soff = Memory.ReadUInt(currloc + 0x8);
+                poff = poff + 0xc;
+                soff = soff + 0xc + goods_param_size;
+                Memory.Write(currloc + 0x4, poff);
+                Memory.Write(currloc + 0x8, soff);
+            }
+
+            /* then add the new pointer structs, params, and strings, and pointers to each. */
+            for (uint i = 0; i < new_entries; i++)
+            {
+                byte[] stringbytes = Encoding.ASCII.GetBytes($"AP {i}");
+                uint newid = highest_id + 1;
+                uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
+                Memory.Write(currloc + 0x0, newid);
+
+                uint new_param_loc = (uint)(new_buffer + new_buffer_params_offset + (old_buffer_num_entries + i) * goods_param_size);
+                Memory.WriteByteArray(new_param_loc, parambytes);
+                Memory.Write(currloc + 0x4, new_param_loc);
+
+                Memory.WriteByteArray(new_string_loc, stringbytes);
+                Memory.Write(currloc + 0x8, newid);
+                new_string_loc += (uint)stringbytes.Length;
+
+                Log.Logger.Information($"Added id={newid} to equipParamGoods");
+            }
+            /* Then fix up the offsets */
+            Memory.Write(new_buffer + 0x0, new_buffer_string_offset);
+            Memory.Write(new_buffer + 0x4, new_buffer_params_offset);
+            Memory.Write(new_buffer + 0xA, new_buffer_num_entries);
+
+            Memory.Write(new_allocated_buffer, new_buffer_size);
+
+            /* Then switch out the pointer */
+            Memory.Write(resCap + 0x38, new_buffer);
+            Memory.Write(resCap + 0x30, new_buffer_size);
+        }
+        private static void upgradeGoodsLess(ulong resCap)
+        {
+            uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
+            ulong old_buffer = Memory.ReadULong(resCap + 0x38);
+            uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
+            ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
+            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+
+            ushort new_entries = 0;
+
+            uint goods_param_size = 0x5c;
+            ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
+
+            ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
+            uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
+            ushort addl_str_length = 10;
+
+            uint endtable_size = (uint)(new_buffer_num_entries * 0x8);
+
+            uint new_buffer_alloc_size = (uint)(old_buffer_size + (0xc + goods_param_size + addl_str_length) * new_entries + endtable_size + 0xf);
+
+            ulong new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size + 0x10);
+            ulong new_buffer = new_allocated_buffer + 0x10;
+            Log.Logger.Information($"Allocated {new_buffer_alloc_size} bytes at {new_buffer.ToString("X")}");
+
+            byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)((int)old_buffer_size));
+            Memory.WriteByteArray(new_buffer, basebytes);
+
+            ulong old_endtable_base = (old_buffer + old_buffer_size + 0xf) & 0xFFFFFFF0;
+            ulong new_endtable_base = (new_buffer + old_buffer_size + 0xf) & 0xFFFFFFF0;
+            byte[] basebytes2 = Memory.ReadByteArray(old_endtable_base, (int)endtable_size);
+            Memory.WriteByteArray(new_endtable_base, basebytes2);
+
+            Memory.Write(new_allocated_buffer, old_buffer_size);
+
+            /* Then switch out the pointer */
+            Memory.Write(resCap + 0x38, new_buffer);
+            Memory.Write(resCap + 0x30, old_buffer_size);
+        }
+
+        private static void UpdateItemText(ulong strloc, int len, string newstring)
+        {
+            if (strloc == 0)
+            {
+                Log.Logger.Information($"strloc = {strloc}"); return;
+            }
+            byte[] ba = Memory.ReadByteArray(strloc, len);
+            string su16 = Encoding.Unicode.GetString(ba);
+            string[] sub16 = su16.Split("\0");
+            Log.Logger.Information($"Padding to {sub16[0].Length} bytes");
+            int available_space = sub16[0].Length;
+            string newptxt = newstring;
+            if (newstring.Length > available_space) 
+                newptxt = newstring.Substring(0, sub16[0].Length);
+
+            byte[] newba = Encoding.Unicode.GetBytes(newptxt);
+            Memory.WriteByteArray(strloc, newba);
+            Log.Logger.Information($"String found: {su16}, \n@{strloc.ToString("X")}");
+            Log.Logger.Information($"Wrote string {newptxt}");
+        }
+
+        private static ulong FindMsg(ulong MsgsStart, uint id)
+        {
+            ulong GoodsMsgsStrTableOffset = Memory.ReadULong(MsgsStart + 0x14);
+            ushort GoodsMsgsCompareEntries = Memory.ReadUShort(MsgsStart + 0xc);
+            ulong GoodsMsgsCompareStart = MsgsStart + 0x1c;
+            uint compareEntrySize = 0xc;
+            for (uint curridx = 0; curridx < GoodsMsgsCompareEntries; curridx++)
+            {
+                ulong currentry = GoodsMsgsCompareStart + (compareEntrySize * curridx);
+                uint low = Memory.ReadUInt(currentry + 0x4);
+                uint high = Memory.ReadUInt(currentry + 0x8);
+                if (low <= id && id <= high)
+                {
+                    uint baseoffset = Memory.ReadUInt(currentry + 0x0);
+                    uint idoffset = id - low;
+                    uint strEntryOffset = 4 * (idoffset + baseoffset);
+
+                    ulong itemstroffset = Memory.ReadUInt(MsgsStart + GoodsMsgsStrTableOffset + strEntryOffset);
+                    ulong itemstrloc = MsgsStart + itemstroffset;
+                    return itemstrloc;
+                }
+            }
+            return 0;
+        }
+        private static void SetEventFlag(int flagnum, byte newvalue)
+        {
+            var baseAddress = Helpers.GetEventFlagsOffset();
+            Location newloc = new Location()
+            {
+                Address = baseAddress + Helpers.GetEventFlagOffset(flagnum).Item1,
+                AddressBit = Helpers.GetEventFlagOffset(flagnum).Item2
+            };
+            Memory.WriteBit(newloc.Address, newloc.AddressBit, newvalue == 0 ? false : true);
+            return;
+        }
+
     }
 }

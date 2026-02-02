@@ -39,7 +39,7 @@ public partial class App : Application
     private DeathLinkService _deathlinkService;
     DateTime lastDeathLinkTime = DateTime.MinValue;
     private const bool DEBUG_TXTLOG = false;
-    private const bool DO_NOT_CONNECT = false;
+    private const bool DO_NOT_CONNECT = true;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
@@ -257,6 +257,24 @@ public partial class App : Application
             if (cmdparts.Length == 2)
                 MonitorEventFlag(Int32.Parse(cmdparts[1]));
         }
+        else if (command.StartsWith("/get"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 2)
+                AddItem(0, Int32.Parse(cmdparts[1]), 1);
+            if (cmdparts.Length == 3)
+                AddItem(Int32.Parse(cmdparts[2]) * 0x10000000, Int32.Parse(cmdparts[1]), 1);
+        }
+        else if (command.StartsWith("/set"))
+        {
+
+            //Helpers.OverwriteSingleItem()
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 2)
+                AddItem(0, Int32.Parse(cmdparts[1]), 1);
+            if (cmdparts.Length == 3)
+                AddItem(Int32.Parse(cmdparts[2]) * 0x10000000, Int32.Parse(cmdparts[1]), 1);
+        }
         else /* send any not-specifically-handled message to normal processing */
         {
             Client?.SendMessage(a.Command);
@@ -325,7 +343,6 @@ public partial class App : Application
             }
         });
     }
-
     private void GoalCheck()
     {
         Log.Logger.Warning("Beginning /goalcheck processing");
@@ -656,8 +673,10 @@ public partial class App : Application
         }
         else
         {
-            StartEventWatcher();
-            Helpers.ListItemLots();
+            Helpers.SetItemLot();
+            Helpers.ChangePrismStoneText();
+            //StartEventWatcher();
+            //Helpers.ListItemLots();
         }
         //Helpers.MonitorLastBonfire((lastBonfire) =>
         //{
