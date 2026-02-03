@@ -39,7 +39,7 @@ public partial class App : Application
     private DeathLinkService _deathlinkService;
     DateTime lastDeathLinkTime = DateTime.MinValue;
     private const bool DEBUG_TXTLOG = false;
-    private const bool DO_NOT_CONNECT = true;
+    private const bool DO_NOT_CONNECT = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
@@ -1409,6 +1409,8 @@ public partial class App : Application
 
             Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
 
+            Helpers.AddAPItems(scoutedLocationInfo);
+
             Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, out SpecialItemLotsMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
 
             var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
@@ -1426,6 +1428,7 @@ public partial class App : Application
             }
             //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
             ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags, scoutedLocationInfo, SlotLocToItemUpgMap);
+
 
             foreach (var pair in ConditionRewardMap) Log.Logger.Verbose($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
             Log.Logger.Debug($"ConditionRewardMap has {ConditionRewardMap.Count} members");

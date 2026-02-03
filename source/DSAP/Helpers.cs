@@ -1981,38 +1981,45 @@ namespace DSAP
             UpdateItemText(itemInfoStrLoc, 500, "*narrator voice* We're not sure how this got here. \nBest hold on to it. \n\nJust in case.\0");
 
             ulong equipGoodsParamResCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
-            upgradeGoods(equipGoodsParamResCap);
-            AddMsgs(9015, new List<string>() { "AP Item From Player 2's world" });
+            //upgradeGoods(equipGoodsParamResCap);
+            //AddMsgs(9015, new List<string>() { "AP Item From Player 2's world" });
             return;
         }
 
-        private static void upgradeGoods(ulong resCap)
+        private static void upgradeGoods(List<KeyValuePair<long, ScoutedItemInfo>> addedEntries)
         {
+            ulong resCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
             uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
             ulong old_buffer = Memory.ReadULong(resCap + 0x38);
             uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
             ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
             ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
 
-            ushort new_entries = 1;
+            ushort new_entries = (ushort)addedEntries.Count();
 
             uint goods_param_size = 0x5c;
             ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
 
             ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
             uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
-            ushort addl_str_length = 10;
+            uint addl_str_length = (uint)addedEntries.Aggregate(0, (total, x) => total + x.Value.ItemName.Length + 1);
             uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
 
-            uint new_buffer_size = (uint)(old_buffer_size + (0xc + goods_param_size + addl_str_length) * new_entries);
+            uint new_buffer_size = (uint)(old_buffer_size + addl_str_length + (0xc + goods_param_size) * new_entries);
             uint new_buffer_alloc_size = (uint)(new_buffer_size + (0x8 * new_entries) + 0x10 + 0xf);
 
             ulong new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size);
             ulong new_buffer = new_allocated_buffer + 0x10;
             Log.Logger.Information($"Allocated {new_buffer_size} bytes at {new_buffer.ToString("X")}");
+            Log.Logger.Information($"Overwrite EquipParamGoods @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
 
             /* first, read highest numbered param in list */
             uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
+            if (addedEntries.Any(x => x.Key < highest_id))
+            {
+                Log.Logger.Warning($"Warning: Highest id in params detected as {highest_id}, which is higher than the ids used by our added entries.");
+                Log.Logger.Warning($"Warning: This may be due to other mods adding items above our range. As such, you may encounter errors.");
+            }
             /* Then, copy the header + pointer structs */
             byte[] basebytes = Memory.ReadByteArray(old_buffer, old_buffer_params_offset);
             Memory.WriteByteArray(new_buffer, basebytes);
@@ -2027,6 +2034,12 @@ namespace DSAP
 
             /* old buffer ends on the last string - last null terminator (shift-jis) */
             byte[] parambytes = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)goods_param_size);
+            parambytes[0x36] = 99; // max num
+            parambytes[0x3a] = 1; // goods type = key
+            parambytes[0x3b] = 0; // ref category = like key
+            parambytes[0x3e] = 0; // use animation = 0
+            // Is Only One?
+            // Is Deposit?
             uint new_string_loc = (uint)(new_buffer + new_buffer_string_offset + old_buffer_strings_length);
 
             // fix old entries' offsets
@@ -2035,8 +2048,8 @@ namespace DSAP
                 uint currloc = (uint)(new_buffer + 0x30 + i * 0xc);
                 uint poff = Memory.ReadUInt(currloc + 0x4);
                 uint soff = Memory.ReadUInt(currloc + 0x8);
-                poff = poff + 0xc;
-                soff = soff + 0xc + goods_param_size;
+                poff = (uint)(poff + (0xc * new_entries));
+                soff = soff + (0xc + goods_param_size) * new_entries;
                 Memory.Write(currloc + 0x4, poff);
                 Memory.Write(currloc + 0x8, soff);
             }
@@ -2044,8 +2057,16 @@ namespace DSAP
             /* then add the new pointer structs, params, and strings, and pointers to each. */
             for (uint i = 0; i < new_entries; i++)
             {
-                byte[] stringbytes = Encoding.ASCII.GetBytes($"AP {i}\0");
-                uint newid = highest_id + 1 + i;
+                var entry = addedEntries.ToArray()[i];
+                byte[] stringbytes = Encoding.ASCII.GetBytes($"{entry.Value.ItemName}\0");
+                uint newid = (uint)entry.Key;
+                // set sort bytes in param based on id
+                byte[] idbytes = BitConverter.GetBytes(newid);
+                parambytes[0x1c] = idbytes[0];
+                parambytes[0x1d] = idbytes[1];
+                parambytes[0x1e] = idbytes[2];
+                parambytes[0x1f] = idbytes[3];
+
                 uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
                 Memory.Write(currloc + 0x0, newid);
 
@@ -2056,9 +2077,9 @@ namespace DSAP
                 Memory.WriteByteArray(new_string_loc, stringbytes);
                 Memory.Write(currloc + 0x8, new_string_loc - new_buffer);
                 new_string_loc += (uint)stringbytes.Length;
-
-                Log.Logger.Information($"Added id={newid} to equipParamGoods");
             }
+            Log.Logger.Information($"Added {new_entries} to equipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
+
             ulong post_string_loc = new_string_loc;
             ulong saved_len = post_string_loc - new_buffer;
             /* Then fix up the offsets */
@@ -2077,8 +2098,10 @@ namespace DSAP
             // add our new entries to the endtable
             for (uint i = 0; i < new_entries; i++)
             {
+                var entry = addedEntries.ToArray()[i];
+                uint newid = (uint)entry.Key;
                 uint curr_endtable_loc = (uint)(new_endtable_loc + 8 * (i + old_buffer_num_entries));
-                Memory.Write(curr_endtable_loc, highest_id + i + 1);
+                Memory.Write(curr_endtable_loc, newid);
                 Memory.Write(curr_endtable_loc + 0x4, old_buffer_num_entries + i);
             }
 
@@ -2086,11 +2109,11 @@ namespace DSAP
             Memory.Write(resCap + 0x38, new_buffer);
             Memory.Write(resCap + 0x30, saved_len);
         }
-        private static void AddMsgs(uint start_id, List<string> instrings)
+        private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings)
         {
             ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
-            
-            ulong old_buffer = Memory.ReadULong(MsgMan + 0x380);
+
+            ulong old_buffer = Memory.ReadULong(MsgMan + offset);
             ulong old_buffer_size = Memory.ReadUInt(old_buffer + 0x4);
             ulong old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
             ulong old_buffer_num_stroff_entries = Memory.ReadUShort(old_buffer + 0x10);
@@ -2116,68 +2139,80 @@ namespace DSAP
             //     each string offset entry
             //     end of strings/size of all
 
-            ulong new_entries = (ulong)instrings.Count;
+            ulong new_entries = (ulong)(instrings.Last().Key - instrings.First().Key + 1);
             ulong total_String_size = 0;
-            foreach (string entry in instrings)
+            ulong new_buffer = 0; // temp
+            ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
+            ulong old_buffer_string_start_offset = old_buffer_stroff_start_offset + (old_buffer_num_stroff_entries * 4);
+            ulong new_buffer_string_start_offset = old_buffer_string_start_offset + 0xc + 4 * new_entries;
+            foreach (var entry in instrings)
             {
-                total_String_size += (ulong)Encoding.Unicode.GetBytes(entry).Length;
+                total_String_size += (ulong)Encoding.Unicode.GetBytes(entry.Value).Length;
             }
+            if (new_entries < (ulong)instrings.Count)
+                total_String_size += (ulong)instrings.Count - new_entries;
             //calculate size
             ulong new_buffer_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size;
 
-            ulong new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_size);
+            new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_size);
+            //ulong new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_size);
             Log.Logger.Information($"Overwrite Msgs @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
 
             // first, copy over header & old maps
             byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)(0x1c + old_buffer_num_spanmaps * 0xc));
             Memory.WriteByteArray(new_buffer, basebytes);
             // Then, copy over existing string offset table
-            ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
+
+            //ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
+                
+
             byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_stroff_start_offset, (int)(old_buffer_num_stroff_entries * 4));
             Memory.WriteByteArray(new_buffer + new_buffer_stroff_start_offset, basebytes2);
-
             // Then, copy over existing strings
-            ulong old_buffer_string_start_offset = old_buffer_stroff_start_offset + (old_buffer_num_stroff_entries * 4);
-            ulong new_buffer_string_start_offset = old_buffer_string_start_offset + 0xc + 4 * new_entries;
             byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_start_offset, (int)(old_buffer_size - old_buffer_string_start_offset));
             Memory.WriteByteArray(new_buffer + new_buffer_string_start_offset, basebytes3);
 
             // add new span map
             ulong new_spanmap_loc = new_buffer + old_buffer_stroff_start_offset; // old buffer stroffs started where this would
-            Memory.Write(new_spanmap_loc, old_buffer_num_stroff_entries); // next str off index will be the next available number (0 indexed) - aka current max
-            Memory.Write(new_spanmap_loc + 0x4, start_id);
-            Memory.Write(new_spanmap_loc + 0x8, (uint)(start_id + new_entries - 1));
+            Memory.Write(new_spanmap_loc, (int)old_buffer_num_stroff_entries); // next str off index will be the next available number (0 indexed) - aka current max
+            Memory.Write(new_spanmap_loc + 0x4, (int)instrings.First().Key);
+            Memory.Write(new_spanmap_loc + 0x8, (int)instrings.Last().Key);
 
             // Correct bad string offsets in table - increase by 0xc for the new spanmap, and 0x4 for each new string
-            for (uint i=0; i < old_buffer_num_stroff_entries; i++)
+            for (uint i = 0; i < old_buffer_num_stroff_entries; i++)
             {
-                ulong stroff_loc = new_buffer + new_buffer_stroff_start_offset + 4*i;
+                ulong stroff_loc = new_buffer + new_buffer_stroff_start_offset + 4 * i;
                 uint stroff_val = Memory.ReadUInt(stroff_loc);
-                stroff_val += (uint)(0xc + (new_entries * 4));
-                Memory.Write(stroff_loc, stroff_val);
+                if (stroff_val != 0)
+                {
+                    stroff_val += (uint)(0xc + (new_entries * 4));
+                    Memory.Write(stroff_loc, stroff_val);
+                }
             }
             // point to end of last old string
             ulong curr_end_loc = new_buffer + new_buffer_string_start_offset + (old_buffer_size - old_buffer_string_start_offset);
             ulong end_of_stroffs = new_buffer + new_buffer_stroff_start_offset + (4 * old_buffer_num_stroff_entries);
-            for (uint i=0; i < new_entries; i++)
+            for (uint i = 0; i < new_entries; i++)
             {
                 ulong curr_stroff_loc = end_of_stroffs + 4 * i;
-                Memory.Write(curr_stroff_loc, (int)(curr_end_loc-new_buffer)); // point stroff entry to string position
-                // Then write the string
-                byte[] ba = Encoding.Unicode.GetBytes(instrings.ToArray()[i]);
+                Memory.Write(curr_stroff_loc, (int)(curr_end_loc - new_buffer)); // point stroff entry to string position
+                                                                                    // Then write the string
+                byte[] ba = Encoding.Unicode.GetBytes("\0");
+                if (instrings.Any(x => x.Key == instrings.First().Key + i))
+                    ba = Encoding.Unicode.GetBytes(instrings.Find(x => x.Key == instrings.First().Key + i).Value);
                 Memory.WriteByteArray(curr_end_loc, ba);
                 curr_end_loc += (ulong)ba.Length;
             }
             // end here
 
-            Memory.Write(new_buffer + 0x4, curr_end_loc-new_buffer);
+            Memory.Write(new_buffer + 0x4, curr_end_loc - new_buffer);
             Memory.Write(new_buffer + 0xc, old_buffer_num_spanmaps + 1);
             Memory.Write(new_buffer + 0x10, old_buffer_num_stroff_entries + new_entries);
             Memory.Write(new_buffer + 0x14, new_buffer_stroff_start_offset);
             // New buffer will need updated:
 
             /* Then switch out the pointer */
-            Memory.Write(MsgMan + 0x380, new_buffer);
+            Memory.Write(MsgMan + offset, new_buffer);
         }
         private static void UpdateItemText(ulong strloc, int len, string newstring)
         {
@@ -2236,5 +2271,42 @@ namespace DSAP
             return;
         }
 
+        internal static void AddAPItems(Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
+        {
+            List<KeyValuePair<long, ScoutedItemInfo>> addedEntries = scoutedLocationInfo.Where((e) => e.Value.Player.Slot != App.Client.CurrentSession.ConnectionInfo.Slot || e.Value.ItemName.Contains("Fog Wall Key")).ToList();
+            addedEntries.Sort((a, b) => a.Key.CompareTo(b.Key));
+
+            upgradeGoods(addedEntries);
+
+            // add name
+            AddMsgs(0x380, addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, $"{x.Value.Player}'s {x.Value.ItemDisplayName}\0")).ToList());
+            // add caption
+            AddMsgs(0x378, addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, BuildItemCaption(x))).ToList());
+            // add info
+            AddMsgs(0x328, addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, BuildItemInfo(x))).ToList());
+
+        }
+        internal static string BuildItemCaption(KeyValuePair<long, ScoutedItemInfo> item)
+        {
+            const byte progression = 0b001;
+            const byte useful = 0b010;
+            const byte trap = 0b100;
+            string item_type = "regular";
+            if (((byte)item.Value.Flags) == 0b001) item_type = "Progression";
+            if (((byte)item.Value.Flags) == 0b010) item_type = "Useful";
+            if (((byte)item.Value.Flags) == 0b100) item_type = "Trap";
+            return $"A {item_type} Archipelago item for {item.Value.Player}'s {item.Value.ItemGame}.\0";
+        }
+        internal static string BuildItemInfo(KeyValuePair<long, ScoutedItemInfo> item)
+        {
+            const byte progression = 0b001;
+            const byte useful = 0b010;
+            const byte trap = 0b100;
+            string item_type = "regular";
+            if (((byte)item.Value.Flags) == 0b001) item_type = "Progression";
+            if (((byte)item.Value.Flags) == 0b010) item_type = "Useful";
+            if (((byte)item.Value.Flags) == 0b100) item_type = "Trap";
+            return $"A {item_type} Archipelago item for {item.Value.Player}'s {item.Value.ItemGame}.\n\nYou found this at {item.Value.LocationName}\0";
+        }
     }
 }
