@@ -1982,6 +1982,7 @@ namespace DSAP
 
             ulong equipGoodsParamResCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
             upgradeGoods(equipGoodsParamResCap);
+            AddMsgs(9015, new List<string>() { "AP Item From Player 2's world" });
             return;
         }
 
@@ -2028,7 +2029,7 @@ namespace DSAP
             byte[] parambytes = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)goods_param_size);
             uint new_string_loc = (uint)(new_buffer + new_buffer_string_offset + old_buffer_strings_length);
 
-
+            // fix old entries' offsets
             for (uint i = 0; i < old_buffer_num_entries; i++)
             {
                 uint currloc = (uint)(new_buffer + 0x30 + i * 0xc);
@@ -2085,129 +2086,99 @@ namespace DSAP
             Memory.Write(resCap + 0x38, new_buffer);
             Memory.Write(resCap + 0x30, saved_len);
         }
-
-        private static void upgradeGoodsOld(ulong resCap)
+        private static void AddMsgs(uint start_id, List<string> instrings)
         {
-            uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
-            ulong old_buffer = Memory.ReadULong(resCap + 0x38);
-            uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
-            ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
-            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+            ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
+            
+            ulong old_buffer = Memory.ReadULong(MsgMan + 0x380);
+            ulong old_buffer_size = Memory.ReadUInt(old_buffer + 0x4);
+            ulong old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
+            ulong old_buffer_num_stroff_entries = Memory.ReadUShort(old_buffer + 0x10);
+            ulong old_buffer_stroff_start_offset = Memory.ReadUInt(old_buffer + 0x14);
+            // structure of buffer:
+            // string end/size@ 0x04
+            // num of span maps 0x0c
+            // # stroff entries 0x10
+            // stroff table  at 0x14
+            // span maps start  0x1c
+            // span maps have <offset> <min> <max>. Offset is # of entries into string offset table
+            // after span maps is string offset table
+            // There are (number of items, = 0x110 vanilla) in string offset table
+            // Then there are the strings
+            // New buffer will need added:
+            //  1. (optionally) +c bytes for another map,
+            //  2. 0x4 bytes per added id in the string offset table
+            //  3. [n] bytes for each string including null char, in Unicode
+            // New buffer will need updated:
+            //     (optionally) num of span maps
+            //     string offset at 0x14
+            //     span map entry if not adding a new one
+            //     each string offset entry
+            //     end of strings/size of all
 
-            ushort new_entries = 0;
+            ulong new_entries = (ulong)instrings.Count;
+            ulong total_String_size = 0;
+            foreach (string entry in instrings)
+            {
+                total_String_size += (ulong)Encoding.Unicode.GetBytes(entry).Length;
+            }
+            //calculate size
+            ulong new_buffer_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size;
 
-            uint goods_param_size = 0x5c;
-            ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
+            ulong new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_size);
+            Log.Logger.Information($"Overwrite Msgs @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
 
-            ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
-            uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
-            ushort addl_str_length = 10;
-
-            uint new_buffer_size = (uint)(old_buffer_size + (0xc + goods_param_size + addl_str_length) * new_entries);
-
-            ulong new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_size + 0x10);
-            ulong new_buffer = new_allocated_buffer + 0x10;
-            Log.Logger.Information($"Allocated {new_buffer_size} bytes at {new_buffer.ToString("X")}");
-
-            /* first, read highest numbered param in list */
-            uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
-            /* Then, copy the header + pointer structs */
-            byte[] basebytes = Memory.ReadByteArray(old_buffer, old_buffer_params_offset);
+            // first, copy over header & old maps
+            byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)(0x1c + old_buffer_num_spanmaps * 0xc));
             Memory.WriteByteArray(new_buffer, basebytes);
-            /* Then, copy the params */
-            uint old_buffer_params_length = (uint)(goods_param_size * old_buffer_num_entries);
-            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)old_buffer_params_length);
-            Memory.WriteByteArray(new_buffer + new_buffer_params_offset, basebytes2);
-            /* Then, copy the strings */
-            uint old_buffer_strings_length = old_buffer_size - old_buffer_string_offset;
-            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_offset, (int)old_buffer_strings_length);
-            Memory.WriteByteArray(new_buffer + new_buffer_string_offset, basebytes3);
+            // Then, copy over existing string offset table
+            ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
+            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_stroff_start_offset, (int)(old_buffer_num_stroff_entries * 4));
+            Memory.WriteByteArray(new_buffer + new_buffer_stroff_start_offset, basebytes2);
 
-            /* old buffer ends on the last string - last null terminator (shift-jis) */
-            byte[] parambytes = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)goods_param_size);
-            uint new_string_loc = (uint)(new_buffer + new_buffer_string_offset + old_buffer_strings_length);
+            // Then, copy over existing strings
+            ulong old_buffer_string_start_offset = old_buffer_stroff_start_offset + (old_buffer_num_stroff_entries * 4);
+            ulong new_buffer_string_start_offset = old_buffer_string_start_offset + 0xc + 4 * new_entries;
+            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_start_offset, (int)(old_buffer_size - old_buffer_string_start_offset));
+            Memory.WriteByteArray(new_buffer + new_buffer_string_start_offset, basebytes3);
 
+            // add new span map
+            ulong new_spanmap_loc = new_buffer + old_buffer_stroff_start_offset; // old buffer stroffs started where this would
+            Memory.Write(new_spanmap_loc, old_buffer_num_stroff_entries); // next str off index will be the next available number (0 indexed) - aka current max
+            Memory.Write(new_spanmap_loc + 0x4, start_id);
+            Memory.Write(new_spanmap_loc + 0x8, (uint)(start_id + new_entries - 1));
 
-            for (uint i = 0; i < old_buffer_num_entries; i++)
+            // Correct bad string offsets in table - increase by 0xc for the new spanmap, and 0x4 for each new string
+            for (uint i=0; i < old_buffer_num_stroff_entries; i++)
             {
-                uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
-                uint poff = Memory.ReadUInt(currloc + 0x4);
-                uint soff = Memory.ReadUInt(currloc + 0x8);
-                poff = poff + 0xc;
-                soff = soff + 0xc + goods_param_size;
-                Memory.Write(currloc + 0x4, poff);
-                Memory.Write(currloc + 0x8, soff);
+                ulong stroff_loc = new_buffer + new_buffer_stroff_start_offset + 4*i;
+                uint stroff_val = Memory.ReadUInt(stroff_loc);
+                stroff_val += (uint)(0xc + (new_entries * 4));
+                Memory.Write(stroff_loc, stroff_val);
             }
-
-            /* then add the new pointer structs, params, and strings, and pointers to each. */
-            for (uint i = 0; i < new_entries; i++)
+            // point to end of last old string
+            ulong curr_end_loc = new_buffer + new_buffer_string_start_offset + (old_buffer_size - old_buffer_string_start_offset);
+            ulong end_of_stroffs = new_buffer + new_buffer_stroff_start_offset + (4 * old_buffer_num_stroff_entries);
+            for (uint i=0; i < new_entries; i++)
             {
-                byte[] stringbytes = Encoding.ASCII.GetBytes($"AP {i}");
-                uint newid = highest_id + 1;
-                uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
-                Memory.Write(currloc + 0x0, newid);
-
-                uint new_param_loc = (uint)(new_buffer + new_buffer_params_offset + (old_buffer_num_entries + i) * goods_param_size);
-                Memory.WriteByteArray(new_param_loc, parambytes);
-                Memory.Write(currloc + 0x4, new_param_loc);
-
-                Memory.WriteByteArray(new_string_loc, stringbytes);
-                Memory.Write(currloc + 0x8, newid);
-                new_string_loc += (uint)stringbytes.Length;
-
-                Log.Logger.Information($"Added id={newid} to equipParamGoods");
+                ulong curr_stroff_loc = end_of_stroffs + 4 * i;
+                Memory.Write(curr_stroff_loc, (int)(curr_end_loc-new_buffer)); // point stroff entry to string position
+                // Then write the string
+                byte[] ba = Encoding.Unicode.GetBytes(instrings.ToArray()[i]);
+                Memory.WriteByteArray(curr_end_loc, ba);
+                curr_end_loc += (ulong)ba.Length;
             }
-            /* Then fix up the offsets */
-            Memory.Write(new_buffer + 0x0, new_buffer_string_offset);
-            Memory.Write(new_buffer + 0x4, new_buffer_params_offset);
-            Memory.Write(new_buffer + 0xA, new_buffer_num_entries);
+            // end here
 
-            Memory.Write(new_allocated_buffer, new_buffer_size);
+            Memory.Write(new_buffer + 0x4, curr_end_loc-new_buffer);
+            Memory.Write(new_buffer + 0xc, old_buffer_num_spanmaps + 1);
+            Memory.Write(new_buffer + 0x10, old_buffer_num_stroff_entries + new_entries);
+            Memory.Write(new_buffer + 0x14, new_buffer_stroff_start_offset);
+            // New buffer will need updated:
 
             /* Then switch out the pointer */
-            Memory.Write(resCap + 0x38, new_buffer);
-            Memory.Write(resCap + 0x30, new_buffer_size);
+            Memory.Write(MsgMan + 0x380, new_buffer);
         }
-        private static void upgradeGoodsLess(ulong resCap)
-        {
-            uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
-            ulong old_buffer = Memory.ReadULong(resCap + 0x38);
-            uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
-            ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
-            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
-
-            ushort new_entries = 0;
-
-            uint goods_param_size = 0x5c;
-            ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
-
-            ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
-            uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
-            ushort addl_str_length = 10;
-
-            uint endtable_size = (uint)(new_buffer_num_entries * 0x8);
-
-            uint new_buffer_alloc_size = (uint)(old_buffer_size + (0xc + goods_param_size + addl_str_length) * new_entries + endtable_size + 0xf);
-
-            ulong new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size + 0x10);
-            ulong new_buffer = new_allocated_buffer + 0x10;
-            Log.Logger.Information($"Allocated {new_buffer_alloc_size} bytes at {new_buffer.ToString("X")}");
-
-            byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)((int)old_buffer_size));
-            Memory.WriteByteArray(new_buffer, basebytes);
-
-            ulong old_endtable_base = (old_buffer + old_buffer_size + 0xf) & 0xFFFFFFF0;
-            ulong new_endtable_base = (new_buffer + old_buffer_size + 0xf) & 0xFFFFFFF0;
-            byte[] basebytes2 = Memory.ReadByteArray(old_endtable_base, (int)endtable_size);
-            Memory.WriteByteArray(new_endtable_base, basebytes2);
-
-            Memory.Write(new_allocated_buffer, old_buffer_size);
-
-            /* Then switch out the pointer */
-            Memory.Write(resCap + 0x38, new_buffer);
-            Memory.Write(resCap + 0x30, old_buffer_size);
-        }
-
         private static void UpdateItemText(ulong strloc, int len, string newstring)
         {
             if (strloc == 0)
