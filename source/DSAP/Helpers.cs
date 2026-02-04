@@ -4,6 +4,7 @@ using Archipelago.Core.Util.GPS;
 using Archipelago.MultiClient.Net.Models;
 using DSAP.Models;
 using Serilog;
+using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using System;
 using System.Collections;
@@ -497,18 +498,8 @@ namespace DSAP
                                     addonitems++;
                                 specialResult[lot.Id].Items.Add(newLotItem);
 
-                                // replace with the AP item with the relevant loc id
-                                newLotItem = new ItemLotItem
-                                {
-                                    CumulateLotPoint = 0,
-                                    CumulateReset = false,
-                                    EnableLuck = false,
-                                    GetItemFlagId = -1,
-                                    LotItemBasePoint = 100,
-                                    LotItemCategory = (int)Enums.DSItemCategory.KeyItems,
-                                    LotItemNum = 1,
-                                    LotItemId = locId
-                                };
+                                // replace with the AP item with the right fogwall key/trap
+                                newLotItem.LotItemCategory = (int)Enums.DSItemCategory.KeyItems;
                             }
                         }
                         else
@@ -604,88 +595,6 @@ namespace DSAP
             return;
         }
 
-        /// <summary>
-        /// Build a mapping of the location id values in eventflags to the ItemLot that should come from there, for items in our own game.
-        /// </summary>
-        /// <details>
-        /// This is used for detecting non-item lot conditions in our own game(like a door opening) and rewarding the player with that item.
-        /// This is a separate method from the above similar method for one main reason:
-        ///    1) It needs to fill in EventFlag.id as the key instead of EventFlag.flag, so we can search by the "AP location id" instead of the DSR flag
-        /// </details>
-        /// <param name="eventflags">A list of location flags of which items will be found.</param>
-        /// <returns></returns>
-        public static Dictionary<int, ItemLot> BuildIdToLotMap(List<EventFlag> eventflags,
-                                                               Dictionary<long, ScoutedItemInfo> scoutedLocationInfo,
-                                                               Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
-        {
-            Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
-            int i = 0;
-            foreach (var (k, v) in scoutedLocationInfo)
-            {
-                i++;
-                int locId = ((int)k);
-                string target = v.Player.Name;
-                EventFlag? lot = eventflags.Find(x => x.Id == locId);
-                DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == v.ItemId);
-                if (lot != null && item != null)
-                {
-                    DarkSoulsItem repitem = item;
-                    if (item.Category == Enums.DSItemCategory.AnyWeapon)
-                    {
-                        Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
-                        if (App.DSOptions.UpgradedWeaponsPercentage > 0
-                            && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
-                        {
-                            if (itemupg.Item1 == item.ApId) // if item apid matches
-                                repitem = UpgradeItem(repitem, itemupg.Item2);
-                            else
-                            {
-                                Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                            }
-                        }
-                    }
-
-                    Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
-                    ItemLotItem newitem = new ItemLotItem
-                    {
-                        CumulateLotPoint = 0,
-                        CumulateReset = false,
-                        EnableLuck = false,
-                        GetItemFlagId = -1,
-                        LotItemBasePoint = 100,
-                        LotItemCategory = (int)repitem.Category,
-                        LotItemNum = (byte)repitem.Quantity,
-                        LotItemId = repitem.Id
-                    };
-
-                    /* If it's already in the mapping, add the item to the list of items in the existing lot */
-                    if (result.ContainsKey(lot.Id))
-                        result[lot.Id].Items.Add(newitem);
-                    else
-                    {
-                        /* add the found location->item to the replacement dictionary */
-                        var newitemlot = new ItemLot
-                        {
-                            Rarity = 1,
-                            GetItemFlagId = -1,
-                            CumulateNumFlagId = -1,
-                            CumulateNumMax = 0,
-                            Items = new List<ItemLotItem>([newitem])
-                        };
-                        result.Add(lot.Id, newitemlot);
-                    }
-                }
-                else
-                {
-                    Log.Logger.Verbose($"Item {i} {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                }
-            }
-            Log.Logger.Debug($"idToLotMap size = {result.Count}");
-
-            /* Don't populate the rest of the flags with prism stones */
-            return result;
-        }
         /// <summary>
         /// Build a mapping of the slot:locationid key to itemid:upg value based on info stored in slotdata from the server.
         /// </summary>
@@ -1125,7 +1034,7 @@ namespace DSAP
             List<DarkSoulsItem> newlist = list.Select(x => new DarkSoulsItem()
             {
                 Name = x.Itemname,
-                Id = x.Itemid, // ap id of event item
+                Id = x.Dsrid, // dsr id of event item
                 StackSize = 1,
                 UpgradeType = Enums.ItemUpgrade.None,
                 Category = Enums.DSItemCategory.DsrEvent,
@@ -2303,12 +2212,14 @@ namespace DSAP
             var added_names = addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, $"{x.Value.Player}'s {x.Value.ItemDisplayName}\0")).ToList();
             var added_captions = addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, BuildItemCaption(x))).ToList();
 
-            var added_emk_names = App.EmkControllers.Select(x => new KeyValuePair<long, string>(x.Itemname))
-            foreach (var f in App.EmkControllers)
-            {
+            var added_emk_names = GetDsrEventItems().Select(x => new KeyValuePair<long, string>(x.Id, $"{x.Name}\0"));
+            var added_emk_captions = GetDsrEventItems().Select(x => new KeyValuePair<long, string>(x.Id, BuildDsrEventItemCaption()));
 
-            }
+            added_names.AddRange(added_emk_names);
+            added_captions.AddRange(added_emk_captions);
 
+            added_names.Sort((a, b) => a.Key.CompareTo(b.Key));
+            added_captions.Sort((a, b) => a.Key.CompareTo(b.Key));
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -2338,6 +2249,10 @@ namespace DSAP
             if (((byte)item.Value.Flags) == 0b010) item_type = "Useful";
             if (((byte)item.Value.Flags) == 0b100) item_type = "Trap";
             return $"A {item_type} Archipelago item for {item.Value.Player}'s {item.Value.ItemGame}.\0";
+        }
+        internal static string BuildDsrEventItemCaption()
+        {
+            return "A boon from another world. Makes a fog wall passable.\0";
         }
     }
 }

@@ -44,8 +44,6 @@ public partial class App : Application
     public static List<DarkSoulsItem> AllItems { get; set; }
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
     private static Dictionary<int, ItemLot> SpecialItemLotsMap = new Dictionary<int, ItemLot>();
-    
-    private static Dictionary<int, ItemLot> ConditionRewardMap = new Dictionary<int, ItemLot>();
     private static Dictionary<string, Tuple<int, string>> SlotLocToItemUpgMap = [];
     private static readonly object _lockObject = new object();
     private static readonly object _deathlinkLock = new object(); // lock that protects IsHandlingDeathLink and lastDeathLinkTime
@@ -438,7 +436,7 @@ public partial class App : Application
         Log.Logger.Warning($"v={Client?.CurrentSession.RoomState.Version},gv={Client?.CurrentSession.RoomState.GeneratorVersion}," +
             $"rist={Client?.CurrentSession.RoomState.RoomInfoSendTime.ToShortTimeString()},ctime={DateTime.Now.ToUniversalTime().ToShortTimeString()},Slot={Client?.CurrentSession.ConnectionInfo.Slot}");
         Log.Logger.Warning($"locs={Client?.CurrentSession.Locations.AllLocationsChecked.Count}/{Client?.CurrentSession.Locations.AllLocations.Count}");
-        Log.Logger.Warning($"items received={Client?.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap?.Count},crm={ConditionRewardMap?.Count}");
+        Log.Logger.Warning($"items received={Client?.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap?.Count}");
         Log.Logger.Warning($"version info={DSOptions?.VersionInfoString()}, cdv={Archipelago.Core.AvaloniaGUI.Utils.Helpers.GetAppVersion()}");
         Log.Logger.Warning($"saveidset={SaveidSet}");
         if (Client != null && Helpers.IsInGame())
@@ -464,19 +462,20 @@ public partial class App : Application
     }
 
     /* Add an abstract "item" which can be a trap, event, or normal item */
-    public static void AddAbstractItem(int category, int id, int quantity)
+    public static void AddAbstractItem(DarkSoulsItem item)
     {
+        int category = (int)item.Category;
         if (category == (int)DSItemCategory.Trap)
         {
             RunLagTrap();
         }
         else if (category == (int)DSItemCategory.DsrEvent)
         {
-            ReceiveEventItem(id);
+            ReceiveEventItem(item.ApId);
         }
         else
         {
-            AddItem(category, id, quantity);
+            AddItem(category, item.Id, item.Quantity);
         }
     }
     public static void AddItem(int category, int id, int quantity)
@@ -1061,21 +1060,25 @@ public partial class App : Application
 
         if (SaveidSet && Helpers.IsInGame())
         {
+            var fog_key = Helpers.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
+
             // First, ignore any items which came from "item lots". Player already got them!
-            if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot)
+            if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot && Helpers.GetItemLotLocations().Any(x => x.Id == e.LocationId))    
             {
-                // Except "special item lots" - where we need extra processing (e.g. fog wall keys, traps, etc).
-                if (!SpecialItemLotsMap.ContainsKey((int)e.LocationId)) 
+                if (fog_key == null) // If it's a fog wall key, also receive the actual item now, then event later
                 {
-                    // For non-special item lots, player already picked it up!
-                    var itemLocations = Helpers.GetItemLotLocations(); 
-                    if (itemLocations.Any(x => x.Id == e.LocationId))
-                    {
-                        Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
-                        return;
-                    }
+                    Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
+                    return;
+                }   
+            }
+            else // in any spot that isn't a local item lot
+            {
+                if (fog_key != null) // make sure to receive fog keys
+                {
+                    AddItem((int)DSItemCategory.KeyItems, fog_key.Id, 1);
                 }
             }
+            // otherwise, player needs to get the item first.
 
             var itemId = e.Item.Id;
             var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
@@ -1096,7 +1099,7 @@ public partial class App : Application
                         Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
                     }
                 }
-                AddAbstractItem((int)itemToReceive.Category, itemToReceive.Id, itemToReceive.Quantity);
+                AddAbstractItem(itemToReceive);
 
                 /* If after receiving item (or trap), player is still in game, then it received successfully */
                 if (Helpers.IsInGame())
@@ -1109,7 +1112,7 @@ public partial class App : Application
                 Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 var filler = AllItems.First(x => x.Id == 380);
-                AddAbstractItem((int)filler.Category, filler.Id, 1);
+                AddAbstractItem(filler);
             }
         }
         e.Success = success;
@@ -1215,46 +1218,6 @@ public partial class App : Application
                 if (emk != null)
                 {
                     emk.Unlock();
-                }
-            }
-        }
-        if (Client.CurrentSession.Locations.AllLocationsChecked.Count > 0)
-        {
-            Log.Logger.Debug("detecting event keys in all locs");
-            var locationlistcopy = Client.CurrentSession.Locations.AllLocationsChecked;
-            foreach (var location in locationlistcopy)
-            {
-                /* search condition rewards map (doors, etc) */
-                if (ConditionRewardMap.ContainsKey(((int)location)))
-                {
-                    foreach (var item in ConditionRewardMap[((int)location)].Items)
-                    {
-                        if (item.LotItemCategory == (int)DSItemCategory.DsrEvent)
-                        {
-                            var emk = EmkControllers.Find(x => x.ApId == item.LotItemId);
-                            if (emk != null)
-                            {
-                                emk.Unlock();
-                            }
-                        }
-                    }
-                }
-                
-                /* then search special item lot map (floor items) */
-                if (SpecialItemLotsMap.ContainsKey(((int)location)))
-                {
-                    Log.Logger.Debug($"found loc {((int)location)} in special lot list");
-                    foreach (var item in SpecialItemLotsMap[((int)location)].Items)
-                    {
-                        if (item.LotItemCategory == (int)DSItemCategory.DsrEvent)
-                        {
-                            var emk = EmkControllers.Find(x => x.ApId == item.LotItemId);
-                            if (emk != null)
-                            {
-                                emk.Unlock();
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -1426,13 +1389,6 @@ public partial class App : Application
             {
                 Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
             }
-            //ConditionRewardMap = Helpers.BuildIdFlagLotMap(nonItemLotFlags);
-            ConditionRewardMap = Helpers.BuildIdToLotMap(nonItemLotFlags, scoutedLocationInfo, SlotLocToItemUpgMap);
-
-
-            foreach (var pair in ConditionRewardMap) Log.Logger.Verbose($"ConditionRewardMap item {pair.Key} has {pair.Value.Items.Count} items, first is itemid {pair.Value.Items[0].LotItemId}");
-            Log.Logger.Debug($"ConditionRewardMap has {ConditionRewardMap.Count} members");
-
         }
         /* Set to only receive remote items and starting inventory */
         ReplaceItems();
