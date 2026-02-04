@@ -483,7 +483,7 @@ namespace DSAP
 
                             if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
                             {
-                                Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with prism stone.");
+                                Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with AP item.");
                                 var newspecialitemlot = new ItemLot
                                 {
                                     Rarity = 1,
@@ -497,7 +497,18 @@ namespace DSAP
                                     addonitems++;
                                 specialResult[lot.Id].Items.Add(newLotItem);
 
-                                newLotItem = prismStoneLotItem;
+                                // replace with the AP item with the relevant loc id
+                                newLotItem = new ItemLotItem
+                                {
+                                    CumulateLotPoint = 0,
+                                    CumulateReset = false,
+                                    EnableLuck = false,
+                                    GetItemFlagId = -1,
+                                    LotItemBasePoint = 100,
+                                    LotItemCategory = (int)Enums.DSItemCategory.KeyItems,
+                                    LotItemNum = 1,
+                                    LotItemId = locId
+                                };
                             }
                         }
                         else
@@ -509,10 +520,20 @@ namespace DSAP
                             newLotItem = prismStoneLotItem;
                         }
                     }
-                    else /* item not in own game, put a prism stone instead */
+                    else /* item not in own game, put the relevant id item instead */
                     {
-                        Log.Logger.Verbose($"Item {i} target = {target}");
-                        newLotItem = prismStoneLotItem;
+                        Log.Logger.Verbose($"Item {i}/{locId} for target = {target}");
+                        newLotItem = new ItemLotItem
+                        {
+                            CumulateLotPoint = 0,
+                            CumulateReset = false,
+                            EnableLuck = false,
+                            GetItemFlagId = -1,
+                            LotItemBasePoint = 100,
+                            LotItemCategory = (int)Enums.DSItemCategory.KeyItems,
+                            LotItemNum = 1,
+                            LotItemId = locId
+                        };
                     }
                     /* add the found location->item to the replacement dictionary */
                     var newitemlot = new ItemLot
@@ -1986,7 +2007,7 @@ namespace DSAP
             return;
         }
 
-        private static void upgradeGoods(List<KeyValuePair<long, ScoutedItemInfo>> addedEntries)
+        private static void upgradeGoods(List<KeyValuePair<long, string>> addedEntries)
         {
             ulong resCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
             uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
@@ -2002,7 +2023,7 @@ namespace DSAP
 
             ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
             uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
-            uint addl_str_length = (uint)addedEntries.Aggregate(0, (total, x) => total + x.Value.ItemName.Length + 1);
+            uint addl_str_length = (uint)addedEntries.Aggregate(0, (total, x) => total + x.Value.Length + 1);
             uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
 
             uint new_buffer_size = (uint)(old_buffer_size + addl_str_length + (0xc + goods_param_size) * new_entries);
@@ -2058,14 +2079,17 @@ namespace DSAP
             for (uint i = 0; i < new_entries; i++)
             {
                 var entry = addedEntries.ToArray()[i];
-                byte[] stringbytes = Encoding.ASCII.GetBytes($"{entry.Value.ItemName}\0");
+                byte[] stringbytes = Encoding.ASCII.GetBytes($"{entry.Value}\0");
                 uint newid = (uint)entry.Key;
-                // set sort bytes in param based on id
+                // set sort bytes in param based on id - not sure if this is grabbing top or bottom 2 bytes!! But filling all 4 put the items at the top instead.
                 byte[] idbytes = BitConverter.GetBytes(newid);
                 parambytes[0x1c] = idbytes[0];
                 parambytes[0x1d] = idbytes[1];
-                parambytes[0x1e] = idbytes[2];
-                parambytes[0x1f] = idbytes[3];
+                //parambytes[0x1e] = idbytes[2];
+                //parambytes[0x1f] = idbytes[3];
+                byte[] iconbytes = BitConverter.GetBytes((short)2042);
+                parambytes[0x2c] = iconbytes[0];
+                parambytes[0x2d] = iconbytes[1];
 
                 uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
                 Memory.Write(currloc + 0x0, newid);
@@ -2273,17 +2297,35 @@ namespace DSAP
 
         internal static void AddAPItems(Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
         {
-            List<KeyValuePair<long, ScoutedItemInfo>> addedEntries = scoutedLocationInfo.Where((e) => e.Value.Player.Slot != App.Client.CurrentSession.ConnectionInfo.Slot || e.Value.ItemName.Contains("Fog Wall Key")).ToList();
-            addedEntries.Sort((a, b) => a.Key.CompareTo(b.Key));
+            List<KeyValuePair<long, ScoutedItemInfo>> addedEntries = scoutedLocationInfo.Where((e) => e.Value.Player.Slot != App.Client.CurrentSession.ConnectionInfo.Slot).ToList();
+            //addedEntries.Sort((a, b) => a.Key.CompareTo(b.Key));
 
-            upgradeGoods(addedEntries);
+            var added_names = addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, $"{x.Value.Player}'s {x.Value.ItemDisplayName}\0")).ToList();
+            var added_captions = addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, BuildItemCaption(x))).ToList();
+
+            var added_emk_names = App.EmkControllers.Select(x => new KeyValuePair<long, string>(x.Itemname))
+            foreach (var f in App.EmkControllers)
+            {
+
+            }
+
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            // add items
+            upgradeGoods(added_names);
 
             // add name
-            AddMsgs(0x380, addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, $"{x.Value.Player}'s {x.Value.ItemDisplayName}\0")).ToList());
+            AddMsgs(0x380, added_names);
             // add caption
-            AddMsgs(0x378, addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, BuildItemCaption(x))).ToList());
+            AddMsgs(0x378, added_captions);
             // add info
-            AddMsgs(0x328, addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, BuildItemInfo(x))).ToList());
+            AddMsgs(0x328, added_captions);
+
+            watch.Stop();
+
+            Log.Logger.Information($"Finished adding new items, took {watch.ElapsedMilliseconds}ms");
+            App.Client.AddOverlayMessage($"Finished adding new items, took {watch.ElapsedMilliseconds}ms");
 
         }
         internal static string BuildItemCaption(KeyValuePair<long, ScoutedItemInfo> item)
@@ -2291,22 +2333,11 @@ namespace DSAP
             const byte progression = 0b001;
             const byte useful = 0b010;
             const byte trap = 0b100;
-            string item_type = "regular";
+            string item_type = "normal";
             if (((byte)item.Value.Flags) == 0b001) item_type = "Progression";
             if (((byte)item.Value.Flags) == 0b010) item_type = "Useful";
             if (((byte)item.Value.Flags) == 0b100) item_type = "Trap";
             return $"A {item_type} Archipelago item for {item.Value.Player}'s {item.Value.ItemGame}.\0";
-        }
-        internal static string BuildItemInfo(KeyValuePair<long, ScoutedItemInfo> item)
-        {
-            const byte progression = 0b001;
-            const byte useful = 0b010;
-            const byte trap = 0b100;
-            string item_type = "regular";
-            if (((byte)item.Value.Flags) == 0b001) item_type = "Progression";
-            if (((byte)item.Value.Flags) == 0b010) item_type = "Useful";
-            if (((byte)item.Value.Flags) == 0b100) item_type = "Trap";
-            return $"A {item_type} Archipelago item for {item.Value.Player}'s {item.Value.ItemGame}.\n\nYou found this at {item.Value.LocationName}\0";
         }
     }
 }

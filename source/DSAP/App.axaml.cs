@@ -57,7 +57,7 @@ public partial class App : Application
     public static bool CheckSaveId = true;
     private static bool _goalSent = false;
     private static readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
-    static List<EmkController> EmkControllers = [];
+    public static List<EmkController> EmkControllers = [];
     private static DarkSoulsClient dsrClient = null;
     public override void Initialize()
     {
