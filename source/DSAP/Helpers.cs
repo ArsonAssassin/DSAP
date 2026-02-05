@@ -1387,27 +1387,74 @@ namespace DSAP
         public static byte[] GetItemWithMessage()
         {
             byte[] x = new byte[] {
-        0x8B, 0x15, 0x3E, 0x00, 0x00, 0x00,               // mov edx,[itemdata] 
-        0x48, 0xA1, 0x30, 0xA5, 0xc8, 0x41, 0x01, 0x00, 0x00, 0x00,  // mov rax,[ChrBaseClass]
-        0x44, 0x8B, 0x0D, 0x31, 0x00, 0x00, 0x00,        // mov r9d,[itemdata+4]
-        0x44, 0x8B, 0x05, 0x2E, 0x00, 0x00, 0x00,        // mov r8d,[itemdata+8]
-        0x4C, 0x8B, 0x78, 0x10,                           // mov r15,[rax+10]
-        0x49, 0x8D, 0x8F, 0x80, 0x02, 0x00, 0x00,        // lea rcx,[r15+280]
-        0x48, 0x83, 0xEC, 0x38,                           // sub rsp,38
-        0xFF, 0x15, 0x02, 0x00, 0x00, 0x00, 0xEB, 0x08,  // call ItemGetAddr
-        0xE0, 0x79, 0x74, 0x40, 0x01, 0x00, 0x00, 0x00,  // ItemGetAddr placeholder
-        0x48, 0x83, 0xC4, 0x38,                           // add rsp,38
-        0xC3,                                             // ret
-        0x90, 0x90,                                       // nops for alignment
-        0x00, 0x00, 0x00, 0x00,                          // item category placeholder
-        0x00, 0x00, 0x00, 0x00,                          // item quantity placeholder
-        0x00, 0x00, 0x00, 0x00,                          // item id placeholder
-        0xFF, 0xFF, 0xFF, 0xFF                           // item durability
-    };
+                0x41, 0xb9, 0x00, 0x00, 0x00, 0x00,       //mov         r9d,0x0          // amount
+                0x41, 0xb8, 0x00, 0x00, 0x00, 0x00,       //mov         r8d,0x0          // itemid
+                0xba, 0x00, 0x00, 0x00, 0x00,             //mov         edx,0x0          // category
+                0x48, 0xa1, 0x30, 0xa5, 0xc8, 0x41, 0x01, //movabs      rax,0x141c8a530
+                0x00, 0x00, 0x00,
+                0x4c, 0x8b, 0x78, 0x10,                   //mov         r15,[rax+0x10]
+                0x49, 0x8d, 0x8f, 0x80, 0x02, 0x00, 0x00, //lea         rcx,[r15+0x280]
+                0x48, 0x83, 0xec, 0x38,                   //sub         rsp,0x38
+                0x49, 0xbe, 0xe0, 0x79, 0x74, 0x40, 0x01, //movabs      r14,0x1407479E0  // addItemToInvetory()
+                0x00, 0x00, 0x00,
+                0x41, 0xff, 0xd6,                         //call        r14
+                0x48, 0x83, 0xc4, 0x38,                   //add         rsp,0x38
 
-            // Replace ChrBaseClass address
-            Array.Copy(BitConverter.GetBytes(GetChrBaseClassOffset()), 0, x, 8, 8);
+                0x41, 0xb9, 0x00, 0x00, 0x00, 0x00,       //mov         r9d,0x0          // amount
+                0x41, 0xb8, 0x00, 0x00, 0x00, 0x00,       //mov         r8d,0x0          // itemid
+                0xba, 0x00, 0x00, 0x00, 0x00,             //mov         edx,0x0          // category
+                0x48, 0xb9, 0xa8, 0x91, 0xc8, 0x41, 0x01, //movabs      rcx,0x141c891a8
+                0x00, 0x00, 0x00,
+                0x48, 0x8b, 0x09,                         //mov         rcx,QWORD PTR [rcx]
+                0x48, 0x83, 0xec, 0x64,                   //sub         rsp,0x64
 
+                0x40, 0x53,                               //PUSH        RBX
+                0x4c, 0x8b, 0xd9,                         //MOV         R11,RCX
+                0x33, 0xc0,                               //XOR         EAX,EAX
+                0x48, 0x8b, 0x49, 0x10,                   //MOV         RCX,qword ptr [RCX + 0x10]
+                0x8b, 0xda,                               //MOV         EBX,EDX
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x74, 0x0c,                               //JZ          0x0c
+                0x4c, 0x8b, 0x11,                         //MOV         R10,qword ptr [RCX]
+                0x48, 0x8b, 0xc1,                         //MOV         RAX,RCX
+                0x4d, 0x89, 0x53, 0x10,                   //MOV         qword ptr [R11 + 0x10],R10
+                0xeb, 0x34,                               //JMP         0x34
+                0x49, 0x8b, 0x4b, 0x08,                   //MOV         RCX,qword ptr [R11 + 0x8]
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x74, 0x42,                               //JZ          0x42
+                0x48, 0x8b, 0xc1,                         //MOV         RAX,RCX
+                0x48, 0x8b, 0x09,                         //MOV         RCX,qword ptr [RCX]
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x74, 0x18,                               //JZ          0x18
+                0x48, 0x8b, 0xd0,                         //MOV         RDX,RAX
+                0x48, 0x8b, 0xc1,                         //MOV         RAX,RCX
+                0x48, 0x8b, 0x09,                         //MOV         RCX,qword ptr [RCX]
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x75, 0xf2,                               //JNZ         0xf2
+                0x48, 0x85, 0xd2,                         //TEST        RDX,RDX
+                0x74, 0x05,                               //JZ          0x8
+                0x48, 0x89, 0x0a,                         //MOV         qword ptr [RDX],RCX
+                0xeb, 0x08,                               //JMP         0x8
+                0x49, 0xc7, 0x43,                         //MOV         qword ptr [R11 + 0x8],0x0
+                0x08, 0x00, 0x00,
+                0x00, 0x00,
+                0x48, 0x85, 0xc0,                         //TEST        RAX,RAX
+                0x74, 0x12,                               //JZ          0x12
+                0x48, 0xc7, 0x00,                         //MOV         qword ptr [RAX],0x0
+                0x00, 0x00, 0x00, 0x00,
+                0x89, 0x58, 0x08,                         //MOV         dword ptr [RAX + 0x8],EBX
+                0x44, 0x89, 0x40, 0x0c,                   //MOV         dword ptr [RAX + 0xc],R8D
+                0x44, 0x89, 0x48, 0x10,                   //MOV         dword ptr [RAX + 0x10],R9D
+                0x49, 0x8b, 0x4b, 0x08,                   //MOV         RCX,qword ptr [R11 + 0x8]
+                0x48, 0x89, 0x08,                         //MOV         qword ptr [RAX],RCX
+                0xb9, 0x2c, 0x01,                         //MOV         ECX,0x12c
+                0x00, 0x00,
+                0x49, 0x89, 0x43, 0x08,                   //MOV         qword ptr [R11 + 0x8],RAX
+                0x5b,                                     //POP         RBX
+
+                0x48, 0x83, 0xc4, 0x64,                   //add         rsp,0x64
+                0xc3,                                     //RET 
+            };
             return x;
         }
                 /*  ----------Code To Emulate--------------

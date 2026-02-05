@@ -257,21 +257,7 @@ public partial class App : Application
         }
         else if (command.StartsWith("/get"))
         {
-            string[] cmdparts = command.Split(" ");
-            if (cmdparts.Length == 2)
-                AddItem(0, Int32.Parse(cmdparts[1]), 1);
-            if (cmdparts.Length == 3)
-                AddItem(Int32.Parse(cmdparts[2]) * 0x10000000, Int32.Parse(cmdparts[1]), 1);
-        }
-        else if (command.StartsWith("/set"))
-        {
-
-            //Helpers.OverwriteSingleItem()
-            string[] cmdparts = command.Split(" ");
-            if (cmdparts.Length == 2)
-                AddItem(0, Int32.Parse(cmdparts[1]), 1);
-            if (cmdparts.Length == 3)
-                AddItem(Int32.Parse(cmdparts[2]) * 0x10000000, Int32.Parse(cmdparts[1]), 1);
+            AddItemWithMessage((int)DSItemCategory.KeyItems, 11100970, 1);
         }
         else /* send any not-specifically-handled message to normal processing */
         {
@@ -475,7 +461,7 @@ public partial class App : Application
         }
         else
         {
-            AddItem(category, item.Id, item.Quantity);
+            AddItemWithMessage(category, item.Id, item.Quantity);
         }
     }
     public static void AddItem(int category, int id, int quantity)
@@ -494,17 +480,19 @@ public partial class App : Application
     {
         var command = Helpers.GetItemWithMessage();
 
-        // Set item category (at offset 0x3F)
-        Array.Copy(BitConverter.GetBytes(category), 0, command, 0x3F, 4);
-
-        // Set item quantity (at offset 0x43)
-        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x43, 4);
-
-        // Set item id (at offset 0x47)
-        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x47, 4);
+        //set item quantity
+        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x2, 4);
+        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x3d, 4);
+        //Set item id
+        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x8, 4);
+        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x43, 4);
+        //Set item category
+        Array.Copy(BitConverter.GetBytes(category), 0, command, 0xd, 4);
+        Array.Copy(BitConverter.GetBytes(category), 0, command, 0x48, 4);
 
         var result = Memory.ExecuteCommand(command);
     }
+    
 
     public static void HomewardBoneCommand()
     {
@@ -1075,7 +1063,7 @@ public partial class App : Application
             {
                 if (fog_key != null) // make sure to receive fog keys
                 {
-                    AddItem((int)DSItemCategory.KeyItems, fog_key.Id, 1);
+                    AddItemWithMessage((int)DSItemCategory.KeyItems, fog_key.Id, 1);
                 }
             }
             // otherwise, player needs to get the item first.
@@ -1392,7 +1380,6 @@ public partial class App : Application
         }
         /* Set to only receive remote items and starting inventory */
         ReplaceItems();
-
     }
 
     private static void OnDisconnected(object sender, EventArgs args)
