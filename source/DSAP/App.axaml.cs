@@ -1046,7 +1046,7 @@ public partial class App : Application
         LogItem(e.Item, 1);
         bool success = false;
 
-        if (SaveidSet && Helpers.IsInGame())
+        if (SaveidSet && Helpers.IsInGame() && Helpers.CanPopupItems())
         {
             var fog_key = Helpers.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
 
@@ -1113,9 +1113,9 @@ public partial class App : Application
             Task.Run(async () =>
             {
                 /* Check every second if player is in game again yet */
-                while(!SaveidSet || !Helpers.IsInGame())
+                while(!SaveidSet || !Helpers.IsInGame() || !Helpers.CanPopupItems())
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(200);
                 }
 
                 Log.Logger.Warning($"Player once again detected as in game. Re-trying item receive.");

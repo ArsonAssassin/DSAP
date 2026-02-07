@@ -2301,5 +2301,19 @@ namespace DSAP
         {
             return "A boon from another world. Makes a fog wall passable.\0";
         }
+
+        internal static bool CanPopupItems()
+        {
+            ulong ItemGetMenuMan = Memory.ReadULong(0x141c891a8);
+            if (ItemGetMenuMan == 0) 
+                return false;
+
+            ulong unused_node_queue = Memory.ReadULong(ItemGetMenuMan + 0x10);
+            ulong valid_node_queue = Memory.ReadULong(ItemGetMenuMan + 0x8);
+            if (unused_node_queue == 0 && valid_node_queue == 0)
+                return false;
+
+            return true;
+        }
     }
 }
