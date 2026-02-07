@@ -476,9 +476,11 @@ public partial class App : Application
 
         var result = Memory.ExecuteCommand(command);
     }
-    public static void AddItemWithMessage(int category, int id, int quantity)
+    public static long AddItemWithMessage(int category, int id, int quantity)
     {
         var command = Helpers.GetItemWithMessage();
+
+        nint resultArea = Memory.Allocate(4); // dword size
 
         //set item quantity
         Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x2, 4);
@@ -489,8 +491,18 @@ public partial class App : Application
         //Set item category
         Array.Copy(BitConverter.GetBytes(category), 0, command, 0xd, 4);
         Array.Copy(BitConverter.GetBytes(category), 0, command, 0x48, 4);
+        
+        // set result address
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0xef, 8); // 240 bytes -> offset of the mov to result target operand
 
-        var result = Memory.ExecuteCommand(command);
+        var execResult = Memory.ExecuteCommand(command);
+
+        int result = Memory.ReadInt((ulong)resultArea); // get result
+
+        Log.Logger.Information($"additem result {result}");
+        Memory.FreeMemory(resultArea);
+
+        return result;
     }
     
 
@@ -1041,13 +1053,31 @@ public partial class App : Application
             Client.AddOverlayMessage($"You are now safe to load your save.");
         }
     }
+    static DateTime lastItemReceived = DateTime.MinValue;
+    static uint batchItemsReceived = 0;
     private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
     {
         LogItem(e.Item, 1);
         bool success = false;
+        DateTime dtnow = DateTime.UtcNow;
 
         if (SaveidSet && Helpers.IsInGame() && Helpers.CanPopupItems())
         {
+            if (lastItemReceived > dtnow.AddMilliseconds(-250))
+            {
+                batchItemsReceived++;
+                if (batchItemsReceived > 3)
+                {
+                    Task.Delay((lastItemReceived.AddMilliseconds(250) - dtnow).Milliseconds).Wait();
+                    batchItemsReceived = 0;
+                    lastItemReceived = dtnow;
+                }   
+            }
+            else
+            {
+                batchItemsReceived = 0;
+                lastItemReceived = dtnow;
+            }
             var fog_key = Helpers.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
 
             // First, ignore any items which came from "item lots". Player already got them!

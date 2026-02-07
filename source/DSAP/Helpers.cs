@@ -1386,6 +1386,9 @@ namespace DSAP
 
         public static byte[] GetItemWithMessage()
         {
+            // could use additional validation
+            // - check 0x141c891a8 / ItemGetMenuManImpl before the addItemToInventory,
+            // - check 0x141c8a530 / GameDataMan for null before it is dereferenced
             byte[] x = new byte[] {
                 0x41, 0xb9, 0x00, 0x00, 0x00, 0x00,       //mov         r9d,0x0          // amount
                 0x41, 0xb8, 0x00, 0x00, 0x00, 0x00,       //mov         r8d,0x0          // itemid
@@ -1411,6 +1414,8 @@ namespace DSAP
                 0x40, 0x53,                               //PUSH        RBX
                 0x4c, 0x8b, 0xd9,                         //MOV         R11,RCX
                 0x33, 0xc0,                               //XOR         EAX,EAX
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x74, 0x78,                               //JZ          0x78  (BadRCX)
                 0x48, 0x8b, 0x49, 0x10,                   //MOV         RCX,qword ptr [RCX + 0x10]
                 0x8b, 0xda,                               //MOV         EBX,EDX
                 0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
@@ -1451,9 +1456,19 @@ namespace DSAP
                 0x00, 0x00,
                 0x49, 0x89, 0x43, 0x08,                   //MOV         qword ptr [R11 + 0x8],RAX
                 0x5b,                                     //POP         RBX
-
+                
                 0x48, 0x83, 0xc4, 0x64,                   //add         rsp,0x64
                 0xc3,                                     //RET 
+                // BadRCX:
+                0x5b,                                     //POP         RBX
+                0x48, 0x83, 0xc4, 0x64,                   //add         rsp,0x64
+                0x48, 0xc7, 0xc0, 0xff, 0xff, 0xff, 0xff, //mov         rax,0x12345678
+                0x48, 0xb8,                               //movabs rax,0x1234567812345678
+                0x78, 0x56, 0x34, 0x12,
+                0x78, 0x56, 0x34, 0x12,
+                0xc7, 0x00, 0xff, 0xff, 0xff, 0xff,        //mov DWORD PTR[rax],0xffffffff
+                0xc3,                                     //RET 
+
             };
             return x;
         }
