@@ -448,7 +448,7 @@ public partial class App : Application
     }
 
     /* Add an abstract "item" which can be a trap, event, or normal item */
-    public static void AddAbstractItem(DarkSoulsItem item)
+    public static void AddAbstractItem(DarkSoulsItem item, bool isProgression)
     {
         int category = (int)item.Category;
         if (category == (int)DSItemCategory.Trap)
@@ -461,39 +461,59 @@ public partial class App : Application
         }
         else
         {
-            AddItemWithMessage(category, item.Id, item.Quantity);
+            if (isProgression)
+            {
+                AddItemWithMessage(category, item.Id, item.Quantity);
+            }
+            else
+            {
+                AddItem(category, item.Id, item.Quantity);
+            }
         }
     }
-    public static void AddItem(int category, int id, int quantity)
+    public static long AddItem(int category, int id, int quantity)
     {
         var command = Helpers.GetItemCommand();
+        nint resultArea = Memory.Allocate(4); // dword size
         //Set item category
-        Array.Copy(BitConverter.GetBytes(category), 0, command, 0x1, 4);
-        //Set item quantity
-        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x7, 4);
-        //set item id
-        Array.Copy(BitConverter.GetBytes(id), 0, command, 0xD, 4);
+        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x2, 4);
+        //Set item id
+        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x8, 4);
+        //Set item category
+        Array.Copy(BitConverter.GetBytes(category), 0, command, 0xd, 4);
+        // 66 and 83 offset, 0x42 and 0x53, for the result area
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0x42, 8); 
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0x53, 8); 
+        
+        var execResult = Memory.ExecuteCommand(command);
 
-        var result = Memory.ExecuteCommand(command);
+        int result = Memory.ReadInt((ulong)resultArea); // get result
+
+        Log.Logger.Information($"additem result {result}");
+        Memory.FreeMemory(resultArea);
+
+        return result;
     }
     public static long AddItemWithMessage(int category, int id, int quantity)
     {
-        var command = Helpers.GetItemWithMessage();
+        var command = Helpers.GetItemWithMessageCommand();
 
         nint resultArea = Memory.Allocate(4); // dword size
 
-        //set item quantity
+        //set item quantity, 2 and 66 (0x2 and 0x42)
         Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x2, 4);
-        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x3d, 4);
-        //Set item id
+        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x42, 4);
+        //Set item id 8 and 72 (0x8 and 0x48)
         Array.Copy(BitConverter.GetBytes(id), 0, command, 0x8, 4);
-        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x43, 4);
-        //Set item category
+        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x48, 4);
+        //Set item category 13 and 77 (0x0d and 0x4d)
         Array.Copy(BitConverter.GetBytes(category), 0, command, 0xd, 4);
-        Array.Copy(BitConverter.GetBytes(category), 0, command, 0x48, 4);
-        
-        // set result address
-        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0xef, 8); // 240 bytes -> offset of the mov to result target operand
+        Array.Copy(BitConverter.GetBytes(category), 0, command, 0x4d, 4);
+
+        // set result address at 231, 248, and 270 (0xe7, 0xf8 and 0x10e)
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0xe7, 8);
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0xf8, 8);
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0x10e, 8);
 
         var execResult = Memory.ExecuteCommand(command);
 
@@ -1117,7 +1137,7 @@ public partial class App : Application
                         Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
                     }
                 }
-                AddAbstractItem(itemToReceive);
+                AddAbstractItem(itemToReceive, e.Item.IsProgression);
 
                 /* If after receiving item (or trap), player is still in game, then it received successfully */
                 if (Helpers.IsInGame())
@@ -1130,7 +1150,7 @@ public partial class App : Application
                 Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
                 var filler = AllItems.First(x => x.Id == 380);
-                AddAbstractItem(filler);
+                AddAbstractItem(filler, e.Item.IsProgression);
             }
         }
         e.Success = success;
