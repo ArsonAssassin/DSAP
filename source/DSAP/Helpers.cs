@@ -422,10 +422,8 @@ namespace DSAP
         /// </details>
         /// <param name="eventflags">A list of location flags of which items will be found.</param>
         /// <param name="resultMap">A dictionary mapping itemlot flags to "item lots".</param>
-        /// <param name="specialResultMap">A dictionary mapping itemlot flags to "special items" (e.g. events, traps). </param>
         /// <returns></returns>
         public static void BuildFlagToLotMap(out Dictionary<int, ItemLot> resultMap,
-            out Dictionary<int, ItemLot> specialResultMap,
             List<EventFlag> eventflags,
             Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap,
             Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
@@ -566,31 +564,6 @@ namespace DSAP
                 result.Add(lotflag, newitemlot);
             }
 
-            /* Then, anything that is in this eventflags list, but wasn't an AP location sent to us, replace with prism stones */
-            //Dictionary<int, int> addedItems = [];
-            //foreach (var flag in eventflags.Where(x => !result.ContainsKey(x.Flag)).Select(x => x.Flag))
-            //{
-            //    addedItems.TryAdd(flag, 0);
-            //    addedItems[flag] += 1;
-            //}
-            //foreach (var pair in addedItems)
-            //{
-            //    int flag = pair.Key;
-            //    result.TryAdd(pair.Key, new ItemLot()
-            //    {
-            //        Rarity = 1,
-            //        GetItemFlagId = -1,
-            //        CumulateNumFlagId = -1,
-            //        CumulateNumMax = 0,
-            //        Items = []
-            //    });
-            //    for (int i = 0; i < pair.Value; i++)
-            //    {
-            //        result[flag].Items.Add(prismStoneLotItem);
-            //    }
-            //    Log.Logger.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
-            //}
-            specialResultMap = specialResult;
             resultMap = result;
             return;
         }
@@ -1423,7 +1396,7 @@ namespace DSAP
                 0x48, 0xa1, 0x30, 0xa5, 0xc8, 0x41, 0x01, //movabs      rax,[0x141c8a530]
                 0x00, 0x00, 0x00,
                 0x48, 0x85, 0xc0,                         //TEST        RAX,RAX
-                0x74, 0xD6,                               //JZ          0xD6  (BadRaX)  214 dec 
+                0x0f, 0x84, 0xda, 0x00, 0x00, 0x00,       //JZ          +218 / 0xDA (BadRAX)
                 0x4c, 0x8b, 0x78, 0x10,                   //mov         r15,[rax+0x10]
                 0x49, 0x8d, 0x8f, 0x80, 0x02, 0x00, 0x00, //lea         rcx,[r15+0x280]
                 0x48, 0x83, 0xec, 0x38,                   //sub         rsp,0x38
@@ -1444,7 +1417,7 @@ namespace DSAP
                 0x4c, 0x8b, 0xd9,                         //MOV         R11,RCX
                 0x33, 0xc0,                               //XOR         EAX,EAX
                 0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
-                0x74, 0x99,                               //JZ          0x99  (BadRCX) 153 dec
+                0x0f, 0x84, 0x99, 0x00, 0x00, 0x00,       //JZ          +153 / 0x99 (BadRCX)
                 0x48, 0x8b, 0x49, 0x10,                   //MOV         RCX,qword ptr [RCX + 0x10]
                 0x8b, 0xda,                               //MOV         EBX,EDX
                 0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
@@ -1510,16 +1483,16 @@ namespace DSAP
             };
             return x;
         }
-                /*  ----------Code To Emulate--------------
-            
-            mov rcx,[BaseB]
-            mov edx,1
-            sub rsp,38
-            call 0x1404867e0
-            add rsp,38
-            ret
+        /*  ----------Code To Emulate--------------
 
-        */
+    mov rcx,[BaseB]
+    mov edx,1
+    sub rsp,38
+    call 0x1404867e0
+    add rsp,38
+    ret
+
+*/
         /*  ----------Homeward Bone injected ASM--------------
             0:  48 c7 c1 78 56 34 12    mov    rcx,0x12345678
             7:  00

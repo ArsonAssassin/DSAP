@@ -42,14 +42,22 @@ public partial class App : Application
     private const bool DO_NOT_CONNECT = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
+    // 
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
     private static Dictionary<int, ItemLot> SpecialItemLotsMap = new Dictionary<int, ItemLot>();
     private static Dictionary<string, Tuple<int, string>> SlotLocToItemUpgMap = [];
+    // Logging
     private static readonly object _lockObject = new object();
+    // Deathlink
     private static readonly object _deathlinkLock = new object(); // lock that protects IsHandlingDeathLink and lastDeathLinkTime
     private bool IsHandlingDeathlink = false;
     private bool deathlink_enabled = false;
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
+    // Item popups
+    static DateTime lastItemReceived = DateTime.MinValue;
+    static uint batchItemsReceived = 0;
+    static char itemPopupFilter = 'A';
+    //
     public static DarkSoulsOptions DSOptions;
     public static bool SaveidSet = false;
     public static bool CheckSaveId = true;
@@ -105,16 +113,47 @@ public partial class App : Application
         if (command.StartsWith("/help"))
         {
             Log.Logger.Warning("--- DSAP commands: --- ");
+            Log.Logger.Warning("--- Informational --- ");
             Log.Logger.Warning(" /help - Display this menu.");
             Log.Logger.Warning(" /diag - Print out some diagnostic information.");
-            Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session).");
-            Log.Logger.Warning(" /goalcheck - Manually check if the goal has been completed, if for some reason it did not send [continued below].");
+            Log.Logger.Warning(" /goalcheck - Manually check if the goal has been completed, if for some reason it did not send.");
             Log.Logger.Warning("              Please report back with the screenshots + the resulting messages if you have to use this.");
             Log.Logger.Warning(" /lock [Locked/Unlocked/All] - Display list of all locked or unlocked lockable events, or status of all of them (default).");
             Log.Logger.Warning(" /fog [Locked/Unlocked/All] - Display list of locked or unlocked fog walls, or status of all of them (default).");
             Log.Logger.Warning(" /bossfog [Locked/Unlocked/All] - Display list of locked or unlocked boss fog walls, or status of all of them (default).");
+            Log.Logger.Warning("--- Client Settings ---");
+            Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session).");
+            Log.Logger.Warning(" /ipshow [All/Progression/None] - set which received item popups will show.");
             Log.Logger.Warning("--- End of DSAP commands. ---");
             Client?.SendMessage(a.Command); /* send original command through client for the rest of /help - maybe player will have something if they are an admin. */
+        }
+        else if (command.StartsWith("/ipshow"))
+        {
+            string[] cmdparts = command.Split(" ");
+            if (cmdparts.Length == 1)
+            {
+                Log.Logger.Warning(" /ipshow [All/Progression/None] - set which received item popups will show.");
+                string curr_value = "";
+                if (itemPopupFilter == 'A') curr_value = "All items";
+                if (itemPopupFilter == 'P') curr_value = "Progression items only";
+                if (itemPopupFilter == 'N') curr_value = "No items";
+                Log.Logger.Warning($" Current setting: {curr_value} will display item popups");
+
+            }
+            else // if (cmdparts.Length > 1)
+            {
+                if ("APN".Contains(cmdparts[1].ToUpper()[0]))
+                {
+                    itemPopupFilter = cmdparts[1].ToUpper()[0];
+                    string curr_value = "";
+                    if (itemPopupFilter == 'A') curr_value = "All items";
+                    if (itemPopupFilter == 'P') curr_value = "Progression items only";
+                    if (itemPopupFilter == 'N') curr_value = "No items";
+                    Log.Logger.Information($"Updated item popup filter to {curr_value}");
+                }   
+                else
+                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [A, P, N].");
+            }
         }
         else if (command.StartsWith("/resetsave"))
         {
@@ -186,7 +225,7 @@ public partial class App : Application
                 if (App.dsrClient.ProcIds.Contains(pid))
                 {
                     App.dsrClient.ProcId = pid;
-                }   
+                }
                 else
                 {
                     Log.Logger.Error("Invalid pid, please try again.");
@@ -255,7 +294,7 @@ public partial class App : Application
             if (cmdparts.Length == 2)
                 MonitorEventFlag(Int32.Parse(cmdparts[1]));
         }
-        else if (command.StartsWith("/get"))
+        else if (command.StartsWith("/get")) // for debugging
         {
             AddItemWithMessage((int)DSItemCategory.KeyItems, 11100970, 1);
         }
@@ -461,7 +500,7 @@ public partial class App : Application
         }
         else
         {
-            if (isProgression)
+            if (itemPopupFilter == 'A' || (isProgression && itemPopupFilter == 'P' ))
             {
                 AddItemWithMessage(category, item.Id, item.Quantity);
             }
@@ -500,20 +539,20 @@ public partial class App : Application
 
         nint resultArea = Memory.Allocate(4); // dword size
 
-        //set item quantity, 2 and 66 (0x2 and 0x42)
+        //set item quantity, 2 and 70 (0x2 and 0x42)
         Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x2, 4);
-        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x42, 4);
-        //Set item id 8 and 72 (0x8 and 0x48)
+        Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x46, 4);
+        //Set item id 8 and 76 (0x8 and 0x4c)
         Array.Copy(BitConverter.GetBytes(id), 0, command, 0x8, 4);
-        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x48, 4);
-        //Set item category 13 and 77 (0x0d and 0x4d)
+        Array.Copy(BitConverter.GetBytes(id), 0, command, 0x4c, 4);
+        //Set item category 13 and 81 (0x0d and 0x51)
         Array.Copy(BitConverter.GetBytes(category), 0, command, 0xd, 4);
-        Array.Copy(BitConverter.GetBytes(category), 0, command, 0x4d, 4);
+        Array.Copy(BitConverter.GetBytes(category), 0, command, 0x51, 4);
 
         // set result address at 231, 248, and 270 (0xe7, 0xf8 and 0x10e)
-        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0xe7, 8);
-        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0xf8, 8);
-        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0x10e, 8);
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0xeF, 8);
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0x100, 8);
+        Array.Copy(BitConverter.GetBytes(resultArea), 0, command, 0x116, 8);
 
         var execResult = Memory.ExecuteCommand(command);
 
@@ -524,7 +563,7 @@ public partial class App : Application
 
         return result;
     }
-    
+
 
     public static void HomewardBoneCommand()
     {
@@ -632,6 +671,20 @@ public partial class App : Application
             }
             Client.MessageReceived += Client_MessageReceived;
             
+            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
+
+            if (!Client.IsLoggedIn)
+            {
+                Log.Logger.Warning("Login failed");
+                Client.AddOverlayMessage("Login failed");
+                Context.ConnectButtonEnabled = true;
+                return;
+            }
+            if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
+            {
+                SetDeathlink(true);
+            }
+
             if (Context.OverlayEnabled)
             {
                 Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
@@ -660,19 +713,8 @@ public partial class App : Application
                 });
             }
 
-            await Client.Login(e.Slot, !string.IsNullOrWhiteSpace(e.Password) ? e.Password : null);
 
-            if (!Client.IsLoggedIn)
-            {
-                Log.Logger.Warning("Login failed");
-                Client.AddOverlayMessage("Login failed");
-                Context.ConnectButtonEnabled = true;
-                return;
-            }
-            if (Client.Options.ContainsKey("enable_deathlink") && ((JsonElement)Client.Options["enable_deathlink"]).GetUInt32() != 0)
-            {
-                SetDeathlink(true);
-            }
+
 
             /* Look for event unlocks in full list of received items and locations */
             DetectEventKeys();
@@ -1073,8 +1115,7 @@ public partial class App : Application
             Client.AddOverlayMessage($"You are now safe to load your save.");
         }
     }
-    static DateTime lastItemReceived = DateTime.MinValue;
-    static uint batchItemsReceived = 0;
+
     private static void Client_ItemReceived(object? sender, ItemReceivedEventArgs e)
     {
         LogItem(e.Item, 1);
@@ -1083,21 +1124,28 @@ public partial class App : Application
 
         if (SaveidSet && Helpers.IsInGame() && Helpers.CanPopupItems())
         {
-            if (lastItemReceived > dtnow.AddMilliseconds(-250))
+            // For items that will give popups, limit how often they send
+            if (itemPopupFilter == 'A' || (e.Item.IsProgression && itemPopupFilter == 'P')) // Progression items, or all items if filtering is off
             {
-                batchItemsReceived++;
-                if (batchItemsReceived > 3)
+                if (lastItemReceived > dtnow.AddMilliseconds(-250))
                 {
-                    Task.Delay((lastItemReceived.AddMilliseconds(250) - dtnow).Milliseconds).Wait();
+                    batchItemsReceived++;
+                    if (batchItemsReceived > 3)
+                    {
+                        Task.Delay((lastItemReceived.AddMilliseconds(250) - dtnow).Milliseconds).Wait();
+                        batchItemsReceived = 0;
+                        lastItemReceived = dtnow;
+                    }
+                    Log.Logger.Warning($"bi1_ {batchItemsReceived}");
+                }
+                else
+                {
                     batchItemsReceived = 0;
                     lastItemReceived = dtnow;
-                }   
+                    Log.Logger.Warning($"bi0_ {batchItemsReceived}");
+                }
             }
-            else
-            {
-                batchItemsReceived = 0;
-                lastItemReceived = dtnow;
-            }
+            
             var fog_key = Helpers.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
 
             // First, ignore any items which came from "item lots". Player already got them!
@@ -1147,8 +1195,8 @@ public partial class App : Application
             }
             else
             {
-                Log.Logger.Warning($"Unable to identify received item {itemId}, receiving rubbish instead.");
-                Client.AddOverlayMessage($"Unable to identify received item {itemId}, receiving rubbish instead.");
+                Log.Logger.Warning($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.");
+                Client.AddOverlayMessage($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.");
                 var filler = AllItems.First(x => x.Id == 380);
                 AddAbstractItem(filler, e.Item.IsProgression);
             }
@@ -1340,8 +1388,7 @@ public partial class App : Application
                 var messageToLog = new LogListItem(new List<TextSpan>()
                 {
                     new TextSpan(){Text = $"[{item.Id.ToString()}] -", TextColor = new SolidColorBrush(Color.FromRgb(255, 255, 255))},
-                    new TextSpan(){Text = $"{item.Name}", TextColor = new SolidColorBrush(Color.FromRgb(200, 255, 200))},
-                    new TextSpan(){Text = $"x{quantity.ToString()}", TextColor =new SolidColorBrush(Color.FromRgb(200, 255, 200))}
+                    new TextSpan(){Text = $"{item.Name}", TextColor = new SolidColorBrush(Color.FromRgb(200, 255, 200))}
                 });
                 Context.ItemList.Add(messageToLog);
             });
@@ -1412,7 +1459,7 @@ public partial class App : Application
 
             Helpers.AddAPItems(scoutedLocationInfo);
 
-            Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, out SpecialItemLotsMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
+            Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
 
             var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
             nonItemLotFlags.AddRange(Helpers.GetBonfireFlags().Cast<EventFlag>());
@@ -1421,7 +1468,6 @@ public partial class App : Application
             nonItemLotFlags.AddRange(Helpers.GetMiscFlags().Cast<EventFlag>());
 
             //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();
-            Log.Logger.Debug($"Special lot item count: {SpecialItemLotsMap.Count}");
             Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
             foreach (var item in nonItemLotFlags)
             {
