@@ -4,8 +4,6 @@ using Archipelago.Core.Util.GPS;
 using Archipelago.MultiClient.Net.Models;
 using DSAP.Models;
 using Serilog;
-using Silk.NET.Input;
-using Silk.NET.OpenGL;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,13 +13,13 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
     public class Helpers
-    {   
+    {
+        private static readonly object _memAllocLock = new object();
         /* aka GameDataMan */
         private static AoBHelper BaseBAoB = new AoBHelper("BaseB",
                 [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0],
@@ -266,7 +264,7 @@ namespace DSAP
         private static ulong GetItemLotParamOffset()
         {
             var foo = SoloParamAob.Address;
-            Log.Logger.Information($"foo {foo.ToString("X")}");
+            Log.Logger.Verbose($"solo param location {foo.ToString("X")}");
             var next = OffsetPointer(((ulong)foo), 0x570);
             var foo2 = Memory.ReadULong(next);
             next = OffsetPointer(foo2, 0x38);
@@ -1989,14 +1987,53 @@ namespace DSAP
             return;
         }
 
-        private static void upgradeGoods(List<KeyValuePair<long, string>> addedEntries)
+        private static bool upgradeGoods(List<KeyValuePair<long, string>> addedEntries)
         {
             ulong resCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
             uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
             ulong old_buffer = Memory.ReadULong(resCap + 0x38);
+            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+
+            /* first, read highest numbered param in list */
+            uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
+            if (addedEntries.First().Key <= highest_id)
+            {
+                Log.Logger.Warning($"Warning: Highest id in params detected as {highest_id}, >= one of our entries.");
+                Log.Logger.Warning($"Checking if params and msgs have already been updated...");
+                
+                uint old_end_buffer_offset = old_buffer_size + (uint)(0x8 * old_buffer_num_entries) + 0x10 + 0xf;
+                ulong old_desc_area_loc = old_buffer + old_end_buffer_offset;
+                DescArea old_desc_area = Memory.ReadObject<DescArea>(old_desc_area_loc);
+                Log.Logger.Debug("Read object: " + old_desc_area.ToString());
+                bool requires_reload = ValidateDescArea(old_desc_area);
+                if (requires_reload)
+                {
+                    //int intermediate_buffer_size = old_desc_area.FullAllocLength;
+                    ulong intermediate_buffer_loc = old_buffer;
+                    // desc size 4, full alloc length 4, old address 8, old length 4, seed hash 4, slot 4
+                    // reset old buffer values
+                    old_buffer = old_desc_area.OldAddress;
+                    old_buffer_size = (uint)old_desc_area.OldLength;
+                    old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+
+                    /* Switch out the pointer so deallocated area isn't accessed by the game */
+                    Memory.Write(resCap + 0x30, old_buffer_size);
+                    Memory.Write(resCap + 0x38, old_buffer);
+
+                    // dealloc previously swapped-in area
+                    Memory.FreeMemory((nint)(intermediate_buffer_loc - 0x10));
+                    Log.Logger.Warning("Reloading EquipGoodsParams");
+                }
+                else
+                {
+                    Log.Logger.Information("EquipGoodsParams replacement not needed - skipping");
+                    return false;
+                }
+
+            }
+
             uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
             ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
-            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
 
             ushort new_entries = (ushort)addedEntries.Count();
 
@@ -2009,20 +2046,19 @@ namespace DSAP
             uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
 
             uint new_buffer_size = (uint)(old_buffer_size + addl_str_length + (0xc + goods_param_size) * new_entries);
-            uint new_buffer_alloc_size = (uint)(new_buffer_size + (0x8 * new_entries) + 0x10 + 0xf);
+            uint new_buffer_alloc_size = (uint)(new_buffer_size + (0x8 * new_buffer_num_entries) + 0x10 + 0xf + DescArea.size); // ensure enough for the binary search table and the prologue
 
-            ulong new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size);
+            ulong new_allocated_buffer = 0;
+            lock (_memAllocLock)
+            {
+                new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size);
+            }
+            
             ulong new_buffer = new_allocated_buffer + 0x10;
-            Log.Logger.Information($"Allocated {new_buffer_size} bytes at {new_buffer.ToString("X")}");
+            Log.Logger.Information($"Allocated {new_buffer_alloc_size} bytes at {new_allocated_buffer.ToString("X")}");
             Log.Logger.Information($"Overwrite EquipParamGoods @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
 
-            /* first, read highest numbered param in list */
-            uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
-            if (addedEntries.Any(x => x.Key < highest_id))
-            {
-                Log.Logger.Warning($"Warning: Highest id in params detected as {highest_id}, which is higher than the ids used by our added entries.");
-                Log.Logger.Warning($"Warning: This may be due to other mods adding items above our range. As such, you may encounter errors.");
-            }
+
             /* Then, copy the header + pointer structs */
             byte[] basebytes = Memory.ReadByteArray(old_buffer, old_buffer_params_offset);
             Memory.WriteByteArray(new_buffer, basebytes);
@@ -2072,6 +2108,7 @@ namespace DSAP
                 byte[] iconbytes = BitConverter.GetBytes((short)2042);
                 parambytes[0x2c] = iconbytes[0];
                 parambytes[0x2d] = iconbytes[1];
+                parambytes[0x45] |= (byte)(0x30); // turn on isDrop and isDeposit bits
 
                 uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
                 Memory.Write(currloc + 0x0, newid);
@@ -2084,7 +2121,7 @@ namespace DSAP
                 Memory.Write(currloc + 0x8, new_string_loc - new_buffer);
                 new_string_loc += (uint)stringbytes.Length;
             }
-            Log.Logger.Information($"Added {new_entries} to equipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
+            Log.Logger.Information($"Added {new_entries} items to equipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
 
             ulong post_string_loc = new_string_loc;
             ulong saved_len = post_string_loc - new_buffer;
@@ -2101,7 +2138,7 @@ namespace DSAP
             ulong old_endtable_loc = old_buffer + ((old_buffer_size + 0xf) & 0xFFFFFFFFFFFFFFF0);
             byte[] old_endtable = Memory.ReadByteArray(old_endtable_loc, 8*old_buffer_num_entries);
             Memory.WriteByteArray(new_endtable_loc, old_endtable);
-            // add our new entries to the endtable
+            // add our new entries to the endtable (binary search table)
             for (uint i = 0; i < new_entries; i++)
             {
                 var entry = addedEntries.ToArray()[i];
@@ -2110,11 +2147,78 @@ namespace DSAP
                 Memory.Write(curr_endtable_loc, newid);
                 Memory.Write(curr_endtable_loc + 0x4, old_buffer_num_entries + i);
             }
+            // end of data
+
+            // add desc area to end
+            uint end_buffer_offset = new_buffer_size + (uint)(0x8 * new_buffer_num_entries) + 0x10 + 0xf;
+            ulong desc_area_loc = new_buffer + end_buffer_offset;
+
+            var seedHash = HashSeed(App.Client.CurrentSession.RoomState.Seed);
+            var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
+
+            var new_desc_area = new DescArea((int)new_buffer_alloc_size, old_buffer, (int)old_buffer_size, seedHash, slot);
+            Memory.WriteObject<DescArea>(desc_area_loc, new_desc_area);
+            // end of data + metadata
+
 
             /* Then switch out the pointer */
             Memory.Write(resCap + 0x38, new_buffer);
             Memory.Write(resCap + 0x30, saved_len);
+            return true;
         }
+
+        private static bool ValidateDescArea(DescArea descArea)
+        {
+            bool requires_reload = false;
+            if (descArea.DescSize >= DescArea.size)
+            {
+                int old_slot = descArea.Slot;
+                
+                if (descArea.SeedHash != HashSeed(App.Client.CurrentSession.RoomState.Seed)) // different seed
+                {
+                    if (IsInGame())
+                    {
+                        App.Client.AddOverlayMessage($"Error - check the client log");
+                        Log.Logger.Error("Different seed detected than your previous connection to Archipelago.");
+                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
+                        return false;
+                    }
+                    else
+                    {
+                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
+                        return true;
+                    }
+                        
+                    
+                }
+                else if (old_slot != App.Client.CurrentSession.ConnectionInfo.Slot) // different slot
+                {
+                    if (IsInGame())
+                    {
+                        App.Client.AddOverlayMessage($"Error - check the client log");
+                        Log.Logger.Error("Different slotdetected than your previous connection to Archipelago.");
+                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
+                        return false;
+                    }
+                    else
+                    {
+                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
+                        return true;
+                    }   
+                }
+                else // seed and slot checked out fine. Looks good, no need to reload.
+                {
+                    return false;
+                }
+            }
+            else // desc area too small
+            {
+                Log.Logger.Error("No version detected on equip goods params. A different mod is probably interfering with our items.");
+                Log.Logger.Error("Try running without other mods.");
+                return false;
+            }
+        }
+
         private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings)
         {
             ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
@@ -2122,8 +2226,6 @@ namespace DSAP
             ulong old_buffer = Memory.ReadULong(MsgMan + offset);
             ulong old_buffer_size = Memory.ReadUInt(old_buffer + 0x4);
             ulong old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
-            ulong old_buffer_num_stroff_entries = Memory.ReadUShort(old_buffer + 0x10);
-            ulong old_buffer_stroff_start_offset = Memory.ReadUInt(old_buffer + 0x14);
             // structure of buffer:
             // string end/size@ 0x04
             // num of span maps 0x0c
@@ -2145,9 +2247,46 @@ namespace DSAP
             //     each string offset entry
             //     end of strings/size of all
 
+            // get highest entry in span maps table
+            // check its id against known ids, if higher do desc area validation
+            long highest_id = Memory.ReadUInt(old_buffer + 0x1c + 0xc * (old_buffer_num_spanmaps - 1) + 0x8);
+            Log.Logger.Verbose($"msgs highest id = {highest_id}");
+            if (highest_id >= instrings.First().Key) // conflict
+            {
+                // validate desc area
+                // If it's no good, reset it
+                ulong desc_area_loc = old_buffer + old_buffer_size;
+                DescArea old_desc_area = Memory.ReadObject<DescArea>(desc_area_loc);
+                Log.Logger.Debug("Read object: " + old_desc_area.ToString() + " from " + desc_area_loc.ToString("X"));
+                bool update_required = ValidateDescArea(old_desc_area);
+                if (update_required)
+                {
+                    ulong intermediate_buffer_loc = old_buffer; // save "swapped-in area" ptr
+                    // reset old buffer values
+                    old_buffer = old_desc_area.OldAddress;
+                    old_buffer_size = (ulong)old_desc_area.OldLength;
+                    old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
+
+                    /* Switch out the pointer so deallocated area isn't accessed by the game */
+                    Memory.Write(MsgMan + offset, old_buffer);
+
+                    // dealloc previously swapped-in area
+                    Memory.FreeMemory((nint)(intermediate_buffer_loc));
+                    Log.Logger.Information("Updating item msg text");
+                }
+                else
+                {
+                    Log.Logger.Information("Item msg text update not needed - skipping");
+                    return;
+                }
+            }
+
+            ulong old_buffer_num_stroff_entries = Memory.ReadUShort(old_buffer + 0x10);
+            ulong old_buffer_stroff_start_offset = Memory.ReadUInt(old_buffer + 0x14);
+
             ulong new_entries = (ulong)(instrings.Last().Key - instrings.First().Key + 1);
             ulong total_String_size = 0;
-            ulong new_buffer = 0; // temp
+            ulong new_buffer = 0;
             ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
             ulong old_buffer_string_start_offset = old_buffer_stroff_start_offset + (old_buffer_num_stroff_entries * 4);
             ulong new_buffer_string_start_offset = old_buffer_string_start_offset + 0xc + 4 * new_entries;
@@ -2159,9 +2298,13 @@ namespace DSAP
                 total_String_size += (ulong)instrings.Count - new_entries;
             //calculate size
             ulong new_buffer_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size;
+            ulong new_buffer_total_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size + (ulong)DescArea.size;
 
-            new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_size);
-            //ulong new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_size);
+            lock (_memAllocLock)
+            {
+                new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_total_size);
+            }
+            Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer.ToString("X")}");
             Log.Logger.Information($"Overwrite Msgs @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
 
             // first, copy over header & old maps
@@ -2209,14 +2352,21 @@ namespace DSAP
                 Memory.WriteByteArray(curr_end_loc, ba);
                 curr_end_loc += (ulong)ba.Length;
             }
+            // end of data here
+            // add desc area
+            var seedHash = HashSeed(App.Client.CurrentSession.RoomState.Seed);
+            var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
+            var new_desc_area = new DescArea((int)new_buffer_total_size, old_buffer, (int)old_buffer_size, seedHash, slot);
+            Memory.WriteObject<DescArea>(curr_end_loc, new_desc_area);
+            Log.Logger.Verbose($"new Desc Area written to {curr_end_loc.ToString("X")}");
             // end here
 
+            // fix up header area
             Memory.Write(new_buffer + 0x4, curr_end_loc - new_buffer);
             Memory.Write(new_buffer + 0xc, old_buffer_num_spanmaps + 1);
             Memory.Write(new_buffer + 0x10, old_buffer_num_stroff_entries + new_entries);
             Memory.Write(new_buffer + 0x14, new_buffer_stroff_start_offset);
-            // New buffer will need updated:
-
+            
             /* Then switch out the pointer */
             Memory.Write(MsgMan + offset, new_buffer);
         }
@@ -2277,7 +2427,7 @@ namespace DSAP
             return;
         }
 
-        internal static void AddAPItems(Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
+        internal static async Task AddAPItems(Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
         {
             List<KeyValuePair<long, ScoutedItemInfo>> addedEntries = scoutedLocationInfo.Where((e) => e.Value.Player.Slot != App.Client.CurrentSession.ConnectionInfo.Slot).ToList();
             //addedEntries.Sort((a, b) => a.Key.CompareTo(b.Key));
@@ -2297,19 +2447,19 @@ namespace DSAP
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
             // add items
-            upgradeGoods(added_names);
+            bool do_replacements = upgradeGoods(added_names);
 
-            // add name
-            AddMsgs(0x380, added_names);
-            // add caption
-            AddMsgs(0x378, added_captions);
-            // add info
-            AddMsgs(0x328, added_captions);
+            var tasks = new List<Task>
+                {
+                Task.Run(() => { AddMsgs(0x380, added_names); }), // names
+                Task.Run(() => { AddMsgs(0x378, added_captions); }), // captions
+                Task.Run(() => { AddMsgs(0x328, added_captions); }), // info
+                };
+            await Task.WhenAll(tasks);
 
             watch.Stop();
-
-            Log.Logger.Information($"Finished adding new items, took {watch.ElapsedMilliseconds}ms");
-            App.Client.AddOverlayMessage($"Finished adding new items, took {watch.ElapsedMilliseconds}ms");
+            Log.Logger.Information($"Finished adding new items params + msgs, took {watch.ElapsedMilliseconds}ms");
+            App.Client.AddOverlayMessage($"Finished adding new items params + msgs, took {watch.ElapsedMilliseconds}ms");
 
         }
         internal static string BuildItemCaption(KeyValuePair<long, ScoutedItemInfo> item)

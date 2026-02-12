@@ -44,7 +44,6 @@ public partial class App : Application
     public static List<DarkSoulsItem> AllItems { get; set; }
     // 
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
-    private static Dictionary<int, ItemLot> SpecialItemLotsMap = new Dictionary<int, ItemLot>();
     private static Dictionary<string, Tuple<int, string>> SlotLocToItemUpgMap = [];
     // Logging
     private static readonly object _lockObject = new object();
@@ -528,7 +527,7 @@ public partial class App : Application
 
         int result = Memory.ReadInt((ulong)resultArea); // get result
 
-        Log.Logger.Information($"additem result {result}");
+        Log.Logger.Verbose($"additem result {result}");
         Memory.FreeMemory(resultArea);
 
         return result;
@@ -558,7 +557,7 @@ public partial class App : Application
 
         int result = Memory.ReadInt((ulong)resultArea); // get result
 
-        Log.Logger.Information($"additem result {result}");
+        Log.Logger.Verbose($"additem w/message result {result}");
         Memory.FreeMemory(resultArea);
 
         return result;
@@ -1136,13 +1135,11 @@ public partial class App : Application
                         batchItemsReceived = 0;
                         lastItemReceived = dtnow;
                     }
-                    Log.Logger.Warning($"bi1_ {batchItemsReceived}");
                 }
                 else
                 {
                     batchItemsReceived = 0;
                     lastItemReceived = dtnow;
-                    Log.Logger.Warning($"bi0_ {batchItemsReceived}");
                 }
             }
             
@@ -1457,7 +1454,7 @@ public partial class App : Application
 
             Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
 
-            Helpers.AddAPItems(scoutedLocationInfo);
+            await Helpers.AddAPItems(scoutedLocationInfo);
 
             Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
 
@@ -1482,5 +1479,8 @@ public partial class App : Application
     {
         Log.Logger.Information("Disconnected from Archipelago");
         Client.AddOverlayMessage("Disconnected from Archipelago");
+        SlotLocToItemUpgMap = [];
+        EmkControllers = [];
+        ItemLotReplacementMap = [];
     }
 }
