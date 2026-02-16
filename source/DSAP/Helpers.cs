@@ -1,6 +1,7 @@
 ﻿using Archipelago.Core.Models;
 using Archipelago.Core.Util;
 using Archipelago.Core.Util.GPS;
+using Archipelago.Core.Util.Hook;
 using Archipelago.MultiClient.Net.Models;
 using DSAP.Models;
 using Serilog;
@@ -2461,7 +2462,60 @@ namespace DSAP
             Log.Logger.Information($"Finished adding new items params + msgs, took {watch.ElapsedMilliseconds}ms");
             App.Client.AddOverlayMessage($"Finished adding new items params + msgs, took {watch.ElapsedMilliseconds}ms");
 
+            var local_ap_keys = added_emk_names.ToList();
+            local_ap_keys.Sort((a,b) =>  a.Key.CompareTo(b.Key));
+            // add item removal hook. Filter only things that are remote items; min = after last fogwall/local ap key, max = last ap key
+            AddAPItemHook(local_ap_keys.Last().Key + 1, added_names.Last().Key);
         }
+
+        private static void AddAPItemHook(long min, long max)
+        {
+            ulong target_func_start = 0x1407479E0;
+            byte[] replaced_instructions = Memory.ReadByteArray(target_func_start, 14);
+            ulong replacement_func_start_addr = (ulong)Memory.Allocate(1000, Memory.PAGE_EXECUTE_READWRITE);
+
+            var jmpstub = new byte[]
+            {
+                0xff, 0x25, 0x00, 0x00, 0x00, 0x00,       //jmp    QWORD PTR [rip+0x0]        # 6 <_main+0x6>
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // target address
+                // then the address to jump to (8 bytes)
+            };
+            Array.Copy(BitConverter.GetBytes(replacement_func_start_addr), 0, jmpstub, 6, 8); // target address
+
+            //CMP r9d,0x12345678
+            //JL OVER
+            //CMP r9d,0x12345678
+            //JG OVER
+            // RET and 5 nops (could be replaced with mov r9d,<value>)
+            // OVER (label)
+            // 14 nops (replaced with source 14 bytes overwritten by jmp instruction)
+            //  jmp        qword[rip+0]
+            // <return address>
+            var new_instructions = new byte[]
+            {
+                0x41, 0x81, 0xf8, 0x78, 0x56, 0x34, 0x12,    // cmp r9d,0x12345678
+                0x7c, 0x0f,                                  // jl     OVER
+                0x41, 0x81, 0xf8, 0x78, 0x56, 0x34, 0x12,    // cmp    r9d,0x12345678
+                0x7f, 0x06,                                  // jg     OVER
+                0xc3, 0x90, 0x90, 0x90, 0x90, 0x90,          // ret and 5 nops
+                //0x41, 0xb8, 0x72, 0x01, 0x00, 0x00,          // mov    r9d,0x172 (dec 370)
+                // OVER (label)
+                0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,    // 14 nops -> get replaced with source 14 bytes
+                0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+                0xff, 0x25, 0x00, 0x00, 0x00, 0x00,          // jmp    QWORD PTR [rip+0x8]
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // jmp's target address
+            };
+
+            Array.Copy(BitConverter.GetBytes(min), 0, new_instructions, 3, 4); // min
+            Array.Copy(BitConverter.GetBytes(max), 0, new_instructions, 12, 4); // max
+            Array.Copy(replaced_instructions, 0, new_instructions, 24, 14); // replaced_instructions
+            Array.Copy(BitConverter.GetBytes(target_func_start + 14), 0, new_instructions, 44, 8); // target address
+
+
+            Memory.WriteByteArray(replacement_func_start_addr, new_instructions); // write new instructions into its hook area
+            Memory.WriteByteArray(target_func_start, jmpstub); // write jmp stub (e.g. "create hook")
+        }
+
         internal static string BuildItemCaption(KeyValuePair<long, ScoutedItemInfo> item)
         {
             const byte progression = 0b001;
