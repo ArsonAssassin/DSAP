@@ -1,9 +1,10 @@
 ﻿using Archipelago.Core.Models;
 using Archipelago.Core.Util;
 using Archipelago.Core.Util.GPS;
+using Archipelago.Core.Util.Hook;
+using Archipelago.MultiClient.Net.Models;
 using DSAP.Models;
 using Serilog;
-using Silk.NET.OpenGL;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,13 +14,13 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP
 {
     public class Helpers
-    {   
+    {
+        private static readonly object _memAllocLock = new object();
         /* aka GameDataMan */
         private static AoBHelper BaseBAoB = new AoBHelper("BaseB",
                 [0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x45, 0x33, 0xED, 0x48, 0x8B, 0xF1, 0x48, 0x85, 0xC0],
@@ -36,7 +37,10 @@ namespace DSAP
         private static AoBHelper EmkAoB = new AoBHelper("EmkHead",
                 [0x48, 0x89, 0x05, 0x00, 0x00, 0x00, 0x00, 0xeb, 0x0b, 0x48, 0xc7, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8b, 0x5c, 0x24, 0x50],
                 "xxx????xxxxx????xxxxxxxxx", 3, 4);
-
+        private static AoBHelper SoloParamAob = new AoBHelper("SoloParam",
+                [ 0x4C, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x48, 0x63, 0xC9, 0x48, 0x8D, 0x04, 0xC9 ],
+                "xxx????xxxxxxx", 3, 4);
+        
         private static ItemLotItem prismStoneLotItem = new ItemLotItem
         {
             CumulateLotPoint = 0,
@@ -260,10 +264,9 @@ namespace DSAP
         }
         private static ulong GetItemLotParamOffset()
         {
-            var soloParams = GetSoloParamOffset();
-            
-            var foo = Memory.ReadULong(soloParams);
-            var next = OffsetPointer(foo, 0x570);
+            var foo = SoloParamAob.Address;
+            Log.Logger.Verbose($"solo param location {foo.ToString("X")}");
+            var next = OffsetPointer(((ulong)foo), 0x570);
             var foo2 = Memory.ReadULong(next);
             next = OffsetPointer(foo2, 0x38);
             var foo3 = Memory.ReadULong(next);
@@ -418,243 +421,33 @@ namespace DSAP
         /// </details>
         /// <param name="eventflags">A list of location flags of which items will be found.</param>
         /// <param name="resultMap">A dictionary mapping itemlot flags to "item lots".</param>
-        /// <param name="specialResultMap">A dictionary mapping itemlot flags to "special items" (e.g. events, traps). </param>
         /// <returns></returns>
         public static void BuildFlagToLotMap(out Dictionary<int, ItemLot> resultMap,
-            out Dictionary<int, ItemLot> specialResultMap,
             List<EventFlag> eventflags,
-            Dictionary<string, object> slotData,
-            Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
+            Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap,
+            Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
             Dictionary<int, ItemLot> specialResult = new Dictionary<int, ItemLot>();
 
             var addonitems = 0;
 
-            /* Get locationsId and locationsTarget into lists */
-            List<int?> locationsIdList = new List<int?>();
-            List<int> locationsTargetList = new List<int>();
-
-            if (slotData.TryGetValue("locationsId", out object locationsId))
+            int i = 0;
+            foreach (var (k, v) in scoutedLocationInfo)
             {
-                locationsIdList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsId.ToString()));
-                if (slotData.TryGetValue("locationsTarget", out object locationsTarget))
+                i++;
+                int locId = ((int)k);
+                string target = v.Player.Name;
+                EventFlag? lot = eventflags.Find(x => x.Id == locId);
+                if (lot != null) /* found a location in our "item lots" */
                 {
-                    locationsTargetList.AddRange(JsonSerializer.Deserialize<int[]>(locationsTarget.ToString()));
-                }
-            }
-
-            if (locationsIdList.Count == 0 || locationsTargetList.Count == 0
-             || locationsIdList.Count != locationsTargetList.Count)
-            {
-                Log.Logger.Error("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-                App.Client.AddOverlayMessage("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-            }
-            else
-            {
-                /* Iterate over each pair of entries in the pair of lists */
-                for (int i = 0; i < locationsIdList.Count; i++)
-                {
-                    int target = locationsTargetList[i];
-                    int? locId = locationsIdList[i];
-                    if (locId != null) /* full list of locations in our game */
-                    {
-                        EventFlag? lot = eventflags.Find(x => x.Id == locId);
-                        if (lot != null) /* found a location in our "item lots" */
-                        {
-                            ItemLotItem newLotItem = new ItemLotItem { };
-                            if (target != 0) /* found an item in our game  */
-                            {
-                                /* Found an item of our own, located in our own game. 
-                                 * Validate that it's in the eventflags we've been given, and find the matching item. */
-                                DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
-                                if (item != null)
-                                {
-                                    DarkSoulsItem repitem = item;
-                                    if (item.Category == Enums.DSItemCategory.AnyWeapon)
-                                    {
-                                        Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
-                                        if (App.DSOptions.UpgradedWeaponsPercentage > 0
-                                            && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
-                                        {
-                                            if (itemupg.Item1 == item.ApId) // if item apid matches
-                                                repitem = UpgradeItem(repitem, itemupg.Item2);
-                                            else
-                                            {
-                                                Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                                App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                            }
-                                        }
-                                    }
-
-                                    Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
-                                    newLotItem = new ItemLotItem
-                                    {
-                                        CumulateLotPoint = 0,
-                                        CumulateReset = false,
-                                        EnableLuck = false,
-                                        GetItemFlagId = -1,
-                                        LotItemBasePoint = 100,
-                                        LotItemCategory = (int)repitem.Category,
-                                        LotItemNum = (byte)repitem.Quantity,
-                                        LotItemId = repitem.Id
-                                    };
-
-                                    if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
-                                    {
-                                        Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with prism stone.");
-                                        var newspecialitemlot = new ItemLot
-                                        {
-                                            Rarity = 1,
-                                            GetItemFlagId = -1,
-                                            CumulateNumFlagId = -1,
-                                            CumulateNumMax = 0,
-                                            Items = []
-                                        };
-
-                                        if (!specialResult.TryAdd(lot.Id, newspecialitemlot))
-                                            addonitems++;
-                                        specialResult[lot.Id].Items.Add(newLotItem);
-                                        
-                                        newLotItem = prismStoneLotItem;
-                                    }
-                                }
-                                else
-                                {
-                                    Log.Logger.Warning($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                                    App.Client.AddOverlayMessage($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                                    Log.Logger.Warning($"Item at loc {locId} replaced with prism stone instead.");
-                                    App.Client.AddOverlayMessage($"Item at loc {locId} replaced with prism stone instead.");
-                                    newLotItem = prismStoneLotItem;
-                                }
-                            }
-                            else /* item not in own game, put a prism stone instead */
-                            {
-                                Log.Logger.Verbose($"Item {i} target = {target}");
-                                newLotItem = prismStoneLotItem;
-                            }
-                            
-                            /* add the found location->item to the replacement dictionary */
-                            var newitemlot = new ItemLot
-                            {
-                                Rarity = 1,
-                                GetItemFlagId = -1,
-                                CumulateNumFlagId = -1,
-                                CumulateNumMax = 0,
-                                Items = []
-                            };
-                            if (!result.TryAdd(lot.Flag, newitemlot))
-                                addonitems++;
-                            result[lot.Flag].Items.Add(newLotItem);
-                        }
-                        
-                    }
-                }
-            }
-            Log.Logger.Debug($"replacement dict size = {result.Count}");
-            Log.Logger.Debug($" {addonitems} addonitems");
-
-
-            /* Populate frampt chest with rubbish */
-            const int frampt_base = 50004000;
-            /* Iterate over each pair of entries in the pair of lists */
-            for (int i = 0; i <= 69; i++)
-            {
-                /* Skip estus flask + upgrades */
-                if (i >= 38 && i <= 45)
-                    continue;
-
-                int lotflag = frampt_base + i;
-                /* lot with only rubbish */
-                var newitemlot = new ItemLot
-                {
-                    Rarity = 1,
-                    GetItemFlagId = -1,
-                    CumulateNumFlagId = -1,
-                    CumulateNumMax = 0,
-                    Items = [rubbishLotItem]
-                };
-                result.Add(lotflag, newitemlot);
-            }
-
-            /* Then, anything that is in this eventflags list, but wasn't an AP location sent to us, replace with prism stones */
-            //Dictionary<int, int> addedItems = [];
-            //foreach (var flag in eventflags.Where(x => !result.ContainsKey(x.Flag)).Select(x => x.Flag))
-            //{
-            //    addedItems.TryAdd(flag, 0);
-            //    addedItems[flag] += 1;
-            //}
-            //foreach (var pair in addedItems)
-            //{
-            //    int flag = pair.Key;
-            //    result.TryAdd(pair.Key, new ItemLot()
-            //    {
-            //        Rarity = 1,
-            //        GetItemFlagId = -1,
-            //        CumulateNumFlagId = -1,
-            //        CumulateNumMax = 0,
-            //        Items = []
-            //    });
-            //    for (int i = 0; i < pair.Value; i++)
-            //    {
-            //        result[flag].Items.Add(prismStoneLotItem);
-            //    }
-            //    Log.Logger.Verbose($"item lot {flag} added, count = {result[flag].Items.Count} items");
-            //}
-            specialResultMap = specialResult;
-            resultMap = result;
-            return;
-        }
-
-        /// <summary>
-        /// Build a mapping of the location id values in eventflags to the ItemLot that should come from there, for items in our own game.
-        /// </summary>
-        /// <details>
-        /// This is used for detecting non-item lot conditions in our own game(like a door opening) and rewarding the player with that item.
-        /// This is a separate method from the above similar method for one main reason:
-        ///    1) It needs to fill in EventFlag.id as the key instead of EventFlag.flag, so we can search by the "AP location id" instead of the DSR flag
-        /// </details>
-        /// <param name="eventflags">A list of location flags of which items will be found.</param>
-        /// <returns></returns>
-        public static Dictionary<int, ItemLot> BuildIdToLotMap(List<EventFlag> eventflags, Dictionary<string, object> slotData, Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap)
-        {
-            Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
-
-            /* Get locationsId and locationsTarget into lists */
-            List<int?> locationsIdList = new List<int?>();
-            List<int?> locationsTargetList = new List<int?>();
-
-            if (slotData.TryGetValue("locationsId", out object locationsId))
-            {
-                locationsIdList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsId.ToString()));
-                if (slotData.TryGetValue("locationsTarget", out object locationsTarget))
-                {
-                    locationsTargetList.AddRange(JsonSerializer.Deserialize<int?[]>(locationsTarget.ToString()));
-                }
-            }
-
-            if (locationsIdList.Count == 0 || locationsTargetList.Count == 0
-             || locationsIdList.Count != locationsTargetList.Count)
-            {
-                Log.Logger.Error("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-                App.Client.AddOverlayMessage("Slot Info: Location and Item id count mismatch, cannot overwrite items.");
-            }
-            else
-            {
-                /* Iterate over each pair of entries in the pair of lists */
-                for (int i = 0; i < locationsIdList.Count; i++)
-                {
-                    int? target = locationsTargetList[i];
-                    int? locId = locationsIdList[i];
-
-                    if (locId != null && target != null && target != 0)
+                    ItemLotItem newLotItem = new ItemLotItem { };
+                    if (v.Player.Slot == App.Client.CurrentSession.ConnectionInfo.Slot) // it is us
                     {
                         /* Found an item of our own, located in our own game. 
-                         * Validate that it's in the eventflags we've been given, and find the matching item. */
-
-                        EventFlag? lot = eventflags.Find(x => x.Id == locId);
-                        DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == 11110000 + target);
-                        if (lot != null && item != null)
+                                 * Validate that it's in the eventflags we've been given, and find the matching item. */
+                        DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == v.ItemId);
+                        if (item != null)
                         {
                             DarkSoulsItem repitem = item;
                             if (item.Category == Enums.DSItemCategory.AnyWeapon)
@@ -674,7 +467,7 @@ namespace DSAP
                             }
 
                             Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
-                            ItemLotItem newitem = new ItemLotItem
+                            newLotItem = new ItemLotItem
                             {
                                 CumulateLotPoint = 0,
                                 CumulateReset = false,
@@ -686,36 +479,94 @@ namespace DSAP
                                 LotItemId = repitem.Id
                             };
 
-                            /* If it's already in the mapping, add the item to the list of items in the existing lot */
-                            if (result.ContainsKey(lot.Id))
-                                result[lot.Id].Items.Add(newitem);
-                            else
+                            if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
                             {
-                                /* add the found location->item to the replacement dictionary */
-                                var newitemlot = new ItemLot
+                                Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with AP item.");
+                                var newspecialitemlot = new ItemLot
                                 {
                                     Rarity = 1,
                                     GetItemFlagId = -1,
                                     CumulateNumFlagId = -1,
                                     CumulateNumMax = 0,
-                                    Items = new List<ItemLotItem>([newitem])
+                                    Items = []
                                 };
-                                result.Add(lot.Id, newitemlot);
+
+                                if (!specialResult.TryAdd(lot.Id, newspecialitemlot))
+                                    addonitems++;
+                                specialResult[lot.Id].Items.Add(newLotItem);
+
+                                // replace with the AP item with the right fogwall key/trap
+                                newLotItem.LotItemCategory = (int)Enums.DSItemCategory.KeyItems;
                             }
                         }
                         else
                         {
-                            Log.Logger.Verbose($"Item {i} {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                            Log.Logger.Warning($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                            App.Client.AddOverlayMessage($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                            Log.Logger.Warning($"Item at loc {locId} replaced with prism stone instead.");
+                            App.Client.AddOverlayMessage($"Item at loc {locId} replaced with prism stone instead.");
+                            newLotItem = prismStoneLotItem;
                         }
-
                     }
+                    else /* item not in own game, put the relevant id item instead */
+                    {
+                        Log.Logger.Verbose($"Item {i}/{locId} for target = {target}");
+                        newLotItem = new ItemLotItem
+                        {
+                            CumulateLotPoint = 0,
+                            CumulateReset = false,
+                            EnableLuck = false,
+                            GetItemFlagId = -1,
+                            LotItemBasePoint = 100,
+                            LotItemCategory = (int)Enums.DSItemCategory.KeyItems,
+                            LotItemNum = 1,
+                            LotItemId = locId
+                        };
+                    }
+                    /* add the found location->item to the replacement dictionary */
+                    var newitemlot = new ItemLot
+                    {
+                        Rarity = 1,
+                        GetItemFlagId = -1,
+                        CumulateNumFlagId = -1,
+                        CumulateNumMax = 0,
+                        Items = []
+                    };
+                    if (!result.TryAdd(lot.Flag, newitemlot))
+                        addonitems++;
+                    result[lot.Flag].Items.Add(newLotItem);
                 }
             }
-            Log.Logger.Debug($"idToLotMap size = {result.Count}");
+            Log.Logger.Debug($"replacement dict size = {result.Count}");
+            Log.Logger.Debug($" {addonitems} addonitems");
 
-            /* Don't populate the rest of the flags with prism stones */
-            return result;
+
+            /* Populate frampt chest with rubbish */
+            const int frampt_base = 50004000;
+            /* Iterate over each pair of entries in the pair of lists */
+            for (i = 0; i <= 69; i++)
+            {
+                /* Skip estus flask + upgrades */
+                if (i >= 38 && i <= 45)
+                    continue;
+
+                int lotflag = frampt_base + i;
+                /* lot with only rubbish */
+                var newitemlot = new ItemLot
+                {
+                    Rarity = 1,
+                    GetItemFlagId = -1,
+                    CumulateNumFlagId = -1,
+                    CumulateNumMax = 0,
+                    Items = [rubbishLotItem]
+                };
+                result.Add(lotflag, newitemlot);
+            }
+
+            resultMap = result;
+            return;
         }
+
         /// <summary>
         /// Build a mapping of the slot:locationid key to itemid:upg value based on info stored in slotdata from the server.
         /// </summary>
@@ -1155,7 +1006,7 @@ namespace DSAP
             List<DarkSoulsItem> newlist = list.Select(x => new DarkSoulsItem()
             {
                 Name = x.Itemname,
-                Id = x.Itemid, // ap id of event item
+                Id = x.Dsrid, // dsr id of event item
                 StackSize = 1,
                 UpgradeType = Enums.ItemUpgrade.None,
                 Category = Enums.DSItemCategory.DsrEvent,
@@ -1499,48 +1350,148 @@ namespace DSAP
         }
         public static byte[] GetItemCommand()
         {
-
-            byte[] x = [0xBA, 0x00, 0x00, 0x00, 0x10, 0x41, 0xB9, 0x01, 0x00, 0x00, 0x00, 0x41, 0xB8, 0x28, 0x70, 0x08, 0x00, 0x41, 0xBC, 0xFE, 0xFE, 0xFE, 0xFE, 0x48, 0xA1, 0x30, 0xA5, 0xC8, 0x41, 0x01, 0x00, 0x00, 0x00, 0xC6, 0x44, 0x24, 0x38, 0x01, 0x40, 0x88, 0x7C, 0x24, 0x30, 0xC6, 0x44, 0x24, 0x28, 0x01, 0x4C, 0x8B, 0x78, 0x10, 0xC6, 0x44, 0x24, 0x20, 0x01, 0x49, 0x8D, 0x8F, 0x80, 0x02, 0x00, 0x00, 0x48, 0x83, 0xEC, 0x38, 0x49, 0xBE, 0xE0, 0x79, 0x74, 0x40, 0x01, 0x00, 0x00, 0x00, 0x41, 0xFF, 0xD6, 0x48, 0x83, 0xC4, 0x38, 0xC3];
-            return x;
-        }
-
-
-        public static byte[] GetItemWithMessage()
-        {
             byte[] x = new byte[] {
-        0x8B, 0x15, 0x3E, 0x00, 0x00, 0x00,               // mov edx,[itemdata] 
-        0x48, 0xA1, 0x30, 0xA5, 0xc8, 0x41, 0x01, 0x00, 0x00, 0x00,  // mov rax,[ChrBaseClass]
-        0x44, 0x8B, 0x0D, 0x31, 0x00, 0x00, 0x00,        // mov r9d,[itemdata+4]
-        0x44, 0x8B, 0x05, 0x2E, 0x00, 0x00, 0x00,        // mov r8d,[itemdata+8]
-        0x4C, 0x8B, 0x78, 0x10,                           // mov r15,[rax+10]
-        0x49, 0x8D, 0x8F, 0x80, 0x02, 0x00, 0x00,        // lea rcx,[r15+280]
-        0x48, 0x83, 0xEC, 0x38,                           // sub rsp,38
-        0xFF, 0x15, 0x02, 0x00, 0x00, 0x00, 0xEB, 0x08,  // call ItemGetAddr
-        0xE0, 0x79, 0x74, 0x40, 0x01, 0x00, 0x00, 0x00,  // ItemGetAddr placeholder
-        0x48, 0x83, 0xC4, 0x38,                           // add rsp,38
-        0xC3,                                             // ret
-        0x90, 0x90,                                       // nops for alignment
-        0x00, 0x00, 0x00, 0x00,                          // item category placeholder
-        0x00, 0x00, 0x00, 0x00,                          // item quantity placeholder
-        0x00, 0x00, 0x00, 0x00,                          // item id placeholder
-        0xFF, 0xFF, 0xFF, 0xFF                           // item durability
-    };
+                0x41, 0xb9, 0x00, 0x00, 0x00, 0x00,       //mov         r9d,0x0          // amount
+                0x41, 0xb8, 0x00, 0x00, 0x00, 0x00,       //mov         r8d,0x0          // itemid
+                0xba, 0x00, 0x00, 0x00, 0x00,             //mov         edx,0x0          // category
+                0x48, 0xa1, 0x30, 0xa5, 0xc8, 0x41, 0x01, //movabs      rax,[0x141c8a530]
+                0x00, 0x00, 0x00,
+                0x48, 0x85, 0xc0,                         //TEST        RAX,RAX
+                0x74, 0x31,                               //JZ          0x31  (BadRaX)
+                0x4c, 0x8b, 0x78, 0x10,                   //mov         r15,[rax+0x10]
+                0x49, 0x8d, 0x8f, 0x80, 0x02, 0x00, 0x00, //lea         rcx,[r15+0x280]
+                0x48, 0x83, 0xec, 0x38,                   //sub         rsp,0x38
+                0x49, 0xbe, 0xe0, 0x79, 0x74, 0x40, 0x01, //movabs      r14,0x1407479E0  // addItemToInventory()
+                0x00, 0x00, 0x00,
+                0x41, 0xff, 0xd6,                         //call        r14
+                0x48, 0x83, 0xc4, 0x38,                   //add         rsp,0x38
 
-            // Replace ChrBaseClass address
-            Array.Copy(BitConverter.GetBytes(GetChrBaseClassOffset()), 0, x, 8, 8);
+                0x48, 0xb8,                               //movabs rax,0x1234567812345678 // replace with resultArea
+                0x78, 0x56, 0x34, 0x12,  // target operand -> result area (8 bytes)
+                0x78, 0x56, 0x34, 0x12,
+                0xc7, 0x00, 0x00, 0x00, 0x00, 0x00,        //mov DWORD PTR[rax],0x00000000
+                0xc3,                                     //RET 
+                // BadRAX:
+                0x48, 0xb8,                               //movabs rax,0x1234567812345678 // replace with resultArea
+                0x78, 0x56, 0x34, 0x12,  // target operand -> result area (8 bytes)
+                0x78, 0x56, 0x34, 0x12,
+                0xc7, 0x00, 0xff, 0xff, 0xff, 0xff,        //mov DWORD PTR[rax],0xffffffff
+                0xc3,                                     //RET 
 
+            };
             return x;
         }
-                /*  ----------Code To Emulate--------------
-            
-            mov rcx,[BaseB]
-            mov edx,1
-            sub rsp,38
-            call 0x1404867e0
-            add rsp,38
-            ret
 
-        */
+
+        public static byte[] GetItemWithMessageCommand()
+        {
+            // could use additional validation
+            // - check 0x141c891a8 / ItemGetMenuManImpl before the addItemToInventory,
+            // - check 0x141c8a530 / GameDataMan for null before it is dereferenced
+            byte[] x = new byte[] {
+                0x41, 0xb9, 0x00, 0x00, 0x00, 0x00,       //mov         r9d,0x0          // amount
+                0x41, 0xb8, 0x00, 0x00, 0x00, 0x00,       //mov         r8d,0x0          // itemid
+                0xba, 0x00, 0x00, 0x00, 0x00,             //mov         edx,0x0          // category
+                0x48, 0xa1, 0x30, 0xa5, 0xc8, 0x41, 0x01, //movabs      rax,[0x141c8a530]
+                0x00, 0x00, 0x00,
+                0x48, 0x85, 0xc0,                         //TEST        RAX,RAX
+                0x0f, 0x84, 0xda, 0x00, 0x00, 0x00,       //JZ          +218 / 0xDA (BadRAX)
+                0x4c, 0x8b, 0x78, 0x10,                   //mov         r15,[rax+0x10]
+                0x49, 0x8d, 0x8f, 0x80, 0x02, 0x00, 0x00, //lea         rcx,[r15+0x280]
+                0x48, 0x83, 0xec, 0x38,                   //sub         rsp,0x38
+                0x49, 0xbe, 0xe0, 0x79, 0x74, 0x40, 0x01, //movabs      r14,0x1407479E0  // addItemToInventory()
+                0x00, 0x00, 0x00,
+                0x41, 0xff, 0xd6,                         //call        r14
+                0x48, 0x83, 0xc4, 0x38,                   //add         rsp,0x38
+
+                0x41, 0xb9, 0x00, 0x00, 0x00, 0x00,       //mov         r9d,0x0          // amount
+                0x41, 0xb8, 0x00, 0x00, 0x00, 0x00,       //mov         r8d,0x0          // itemid
+                0xba, 0x00, 0x00, 0x00, 0x00,             //mov         edx,0x0          // category
+                0x48, 0xb9, 0xa8, 0x91, 0xc8, 0x41, 0x01, //movabs      rcx,0x141c891a8 // ItemGetMenuMan 
+                0x00, 0x00, 0x00,
+                0x48, 0x8b, 0x09,                         //mov         rcx,QWORD PTR [rcx]
+                0x48, 0x83, 0xec, 0x64,                   //sub         rsp,0x64
+
+                0x40, 0x53,                               //PUSH        RBX
+                0x4c, 0x8b, 0xd9,                         //MOV         R11,RCX
+                0x33, 0xc0,                               //XOR         EAX,EAX
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x0f, 0x84, 0x99, 0x00, 0x00, 0x00,       //JZ          +153 / 0x99 (BadRCX)
+                0x48, 0x8b, 0x49, 0x10,                   //MOV         RCX,qword ptr [RCX + 0x10]
+                0x8b, 0xda,                               //MOV         EBX,EDX
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x74, 0x0c,                               //JZ          0x0c
+                0x4c, 0x8b, 0x11,                         //MOV         R10,qword ptr [RCX]
+                0x48, 0x8b, 0xc1,                         //MOV         RAX,RCX
+                0x4d, 0x89, 0x53, 0x10,                   //MOV         qword ptr [R11 + 0x10],R10
+                0xeb, 0x34,                               //JMP         0x34
+                0x49, 0x8b, 0x4b, 0x08,                   //MOV         RCX,qword ptr [R11 + 0x8]
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x74, 0x42,                               //JZ          0x42
+                0x48, 0x8b, 0xc1,                         //MOV         RAX,RCX
+                0x48, 0x8b, 0x09,                         //MOV         RCX,qword ptr [RCX]
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x74, 0x18,                               //JZ          0x18
+                0x48, 0x8b, 0xd0,                         //MOV         RDX,RAX
+                0x48, 0x8b, 0xc1,                         //MOV         RAX,RCX
+                0x48, 0x8b, 0x09,                         //MOV         RCX,qword ptr [RCX]
+                0x48, 0x85, 0xc9,                         //TEST        RCX,RCX
+                0x75, 0xf2,                               //JNZ         0xf2
+                0x48, 0x85, 0xd2,                         //TEST        RDX,RDX
+                0x74, 0x05,                               //JZ          0x8
+                0x48, 0x89, 0x0a,                         //MOV         qword ptr [RDX],RCX
+                0xeb, 0x08,                               //JMP         0x8
+                0x49, 0xc7, 0x43,                         //MOV         qword ptr [R11 + 0x8],0x0
+                0x08, 0x00, 0x00,
+                0x00, 0x00,
+                0x48, 0x85, 0xc0,                         //TEST        RAX,RAX
+                0x74, 0x12,                               //JZ          0x12
+                0x48, 0xc7, 0x00,                         //MOV         qword ptr [RAX],0x0
+                0x00, 0x00, 0x00, 0x00,
+                0x89, 0x58, 0x08,                         //MOV         dword ptr [RAX + 0x8],EBX
+                0x44, 0x89, 0x40, 0x0c,                   //MOV         dword ptr [RAX + 0xc],R8D
+                0x44, 0x89, 0x48, 0x10,                   //MOV         dword ptr [RAX + 0x10],R9D
+                0x49, 0x8b, 0x4b, 0x08,                   //MOV         RCX,qword ptr [R11 + 0x8]
+                0x48, 0x89, 0x08,                         //MOV         qword ptr [RAX],RCX
+                0xb9, 0x2c, 0x01,                         //MOV         ECX,0x12c
+                0x00, 0x00,
+                0x49, 0x89, 0x43, 0x08,                   //MOV         qword ptr [R11 + 0x8],RAX
+                0x5b,                                     //POP         RBX
+                
+                0x48, 0x83, 0xc4, 0x64,                   //add         rsp,0x64
+                0x48, 0xb8,                               //movabs rax,0x1234567812345678
+                0x78, 0x56, 0x34, 0x12,
+                0x78, 0x56, 0x34, 0x12,
+                0xc7, 0x00, 0x00, 0x00, 0x00, 0x00,       //mov DWORD PTR[rax],0x00000000
+                0xc3,                                     //RET 
+                // BadRAX:
+                0x48, 0xb8,                               //movabs rax,0x1234567812345678 // replace with resultArea
+                0x78, 0x56, 0x34, 0x12,  // target operand -> result area (8 bytes)
+                0x78, 0x56, 0x34, 0x12,
+                0xc7, 0x00, 0xff, 0xff, 0xff, 0xff,        //mov DWORD PTR[rax],0xffffffff
+                0xc3,                                     //RET 
+                // BadRCX:
+                0x5b,                                     //POP         RBX
+                0x48, 0x83, 0xc4, 0x64,                   //add         rsp,0x64
+                0x48, 0xb8,                               //movabs rax,0x1234567812345678
+                0x78, 0x56, 0x34, 0x12,
+                0x78, 0x56, 0x34, 0x12,
+                0xc7, 0x00, 0x00, 0x00, 0x00, 0x00,       //mov DWORD PTR[rax],0x00000000
+                0xc3,                                     //RET 
+
+            };
+            return x;
+        }
+        /*  ----------Code To Emulate--------------
+
+    mov rcx,[BaseB]
+    mov edx,1
+    sub rsp,38
+    call 0x1404867e0
+    add rsp,38
+    ret
+
+*/
         /*  ----------Homeward Bone injected ASM--------------
             0:  48 c7 c1 78 56 34 12    mov    rcx,0x12345678
             7:  00
@@ -1661,7 +1612,7 @@ namespace DSAP
         {
             try
             {
-                Log.Logger.Verbose("running eventlist");
+                Log.Logger.Verbose($"running eventlist for {emkControllers.Count} emks");
 
                 if (emkControllers.Count == 0)
                 {
@@ -1860,7 +1811,7 @@ namespace DSAP
             return result;
         }
         // Clear the saved ptrs of our list of "EmkControllers", because we detected there being no events in the list.
-        static void ReleaseEvents(List<EmkController> emkControllers)
+        public static void ReleaseEvents(List<EmkController> emkControllers)
         {
             int num_released = 0;
             foreach (var controller in emkControllers)
@@ -1974,6 +1925,625 @@ namespace DSAP
                 Log.Logger.Information($"ilp '{i}'=" + itemlotparams.ToString(App.AllItems));
 
             }
+        }
+        public static void SetItemLot()
+        {
+            var startAddress = GetItemLotParamOffset();
+
+            var dataOffset = Memory.ReadUInt(startAddress + 0x4);
+            var rowCount = Memory.ReadUShort(startAddress + 0xA);
+            var rowSize = 148;
+
+            var paramTableBytes = Memory.ReadByteArray(startAddress + (ulong)(12 * rowCount), 0x30);
+            var itemlotflag = GetItemLotFlags().Find(x => x.Name.ToLower().Contains("well"));
+
+            ItemLotItem experimentalLotItem = new ItemLotItem
+            {
+                CumulateLotPoint = 0,
+                CumulateReset = false,
+                EnableLuck = false,
+                GetItemFlagId = -1,
+                LotItemBasePoint = 100,
+                LotItemCategory = (int)DSAP.Enums.DSItemCategory.Consumables,
+                LotItemNum = 1,
+                LotItemId = 9015
+            };
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                var tableOffset = i * 12;
+
+                var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
+                var itemLot = ReadItemLot(currentAddress);
+                if (itemLot.GetItemFlagId == itemlotflag.Flag)
+                {
+                    OverwriteSingleItem(currentAddress, experimentalLotItem, 0);
+                }
+            }
+            Location loc = (Location)Helpers.GetItemLotLocations().Find(x => x.Name.ToLower().Contains("well"));
+            SetEventFlag(itemlotflag.Flag, 0);
+            return;
+        }
+        public static void ChangePrismStoneText()
+        {
+            var item = GetAllItems().Find(x => x.Name.ToLower().Contains("prism stone"));
+            uint itemid = (uint)item.Id;
+            //uint itemid = 9014;
+
+            ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
+            ulong GoodsMsgsStart = Memory.ReadULong(MsgMan + 0x380);
+            ulong GoodsCaptionMsgsStart = Memory.ReadULong(MsgMan + 0x378);
+            ulong GoodsInfoMsgStart = Memory.ReadULong(MsgMan + 0x328);
+            ulong itemNameStrLoc = FindMsg(GoodsMsgsStart, itemid);
+            ulong itemCaptionStrLoc = FindMsg(GoodsCaptionMsgsStart, itemid);
+            ulong itemInfoStrLoc = FindMsg(GoodsInfoMsgStart, itemid);
+
+            UpdateItemText(itemNameStrLoc, 100, "AP Item\0");
+            UpdateItemText(itemCaptionStrLoc, 100, "This is an item that belongs to another world...\0");
+            UpdateItemText(itemInfoStrLoc, 500, "*narrator voice* We're not sure how this got here. \nBest hold on to it. \n\nJust in case.\0");
+
+            ulong equipGoodsParamResCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
+            //upgradeGoods(equipGoodsParamResCap);
+            //AddMsgs(9015, new List<string>() { "AP Item From Player 2's world" });
+            return;
+        }
+
+        private static bool upgradeGoods(List<KeyValuePair<long, string>> addedEntries)
+        {
+            ulong resCap = Memory.ReadULong((ulong)(SoloParamAob.Address + 0xF0));
+            uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
+            ulong old_buffer = Memory.ReadULong(resCap + 0x38);
+            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+
+            /* first, read highest numbered param in list */
+            uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
+            if (addedEntries.First().Key <= highest_id)
+            {
+                Log.Logger.Warning($"Warning: Highest id in params detected as {highest_id}, >= one of our entries.");
+                Log.Logger.Warning($"Checking if params and msgs have already been updated...");
+                
+                uint old_end_buffer_offset = old_buffer_size + (uint)(0x8 * old_buffer_num_entries) + 0x10 + 0xf;
+                ulong old_desc_area_loc = old_buffer + old_end_buffer_offset;
+                DescArea old_desc_area = Memory.ReadObject<DescArea>(old_desc_area_loc);
+                Log.Logger.Debug("Read object: " + old_desc_area.ToString());
+                bool requires_reload = ValidateDescArea(old_desc_area);
+                if (requires_reload)
+                {
+                    //int intermediate_buffer_size = old_desc_area.FullAllocLength;
+                    ulong intermediate_buffer_loc = old_buffer;
+                    // desc size 4, full alloc length 4, old address 8, old length 4, seed hash 4, slot 4
+                    // reset old buffer values
+                    old_buffer = old_desc_area.OldAddress;
+                    old_buffer_size = (uint)old_desc_area.OldLength;
+                    old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
+
+                    /* Switch out the pointer so deallocated area isn't accessed by the game */
+                    Memory.Write(resCap + 0x30, old_buffer_size);
+                    Memory.Write(resCap + 0x38, old_buffer);
+
+                    // dealloc previously swapped-in area
+                    Memory.FreeMemory((nint)(intermediate_buffer_loc - 0x10));
+                    Log.Logger.Warning("Reloading EquipGoodsParams");
+                }
+                else
+                {
+                    Log.Logger.Information("EquipGoodsParams replacement not needed - skipping");
+                    return false;
+                }
+
+            }
+
+            uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
+            ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
+
+            ushort new_entries = (ushort)addedEntries.Count();
+
+            uint goods_param_size = 0x5c;
+            ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
+
+            ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
+            uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
+            uint addl_str_length = (uint)addedEntries.Aggregate(0, (total, x) => total + x.Value.Length + 1);
+            uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
+
+            uint new_buffer_size = (uint)(old_buffer_size + addl_str_length + (0xc + goods_param_size) * new_entries);
+            uint new_buffer_alloc_size = (uint)(new_buffer_size + (0x8 * new_buffer_num_entries) + 0x10 + 0xf + DescArea.size); // ensure enough for the binary search table and the prologue
+
+            ulong new_allocated_buffer = 0;
+            lock (_memAllocLock)
+            {
+                new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size);
+            }
+            
+            ulong new_buffer = new_allocated_buffer + 0x10;
+            Log.Logger.Information($"Allocated {new_buffer_alloc_size} bytes at {new_allocated_buffer.ToString("X")}");
+            Log.Logger.Information($"Overwrite EquipParamGoods @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
+
+
+            /* Then, copy the header + pointer structs */
+            byte[] basebytes = Memory.ReadByteArray(old_buffer, old_buffer_params_offset);
+            Memory.WriteByteArray(new_buffer, basebytes);
+            /* Then, copy the params */
+            uint old_buffer_params_length = (uint)(goods_param_size * old_buffer_num_entries);
+            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)old_buffer_params_length);
+            Memory.WriteByteArray(new_buffer + new_buffer_params_offset, basebytes2);
+            /* Then, copy the strings */
+            uint old_buffer_strings_length = old_buffer_size - old_buffer_string_offset;
+            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_offset, (int)old_buffer_strings_length);
+            Memory.WriteByteArray(new_buffer + new_buffer_string_offset, basebytes3);
+
+            /* old buffer ends on the last string - last null terminator (shift-jis) */
+            byte[] parambytes = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)goods_param_size);
+            parambytes[0x36] = 99; // max num
+            parambytes[0x3a] = 1; // goods type = key
+            parambytes[0x3b] = 0; // ref category = like key
+            parambytes[0x3e] = 0; // use animation = 0
+            // Is Only One?
+            // Is Deposit?
+            uint new_string_loc = (uint)(new_buffer + new_buffer_string_offset + old_buffer_strings_length);
+
+            // fix old entries' offsets
+            for (uint i = 0; i < old_buffer_num_entries; i++)
+            {
+                uint currloc = (uint)(new_buffer + 0x30 + i * 0xc);
+                uint poff = Memory.ReadUInt(currloc + 0x4);
+                uint soff = Memory.ReadUInt(currloc + 0x8);
+                poff = (uint)(poff + (0xc * new_entries));
+                soff = soff + (0xc + goods_param_size) * new_entries;
+                Memory.Write(currloc + 0x4, poff);
+                Memory.Write(currloc + 0x8, soff);
+            }
+
+            /* then add the new pointer structs, params, and strings, and pointers to each. */
+            for (uint i = 0; i < new_entries; i++)
+            {
+                var entry = addedEntries.ToArray()[i];
+                byte[] stringbytes = Encoding.ASCII.GetBytes($"{entry.Value}\0");
+                uint newid = (uint)entry.Key;
+                // set sort bytes in param based on id - not sure if this is grabbing top or bottom 2 bytes!! But filling all 4 put the items at the top instead.
+                byte[] idbytes = BitConverter.GetBytes(newid);
+                parambytes[0x1c] = idbytes[0];
+                parambytes[0x1d] = idbytes[1];
+                //parambytes[0x1e] = idbytes[2];
+                //parambytes[0x1f] = idbytes[3];
+                byte[] iconbytes = BitConverter.GetBytes((short)2042);
+                parambytes[0x2c] = iconbytes[0];
+                parambytes[0x2d] = iconbytes[1];
+                parambytes[0x45] |= (byte)(0x30); // turn on isDrop and isDeposit bits
+
+                uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
+                Memory.Write(currloc + 0x0, newid);
+
+                uint new_param_loc = (uint)(new_buffer + new_buffer_params_offset + (old_buffer_num_entries + i) * goods_param_size);
+                Memory.WriteByteArray(new_param_loc, parambytes);
+                Memory.Write(currloc + 0x4, new_param_loc-new_buffer);
+
+                Memory.WriteByteArray(new_string_loc, stringbytes);
+                Memory.Write(currloc + 0x8, new_string_loc - new_buffer);
+                new_string_loc += (uint)stringbytes.Length;
+            }
+            Log.Logger.Information($"Added {new_entries} items to EquipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
+
+            ulong post_string_loc = new_string_loc;
+            ulong saved_len = post_string_loc - new_buffer;
+            /* Then fix up the offsets */
+            Memory.Write(new_buffer + 0x0, new_buffer_string_offset);
+            Memory.Write(new_buffer + 0x4, new_buffer_params_offset);
+            Memory.Write(new_buffer + 0xA, new_buffer_num_entries);
+
+            //Memory.Write(new_allocated_buffer, new_buffer_size);
+            Memory.Write(new_allocated_buffer, saved_len);
+
+            // copy over the endtable
+            ulong new_endtable_loc = new_buffer + ((saved_len + 0xf) & 0xFFFFFFFFFFFFFFF0);
+            ulong old_endtable_loc = old_buffer + ((old_buffer_size + 0xf) & 0xFFFFFFFFFFFFFFF0);
+            byte[] old_endtable = Memory.ReadByteArray(old_endtable_loc, 8*old_buffer_num_entries);
+            Memory.WriteByteArray(new_endtable_loc, old_endtable);
+            // add our new entries to the endtable (binary search table)
+            for (uint i = 0; i < new_entries; i++)
+            {
+                var entry = addedEntries.ToArray()[i];
+                uint newid = (uint)entry.Key;
+                uint curr_endtable_loc = (uint)(new_endtable_loc + 8 * (i + old_buffer_num_entries));
+                Memory.Write(curr_endtable_loc, newid);
+                Memory.Write(curr_endtable_loc + 0x4, old_buffer_num_entries + i);
+            }
+            // end of data
+
+            // add desc area to end
+            uint end_buffer_offset = new_buffer_size + (uint)(0x8 * new_buffer_num_entries) + 0x10 + 0xf;
+            ulong desc_area_loc = new_buffer + end_buffer_offset;
+
+            var seedHash = HashSeed(App.Client.CurrentSession.RoomState.Seed);
+            var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
+
+            var new_desc_area = new DescArea((int)new_buffer_alloc_size, old_buffer, (int)old_buffer_size, seedHash, slot);
+            Memory.WriteObject<DescArea>(desc_area_loc, new_desc_area);
+            // end of data + metadata
+
+
+            /* Then switch out the pointer */
+            Memory.Write(resCap + 0x38, new_buffer);
+            Memory.Write(resCap + 0x30, saved_len);
+            return true;
+        }
+
+        private static bool ValidateDescArea(DescArea descArea)
+        {
+            bool requires_reload = false;
+            if (descArea.DescSize >= DescArea.size)
+            {
+                int old_slot = descArea.Slot;
+                
+                if (descArea.SeedHash != HashSeed(App.Client.CurrentSession.RoomState.Seed)) // different seed
+                {
+                    if (IsInGame())
+                    {
+                        App.Client.AddOverlayMessage($"Error - check the client log");
+                        Log.Logger.Error("Different seed detected than your previous connection to Archipelago.");
+                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
+                        return false;
+                    }
+                    else
+                    {
+                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
+                        return true;
+                    }
+                        
+                    
+                }
+                else if (old_slot != App.Client.CurrentSession.ConnectionInfo.Slot) // different slot
+                {
+                    if (IsInGame())
+                    {
+                        App.Client.AddOverlayMessage($"Error - check the client log");
+                        Log.Logger.Error("Different slotdetected than your previous connection to Archipelago.");
+                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
+                        return false;
+                    }
+                    else
+                    {
+                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
+                        return true;
+                    }   
+                }
+                else // seed and slot checked out fine. Looks good, no need to reload.
+                {
+                    return false;
+                }
+            }
+            else // desc area too small
+            {
+                Log.Logger.Error("No version detected on equip goods params. A different mod is probably interfering with our items.");
+                Log.Logger.Error("Try running without other mods.");
+                return false;
+            }
+        }
+
+        private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings, string msgsName)
+        {
+            ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
+
+            ulong old_buffer = Memory.ReadULong(MsgMan + offset);
+            ulong old_buffer_size = Memory.ReadUInt(old_buffer + 0x4);
+            ulong old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
+            // structure of buffer:
+            // string end/size@ 0x04
+            // num of span maps 0x0c
+            // # stroff entries 0x10
+            // stroff table  at 0x14
+            // span maps start  0x1c
+            // span maps have <offset> <min> <max>. Offset is # of entries into string offset table
+            // after span maps is string offset table
+            // There are (number of items, = 0x110 vanilla) in string offset table
+            // Then there are the strings
+            // New buffer will need added:
+            //  1. (optionally) +c bytes for another map,
+            //  2. 0x4 bytes per added id in the string offset table
+            //  3. [n] bytes for each string including null char, in Unicode
+            // New buffer will need updated:
+            //     (optionally) num of span maps
+            //     string offset at 0x14
+            //     span map entry if not adding a new one
+            //     each string offset entry
+            //     end of strings/size of all
+
+            // get highest entry in span maps table
+            // check its id against known ids, if higher do desc area validation
+            long highest_id = Memory.ReadUInt(old_buffer + 0x1c + 0xc * (old_buffer_num_spanmaps - 1) + 0x8);
+            Log.Logger.Verbose($"msgs highest id = {highest_id}");
+            if (highest_id >= instrings.First().Key) // conflict
+            {
+                // validate desc area
+                // If it's no good, reset it
+                ulong desc_area_loc = old_buffer + old_buffer_size;
+                DescArea old_desc_area = Memory.ReadObject<DescArea>(desc_area_loc);
+                Log.Logger.Debug("Read object: " + old_desc_area.ToString() + " from " + desc_area_loc.ToString("X"));
+                bool update_required = ValidateDescArea(old_desc_area);
+                if (update_required)
+                {
+                    ulong intermediate_buffer_loc = old_buffer; // save "swapped-in area" ptr
+                    // reset old buffer values
+                    old_buffer = old_desc_area.OldAddress;
+                    old_buffer_size = (ulong)old_desc_area.OldLength;
+                    old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
+
+                    /* Switch out the pointer so deallocated area isn't accessed by the game */
+                    Memory.Write(MsgMan + offset, old_buffer);
+
+                    // dealloc previously swapped-in area
+                    Memory.FreeMemory((nint)(intermediate_buffer_loc));
+                    Log.Logger.Information($"Reloading {msgsName} text changes");
+                }
+                else
+                {
+                    Log.Logger.Information($"{msgsName} text update not needed - skipping");
+                    return;
+                }
+            }
+
+            ulong old_buffer_num_stroff_entries = Memory.ReadUShort(old_buffer + 0x10);
+            ulong old_buffer_stroff_start_offset = Memory.ReadUInt(old_buffer + 0x14);
+
+            ulong new_entries = (ulong)(instrings.Last().Key - instrings.First().Key + 1);
+            ulong total_String_size = 0;
+            ulong new_buffer = 0;
+            ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
+            ulong old_buffer_string_start_offset = old_buffer_stroff_start_offset + (old_buffer_num_stroff_entries * 4);
+            ulong new_buffer_string_start_offset = old_buffer_string_start_offset + 0xc + 4 * new_entries;
+            foreach (var entry in instrings)
+            {
+                total_String_size += (ulong)Encoding.Unicode.GetBytes(entry.Value).Length;
+            }
+            if (new_entries < (ulong)instrings.Count)
+                total_String_size += (ulong)instrings.Count - new_entries;
+            //calculate size
+            ulong new_buffer_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size;
+            ulong new_buffer_total_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size + (ulong)DescArea.size;
+
+            lock (_memAllocLock)
+            {
+                new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_total_size);
+            }
+            //Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer.ToString("X")}");
+            Log.Logger.Information($"Updating {msgsName} text @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
+
+            // first, copy over header & old maps
+            byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)(0x1c + old_buffer_num_spanmaps * 0xc));
+            Memory.WriteByteArray(new_buffer, basebytes);
+            // Then, copy over existing string offset table
+
+            //ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
+                
+
+            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_stroff_start_offset, (int)(old_buffer_num_stroff_entries * 4));
+            Memory.WriteByteArray(new_buffer + new_buffer_stroff_start_offset, basebytes2);
+            // Then, copy over existing strings
+            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_start_offset, (int)(old_buffer_size - old_buffer_string_start_offset));
+            Memory.WriteByteArray(new_buffer + new_buffer_string_start_offset, basebytes3);
+
+            // add new span map
+            ulong new_spanmap_loc = new_buffer + old_buffer_stroff_start_offset; // old buffer stroffs started where this would
+            Memory.Write(new_spanmap_loc, (int)old_buffer_num_stroff_entries); // next str off index will be the next available number (0 indexed) - aka current max
+            Memory.Write(new_spanmap_loc + 0x4, (int)instrings.First().Key);
+            Memory.Write(new_spanmap_loc + 0x8, (int)instrings.Last().Key);
+
+            // Correct bad string offsets in table - increase by 0xc for the new spanmap, and 0x4 for each new string
+            for (uint i = 0; i < old_buffer_num_stroff_entries; i++)
+            {
+                ulong stroff_loc = new_buffer + new_buffer_stroff_start_offset + 4 * i;
+                uint stroff_val = Memory.ReadUInt(stroff_loc);
+                if (stroff_val != 0)
+                {
+                    stroff_val += (uint)(0xc + (new_entries * 4));
+                    Memory.Write(stroff_loc, stroff_val);
+                }
+            }
+            // point to end of last old string
+            ulong curr_end_loc = new_buffer + new_buffer_string_start_offset + (old_buffer_size - old_buffer_string_start_offset);
+            ulong end_of_stroffs = new_buffer + new_buffer_stroff_start_offset + (4 * old_buffer_num_stroff_entries);
+            for (uint i = 0; i < new_entries; i++)
+            {
+                ulong curr_stroff_loc = end_of_stroffs + 4 * i;
+                Memory.Write(curr_stroff_loc, (int)(curr_end_loc - new_buffer)); // point stroff entry to string position
+                                                                                    // Then write the string
+                byte[] ba = Encoding.Unicode.GetBytes("\0");
+                if (instrings.Any(x => x.Key == instrings.First().Key + i))
+                    ba = Encoding.Unicode.GetBytes(instrings.Find(x => x.Key == instrings.First().Key + i).Value);
+                Memory.WriteByteArray(curr_end_loc, ba);
+                curr_end_loc += (ulong)ba.Length;
+            }
+            // end of data here
+            // add desc area
+            var seedHash = HashSeed(App.Client.CurrentSession.RoomState.Seed);
+            var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
+            var new_desc_area = new DescArea((int)new_buffer_total_size, old_buffer, (int)old_buffer_size, seedHash, slot);
+            Memory.WriteObject<DescArea>(curr_end_loc, new_desc_area);
+            Log.Logger.Verbose($"new Desc Area written to {curr_end_loc.ToString("X")}");
+            // end here
+
+            // fix up header area
+            Memory.Write(new_buffer + 0x4, curr_end_loc - new_buffer);
+            Memory.Write(new_buffer + 0xc, old_buffer_num_spanmaps + 1);
+            Memory.Write(new_buffer + 0x10, old_buffer_num_stroff_entries + new_entries);
+            Memory.Write(new_buffer + 0x14, new_buffer_stroff_start_offset);
+            
+            /* Then switch out the pointer */
+            Memory.Write(MsgMan + offset, new_buffer);
+        }
+        private static void UpdateItemText(ulong strloc, int len, string newstring)
+        {
+            if (strloc == 0)
+            {
+                Log.Logger.Information($"strloc = {strloc}"); return;
+            }
+            byte[] ba = Memory.ReadByteArray(strloc, len);
+            string su16 = Encoding.Unicode.GetString(ba);
+            string[] sub16 = su16.Split("\0");
+            Log.Logger.Information($"Padding to {sub16[0].Length} bytes");
+            int available_space = sub16[0].Length;
+            string newptxt = newstring;
+            if (newstring.Length > available_space) 
+                newptxt = newstring.Substring(0, sub16[0].Length);
+
+            byte[] newba = Encoding.Unicode.GetBytes(newptxt);
+            Memory.WriteByteArray(strloc, newba);
+            Log.Logger.Information($"String found: {su16}, \n@{strloc.ToString("X")}");
+            Log.Logger.Information($"Wrote string {newptxt}");
+        }
+
+        private static ulong FindMsg(ulong MsgsStart, uint id)
+        {
+            ulong GoodsMsgsStrTableOffset = Memory.ReadULong(MsgsStart + 0x14);
+            ushort GoodsMsgsCompareEntries = Memory.ReadUShort(MsgsStart + 0xc);
+            ulong GoodsMsgsCompareStart = MsgsStart + 0x1c;
+            uint compareEntrySize = 0xc;
+            for (uint curridx = 0; curridx < GoodsMsgsCompareEntries; curridx++)
+            {
+                ulong currentry = GoodsMsgsCompareStart + (compareEntrySize * curridx);
+                uint low = Memory.ReadUInt(currentry + 0x4);
+                uint high = Memory.ReadUInt(currentry + 0x8);
+                if (low <= id && id <= high)
+                {
+                    uint baseoffset = Memory.ReadUInt(currentry + 0x0);
+                    uint idoffset = id - low;
+                    uint strEntryOffset = 4 * (idoffset + baseoffset);
+
+                    ulong itemstroffset = Memory.ReadUInt(MsgsStart + GoodsMsgsStrTableOffset + strEntryOffset);
+                    ulong itemstrloc = MsgsStart + itemstroffset;
+                    return itemstrloc;
+                }
+            }
+            return 0;
+        }
+        private static void SetEventFlag(int flagnum, byte newvalue)
+        {
+            var baseAddress = Helpers.GetEventFlagsOffset();
+            Location newloc = new Location()
+            {
+                Address = baseAddress + Helpers.GetEventFlagOffset(flagnum).Item1,
+                AddressBit = Helpers.GetEventFlagOffset(flagnum).Item2
+            };
+            Memory.WriteBit(newloc.Address, newloc.AddressBit, newvalue == 0 ? false : true);
+            return;
+        }
+
+        internal static async Task AddAPItems(Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
+        {
+            List<KeyValuePair<long, ScoutedItemInfo>> addedEntries = scoutedLocationInfo.Where((e) => e.Value.Player.Slot != App.Client.CurrentSession.ConnectionInfo.Slot).ToList();
+            //addedEntries.Sort((a, b) => a.Key.CompareTo(b.Key));
+
+            var added_names = addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, $"{x.Value.Player}'s {x.Value.ItemDisplayName}\0")).ToList();
+            var added_captions = addedEntries.Select(x => new KeyValuePair<long, string>(x.Key, BuildItemCaption(x))).ToList();
+
+            var added_emk_names = GetDsrEventItems().Select(x => new KeyValuePair<long, string>(x.Id, $"{x.Name}\0"));
+            var added_emk_captions = GetDsrEventItems().Select(x => new KeyValuePair<long, string>(x.Id, BuildDsrEventItemCaption()));
+
+            added_names.AddRange(added_emk_names);
+            added_captions.AddRange(added_emk_captions);
+
+            added_names.Sort((a, b) => a.Key.CompareTo(b.Key));
+            added_captions.Sort((a, b) => a.Key.CompareTo(b.Key));
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            // add items
+            bool do_replacements = upgradeGoods(added_names);
+
+            var tasks = new List<Task>
+                {
+                Task.Run(() => { AddMsgs(0x380, added_names, "Item Names"); }), // names
+                Task.Run(() => { AddMsgs(0x378, added_captions, "Item Captions"); }), // captions
+                Task.Run(() => { AddMsgs(0x328, added_captions, "Item Descriptions"); }), // info
+                };
+            await Task.WhenAll(tasks);
+
+            watch.Stop();
+            Log.Logger.Information($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
+            App.Client.AddOverlayMessage($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
+
+            var local_ap_keys = added_emk_names.ToList();
+            local_ap_keys.Sort((a,b) =>  a.Key.CompareTo(b.Key));
+            // add item removal hook. Filter only things that are remote items; min = after last fogwall/local ap key, max = last ap key
+            AddAPItemHook(local_ap_keys.Last().Key + 1, added_names.Last().Key);
+        }
+
+        private static void AddAPItemHook(long min, long max)
+        {
+            ulong target_func_start = 0x1407479E0;
+            byte[] replaced_instructions = Memory.ReadByteArray(target_func_start, 14);
+            ulong replacement_func_start_addr = (ulong)Memory.Allocate(1000, Memory.PAGE_EXECUTE_READWRITE);
+
+            var jmpstub = new byte[]
+            {
+                0xff, 0x25, 0x00, 0x00, 0x00, 0x00,       //jmp    QWORD PTR [rip+0x0]        # 6 <_main+0x6>
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // target address
+                // then the address to jump to (8 bytes)
+            };
+            Array.Copy(BitConverter.GetBytes(replacement_func_start_addr), 0, jmpstub, 6, 8); // target address
+
+            //CMP r9d,0x12345678
+            //JL OVER
+            //CMP r9d,0x12345678
+            //JG OVER
+            // RET and 5 nops (could be replaced with mov r9d,<value>)
+            // OVER (label)
+            // 14 nops (replaced with source 14 bytes overwritten by jmp instruction)
+            //  jmp        qword[rip+0]
+            // <return address>
+            var new_instructions = new byte[]
+            {
+                0x41, 0x81, 0xf8, 0x78, 0x56, 0x34, 0x12,    // cmp r9d,0x12345678
+                0x7c, 0x0f,                                  // jl     OVER
+                0x41, 0x81, 0xf8, 0x78, 0x56, 0x34, 0x12,    // cmp    r9d,0x12345678
+                0x7f, 0x06,                                  // jg     OVER
+                0xc3, 0x90, 0x90, 0x90, 0x90, 0x90,          // ret and 5 nops
+                //0x41, 0xb8, 0x72, 0x01, 0x00, 0x00,          // mov    r9d,0x172 (dec 370)
+                // OVER (label)
+                0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,    // 14 nops -> get replaced with source 14 bytes
+                0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90,
+                0xff, 0x25, 0x00, 0x00, 0x00, 0x00,          // jmp    QWORD PTR [rip+0x8]
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // jmp's target address
+            };
+
+            Array.Copy(BitConverter.GetBytes(min), 0, new_instructions, 3, 4); // min
+            Array.Copy(BitConverter.GetBytes(max), 0, new_instructions, 12, 4); // max
+            Array.Copy(replaced_instructions, 0, new_instructions, 24, 14); // replaced_instructions
+            Array.Copy(BitConverter.GetBytes(target_func_start + 14), 0, new_instructions, 44, 8); // target address
+
+
+            Memory.WriteByteArray(replacement_func_start_addr, new_instructions); // write new instructions into its hook area
+            Memory.WriteByteArray(target_func_start, jmpstub); // write jmp stub (e.g. "create hook")
+        }
+
+        internal static string BuildItemCaption(KeyValuePair<long, ScoutedItemInfo> item)
+        {
+            const byte progression = 0b001;
+            const byte useful = 0b010;
+            const byte trap = 0b100;
+            string item_type = "normal";
+            if (((byte)item.Value.Flags) == 0b001) item_type = "Progression";
+            if (((byte)item.Value.Flags) == 0b010) item_type = "Useful";
+            if (((byte)item.Value.Flags) == 0b100) item_type = "Trap";
+            return $"A {item_type} Archipelago item for {item.Value.Player}'s {item.Value.ItemGame}.\0";
+        }
+        internal static string BuildDsrEventItemCaption()
+        {
+            return "A boon from another world. Makes a fog wall passable.\0";
+        }
+
+        internal static bool CanPopupItems()
+        {
+            ulong ItemGetMenuMan = Memory.ReadULong(0x141c891a8);
+            if (ItemGetMenuMan == 0) 
+                return false;
+
+            ulong unused_node_queue = Memory.ReadULong(ItemGetMenuMan + 0x10);
+            ulong valid_node_queue = Memory.ReadULong(ItemGetMenuMan + 0x8);
+            if (unused_node_queue == 0 && valid_node_queue == 0)
+                return false;
+
+            return true;
         }
     }
 }
