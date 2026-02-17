@@ -1811,7 +1811,7 @@ namespace DSAP
             return result;
         }
         // Clear the saved ptrs of our list of "EmkControllers", because we detected there being no events in the list.
-        static void ReleaseEvents(List<EmkController> emkControllers)
+        public static void ReleaseEvents(List<EmkController> emkControllers)
         {
             int num_released = 0;
             foreach (var controller in emkControllers)

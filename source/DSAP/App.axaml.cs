@@ -64,6 +64,9 @@ public partial class App : Application
     private static readonly SemaphoreSlim _goalSemaphore = new SemaphoreSlim(1, 1);
     public static List<EmkController> EmkControllers = [];
     private static DarkSoulsClient dsrClient = null;
+    private bool overlayInitialized = false;
+    private bool firstConnectionStarted = false;
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -608,6 +611,7 @@ public partial class App : Application
         {
             Client.Connected -= OnConnectedAsync;
             Client.Disconnected -= OnDisconnected;
+            Client.GameDisconnected -= OnGameDisconnected;
             if (Client.ItemManager != null)
             {
                 Client.ItemManager.ItemReceived -= Client_ItemReceived;
@@ -618,7 +622,6 @@ public partial class App : Application
             {
                 Client.LocationManager.LocationCompleted -= Client_LocationCompleted;
                 Client.LocationManager.EnableLocationsCondition = null;
-                Client.LocationManager.CancelMonitors();
             }
             if (_deathlinkService != null)
             {
@@ -640,11 +643,16 @@ public partial class App : Application
             return;
         }
 
-        Client = new ArchipelagoClient(dsrClient);
+        if (Client == null)
+        {
+            Client = new ArchipelagoClient(dsrClient);
+        }
+        
 
         AllItems = Helpers.GetAllItems();
         Client.Connected += OnConnectedAsync;
         Client.Disconnected += OnDisconnected;
+        Client.GameDisconnected += OnGameDisconnected;
         var isOnline = Helpers.GetIsPlayerOnline();
         if (isOnline)
         {
@@ -684,36 +692,37 @@ public partial class App : Application
                 SetDeathlink(true);
             }
 
-            if (Context.OverlayEnabled)
+            if (!overlayInitialized) // only init overlay if it hasn't already been initialized (initing it twice causes a crash)
             {
-                Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+                overlayInitialized = true;
+                if (Context.OverlayEnabled)
                 {
-                    YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
-                }));
-            }
-            else // otherwise set a task to poll it until it's enabled.
-            {
-                Task.Run(async () =>
-                {
-                    while (true)
+                    Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
                     {
-                        await Task.Delay(2000);
-                        if (Context.OverlayEnabled)
+                        YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
+                    }));
+                }
+                else // otherwise set a task to poll it until it's enabled.
+                {
+                    Task.Run(async () =>
+                    {
+                        while (true)
                         {
-                            Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+                            await Task.Delay(2000);
+                            if (Context.OverlayEnabled)
                             {
-                                YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
-                            }));
-                            Log.Logger.Information("Overlay Enabled.");
-                            Client.AddOverlayMessage("Overlay Enabled.");
-                            break;
+                                Client.IntializeOverlayService(new WindowsOverlayService(new OverlayOptions()
+                                {
+                                    YOffset = 250 // later, set this dynamically based on "UI scale" DSR option
+                                }));
+                                Log.Logger.Information("Overlay Enabled.");
+                                Client.AddOverlayMessage("Overlay Enabled.");
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
-
-
-
 
             /* Look for event unlocks in full list of received items and locations */
             DetectEventKeys();
@@ -1475,12 +1484,23 @@ public partial class App : Application
         ReplaceItems();
     }
 
-    private static void OnDisconnected(object sender, EventArgs args)
+    private void OnDisconnected(object sender, EventArgs args)
     {
-        Log.Logger.Information("Disconnected from Archipelago");
+        if (!firstConnectionStarted) // skip giving errors on first connect
+        {
+            firstConnectionStarted = true;
+            return;
+        }
+        Log.Logger.Error("Disconnected from Archipelago");
         Client.AddOverlayMessage("Disconnected from Archipelago");
         SlotLocToItemUpgMap = [];
         EmkControllers = [];
         ItemLotReplacementMap = [];
+    }
+    private void OnGameDisconnected(object sender, EventArgs args)
+    {
+        Log.Logger.Error("Disconnected from DSR");
+        Client.AddOverlayMessage("Disconnected from DSR");
+        Helpers.ReleaseEvents(EmkControllers); // pointers in emk list become invalid on game restart
     }
 }
