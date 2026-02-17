@@ -1612,7 +1612,7 @@ namespace DSAP
         {
             try
             {
-                Log.Logger.Verbose("running eventlist");
+                Log.Logger.Verbose($"running eventlist for {emkControllers.Count} emks");
 
                 if (emkControllers.Count == 0)
                 {
@@ -2122,7 +2122,7 @@ namespace DSAP
                 Memory.Write(currloc + 0x8, new_string_loc - new_buffer);
                 new_string_loc += (uint)stringbytes.Length;
             }
-            Log.Logger.Information($"Added {new_entries} items to equipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
+            Log.Logger.Information($"Added {new_entries} items to EquipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
 
             ulong post_string_loc = new_string_loc;
             ulong saved_len = post_string_loc - new_buffer;
@@ -2220,7 +2220,7 @@ namespace DSAP
             }
         }
 
-        private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings)
+        private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings, string msgsName)
         {
             ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
 
@@ -2273,11 +2273,11 @@ namespace DSAP
 
                     // dealloc previously swapped-in area
                     Memory.FreeMemory((nint)(intermediate_buffer_loc));
-                    Log.Logger.Information("Updating item msg text");
+                    Log.Logger.Information($"Reloading {msgsName} text changes");
                 }
                 else
                 {
-                    Log.Logger.Information("Item msg text update not needed - skipping");
+                    Log.Logger.Information($"{msgsName} text update not needed - skipping");
                     return;
                 }
             }
@@ -2305,8 +2305,8 @@ namespace DSAP
             {
                 new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_total_size);
             }
-            Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer.ToString("X")}");
-            Log.Logger.Information($"Overwrite Msgs @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
+            //Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer.ToString("X")}");
+            Log.Logger.Information($"Updating {msgsName} text @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
 
             // first, copy over header & old maps
             byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)(0x1c + old_buffer_num_spanmaps * 0xc));
@@ -2452,15 +2452,15 @@ namespace DSAP
 
             var tasks = new List<Task>
                 {
-                Task.Run(() => { AddMsgs(0x380, added_names); }), // names
-                Task.Run(() => { AddMsgs(0x378, added_captions); }), // captions
-                Task.Run(() => { AddMsgs(0x328, added_captions); }), // info
+                Task.Run(() => { AddMsgs(0x380, added_names, "Item Names"); }), // names
+                Task.Run(() => { AddMsgs(0x378, added_captions, "Item Captions"); }), // captions
+                Task.Run(() => { AddMsgs(0x328, added_captions, "Item Descriptions"); }), // info
                 };
             await Task.WhenAll(tasks);
 
             watch.Stop();
-            Log.Logger.Information($"Finished adding new items params + msgs, took {watch.ElapsedMilliseconds}ms");
-            App.Client.AddOverlayMessage($"Finished adding new items params + msgs, took {watch.ElapsedMilliseconds}ms");
+            Log.Logger.Information($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
+            App.Client.AddOverlayMessage($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
 
             var local_ap_keys = added_emk_names.ToList();
             local_ap_keys.Sort((a,b) =>  a.Key.CompareTo(b.Key));
