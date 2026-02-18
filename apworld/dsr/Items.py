@@ -160,6 +160,8 @@ _all_items_base = [
     ("Bell of Awakening #1", 1096, DSRItemCategory.EVENT),
     ("Bell of Awakening #2", 1097, DSRItemCategory.EVENT),
     ("Dusk Rescued", 1098, DSRItemCategory.EVENT),
+    ("Lordvessel Placed", 1099, DSRItemCategory.EVENT),
+
 
 
     ("Fog Wall Key - Northern Undead Asylum", 1200, DSRItemCategory.FOGWALL),
