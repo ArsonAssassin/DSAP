@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP.Helpers
 {
@@ -116,7 +117,7 @@ namespace DSAP.Helpers
             return isOnline;
 
         }
-        public static bool SetLastBonfireToFS()
+        public static bool SetLastBonfireTo(Enums.Bonfires bonfireId)
         {
             var baseCoff = AddressHelper.GetBaseCOffset();
             if (baseCoff != 0)
@@ -125,8 +126,7 @@ namespace DSAP.Helpers
                 if (baseC != 0)
                 {
                     var lastBonfireAddress = OffsetPointer(baseC, 0xB34);
-                    const int firelinkShrine_id = 1020980;
-                    Memory.Write(lastBonfireAddress, firelinkShrine_id);
+                    Memory.Write(lastBonfireAddress, (int)bonfireId);
                     return true;
                 }
             }
@@ -645,6 +645,35 @@ namespace DSAP.Helpers
                 return false;
 
             return true;
+        }
+
+        internal static void TeleportIfPlayerHasKilled(string tpCommand, string bossName, string bonfireName, Enums.Bonfires bonfireId)
+        {
+            // Check if player has killed the boss. If so, teleport them to the Oolacile Sanctuary.
+            var lotFlags = LocationHelper.GetBossFlags();
+            var baseAddress = AddressHelper.GetEventFlagsOffset();
+            BossFlag bossFlag = lotFlags.Find((x) => x.Name.Contains(bossName));
+            var bossLoc = new Location
+            {
+                Name = bossFlag.Name,
+                Address = baseAddress + AddressHelper.GetEventFlagOffset(bossFlag.Flag).Item1,
+                AddressBit = AddressHelper.GetEventFlagOffset(bossFlag.Flag).Item2,
+                Id = bossFlag.Id,
+            };
+            if (bossLoc.Check())
+            {
+                if (SetLastBonfireTo(bonfireId))
+                {
+                    App.HomewardBoneCommand();
+                    Log.Logger.Information($"DLC teleport - player sent to {bonfireName}.");
+                    App.Client.AddOverlayMessage($"DLC teleport - player sent to {bonfireName}.");
+                }
+            }
+            else
+            {
+                Log.Logger.Information($"{tpCommand} teleport failed - player has not killed {bossName}.");
+                App.Client.AddOverlayMessage($"{tpCommand} teleport failed - player has not killed {bossName}.");
+            }
         }
     }
 }

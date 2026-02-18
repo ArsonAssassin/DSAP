@@ -52,5 +52,12 @@ namespace DSAP
             WhiteSignSoapstone = 50000000,
             KeyToTheSeal = 50000100
         }
+        public enum Bonfires
+        {
+            FirelinkShrine = 1020980,
+            OolacileSanctuary = 1212961,
+            ArchivesPrisonCell = 1702961,
+            FirelinkAltar = 1802960,
+        }
     }
 }
