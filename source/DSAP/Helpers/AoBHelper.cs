@@ -2,9 +2,9 @@
 using Serilog;
 using System;
 
-namespace DSAP.Models
+namespace DSAP.Helpers
 {
-    class AoBHelper
+    public class AoBHelper
     {
         public AoBHelper(string key, byte[] pattern, string mask, ushort operandOffset, ushort operandLength)
         {
@@ -13,7 +13,7 @@ namespace DSAP.Models
             Mask = mask;
             OperandOffset = operandOffset;
             OperandLength = operandLength;
-            _pointer = IntPtr.Zero;
+            _pointer = nint.Zero;
         }
         public string Key;
         public byte[] Pattern;
@@ -21,20 +21,20 @@ namespace DSAP.Models
 
         ushort OperandOffset;
         ushort OperandLength;
-        private IntPtr _pointer;
-        private IntPtr Pointer
+        private nint _pointer;
+        private nint Pointer
         {
             /* Get the position of the singleton/global pointer in memory */
             get
             {
                 /* Cache the result. This looks in memory that is static after program load so it will not change. */
-                if (_pointer == IntPtr.Zero)
+                if (_pointer == nint.Zero)
                 {
                     /* First, AoB search. This finds an instruction that references the global pointer with relative addressing */
-                    IntPtr baseAddress = (IntPtr)Helpers.GetBaseAddress();
-                    IntPtr result = Memory.FindSignature(baseAddress, 0x1000000, this.Pattern, this.Mask);
+                    nint baseAddress = (nint)AddressHelper.GetBaseAddress();
+                    nint result = Memory.FindSignature(baseAddress, 0x1000000, Pattern, Mask);
                     Log.Logger.Debug($"{Key}_aob found: {result.ToInt64()}/0x{result.ToInt64().ToString("X")}");
-                    if (result != IntPtr.Zero)
+                    if (result != nint.Zero)
                     {
                         /* Get the relative offset */
                         uint offset = BitConverter.ToUInt32(Memory.ReadByteArray((ulong)(result + OperandOffset), OperandLength), 0);
@@ -42,7 +42,7 @@ namespace DSAP.Models
                         {
                             Log.Logger.Debug($"{Key}_offset found: {offset}/0x{offset.ToString("X")}");
                             /* Instruction position + instruction size + relative offset = global pointer position */
-                            IntPtr globalPtr = (nint)(result + offset + (OperandOffset + OperandLength));
+                            nint globalPtr = (nint)(result + offset + (OperandOffset + OperandLength));
                             Log.Logger.Debug($"{Key}_ptr found: {result.ToInt64()}/0x{result.ToInt64().ToString("X")}");
                             _pointer = globalPtr; /* cache the result */
                         }
@@ -64,16 +64,16 @@ namespace DSAP.Models
             }
         }
         /* Dereference the global pointer - this can't be cached. */
-        public IntPtr Address
+        public nint Address
         { 
             get 
             {
-                if (this.Pointer != IntPtr.Zero)
+                if (Pointer != nint.Zero)
                 {
                     ulong result = Memory.ReadULong((ulong)_pointer);
                     return (nint)result;
                 }
-                return IntPtr.Zero;
+                return nint.Zero;
             } 
         }
     }

@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using DSAP.Helpers;
 using static DSAP.Enums;
 using Color = Avalonia.Media.Color;
 using Location = Archipelago.Core.Models.Location;
@@ -171,8 +172,8 @@ public partial class App : Application
             {
                 if (cmdparts[1] == "confirm")
                 {
-                    Helpers.SetSavedSeedHash(0);
-                    Helpers.SetSavedSaveId(0);
+                    MiscHelper.SetSavedSeedHash(0);
+                    MiscHelper.SetSavedSaveId(0);
                     CheckSaveId = true;
                 }
                 else
@@ -331,11 +332,11 @@ public partial class App : Application
 
     private int CheckEventFlag(int flagnum)
     {
-        var baseAddress = Helpers.GetEventFlagsOffset();
+        var baseAddress = AddressHelper.GetEventFlagsOffset();
         Location newloc = new Location()
         {
-            Address = baseAddress + Helpers.GetEventFlagOffset(flagnum).Item1,
-            AddressBit = Helpers.GetEventFlagOffset(flagnum).Item2
+            Address = baseAddress + AddressHelper.GetEventFlagOffset(flagnum).Item1,
+            AddressBit = AddressHelper.GetEventFlagOffset(flagnum).Item2
         };
         int result = newloc.Check() ? 1 : 0;
         return result;
@@ -377,9 +378,9 @@ public partial class App : Application
         PrintDiagnosticInfo();
 
         // check if goal is completed
-        if (Helpers.IsInGame())
+        if (MiscHelper.IsInGame())
         {
-            ulong baseb = Helpers.GetBaseBAddress();
+            ulong baseb = AddressHelper.GetBaseBAddress();
             Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
             var locs = Client.CurrentSession.Locations.AllLocationsChecked.Where(x => x == 11110499 || x == 11110500);
             foreach (var loc in locs)
@@ -401,7 +402,7 @@ public partial class App : Application
             {
                 Log.Logger.Warning("baseb could not be resolved");
             }
-            var gwynloc = (Location)Helpers.GetBossFlagLocations().Where(x => x.Name == "Gwyn, Lord of Cinder").First();
+            var gwynloc = (Location)LocationHelper.GetBossFlagLocations().Where(x => x.Name == "Gwyn, Lord of Cinder").First();
             if (gwynloc != null)
             {
                 Log.Logger.Warning($"{gwynloc.Name} at {gwynloc.Address.ToString("X")}_{gwynloc.AddressBit.ToString("X")} type {gwynloc.CheckType}.");
@@ -426,7 +427,7 @@ public partial class App : Application
                 Log.Logger.Warning("No Gwyn location found");
             }
             
-            if (Helpers.IsInGame())
+            if (MiscHelper.IsInGame())
             {
                 if (sendingGoal)
                 {
@@ -463,15 +464,15 @@ public partial class App : Application
         Log.Logger.Warning($"items received={Client?.CurrentSession.Items.AllItemsReceived.Count},ilrm={ItemLotReplacementMap?.Count}");
         Log.Logger.Warning($"version info={DSOptions?.VersionInfoString()}, cdv={Archipelago.Core.AvaloniaGUI.Utils.Helpers.GetAppVersion()}");
         Log.Logger.Warning($"saveidset={SaveidSet}");
-        if (Client != null && Helpers.IsInGame())
+        if (Client != null && MiscHelper.IsInGame())
         {
-            ushort seedhash = Helpers.GetSavedSeedHash();
-            ushort slot = Helpers.GetSavedSlot();
+            ushort seedhash = MiscHelper.GetSavedSeedHash();
+            ushort slot = MiscHelper.GetSavedSlot();
 
-            byte saveid = Helpers.GetSavedSaveId();
+            byte saveid = MiscHelper.GetSavedSaveId();
             Log.Logger.Warning($"saved seedhash={seedhash}, slot={slot}, saveid={saveid.ToString("X")}");
 
-            ulong baseb = Helpers.GetBaseBAddress();
+            ulong baseb = AddressHelper.GetBaseBAddress();
             Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
             if (baseb > 0)
             {
@@ -511,7 +512,7 @@ public partial class App : Application
     }
     public static long AddItem(int category, int id, int quantity)
     {
-        var command = Helpers.GetItemCommand();
+        var command = MiscHelper.GetItemCommand();
         nint resultArea = Memory.Allocate(4); // dword size
         //Set item category
         Array.Copy(BitConverter.GetBytes(quantity), 0, command, 0x2, 4);
@@ -534,7 +535,7 @@ public partial class App : Application
     }
     public static long AddItemWithMessage(int category, int id, int quantity)
     {
-        var command = Helpers.GetItemWithMessageCommand();
+        var command = MiscHelper.GetItemWithMessageCommand();
 
         nint resultArea = Memory.Allocate(4); // dword size
 
@@ -566,9 +567,9 @@ public partial class App : Application
 
     public static void HomewardBoneCommand()
     {
-        var command = Helpers.HomewardBone();
+        var command = MiscHelper.HomewardBone();
 
-        Array.Copy(BitConverter.GetBytes(Helpers.GetBaseBAddress()), 0, command, 0x3, 4);
+        Array.Copy(BitConverter.GetBytes(AddressHelper.GetBaseBAddress()), 0, command, 0x3, 4);
 
         var result = Memory.ExecuteCommand(command);
 
@@ -646,11 +647,11 @@ public partial class App : Application
         }
         
 
-        AllItems = Helpers.GetAllItems();
+        AllItems = MiscHelper.GetAllItems();
         Client.Connected += OnConnectedAsync;
         Client.Disconnected += OnDisconnected;
         Client.GameDisconnected += OnGameDisconnected;
-        var isOnline = Helpers.GetIsPlayerOnline();
+        var isOnline = MiscHelper.GetIsPlayerOnline();
         if (isOnline)
         {
             Log.Logger.Warning("YOU ARE PLAYING ONLINE. THIS APPLICATION WILL NOT PROCEED.");
@@ -724,12 +725,12 @@ public partial class App : Application
             /* Look for event unlocks in full list of received items and locations */
             DetectEventKeys();
             
-            var bossLocations = Helpers.GetBossFlagLocations();
-            var itemLocations = Helpers.GetItemLotLocations();
-            var bonfireLocations = Helpers.GetBonfireFlagLocations();
-            var doorLocations = Helpers.GetDoorFlagLocations();
-            var fogWallLocations = Helpers.GetFogWallFlagLocations();
-            var miscLocations = Helpers.GetMiscFlagLocations();
+            var bossLocations = LocationHelper.GetBossFlagLocations();
+            var itemLocations = LocationHelper.GetItemLotLocations();
+            var bonfireLocations = LocationHelper.GetBonfireFlagLocations();
+            var doorLocations = LocationHelper.GetDoorFlagLocations();
+            var fogWallLocations = LocationHelper.GetFogWallFlagLocations();
+            var miscLocations = LocationHelper.GetMiscFlagLocations();
 
             var fullLocationsList = bossLocations.Union(itemLocations).Union(bonfireLocations).Union(doorLocations).Union(fogWallLocations).Union(miscLocations).ToList();
             Client.MonitorLocationsAsync(fullLocationsList);
@@ -739,22 +740,18 @@ public partial class App : Application
         }
         else
         {
-            Helpers.SetItemLot();
-            Helpers.ChangePrismStoneText();
+            ItemLotHelper.SetItemLot();
+            ApItemInjectorHelper.ChangePrismStoneText();
             //StartEventWatcher();
             //Helpers.ListItemLots();
         }
-        //Helpers.MonitorLastBonfire((lastBonfire) =>
-        //{
-        //    Log.Logger.Debug($"Rested at bonfire: {lastBonfire.id}:{lastBonfire.name}");
-        //});
-
+        
         if (DEBUG_TXTLOG)
         { 
             Log.CloseAndFlush();
         }
 
-        //Client.GPSHandler = new Archipelago.Core.Util.GPS.GPSHandler(Helpers.GetPosition, 5000);
+        //Client.GPSHandler = new Archipelago.Core.Util.GPS.GPSHandler(MiscHelper.GetPosition, 5000);
         //Client.GPSHandler.Start();
 
         Context.ConnectButtonEnabled = true;
@@ -777,7 +774,7 @@ public partial class App : Application
                         Log.Logger.Error("Client disconnection detected - stopping ingame listener");
                         return;
                     }
-                    bool isInGame = Helpers.IsInGame();
+                    bool isInGame = MiscHelper.IsInGame();
                     if (!isInGame)
                     {
                         if (SaveidSet)
@@ -807,11 +804,11 @@ public partial class App : Application
     private void Context_UnstuckClicked(object? sender, EventArgs e)
     {
         Context.UnstuckButtonEnabled = false;
-        if (Helpers.IsInGame())
+        if (MiscHelper.IsInGame())
         {
             /* Get the flag for if firelink shrine is lit */
-            var isFSLit = Helpers.ReadBonfireFlag("Firelink Shrine");
-            if (isFSLit && Helpers.SetLastBonfireToFS())
+            var isFSLit = LocationHelper.ReadBonfireFlag("Firelink Shrine");
+            if (isFSLit && MiscHelper.SetLastBonfireToFS())
             {
                 /* Set last rested bonfire to FS */
                 HomewardBoneCommand();
@@ -865,11 +862,11 @@ public partial class App : Application
         }
 
         //Restart deathlink when player is alive again
-        Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
+        Memory.MonitorAddressForAction<int>(AddressHelper.GetPlayerHPAddress(),
             () => {                
                 /* re-enable monitoring condition */
                 Log.Logger.Debug($"Re-enabling deathlink");
-                Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(),
+                Memory.MonitorAddressForAction<int>(AddressHelper.GetPlayerHPAddress(),
                     () => SendDeathlink(_deathlinkService),
                     (health) => _playerIsDead());
                 lock (_deathlinkLock)
@@ -878,7 +875,7 @@ public partial class App : Application
                     IsHandlingDeathlink = false;
                 }
             },
-            (health) => Helpers.IsInGame() && Helpers.GetPlayerHP() > 0); // condition to re-enable deathlink
+            (health) => MiscHelper.IsInGame() && MiscHelper.GetPlayerHP() > 0); // condition to re-enable deathlink
     }
     /// <summary>
     /// Check if player is dead. Intended to be called after checking player hp == 0.
@@ -898,9 +895,9 @@ public partial class App : Application
             * If they leave the game between the first check below and the second, it isn't a problem.
             *   That's because the only case where they got to this code while in game is when they're already dead!
             */
-        if (Helpers.IsInGame())
+        if (MiscHelper.IsInGame())
         {
-            if (Helpers.GetPlayerHP() <= 0)
+            if (MiscHelper.GetPlayerHP() <= 0)
             {
                 return true;
             }
@@ -923,14 +920,14 @@ public partial class App : Application
         DateTime deathtime = System.DateTime.Now; /* get the "time of deathlink" before we wait for lock */
         lock (_deathlinkLock)
         {
-            bool playerInGame = Helpers.IsInGame();
+            bool playerInGame = MiscHelper.IsInGame();
 
             // If player is in game, not already handling deathlink, and not in grace period, receive it for real.
             if (playerInGame
                 && !IsHandlingDeathlink 
                 && lastDeathLinkTime + graceperiod < deathtime)
             {
-                ulong whpp = Helpers.GetPlayerWritableHPAddress();
+                ulong whpp = AddressHelper.GetPlayerWritableHPAddress();
                 Log.Logger.Debug($"whp address={whpp.ToString("X2")}");
                 /* If we got an address */
                 if (whpp != 0)
@@ -984,7 +981,7 @@ public partial class App : Application
         {
             LogHint(e.Message);
         }
-        Log.Logger.Information(JsonSerializer.Serialize(e.Message, Helpers.GetJsonOptions()));
+        Log.Logger.Information(JsonSerializer.Serialize(e.Message, MiscHelper.GetJsonOptions()));
         Client.AddRichOverlayMessage(e.Message);
     }
     private static void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
@@ -1050,7 +1047,7 @@ public partial class App : Application
             _deathlinkService.OnDeathLinkReceived += _deathlinkService_OnDeathLinkReceived;
             Log.Logger.Information($"Initializing deathlink.");
             deathlink_enabled = true;
-            Memory.MonitorAddressForAction<int>(Helpers.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService),
+            Memory.MonitorAddressForAction<int>(AddressHelper.GetPlayerHPAddress(), () => SendDeathlink(_deathlinkService),
                 (health) => _playerIsDead());
         }
         else if (!enable && deathlink_enabled)
@@ -1100,15 +1097,15 @@ public partial class App : Application
     private static void ReplaceItems()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
-        Helpers.OverwriteItemLots(ItemLotReplacementMap);
+        ItemLotHelper.OverwriteItemLots(ItemLotReplacementMap);
         watch.Stop();
 
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
         Client.AddOverlayMessage($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
 
-        Log.Logger.Debug($"Player in game? {(Helpers.IsInGame() ? "yes" : "no")}");
-        Log.Logger.Debug($"ingame time = {Helpers.getIngameTime()}");
-        if (Helpers.IsInGame())
+        Log.Logger.Debug($"Player in game? {(MiscHelper.IsInGame() ? "yes" : "no")}");
+        Log.Logger.Debug($"ingame time = {MiscHelper.getIngameTime()}");
+        if (MiscHelper.IsInGame())
         {
             HomewardBoneCommand();
             Log.Logger.Information($"After Load screen, new item lots will be live.");
@@ -1127,7 +1124,7 @@ public partial class App : Application
         bool success = false;
         DateTime dtnow = DateTime.UtcNow;
 
-        if (SaveidSet && Helpers.IsInGame() && Helpers.CanPopupItems())
+        if (SaveidSet && MiscHelper.IsInGame() && MiscHelper.CanPopupItems())
         {
             // For items that will give popups, limit how often they send
             if (itemPopupFilter == 'A' || (e.Item.IsProgression && itemPopupFilter == 'P')) // Progression items, or all items if filtering is off
@@ -1149,10 +1146,10 @@ public partial class App : Application
                 }
             }
             
-            var fog_key = Helpers.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
+            var fog_key = MiscHelper.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
 
             // First, ignore any items which came from "item lots". Player already got them!
-            if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot && Helpers.GetItemLotLocations().Any(x => x.Id == e.LocationId))    
+            if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot && LocationHelper.GetItemLotLocations().Any(x => x.Id == e.LocationId))    
             {
                 if (fog_key == null) // If it's a fog wall key, also receive the actual item now, then event later
                 {
@@ -1181,7 +1178,7 @@ public partial class App : Application
                     && SlotLocToItemUpgMap.TryGetValue($"{e.Player.Slot}:{e.LocationId}", out var itemupg))
                 {
                     if (itemupg.Item1 == itemToReceive.ApId) // if item apid matches
-                        itemToReceive = Helpers.UpgradeItem(itemToReceive, itemupg.Item2, true);
+                        itemToReceive = MiscHelper.UpgradeItem(itemToReceive, itemupg.Item2, true);
                     else
                     {
                         Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
@@ -1191,7 +1188,7 @@ public partial class App : Application
                 AddAbstractItem(itemToReceive, e.Item.IsProgression);
 
                 /* If after receiving item (or trap), player is still in game, then it received successfully */
-                if (Helpers.IsInGame())
+                if (MiscHelper.IsInGame())
                 {
                     success = true;
                 }
@@ -1214,7 +1211,7 @@ public partial class App : Application
             Task.Run(async () =>
             {
                 /* Check every second if player is in game again yet */
-                while(!SaveidSet || !Helpers.IsInGame() || !Helpers.CanPopupItems())
+                while(!SaveidSet || !MiscHelper.IsInGame() || !MiscHelper.CanPopupItems())
                 {
                     await Task.Delay(200);
                 }
@@ -1236,16 +1233,16 @@ public partial class App : Application
         //2b) If not, request one.Save that into "saveid" flags.Then proceed.
         //3) Then, send event "save id update". This should "reset" the "received items" list.
 
-        if (!Helpers.IsInGame())
+        if (!MiscHelper.IsInGame())
         {
             return false;
         }
 
         bool success = false;
         // Get seed saved in event flags
-        ushort seed = Helpers.GetSavedSeedHash();
-        ushort slot = Helpers.GetSavedSlot();
-        ushort roomseed = Helpers.HashSeed(Client.CurrentSession.RoomState.Seed);
+        ushort seed = MiscHelper.GetSavedSeedHash();
+        ushort slot = MiscHelper.GetSavedSlot();
+        ushort roomseed = MiscHelper.HashSeed(Client.CurrentSession.RoomState.Seed);
         ushort connslot = (ushort)Client.CurrentSession.ConnectionInfo.Slot;
         Log.Logger.Debug($"Roomseed={roomseed}, connslot={connslot}.");
         if (seed == 0) // No seed? save seed, and get a new saveid.
@@ -1253,22 +1250,22 @@ public partial class App : Application
             seed = roomseed;
             slot = connslot;
             Log.Logger.Debug($"No seed found. Setting seed {seed}.");
-            Helpers.SetSavedSeedHash(seed);
-            Helpers.SetSavedSlot(slot);
+            MiscHelper.SetSavedSeedHash(seed);
+            MiscHelper.SetSavedSlot(slot);
 
             byte newsaveid = await Client.RequestNewSaveId();
-            Helpers.SetSavedSaveId(newsaveid);
+            MiscHelper.SetSavedSaveId(newsaveid);
             success = await Client.UpdateSaveId(newsaveid);
         }
         else if (seed == roomseed) // "correct seed"
         {
             if (slot == connslot)
             {
-                byte saveid = Helpers.GetSavedSaveId(); // check saveid
+                byte saveid = MiscHelper.GetSavedSaveId(); // check saveid
                 if (saveid == 0) // no saveid? Get a new saveid
                 {
                     byte newsaveid = await Client.RequestNewSaveId();
-                    Helpers.SetSavedSaveId(newsaveid);
+                    MiscHelper.SetSavedSaveId(newsaveid);
                     saveid = newsaveid;
                 }
                 success = await Client.UpdateSaveId(saveid);
@@ -1321,7 +1318,7 @@ public partial class App : Application
             {
                 while (true)
                 {
-                    Helpers.CheckEventsList();
+                    EmkHelper.CheckEventsList();
                     await Task.Delay(1000);
                 }
             }
@@ -1346,8 +1343,8 @@ public partial class App : Application
                         Log.Logger.Error("Client disconnection detected - stopping event listener");
                         return;
                     }
-                    Helpers.CheckEventsList();
-                    Helpers.ManageEventsList(emkControllers);
+                    EmkHelper.CheckEventsList();
+                    EmkHelper.ManageEventsList(emkControllers);
                     await Task.Delay(1000);
                 }
             }
@@ -1427,7 +1424,7 @@ public partial class App : Application
 
         Client.ItemManager.ItemReceived += Client_ItemReceived;
         Client.LocationManager.LocationCompleted += Client_LocationCompleted;
-        Client.LocationManager.EnableLocationsCondition = () => SaveidSet && Helpers.IsInGame();
+        Client.LocationManager.EnableLocationsCondition = () => SaveidSet && MiscHelper.IsInGame();
 
 
         /* Initialize flag to off - to prevent receiving items until we have set the saveid */
@@ -1451,26 +1448,26 @@ public partial class App : Application
             }
             Log.Logger.Debug($"{DSOptions.ToString()}");
 
-            EmkControllers = Helpers.BuildEmkControllers(slotData);
+            EmkControllers = EmkHelper.BuildEmkControllers(slotData);
 
-            SlotLocToItemUpgMap = Helpers.BuildSlotLocationToItemUpgMap(slotData, currentSlot);
+            SlotLocToItemUpgMap = MiscHelper.BuildSlotLocationToItemUpgMap(slotData, currentSlot);
 
-            var itemflags = Helpers.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList();
+            var itemflags = LocationHelper.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList();
             var locids = Client.CurrentSession.Locations.AllLocations.ToArray();
 
             Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
 
-            await Helpers.AddAPItems(scoutedLocationInfo);
+            await ApItemInjectorHelper.AddAPItems(scoutedLocationInfo);
 
-            Helpers.BuildFlagToLotMap(out ItemLotReplacementMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
+            ItemLotHelper.BuildFlagToLotMap(out ItemLotReplacementMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
 
-            var nonItemLotFlags = Helpers.GetBossFlags().Cast<EventFlag>().ToList();
-            nonItemLotFlags.AddRange(Helpers.GetBonfireFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(Helpers.GetDoorFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(Helpers.GetFogWallFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(Helpers.GetMiscFlags().Cast<EventFlag>());
+            var nonItemLotFlags = LocationHelper.GetBossFlags().Cast<EventFlag>().ToList();
+            nonItemLotFlags.AddRange(LocationHelper.GetBonfireFlags().Cast<EventFlag>());
+            nonItemLotFlags.AddRange(LocationHelper.GetDoorFlags().Cast<EventFlag>());
+            nonItemLotFlags.AddRange(LocationHelper.GetFogWallFlags().Cast<EventFlag>());
+            nonItemLotFlags.AddRange(LocationHelper.GetMiscFlags().Cast<EventFlag>());
 
-            //var nonItemLotFlags = Helpers.GetDoorFlags().Cast<EventFlag>().ToList();
+            //var nonItemLotFlags = MiscHelper.GetDoorFlags().Cast<EventFlag>().ToList();
             Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
             foreach (var item in nonItemLotFlags)
             {
@@ -1498,6 +1495,6 @@ public partial class App : Application
     {
         Log.Logger.Error("Disconnected from DSR");
         Client.AddOverlayMessage("Disconnected from DSR");
-        Helpers.ReleaseEvents(EmkControllers); // pointers in emk list become invalid on game restart
+        EmkHelper.ReleaseEvents(EmkControllers); // pointers in emk list become invalid on game restart
     }
 }
