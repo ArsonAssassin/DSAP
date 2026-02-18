@@ -210,6 +210,7 @@ class DSRWorld(World):
             "Tomb of the Giants - Behind Golden Fog Wall",
             "Tomb of the Giants - Nito",
             "Tomb of the Giants - After Nito",
+            "Firelink Altar",
             "Kiln of the First Flame",
             "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
@@ -253,7 +254,8 @@ class DSRWorld(World):
         create_connection("Firelink Shrine", "The Catacombs")
         create_connection("Firelink Shrine", "Upper New Londo Ruins")
         create_connection("Firelink Shrine - After Undead Parish Elevator", "Northern Undead Asylum Second Visit")
-        create_connection("Firelink Shrine", "Kiln of the First Flame")
+        create_connection("Firelink Shrine", "Firelink Altar")
+        create_connection("Firelink Altar", "Kiln of the First Flame")
         create_connection("Kiln of the First Flame", "Kiln of the First Flame - Gwyn")
         
         create_connection("Northern Undead Asylum Second Visit", "Northern Undead Asylum Second Visit - F2 West Door")
@@ -371,7 +373,7 @@ class DSRWorld(World):
 
         create_connection("Lower New Londo Ruins", "The Abyss")
         create_connection("The Abyss", "The Abyss - After Four Kings")
-        create_connection("The Abyss - After Four Kings", "Kiln of the First Flame")
+        create_connection("The Abyss - After Four Kings", "Firelink Altar")
 
         create_connection("Demon Ruins - Early", "Demon Ruins")
         create_connection("Demon Ruins - Early", "Demon Ruins - Ceaseless Discharge")
@@ -649,7 +651,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Undead Parish -> Sen's Fortress", self.player), lambda state: state.has("Bell of Awakening #1", self.player) and state.has("Bell of Awakening #2", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress - After First Fog -> Sen's Fortress - After Cage Key", self.player), lambda state: state.has("Master Key", self.player) or state.has("Cage Key", self.player))
         set_rule(self.multiworld.get_entrance("Sen's Fortress - Iron Golem -> Sen's Fortress - After Iron Golem", self.player), lambda state: state.has("Iron Golem Defeated", self.player))
-        set_rule(self.multiworld.get_entrance("Anor Londo -> The Duke's Archives", self.player), lambda state: state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Anor Londo -> The Duke's Archives", self.player), lambda state: state.has("Lordvessel Placed", self.player))
         set_rule(self.multiworld.get_entrance("Anor Londo - Ornstein and Smough -> Anor Londo - After Ornstein and Smough", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
 
         set_rule(self.multiworld.get_location("NL: Key to the Seal", self.player), lambda state: state.has("Lordvessel", self.player))
@@ -667,8 +669,9 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Painted World of Ariamis - After Fog -> Painted World of Ariamis - After Annex Key", self.player), lambda state: state.has("Annex Key", self.player))
         
         set_rule(self.multiworld.get_entrance("Lower New Londo Ruins -> The Abyss", self.player), lambda state: state.has("Covenant of Artorias", self.player) and ((self.options.boss_fogwall_sanity.value == False) or state.has ("Boss Fog Wall Key - Four Kings", self.player)))
+        set_rule(self.multiworld.get_entrance("The Abyss -> The Abyss - After Four Kings", self.player), lambda state: state.has("Four Kings Defeated", self.player))
         
-        set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins - Demon Firesage", self.player), lambda state: state.has("Lordvessel", self.player) and ((self.options.boss_fogwall_sanity.value == False) or state.has ("Boss Fog Wall Key - Demon Firesage", self.player)))
+        set_rule(self.multiworld.get_entrance("Demon Ruins -> Demon Ruins - Demon Firesage", self.player), lambda state: state.has("Lordvessel Placed", self.player) and ((self.options.boss_fogwall_sanity.value == False) or state.has ("Boss Fog Wall Key - Demon Firesage", self.player)))
         set_rule(self.multiworld.get_entrance("Demon Ruins - Early -> Demon Ruins", self.player), lambda state: state.has("Ceaseless Discharge Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Lost Izalith -> Demon Ruins Shortcut", self.player), lambda state: state.has("Bed of Chaos Defeated", self.player))
 
@@ -680,17 +683,20 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Demon Ruins - Centipede Demon -> Lost Izalith", self.player), lambda state: state.has("Orange Charred Ring", self.player) and state.has("Centipede Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("The Catacombs - Pinwheel -> The Catacombs - After Pinwheel", self.player), lambda state: state.has("Pinwheel Defeated", self.player))
         set_rule(self.multiworld.get_entrance("The Catacombs - After Pinwheel -> Tomb of the Giants", self.player), lambda state: state.has("Skull Lantern", self.player))
-        set_rule(self.multiworld.get_entrance("Tomb of the Giants - After White Fog -> Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Tomb of the Giants - After White Fog -> Tomb of the Giants - Behind Golden Fog Wall", self.player), lambda state: state.has("Lordvessel Placed", self.player))
         set_rule(self.multiworld.get_entrance("Tomb of the Giants - Nito -> Tomb of the Giants - After Nito", self.player), lambda state: state.has("Gravelord Nito Defeated", self.player))
 
-        # Frampt entrance to Kiln
-        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Kiln of the First Flame", self.player), 
-            lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) 
-            and state.has("Lordvessel", self.player)
-            and state.has("Bell of Awakening #1", self.player) and state.has("Bell of Awakening #2", self.player))
+        # Frampt entrance to Altar
+        set_rule(self.multiworld.get_entrance("Firelink Shrine -> Firelink Altar", self.player), 
+            lambda state: state.has("Bell of Awakening #1", self.player) and state.has("Bell of Awakening #2", self.player))
 
-        # Kaathe entrance to Kiln
-        set_rule(self.multiworld.get_entrance("The Abyss - After Four Kings -> Kiln of the First Flame", self.player), 
+        # Kaathe entrance to Altar - no rule needed
+
+        # Altar Lordvessel Placed event requires the lordvessel
+        set_rule(self.multiworld.get_location("FA: Lordvessel Placed", self.player), lambda state: state.has("Lordvessel", self.player))
+        
+        # Altar to Kiln
+        set_rule(self.multiworld.get_entrance("Firelink Altar -> Kiln of the First Flame", self.player), 
             lambda state: state.has("Lord Soul (Bed of Chaos)", self.player) and state.has("Lord Soul (Nito)", self.player) and state.has("Bequeathed Lord Soul Shard (Four Kings)", self.player) and state.has("Bequeathed Lord Soul Shard (Seath)", self.player) 
             and state.has("Lordvessel", self.player))
         

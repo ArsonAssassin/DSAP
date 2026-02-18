@@ -152,6 +152,7 @@ class DSRLocation(Location):
             "Tomb of the Giants - Behind Golden Fog Wall",
             "Tomb of the Giants - Nito",
             "Tomb of the Giants - After Nito",
+            "Firelink Altar",
             "Kiln of the First Flame",
             "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
@@ -1074,6 +1075,9 @@ location_tables = {
 "Tomb of the Giants - After Nito": [
     DSRLocationData(11110495, f"TotG: Lord Soul (Nito)", f"Lord Soul (Nito)", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110496, f"TotG: Tomb of the Giants - Altar of the Gravelord lit", f"Tomb of the Giants - Altar of the Gravelord lit", DSRLocationCategory.BONFIRE),
+],
+"Firelink Altar": [ 
+    DSRLocationData(11110828, f"FA: Lordvessel Placed", f"Lordvessel Placed", DSRLocationCategory.EVENT),
 ],
 "Kiln of the First Flame": [ 
     DSRLocationData(11110498, f"KoFF: Black Knight Helm", f"Black Knight Helm", DSRLocationCategory.ITEM_LOT),
