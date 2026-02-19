@@ -57,6 +57,38 @@ class LogicToAccessCatacombs(Choice):
     option_ornstein_and_smough = 4
     default = 3
 
+# class LogicToAccessDukesArchivePrison(Choice):
+#     """Artificial logic for Duke's Archives Prison cell (e.g. post 1st Seath Encounter). 
+#      Before the chosen condition, catacombs will be considered "out of logic"
+
+#     - **no_logic:** Duke's Archives Prison Cell is in-logic as soon as you can reach Seath's 1st encounter
+#                     (may require usage of unstuck)
+#     - **cell_key:** DA Prison is in-logic once you have the Archive Tower Cell Key
+#                     (may require usage of unstuck)
+#     - **cell_and_giant_door_key:** (recommended) DA Prison is in-logic once you have  
+#                                     both the Archive Tower Cell Key and Giant Door Key.
+#     - **all_keys:** DA Prison is in-logic only once you have all the DA Prison keys."""
+#     display_name = "Logic Requirement to Access Duke's Archives Prison"
+#     option_no_logic = 0
+#     option_cell_key = 1
+#     option_cell_and_giant_door_key = 2
+#     option_all_keys = 3
+#     default = 2
+
+# class LogicToAccessPaintedWorld(Choice):
+#     """Artificial logic for The Painted World of Ariamis (PW) access.
+#      Before the chosen condition, PW will be considered "out of logic".
+#     If you do not have fog_wall_sanity or boss_fog_wall_sanity options on, this will have no effect.
+
+#     - **no_logic:** Painted World is in-logic as soon as it is accessible (via Anor Londo painting with Peculiar doll)
+#                     (may require usage of unstuck)
+#     - **all_fogs:** PW is in-logic once player has all fog walls that they have access to."""
+    
+#     display_name = "Logic Requirement to Access Painted World"
+#     option_no_logic = 0
+#     option_all_fogs = 1
+#     default = 1
+
 class UpgradedWeaponsPercentage(Range):
     """Percentage of weapons (including shields) in the pool that will be replaced with upgraded versions, if possible.
     Choose a higher value for an easier time."""
@@ -110,6 +142,8 @@ option_groups = [
         ]),
     OptionGroup("Logic", [
         LogicToAccessCatacombs,
+        LogicToAccessDukesArchivePrison,
+        LogicToAccessPaintedWorld,
         ]),
     OptionGroup("Upgraded Weapons", [
         UpgradedWeaponsPercentage,
@@ -129,6 +163,8 @@ class DSROption(PerGameCommonOptions):
     fogwall_sanity: FogwallSanity
     boss_fogwall_sanity: BossFogwallSanity
     logic_to_access_catacombs: LogicToAccessCatacombs
+    logic_to_access_dukes_archives_prison: LogicToAccessDukesArchivePrison
+    logic_to_access_painted_world: LogicToAccessPaintedWorld
     upgraded_weapons_percentage: UpgradedWeaponsPercentage
     upgraded_weapons_allowed_infusions: UpgradedWeaponsAllowedInfusions
     upgraded_weapons_adjusted_levels : UpgradedWeaponsAdjustedLevels

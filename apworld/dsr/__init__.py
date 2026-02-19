@@ -817,6 +817,29 @@ class DSRWorld(World):
             set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), temp_condition)
         # End yaml options for "logic"
         
+        # dukes archive prison rule yaml option
+        # if (self.options.logic_to_access_dukes_archives_prison != LogicToAccessDukesArchivePrison.option_no_logic):
+        #     add_boss_fog_rule("Boss Fog Wall Key - Seath First Encounter", "The Duke's Archives", "The Duke's Archives - After First Seath Encounter")
+        #     match self.options.logic_to_access_dukes_archives_prison:
+        #         case LogicToAccessDukesArchivePrison.option_cell_key:
+        #             temp_condition = lambda state: state.has("Archive Tower Cell Key", self.player)
+        #         case LogicToAccessDukesArchivePrison.option_cell_key:
+        #             temp_condition = lambda state: state.has("Archive Tower Cell Key", self.player) and state.has("Archive Tower Giant Door Key", self.player)
+        #         case LogicToAccessDukesArchivePrison.option_all_keys:
+        #             temp_condition = lambda state: state.has("Archive Tower Cell Key", self.player) and state.has("Archive Tower Giant Door Key", self.player) and state.has("Archive Tower Giant Cell Key", self.player) and state.has("Archive Prison Extra Key", self.player)
+        #         case _: # default to cell and giant door key
+        #             temp_condition = lambda state: state.has("Archive Tower Cell Key", self.player) and state.has("Archive Tower Giant Door Key", self.player)
+        #     # AND combine with (boss fog rule)
+        #     temp2_condition = lambda state: temp_condition(state) and ((self.options.boss_fogwall_sanity.value == False) or state.has("Boss Fog Wall Key - Seath First Encounter", self.player))
+        #     set_rule(self.multiworld.get_entrance("The Duke's Archives -> The Duke's Archives - After First Seath Encounter", self.player), temp2_condition)
+        
+        # painted world rule yaml option
+        # if (self.options.logic_to_access_painted_world == LogicToAccessPaintedWorld.option_all_fogs):
+        #     set_rule(self.multiworld.get_entrance("Anor Londo - After First Fog -> Painted World of Ariamis", self.player), lambda state: (state.has("Peculiar Doll", self.player)
+        #          and ((self.options.fogwall_sanity.value == False) or state.has ("Fog Wall Key - Painted World", self.player))
+        #          and ((self.options.boss_fogwall_sanity.value == False) or state.has ("Boss Fog Wall Key - Crossbreed Priscilla", self.player)))
+        #             )
+            
 
         # for debugging purposes, you may want to visualize the layout of your world. Uncomment the following code to
         # write a PlantUML diagram to the file "my_world.puml" that can help you see whether your regions and locations
@@ -848,6 +871,7 @@ class DSRWorld(World):
                 "fogwall_sanity": self.options.fogwall_sanity.value,
                 "boss_fogwall_sanity": self.options.boss_fogwall_sanity.value,
                 "logic_to_access_catacombs": self.options.logic_to_access_catacombs.current_key,
+                "logic_to_access_dukes_archives_prison": self.options.logic_to_access_dukes_archives_prison.current_key,
                 "upgraded_weapons_percentage": self.options.upgraded_weapons_percentage.value,
                 "upgraded_weapons_allowed_infusions": self.options.upgraded_weapons_allowed_infusions.value,
                 "upgraded_weapons_adjusted_levels": self.options.upgraded_weapons_adjusted_levels.value,
@@ -868,10 +892,12 @@ class DSRWorld(World):
         self.items_names = items_names
         self.items_upgrades = items_upgrades
         self.items_address = items_address
-
+        # self.slot_data = slot_data
         return slot_data
 
     def write_spoiler(self, spoiler_handle: TextIO) -> None:
+        # spoiler_handle.write(f"\nslotdata: {self.slot_data}\n")
+
         wrote_items = False
         if (len(self.items_upgrades) > 0):
             spoiler_handle.write(f"\nDSR weapon upgrades for {self.multiworld.player_name[self.player]}:\n")
