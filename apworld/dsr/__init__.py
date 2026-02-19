@@ -10,7 +10,7 @@ from worlds.generic.Rules import set_rule, add_rule, add_item_rule
 from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildRequiredItemPool, BuildGuaranteedItemPool, UpgradeEquipment
 from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories
 from .Groups import location_name_groups, item_name_groups
-from .Options import DSROption, option_groups
+from .Options import DSROption, option_groups, LogicToAccessCatacombs
 
 from settings import Group, FilePath
 
@@ -714,12 +714,8 @@ class DSRWorld(World):
 
         # artificial logic
         if (self.options.fogwall_sanity == False and self.options.boss_fogwall_sanity == False):
-            set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player))
             set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Key to the Seal", self.player))
             set_rule(self.multiworld.get_entrance("Lower Blighttown -> The Great Hollow", self.player), lambda state: state.has("Lordvessel", self.player))
-            set_rule(self.multiworld.get_entrance("The Catacombs - After Pinwheel -> Tomb of the Giants", self.player), lambda state: state.has("Ornstein and Smough Defeated", self.player) and state.has("Skull Lantern", self.player))
-
-
 
         # fogwall rules
         def add_fog_rule(fogwall_item: str, from_region: str, to_region: str):
@@ -802,7 +798,25 @@ class DSRWorld(World):
         add_boss_fog_rule("Boss Fog Wall Key - Artorias", "Royal Wood", "Royal Wood - Artorias")
         add_boss_fog_rule("Boss Fog Wall Key - Manus", "Chasm of the Abyss", "Chasm of the Abyss - Manus")
 
-        # end of areas
+        # end of fog wall logic
+
+        # Begin yaml options for "logic"
+        # Catacombs rule yaml option
+        if (self.options.logic_to_access_catacombs != LogicToAccessCatacombs.option_no_logic):
+            match self.options.logic_to_access_catacombs:
+                case LogicToAccessCatacombs.option_undead_merchant:
+                    temp_condition = lambda state: state.has("Undead Merchant Access", self.player)
+                case LogicToAccessCatacombs.option_andre:
+                    temp_condition = lambda state: state.has("Andre Access", self.player)
+                case LogicToAccessCatacombs.option_andre_or_undead_merchant:
+                    temp_condition = lambda state: state.has("Andre Access", self.player) or state.has("Undead Merchant Access", self.player)
+                case LogicToAccessCatacombs.option_ornstein_and_smough:
+                    temp_condition = lambda state: state.has("Ornstein and Smough Defeated", self.player)
+                case _: # default to andre or undead_merchant
+                    temp_condition = lambda state: state.has("Andre Access", self.player) or state.has("Undead Merchant Access", self.player)
+            set_rule(self.multiworld.get_entrance("Firelink Shrine -> The Catacombs", self.player), temp_condition)
+        # End yaml options for "logic"
+        
 
         # for debugging purposes, you may want to visualize the layout of your world. Uncomment the following code to
         # write a PlantUML diagram to the file "my_world.puml" that can help you see whether your regions and locations
@@ -833,6 +847,7 @@ class DSRWorld(World):
                 "guaranteed_items": self.options.guaranteed_items.value,
                 "fogwall_sanity": self.options.fogwall_sanity.value,
                 "boss_fogwall_sanity": self.options.boss_fogwall_sanity.value,
+                "logic_to_access_catacombs": self.options.logic_to_access_catacombs.current_key,
                 "upgraded_weapons_percentage": self.options.upgraded_weapons_percentage.value,
                 "upgraded_weapons_allowed_infusions": self.options.upgraded_weapons_allowed_infusions.value,
                 "upgraded_weapons_adjusted_levels": self.options.upgraded_weapons_adjusted_levels.value,
