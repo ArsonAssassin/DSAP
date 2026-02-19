@@ -187,7 +187,7 @@ location_skip_categories = {
     DSRLocationCategory.BONFIRE
 }
 
-# Last id used = 827
+# Last id used = 830
 location_tables = {
 "Undead Asylum Cell": [
     DSRLocationData(11110000, f"UA: Dungeon Cell Key", f"Dungeon Cell Key", DSRLocationCategory.SKIP),
@@ -255,6 +255,7 @@ location_tables = {
     DSRLocationData(11110039, f"UB: Undead Burg lit", f"Undead Burg lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110040, f"UB: Uchigatana", f"Uchigatana", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110041, f"UB: Orange Guidance Soapstone", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
+    DSRLocationData(11110829, f"UB: Undead Merchant", f"Undead Merchant Access", DSRLocationCategory.EVENT),
     DSRLocationData(11110042, f"UB: Residence Key", f"Residence Key", DSRLocationCategory.SHOP_ITEM),
     DSRLocationData(11110823, f"UB: Bottomless Box", f"Bottomless Box", DSRLocationCategory.SHOP_ITEM),
     DSRLocationData(11110824, f"UB: Repairbox", f"Repairbox", DSRLocationCategory.SHOP_ITEM),
@@ -296,11 +297,11 @@ location_tables = {
     DSRLocationData(11110066, f"UP: Undead Parish lit", f"Undead Parish lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110067, f"UP: Halberd", f"Halberd", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110068, f"UP: Basement Key", f"Basement Key", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110830, f"UP: Andre", f"Andre Access", DSRLocationCategory.EVENT),
     DSRLocationData(11110825, f"UP: Andre - Bottomless Box", f"Bottomless Box", DSRLocationCategory.SHOP_ITEM),
     DSRLocationData(11110826, f"UP: Andre - Weapon Smithbox", f"Weapon Smithbox", DSRLocationCategory.SHOP_ITEM),
     DSRLocationData(11110827, f"UP: Andre - Armor Smithbox", f"Armor Smithbox", DSRLocationCategory.SHOP_ITEM),
     DSRLocationData(11110822, f"UP: Andre - Crest of Artorias", f"Crest of Artorias", DSRLocationCategory.SHOP_ITEM),
-
     DSRLocationData(11110069, f"UP: Berenike Knight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110070, f"UP: Fire Keeper Soul - Undead Parish", f"Fire Keeper Soul (Undead Parish)", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110071, f"UP: Large Soul of a Nameless Soldier - Parish Window", f"Large Soul of a Nameless Soldier", DSRLocationCategory.ITEM_LOT),
