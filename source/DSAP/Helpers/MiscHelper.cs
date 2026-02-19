@@ -122,7 +122,7 @@ namespace DSAP.Helpers
             var baseCoff = AddressHelper.GetBaseCOffset();
             if (baseCoff != 0)
             {
-                var baseC = (ulong)Memory.ReadInt(baseCoff);
+                var baseC = Memory.ReadULong(baseCoff);
                 if (baseC != 0)
                 {
                     var lastBonfireAddress = OffsetPointer(baseC, 0xB34);
