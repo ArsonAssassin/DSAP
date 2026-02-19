@@ -182,7 +182,7 @@ namespace DSAP.Helpers
             ulong new_allocated_buffer = 0;
             lock (_memAllocLock)
             {
-                new_allocated_buffer = (ulong)Memory.AllocateAbove(new_buffer_alloc_size);
+                new_allocated_buffer = (ulong)Memory.Allocate(new_buffer_alloc_size);
             }
 
             ulong new_buffer = new_allocated_buffer + 0x10;
@@ -210,12 +210,12 @@ namespace DSAP.Helpers
             parambytes[0x3e] = 0; // use animation = 0
             // Is Only One?
             // Is Deposit?
-            uint new_string_loc = (uint)(new_buffer + new_buffer_string_offset + old_buffer_strings_length);
+            ulong new_string_loc = new_buffer + new_buffer_string_offset + old_buffer_strings_length;
 
             // fix old entries' offsets
             for (uint i = 0; i < old_buffer_num_entries; i++)
             {
-                uint currloc = (uint)(new_buffer + 0x30 + i * 0xc);
+                ulong currloc = new_buffer + 0x30 + i * 0xc;
                 uint poff = Memory.ReadUInt(currloc + 0x4);
                 uint soff = Memory.ReadUInt(currloc + 0x8);
                 poff = (uint)(poff + (0xc * new_entries));
@@ -241,10 +241,10 @@ namespace DSAP.Helpers
                 parambytes[0x2d] = iconbytes[1];
                 parambytes[0x45] |= (byte)(0x30); // turn on isDrop and isDeposit bits
 
-                uint currloc = (uint)(new_buffer + old_buffer_params_offset + i * 0xc);
+                ulong currloc = new_buffer + old_buffer_params_offset + i * 0xc;
                 Memory.Write(currloc + 0x0, newid);
 
-                uint new_param_loc = (uint)(new_buffer + new_buffer_params_offset + (old_buffer_num_entries + i) * goods_param_size);
+                ulong new_param_loc = new_buffer + new_buffer_params_offset + (old_buffer_num_entries + i) * goods_param_size;
                 Memory.WriteByteArray(new_param_loc, parambytes);
                 Memory.Write(currloc + 0x4, new_param_loc - new_buffer);
 
@@ -274,7 +274,7 @@ namespace DSAP.Helpers
             {
                 var entry = addedEntries.ToArray()[i];
                 uint newid = (uint)entry.Key;
-                uint curr_endtable_loc = (uint)(new_endtable_loc + 8 * (i + old_buffer_num_entries));
+                ulong curr_endtable_loc = new_endtable_loc + 8 * (i + old_buffer_num_entries);
                 Memory.Write(curr_endtable_loc, newid);
                 Memory.Write(curr_endtable_loc + 0x4, old_buffer_num_entries + i);
             }
@@ -380,7 +380,7 @@ namespace DSAP.Helpers
 
             // get highest entry in span maps table
             // check its id against known ids, if higher do desc area validation
-            long highest_id = Memory.ReadUInt(old_buffer + 0x1c + 0xc * (old_buffer_num_spanmaps - 1) + 0x8);
+            uint highest_id = Memory.ReadUInt(old_buffer + 0x1c + 0xc * (old_buffer_num_spanmaps - 1) + 0x8);
             Log.Logger.Verbose($"msgs highest id = {highest_id}");
             if (highest_id >= instrings.First().Key) // conflict
             {
@@ -433,7 +433,11 @@ namespace DSAP.Helpers
 
             lock (_memAllocLock)
             {
-                new_buffer = (ulong)Memory.AllocateAbove((uint)new_buffer_total_size);
+                new_buffer = (ulong)Memory.Allocate((uint)new_buffer_total_size);
+            }
+            if (new_buffer == 0)
+            {
+                Log.Logger.Error($"Error allocating {msgsName}, could not allocate {new_buffer_total_size} byte area.");
             }
             //Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer.ToString("X")}");
             Log.Logger.Information($"Updating {msgsName} text @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
