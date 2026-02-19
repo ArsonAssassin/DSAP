@@ -132,11 +132,12 @@ namespace DSAP.Helpers
                 Log.Logger.Warning($"Warning: Highest id in params detected as {highest_id}, >= one of our entries.");
                 Log.Logger.Warning($"Checking if params and msgs have already been updated...");
 
-                uint old_end_buffer_offset = old_buffer_size + (uint)(0x8 * old_buffer_num_entries) + 0x10 + 0xf;
+                uint old_end_buffer_offset = old_buffer_size + (uint)(0x8 * old_buffer_num_entries) + 0xf;
                 ulong old_desc_area_loc = old_buffer + old_end_buffer_offset;
+                Log.Logger.Verbose($"old desc area loc: {old_desc_area_loc}");
                 DescArea old_desc_area = Memory.ReadObject<DescArea>(old_desc_area_loc);
                 Log.Logger.Debug("Read object: " + old_desc_area.ToString());
-                bool requires_reload = ValidateDescArea(old_desc_area);
+                bool requires_reload = ValidateDescArea(old_desc_area, "EquipParamGoods");
                 if (requires_reload)
                 {
                     //int intermediate_buffer_size = old_desc_area.FullAllocLength;
@@ -177,7 +178,7 @@ namespace DSAP.Helpers
             uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
 
             uint new_buffer_size = (uint)(old_buffer_size + addl_str_length + (0xc + goods_param_size) * new_entries);
-            uint new_buffer_alloc_size = (uint)(new_buffer_size + (0x8 * new_buffer_num_entries) + 0x10 + 0xf + DescArea.size); // ensure enough for the binary search table and the prologue
+            uint new_buffer_alloc_size = (uint)(0x10 + new_buffer_size + (0x8 * new_buffer_num_entries) + 0xf + DescArea.size); // ensure enough for the binary search table and the prologue
 
             ulong new_allocated_buffer = 0;
             lock (_memAllocLock)
@@ -281,9 +282,9 @@ namespace DSAP.Helpers
             // end of data
 
             // add desc area to end
-            uint end_buffer_offset = new_buffer_size + (uint)(0x8 * new_buffer_num_entries) + 0x10 + 0xf;
+            uint end_buffer_offset = new_buffer_size + (uint)(0x8 * new_buffer_num_entries) + 0xf;
             ulong desc_area_loc = new_buffer + end_buffer_offset;
-
+            Log.Logger.Verbose($"new desc area loc: {desc_area_loc}");
             var seedHash = MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed);
             var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
 
@@ -298,7 +299,7 @@ namespace DSAP.Helpers
             return true;
         }
 
-        private static bool ValidateDescArea(DescArea descArea)
+        private static bool ValidateDescArea(DescArea descArea, string checkArea)
         {
             bool requires_reload = false;
             if (descArea.DescSize >= DescArea.size)
@@ -344,8 +345,8 @@ namespace DSAP.Helpers
             }
             else // desc area too small
             {
-                Log.Logger.Error("No version detected on equip goods params. A different mod is probably interfering with our items.");
-                Log.Logger.Error("Try running without other mods.");
+                Log.Logger.Error($"Unknown metadata size detected on {checkArea}. A different mod may be interfering.");
+                Log.Logger.Error("Try restarting DSR without other mods.");
                 return false;
             }
         }
@@ -387,9 +388,10 @@ namespace DSAP.Helpers
                 // validate desc area
                 // If it's no good, reset it
                 ulong desc_area_loc = old_buffer + old_buffer_size;
+                Log.Logger.Verbose($"{msgsName} old desc area loc: {desc_area_loc.ToString("X")}, size: {old_buffer_size.ToString()}");
                 DescArea old_desc_area = Memory.ReadObject<DescArea>(desc_area_loc);
                 Log.Logger.Debug("Read object: " + old_desc_area.ToString() + " from " + desc_area_loc.ToString("X"));
-                bool update_required = ValidateDescArea(old_desc_area);
+                bool update_required = ValidateDescArea(old_desc_area, msgsName);
                 if (update_required)
                 {
                     ulong intermediate_buffer_loc = old_buffer; // save "swapped-in area" ptr
@@ -425,8 +427,6 @@ namespace DSAP.Helpers
             {
                 total_String_size += (ulong)Encoding.Unicode.GetBytes(entry.Value).Length;
             }
-            if (new_entries < (ulong)instrings.Count)
-                total_String_size += (ulong)instrings.Count - new_entries;
             //calculate size
             ulong new_buffer_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size;
             ulong new_buffer_total_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size + (ulong)DescArea.size;
@@ -475,29 +475,40 @@ namespace DSAP.Helpers
             }
             // point to end of last old string
             ulong curr_end_loc = new_buffer + new_buffer_string_start_offset + (old_buffer_size - old_buffer_string_start_offset);
+            Log.Logger.Warning($"{msgsName} curr end loc = {curr_end_loc.ToString("X")}, size: {(curr_end_loc - new_buffer).ToString()}");
             ulong end_of_stroffs = new_buffer + new_buffer_stroff_start_offset + (4 * old_buffer_num_stroff_entries);
             for (uint i = 0; i < new_entries; i++)
             {
                 ulong curr_stroff_loc = end_of_stroffs + 4 * i;
-                Memory.Write(curr_stroff_loc, (int)(curr_end_loc - new_buffer)); // point stroff entry to string position
-                                                                                 // Then write the string
                 byte[] ba = Encoding.Unicode.GetBytes("\0");
                 if (instrings.Any(x => x.Key == instrings.First().Key + i))
+                {
                     ba = Encoding.Unicode.GetBytes(instrings.Find(x => x.Key == instrings.First().Key + i).Value);
-                Memory.WriteByteArray(curr_end_loc, ba);
-                curr_end_loc += (ulong)ba.Length;
+                    Memory.Write(curr_stroff_loc, (int)(curr_end_loc - new_buffer)); // point stroff entry to string position
+                                                                                     // Then write the string
+                    Memory.WriteByteArray(curr_end_loc, ba);
+                    curr_end_loc += (ulong)ba.Length;
+                }
+                else
+                {
+                    Memory.Write(curr_stroff_loc, 0); // clear stroff entry
+                }   
             }
             // end of data here
             // add desc area
             var seedHash = MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed);
             var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
             var new_desc_area = new DescArea((int)new_buffer_total_size, old_buffer, (int)old_buffer_size, seedHash, slot);
-            Memory.WriteObject<DescArea>(curr_end_loc, new_desc_area);
-            Log.Logger.Verbose($"new Desc Area written to {curr_end_loc.ToString("X")}");
+
+            
+            ulong new_desc_area_loc = new_buffer + new_buffer_size;
+            Log.Logger.Verbose($"added {new_entries} entries to {msgsName}");
+            Memory.WriteObject<DescArea>(new_desc_area_loc, new_desc_area);
+            Log.Logger.Verbose($"new Desc Area written to {new_desc_area_loc.ToString("X")}");
             // end here
 
             // fix up header area
-            Memory.Write(new_buffer + 0x4, curr_end_loc - new_buffer);
+            Memory.Write(new_buffer + 0x4, new_desc_area_loc - new_buffer);
             Memory.Write(new_buffer + 0xc, old_buffer_num_spanmaps + 1);
             Memory.Write(new_buffer + 0x10, old_buffer_num_stroff_entries + new_entries);
             Memory.Write(new_buffer + 0x14, new_buffer_stroff_start_offset);

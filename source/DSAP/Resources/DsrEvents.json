@@ -8,7 +8,7 @@
     "Eventid": 11510090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100961
+    "Dsrid": 11109961
   },
   {
     "Locname": "AL: Fog Wall - Anor Londo #2 (Archers)",
@@ -19,7 +19,7 @@
     "Eventid": 11510090,
     "Eventslot": 1,
     "Type": "FogWall",
-    "Dsrid": 11100962
+    "Dsrid": 11109962
   },
   {
     "Locname": "ASH: Fog Wall - Ash Lake Entrance",
@@ -30,7 +30,7 @@
     "Eventid": 11320090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100963
+    "Dsrid": 11109963
   },
   {
     "Locname": "BT: Fog Wall - Lower Blighttown Entrance",
@@ -41,7 +41,7 @@
     "Eventid": 11400090,
     "Eventslot": 1,
     "Type": "FogWall",
-    "Dsrid": 11100964
+    "Dsrid": 11109964
   },
   {
     "Locname": "DA: Fog Wall - Duke's Archives Courtyard Entrance",
@@ -52,7 +52,7 @@
     "Eventid": 11700083,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100965
+    "Dsrid": 11109965
   },
   {
     "Locname": "DE: Fog Wall - Depths Rat Room",
@@ -63,7 +63,7 @@
     "Eventid": 11000090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100966
+    "Dsrid": 11109966
   },
   {
     "Locname": "DG: Fog Wall - Darkroot Garden",
@@ -74,7 +74,7 @@
     "Eventid": 11200090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100967
+    "Dsrid": 11109967
   },
   {
     "Locname": "NL: Fog Wall - New Londo (Upper)",
@@ -85,7 +85,7 @@
     "Eventid": 11600090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100968
+    "Dsrid": 11109968
   },
   {
     "Locname": "NL: Fog Wall - New Londo (Lower)",
@@ -96,7 +96,7 @@
     "Eventid": 11600090,
     "Eventslot": 1,
     "Type": "FogWall",
-    "Dsrid": 11100969
+    "Dsrid": 11109969
   },
   {
     "Locname": "PW: Fog Wall - Painted World",
@@ -107,7 +107,7 @@
     "Eventid": 11100090,
     "Eventslot": 1,
     "Type": "FogWall",
-    "Dsrid": 11100970
+    "Dsrid": 11109970
   },
   {
     "Locname": "SF: Fog Wall - Sen's Fortress #1 (Outside Stairs)",
@@ -118,7 +118,7 @@
     "Eventid": 11500090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100971
+    "Dsrid": 11109971
   },
   {
     "Locname": "SF: Fog Wall - Sen's Fortress #2 (Upper Entrance)",
@@ -129,7 +129,7 @@
     "Eventid": 11500090,
     "Eventslot": 1,
     "Type": "FogWall",
-    "Dsrid": 11100972
+    "Dsrid": 11109972
   },
   {
     "Locname": "TC: Fog Wall - Catacombs",
@@ -140,7 +140,7 @@
     "Eventid": 11300090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100973
+    "Dsrid": 11109973
   },
   {
     "Locname": "TotG: Fog Wall - Tomb of the Giants",
@@ -151,7 +151,7 @@
     "Eventid": 11310090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100974
+    "Dsrid": 11109974
   },
   {
     "Locname": "UA: Fog Wall - Northern Undead Asylum",
@@ -162,7 +162,7 @@
     "Eventid": 11810090,
     "Eventslot": 0,
     "Type": "EarlyFogWall",
-    "Dsrid": 11100975
+    "Dsrid": 11109975
   },
   {
     "Locname": "UB: Fog Wall - Undead Burg",
@@ -173,7 +173,7 @@
     "Eventid": 11010090,
     "Eventslot": 0,
     "Type": "FogWall",
-    "Dsrid": 11100976
+    "Dsrid": 11109976
   },
   {
     "Locname": "UP: Fog Wall - Undead Parish",
@@ -184,7 +184,7 @@
     "Eventid": 11010090,
     "Eventslot": 1,
     "Type": "FogWall",
-    "Dsrid": 11100977
+    "Dsrid": 11109977
   },
   {
     "Locname": "AL: Boss Fog Wall - Gwyndolin",
@@ -195,7 +195,7 @@
     "Eventid": 11515380,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100978
+    "Dsrid": 11109978
   },
   {
     "Locname": "AL: Boss Fog Wall - Ornstein and Smough",
@@ -206,7 +206,7 @@
     "Eventid": 11515390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100979
+    "Dsrid": 11109979
   },
   {
     "Locname": "BT: Boss Fog Wall - Quelaag",
@@ -217,7 +217,7 @@
     "Eventid": 11405390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100980
+    "Dsrid": 11109980
   },
   {
     "Locname": "CotA: Boss Fog Wall - Manus",
@@ -228,7 +228,7 @@
     "Eventid": 11215020,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100981
+    "Dsrid": 11109981
   },
   {
     "Locname": "DA: Boss Fog Wall - Seath First Encounter",
@@ -239,7 +239,7 @@
     "Eventid": 11705380,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100982
+    "Dsrid": 11109982
   },
   {
     "Locname": "DE: Boss Fog Wall - Gaping Dragon",
@@ -250,7 +250,7 @@
     "Eventid": 11005390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100983
+    "Dsrid": 11109983
   },
   {
     "Locname": "DG: Boss Fog Wall - Moonlight Butterfly",
@@ -261,7 +261,7 @@
     "Eventid": 11205380,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100984
+    "Dsrid": 11109984
   },
   {
     "Locname": "DR: Boss Fog Wall - Ceaseless Discharge",
@@ -272,7 +272,7 @@
     "Eventid": 11415370,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100985
+    "Dsrid": 11109985
   },
   {
     "Locname": "DR: Boss Fog Wall - Centipede Demon",
@@ -283,7 +283,7 @@
     "Eventid": 11415380,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100986
+    "Dsrid": 11109986
   },
   {
     "Locname": "DR: Boss Fog Wall - Demon Firesage",
@@ -294,7 +294,7 @@
     "Eventid": 11415340,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100987
+    "Dsrid": 11109987
   },
   {
     "Locname": "KoFF: Boss Fog Wall - Gwyn",
@@ -305,7 +305,7 @@
     "Eventid": 11805390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100988
+    "Dsrid": 11109988
   },
   {
     "Locname": "LI: Boss Fog Wall - Bed of Chaos",
@@ -316,7 +316,7 @@
     "Eventid": 11415390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100989
+    "Dsrid": 11109989
   },
   {
     "Locname": "NL: Boss Fog Wall - Four Kings",
@@ -327,7 +327,7 @@
     "Eventid": 11605390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100990
+    "Dsrid": 11109990
   },
   {
     "Locname": "PW: Boss Fog Wall - Crossbreed Priscilla",
@@ -338,7 +338,7 @@
     "Eventid": 11105390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100991
+    "Dsrid": 11109991
   },
   {
     "Locname": "SF: Boss Fog Wall - Iron Golem",
@@ -349,7 +349,7 @@
     "Eventid": 11505390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100992
+    "Dsrid": 11109992
   },
   {
     "Locname": "SG: Boss Fog Wall - Sanctuary Guardian",
@@ -360,7 +360,7 @@
     "Eventid": 11215000,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100993
+    "Dsrid": 11109993
   },
   {
     "Locname": "TC: Boss Fog Wall - Pinwheel",
@@ -371,7 +371,7 @@
     "Eventid": 11305390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100994
+    "Dsrid": 11109994
   },
   {
     "Locname": "TotG: Boss Fog Wall - Nito",
@@ -382,7 +382,7 @@
     "Eventid": 11315390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100995
+    "Dsrid": 11109995
   },
   {
     "Locname": "RW: Boss Fog Wall - Artorias",
@@ -393,7 +393,7 @@
     "Eventid": 11215010,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100996
+    "Dsrid": 11109996
   },
   {
     "Locname": "UB: Boss Fog Wall - Capra Demon",
@@ -404,7 +404,7 @@
     "Eventid": 11015370,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100997
+    "Dsrid": 11109997
   },
   {
     "Locname": "UB: Boss Fog Wall - Taurus Demon",
@@ -415,7 +415,7 @@
     "Eventid": 11015380,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100998
+    "Dsrid": 11109998
   },
   {
     "Locname": "UP: Boss Fog Wall - Bell Gargoyles",
@@ -426,6 +426,6 @@
     "Eventid": 11015390,
     "Eventslot": 0,
     "Type": "BossFogWall",
-    "Dsrid": 11100999
+    "Dsrid": 11109999
   }
 ]
