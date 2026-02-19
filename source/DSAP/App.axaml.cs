@@ -1213,7 +1213,7 @@ public partial class App : Application
                 /* Check every second if player is in game again yet */
                 while(!SaveidSet || !MiscHelper.IsInGame() || !MiscHelper.CanPopupItems())
                 {
-                    await Task.Delay(200);
+                    await Task.Delay(1000);
                 }
 
                 Log.Logger.Warning($"Player once again detected as in game. Re-trying item receive.");
