@@ -40,6 +40,23 @@ class BossFogwallSanity(Toggle):
       Kalameet."""
     display_name = "Boss Fogwall Sanity" 
 
+class LogicToAccessCatacombs(Choice):
+    """Artificial logic for The Catacombs access. 
+     Before the chosen condition, The Catacombs will be considered "out of logic"
+
+    - **no_logic:** (not recommended) Catacombs is in-logic as soon as you get to Firelink Shrine.
+    - **undead_merchant:** Access to Undead Merchant in the Upper Undead Burg puts Catacombs in-logic.
+    - **andre:** Access to Andre puts Catacombs in-logic.
+    - **andre_or_undead_merchant:** Access to either Andre or Undead Merchant puts Catacombs in-logic.
+    - **ornstein_and_smough:** Access to Ornstein and Smough puts Catcombs in-logic."""
+    display_name = "Logic Requirement to Access Catacombs"
+    option_no_logic = 0
+    option_undead_merchant = 1
+    option_andre = 2
+    option_andre_or_undead_merchant = 3
+    option_ornstein_and_smough = 4
+    default = 3
+
 class UpgradedWeaponsPercentage(Range):
     """Percentage of weapons (including shields) in the pool that will be replaced with upgraded versions, if possible.
     Choose a higher value for an easier time."""
@@ -91,6 +108,9 @@ option_groups = [
         FogwallSanity,
         BossFogwallSanity,
         ]),
+    OptionGroup("Logic", [
+        LogicToAccessCatacombs,
+        ]),
     OptionGroup("Upgraded Weapons", [
         UpgradedWeaponsPercentage,
         UpgradedWeaponsAllowedInfusions,
@@ -108,6 +128,7 @@ class DSROption(PerGameCommonOptions):
     excluded_location_behavior: ExcludedLocationBehaviorOption
     fogwall_sanity: FogwallSanity
     boss_fogwall_sanity: BossFogwallSanity
+    logic_to_access_catacombs: LogicToAccessCatacombs
     upgraded_weapons_percentage: UpgradedWeaponsPercentage
     upgraded_weapons_allowed_infusions: UpgradedWeaponsAllowedInfusions
     upgraded_weapons_adjusted_levels : UpgradedWeaponsAdjustedLevels
