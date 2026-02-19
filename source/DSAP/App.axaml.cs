@@ -63,6 +63,7 @@ public partial class App : Application
     public static List<EmkController> EmkControllers = [];
     private static DarkSoulsClient dsrClient = null;
     private bool overlayInitialized = false;
+    private static uint connect_command_step = 0;
     private bool firstConnectionStarted = false;
 
     public override void Initialize()
@@ -113,6 +114,7 @@ public partial class App : Application
         if (command.StartsWith("/help"))
         {
             Log.Logger.Warning("--- DSAP commands: --- ");
+            Log.Logger.Warning(" /connect address:port - Alternative to the hamburger menu for specifying connection information.");
             Log.Logger.Warning("--- Informational --- ");
             Log.Logger.Warning(" /help - Display this menu.");
             Log.Logger.Warning(" /diag - Print out some diagnostic information.");
@@ -120,6 +122,9 @@ public partial class App : Application
             Log.Logger.Warning(" /fog [Locked/Unlocked/All] - Display list of locked or unlocked fog walls, or status of all of them (default).");
             Log.Logger.Warning(" /bossfog [Locked/Unlocked/All] - Display list of locked or unlocked boss fog walls, or status of all of them (default).");
             Log.Logger.Warning("--- Remedial --- ");
+            Log.Logger.Warning(" /unstuck   - Intended for when you cannot leave an area (e.g. PW or DA prison)");
+            Log.Logger.Warning("              Warps you to Firelink Shrine.");
+            Log.Logger.Warning("              Same as the UNSTUCK button in the hamburger menu / connection panel.");
             Log.Logger.Warning(" /goalcheck - Manually check if the goal has been completed, if for some reason it did not send.");
             Log.Logger.Warning("              Please report back with the screenshots + the resulting messages if you have to use this.");
             Log.Logger.Warning(" /warp [DLC/AP/FA] - warp to the DLC/Archives Prison/Firelink Altar if you've been locked out.");
@@ -128,6 +133,59 @@ public partial class App : Application
             Log.Logger.Warning(" /ripshow [All/Progression/None] - set which received item popups will show.");
             Log.Logger.Warning("--- End of DSAP commands. ---");
             Client?.SendMessage(a.Command); /* send original command through client for the rest of /help - maybe player will have something if they are an admin. */
+        }
+        else if (command.StartsWith("/connect") || connect_command_step != 0)
+        {
+            string[] cmdparts = command.Split(" ");
+            if (connect_command_step == 0)
+            {
+                if (cmdparts.Length == 1)
+                {
+                    Log.Logger.Warning(" /connect address:port - Connect to address:port.");
+                    Log.Logger.Warning("                         You will be prompted for a slotname.");
+                }
+                if (cmdparts.Length == 2)
+                {
+                    cmdparts = a.Command.Trim().Split(" "); // capitalization matters, so reset to actual case of the command
+                    string[] subcmdparts = cmdparts[1].Split("@");
+                    if (subcmdparts.Length == 1) // using format host:port
+                    {
+                        Context.Host = cmdparts[1];
+                        Log.Logger.Information("Enter your slotname.");
+                        connect_command_step = 1;
+                    }
+                    else if (subcmdparts.Length == 2) // using format slot@host:port    
+                    {
+                        Context.Host = subcmdparts[1];
+                        Context.Slot = subcmdparts[0];
+                        Context_ConnectClicked(sender, new ConnectClickedEventArgs { Host = Context.Host, Password = Context.Password, Slot = Context.Slot });
+                    }
+                }
+                else
+                    Log.Logger.Warning("invalid command - too many values specified!");
+            }
+            else 
+            {
+                if (command.StartsWith('/'))
+                {
+                    Log.Logger.Warning("Canceling connection flow.");
+                    connect_command_step = 0;
+                }
+                else
+                {
+                    cmdparts = a.Command.Trim().Split(" "); // capitalization matters, so reset to actual case of the command
+                    // Fill out remaining connection information and connect
+                    Context.Slot = cmdparts[0];
+                    if (cmdparts.Length > 1)
+                        Context.Password = cmdparts[1];
+                    // call connectClicked
+                    Context_ConnectClicked(sender, new ConnectClickedEventArgs { Host = Context.Host, Password = Context.Password, Slot = Context.Slot });
+                }
+            }
+        }
+        else if (command.StartsWith("/unstuck"))
+        {
+            Context_UnstuckClicked(sender, new EventArgs());
         }
         else if (command.StartsWith("/warp"))
         {
@@ -619,7 +677,7 @@ public partial class App : Application
     private async void Context_ConnectClicked(object? sender, ConnectClickedEventArgs e)
     {
         Context.ConnectButtonEnabled = false;
-
+        connect_command_step = 0;
         // debugging
         if (DEBUG_TXTLOG)
         {
