@@ -3,8 +3,8 @@
 ## **This implementation is still considered unstable/in alpha. Expect bugs and issues.**
 
 #### Table of Contents
-[How Randomization Works (upcoming)](#How-Randomization-Works (upcoming)) 
-[How Fogwall Sanity Works (important)](How-Fogwall-Sanity-Works)
+[How Randomization Works (upcoming)](#How-Randomization-Works (upcoming))  
+[How Fogwall Sanity Works (important)](How-Fogwall-Sanity-Works)  
 [Initial Setup](#Initial-Setup)  
 [Before you go back online](#Before-you-go-back-online)  
 [Usage](#Usage)  
