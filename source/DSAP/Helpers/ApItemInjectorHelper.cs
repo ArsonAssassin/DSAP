@@ -187,8 +187,8 @@ namespace DSAP.Helpers
             }
 
             ulong new_buffer = new_allocated_buffer + 0x10;
-            Log.Logger.Information($"Allocated {new_buffer_alloc_size} bytes at {new_allocated_buffer.ToString("X")}");
-            Log.Logger.Information($"Overwrite EquipParamGoods @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
+            Log.Logger.Debug($"Allocated {new_buffer_alloc_size} bytes at {new_allocated_buffer.ToString("X")}");
+            Log.Logger.Debug($"Overwrite EquipParamGoods @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
 
 
             /* Then, copy the header + pointer structs */
@@ -475,7 +475,7 @@ namespace DSAP.Helpers
             }
             // point to end of last old string
             ulong curr_end_loc = new_buffer + new_buffer_string_start_offset + (old_buffer_size - old_buffer_string_start_offset);
-            Log.Logger.Warning($"{msgsName} curr end loc = {curr_end_loc.ToString("X")}, size: {(curr_end_loc - new_buffer).ToString()}");
+            Log.Logger.Debug($"{msgsName} curr end loc = {curr_end_loc.ToString("X")}, size: {(curr_end_loc - new_buffer).ToString()}");
             ulong end_of_stroffs = new_buffer + new_buffer_stroff_start_offset + (4 * old_buffer_num_stroff_entries);
             for (uint i = 0; i < new_entries; i++)
             {

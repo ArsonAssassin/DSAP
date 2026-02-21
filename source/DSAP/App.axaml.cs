@@ -826,8 +826,8 @@ public partial class App : Application
         }
         else
         {
-            ItemLotHelper.SetItemLot();
-            ApItemInjectorHelper.ChangePrismStoneText();
+            //ItemLotHelper.SetItemLot();
+            //ApItemInjectorHelper.ChangePrismStoneText();
             //StartEventWatcher();
             //Helpers.ListItemLots();
         }
