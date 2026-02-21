@@ -944,8 +944,8 @@ location_tables = {
 ],
 "Demon Ruins - After Demon Firesage": [
     DSRLocationData(11110602, f"DR: Soul of a Brave Warrior - On Platform Below Roots to Centipede", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110419, f"DR: Soul of a Brave Warrior - Ruins/Domain shortcut", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110420, f"DR: Soul of a Brave Warrior - Chaos Door", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110419, f"DR: Soul of a Brave Warrior - Ruins/Domain Elevator", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110420, f"DR: Soul of a Brave Warrior - Chaos Covenant Door", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110421, f"DR: Demon Ruins - Catacombs lit", f"Demon Ruins - Catacombs lit", DSRLocationCategory.BONFIRE),
 ],
 "Demon Ruins - Centipede Demon": [
