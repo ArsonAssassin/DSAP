@@ -17,8 +17,8 @@
 [Location Groups](#Location-Groups)  
 [Item Groups](#Item-Groups)  
 [Artificial Logic Without Fogwall Locking](#Artificial-Logic-Without-Fogwall-Locking)  
-[Co-op Toleration](#Co-op-Toleration)
-[Contributors](#Contributors)
+[Co-op Toleration](#Co-op-Toleration)  
+[Contributors](#Contributors)  
 
 # How Randomization Works (upcoming)
 * Every loose item on the ground, and potentially fog walls, are "locations" or "checks". Some guaranteed drops are also locations, in addition to the White Sign Soapstone location from the first Solaire encounter.
