@@ -1,5 +1,5 @@
 # world/dsr/__init__.py
-from typing import Dict, Set, List, ClassVar, TextIO
+from typing import Dict, Set, List, ClassVar, TextIO, Any
 
 from BaseClasses import MultiWorld, Region, Item, Entrance, Tutorial, ItemClassification
 from Options import Toggle, OptionError
@@ -58,12 +58,21 @@ class DSRWorld(World):
     item_descriptions = item_descriptions
     location_name_groups = location_name_groups
     settings: ClassVar[DSRSettings]
+    # Start UT (Universal Tracker) support
+    # UT map import from poptracker support
     tracker_world: ClassVar = {
         "map_page_maps" : "maps/maps.json",
         "map_page_locations" : "locations/locations.json",
         "external_pack_key" : "ut_poptracker_path"
     }
-
+    # Tell UT we don't need a yaml
+    ut_can_gen_without_yaml = True
+    # Define function for it to get the options
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
+        # Trigger a regen in UT
+        return slot_data
+    # End UT support
     gc = 0
     bc = 0
 
@@ -79,6 +88,21 @@ class DSRWorld(World):
 
 
     def generate_early(self):
+        # Start UT yamlless support
+        re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+        if re_gen_passthrough and self.game in re_gen_passthrough:
+            # Get the passed through slot data from the real generation
+            slot_data: dict[str, Any] = re_gen_passthrough[self.game]
+
+            slot_options: dict[str, Any] = slot_data.get("options", {})
+            # Set all your options here instead of getting them from the yaml
+            for key, value in slot_options.items():
+                opt: Optional[Option] = getattr(self.options, key, None)
+                if opt is not None:
+                    # You can also set .value directly but that won't work if you have OptionSets
+                    setattr(self.options, key, opt.from_any(value))
+        # End UT yamlless support
+        
         # if upgrade level max < min, reverse them
         if self.options.upgraded_weapons_percentage.value > 0 and self.options.upgraded_weapons_max_level.value < self.options.upgraded_weapons_min_level.value:
             (self.options.upgraded_weapons_min_level, self.options.upgraded_weapons_max_level) = (self.options.upgraded_weapons_max_level, self.options.upgraded_weapons_min_level)
@@ -227,7 +251,7 @@ class DSRWorld(World):
             ]
         regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in our_regions})
        
-        print("created " + str(self.gc) + " real and "+ str(self.bc) + " fake locations")
+        print("DSR: created " + str(self.gc) + " real and "+ str(self.bc) + " fake locations")
 
         # Connect Regions
         def create_connection(from_region: str, to_region: str):
@@ -430,7 +454,7 @@ class DSRWorld(World):
                 if (location.category in [DSRLocationCategory.FOG_WALL, DSRLocationCategory.BOSS_FOG_WALL, 
                                           DSRLocationCategory.DOOR]):
                     default_item = "Nothing"
-                    print("Placing event: " + default_item + " in location: " + location.name)
+                    # print("Placing event: " + default_item + " in location: " + location.name)
 
                 # Replace non-randomized progression items with events
                 event_item = self.create_item(default_item)
@@ -545,8 +569,8 @@ class DSRWorld(World):
         filler_items = [item for item in itempool if item_dictionary[item.name].category in [DSRItemCategory.FILLER]]
         junk_items = [item for item in itempool if item.name in item_name_groups["Junk"]]
         removable_items = filler_items + junk_items
-        print("leftover removable items: " + str(len(removable_items)))
-        print("leftover filler items: " + str(len(filler_items)))
+        # print("leftover removable items: " + str(len(removable_items)))
+        # print("leftover filler items: " + str(len(filler_items)))
 
         for item in removable_items:
             # print("removable item: " + item.name)
