@@ -71,6 +71,7 @@ namespace DSAP.Helpers
                 if (Pointer != nint.Zero)
                 {
                     ulong result = Memory.ReadULong((ulong)_pointer);
+                    //Log.Logger.Warning($"aob {Key} @ {_pointer}");
                     return (nint)result;
                 }
                 return nint.Zero;

@@ -18,33 +18,37 @@ namespace DSAP.Helpers
             HashSet<Tuple<int, int>> ExistingEvents = [];
 
             ulong eventhead_ptr = AddressHelper.GetEmkHeadAddress();
+            int numevents = 0;
             if (eventhead_ptr != prevEventHeadPtr)
                 Log.Logger.Debug($"eventheadptr changed from {prevEventHeadPtr.ToString("X")} to {eventhead_ptr.ToString("X")}");
-            ulong eventhead = Memory.ReadULong((ulong)eventhead_ptr);
-            if (eventhead != prevEventHead)
-                Log.Logger.Debug($"eventhead changed from {prevEventHead.ToString("X")} to {eventhead.ToString("X")}");
-            prevEventHead = eventhead;
-            prevEventHeadPtr = eventhead_ptr;
-
-            // read every event into the hashset
-            // detect number of differences
-            int numevents = 0;
-            for (ulong thisEmk = eventhead; thisEmk != 0; thisEmk = Memory.ReadULong((ulong)thisEmk + 0x68))
+            if (eventhead_ptr != 0)
             {
+                ulong eventhead = Memory.ReadULong((ulong)eventhead_ptr);
+                if (eventhead != prevEventHead)
+                    Log.Logger.Debug($"eventhead changed from {prevEventHead.ToString("X")} to {eventhead.ToString("X")}");
+                prevEventHead = eventhead;
+                prevEventHeadPtr = eventhead_ptr;
 
-                numevents++;
-                if (numevents > 2000)
+                // read every event into the hashset
+                // detect number of differences => numevents
+                for (ulong thisEmk = eventhead; thisEmk != 0; thisEmk = Memory.ReadULong((ulong)thisEmk + 0x68))
                 {
-                    Log.Logger.Warning($"c events:{numevents}");
-                    Log.Logger.Warning($"thisemk = :{thisEmk.ToString("X")}");
-                    break;
+
+                    numevents++;
+                    if (numevents > 2000)
+                    {
+                        Log.Logger.Warning($"c events:{numevents}");
+                        Log.Logger.Warning($"thisemk = :{thisEmk.ToString("X")}");
+                        break;
+                    }
+
+                    int eventid = Memory.ReadInt(thisEmk + 0x30);
+                    int eventslot = Memory.ReadByte(thisEmk + 0x34);
+
+                    ExistingEvents.Add(new Tuple<int, int>(eventid, eventslot));
                 }
-
-                int eventid = Memory.ReadInt(thisEmk + 0x30);
-                int eventslot = Memory.ReadByte(thisEmk + 0x34);
-
-                ExistingEvents.Add(new Tuple<int, int>(eventid, eventslot));
             }
+            
 
             if (!ExistingEvents.SetEquals(PrevEvents))
             {
@@ -155,7 +159,7 @@ namespace DSAP.Helpers
                     for (ulong thisEmk = eventhead; thisEmk != 0; thisEmk = Memory.ReadULong((ulong)thisEmk + 0x68))
                     {
                         bool updatedEmk = true;
-                        while (thisEmk != null && updatedEmk) // loop as long as we are pulling off events
+                        while (thisEmk != 0 && updatedEmk) // loop as long as we are pulling off events
                         {
                             updatedEmk = false;
                             numevents++;
@@ -194,7 +198,7 @@ namespace DSAP.Helpers
                                 }
                             }
                         }
-                        if (thisEmk == null) // reached end of list
+                        if (thisEmk == 0) // reached end of list
                             break;
                         prevptr = thisEmk + 0x68; // save address of previous node's last spot when we move on.
                     }
