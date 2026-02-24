@@ -3,7 +3,7 @@
 ## **This implementation is still considered unstable/in alpha. Expect bugs and issues.**
 
 #### Table of Contents
-[How Randomization Works (upcoming)](#How-Randomization-Works (upcoming))  
+[How Randomization Works](#How-Randomization-Works)  
 [How Fogwall Sanity Works (important)](How-Fogwall-Sanity-Works)  
 [Initial Setup](#Initial-Setup)  
 [Before you go back online](#Before-you-go-back-online)  
@@ -20,7 +20,7 @@
 [Co-op Toleration](#Co-op-Toleration)  
 [Contributors](#Contributors)  
 
-# How Randomization Works (upcoming)
+# How Randomization Works
 * Every loose item on the ground, and potentially fog walls, are "locations" or "checks". Some guaranteed drops are also locations, in addition to the White Sign Soapstone location from the first Solaire encounter.
 * All items in those locations will be shuffled into the randomized multiworld Item Pool. This means they can be found elsewhere, and that the items at those locations will themselves be replaced by other items in the Item Pool.
 * All keys and progression items (e.g. Lordvessel) will be forced into the Item Pool, unless they drop or are shoppable from non-randomized locations.
@@ -120,7 +120,7 @@
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
-## Version 0.0.22.0 (upcoming)
+## Version 0.0.22.0
 * Version update -> 0.0.22.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
 * Feature: The Item Pool is now generated based on the vanilla item pool, with slight modifications. You can actually get rings, and the Zweihander now! You can expect to get less Soul items / less souls from the average soul item as v0.0.21 and lower.
 * Feature: See received items! Item popups will now appear for items received by other players. You can disable showing the popup for non-progression or all items via the `/rippopup` text command in DSAP (see `/help` for details)
