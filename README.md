@@ -84,7 +84,7 @@
 
 # Compatibility
 * This version has been tested with Dark Souls Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.5. 
-* v0.0.22.0 (upcoming release) and above: Linux may work but has not been thoroughly tested
+* Linux, even through Proton/Wine, is not yet supported
 
 # Frequently Asked Questions (FAQ)
 * Q: Can I use this with seamless co-op?
@@ -94,7 +94,7 @@
 * Q: Does this work with Prepare to Die edition?
   * A: No, The current release only works with Dark Souls Remastered. There may be potential to make it compatible with PTDE but not until we are feature-complete on remastered, as there isn't a way to legally obtain a new copy of PTDE anymore.
 * Q: Does this work on Linux?
-  * A: As of v0.0.22.0 (upcoming release), maybe! It has not been thoroughly tested.
+  * A: Not yet. We plan to enable it by having DSAP and DSR run together within Proton, but **critical parts of that setup are not yet working**.
 * Q: Can I randomized starting gear? 
   * A: Not yet - this is planned for the future. Currently, it is recommended to create your character before connecting with the DSAP client.
 * Q: Is there a tracker?
@@ -129,19 +129,19 @@
 * Feature: "Excluded Location Behavior" yaml option added, to allow for not randomizing excluded areas at all, instead of just making them have non-priority, non-useful randomized items.
 * Feature: No more need to immediately battle through the difficult Catacombs immediately! Added yaml option `logic_to_access_catacombs`, which allows you to add additional conditions to catacombs logical access - via access to Andre, Undead Merchant (in Undead Burg), or Ornstein and Smough. Default is access to either Andre or the Undead Merchant.
 * Feature: Yaml-less Universal Tracker (UT) support.
+* Update: Doors checks have been removed (for now). They may be re-introduced in the future with a "door sanity" type of option.
 * Update: Yaml options simplified - Fogwall Lock and Fogwall Sanity options combined into just Fogwall Sanity (same for the Boss equivalents).
 * Update: Yaml option for "Locked Undead Asylum Fog Wall" was removed, and not folded into any other option. It too quickly caused BK mode.
 * Update: Yaml option for "Singular Boss Souls" was removed, due to being irrelevant.
 * Update: Yaml option for "Enable Master Key" was removed, due to being confusing. It is possible to add it into the pool via the Guaranteed Items option.
 * Update: Added multiple text commands to the client: `/connect`, `/unstuck`, a limited `/warp` command for re-accessing blocked areas, `/rippopup` for limiting popups for items received from other games.
 * Update: Saves will now keep track of the slot (and generated seed) they last connected to, and warn player if they the save you load into was both 1) made by a v0.0.22+ client and 2) previously connected to a different slot (and seed). This should help guard against accidentally sending the checks completed by a save which was used for a different generated multiworld. Does not protect against this when loading v0.0.21 and lower saves.
-* Update: Initial Linux support. Not thoroughly tested.
 * Fix: Account for shop items and un-randomized drops being in logic, instead of also adding them to the pool.
 * Fix: Logic - Golden fogwalls no longer considered clearable until you can actually *place* the Lordvessel.
-* Fix: Location name: Renamed DR: `DR: Soul of a Brave Warrior - Ruins/Domain Shortcut` to `DR: Soul of a Brave Warrior - Ruins/Domain Elevator` for clarity
-* Fix: Location name: Renamed DR: `DR: Soul of a Brave Warrior - Chaos Door` to `DR: Soul of a Brave Warrior - Chaos Covenant Door`
+* Fix: Location name: Renamed `DR: Soul of a Brave Warrior - Ruins/Domain Shortcut` to `DR: Soul of a Brave Warrior - Ruins/Domain Elevator` for clarity
+* Fix: Location name: Renamed `DR: Soul of a Brave Warrior - Chaos Door` to `DR: Soul of a Brave Warrior - Chaos Covenant Door`
 * Fix: DLC Boss Fogs now made to work correctly.
-* Fix: Broken Pendant and Duke's Archives Cell Key should now only be in their vanilla locations, instead of also randomized into the Item Pool.
+* Fix: Broken Pendant, Duke's Archives Cell Key, Residence Key, Crest of Artorias, and Covenant of Artorias should now only be in their vanilla locations, instead of also randomized into the Item Pool.
 * Fix: Some improvements to client behavior after reconnection to AP Server.
 * Fix: Massive reduction of bandwidth and game data storage usage
 * Fix: Pressing `Enter` while in the client text box will now submit text commands.
