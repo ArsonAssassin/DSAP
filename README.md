@@ -3,7 +3,7 @@
 ## **This implementation is still considered unstable/in alpha. Expect bugs and issues.**
 
 #### Table of Contents
-[How Randomization Works (upcoming)](#How-Randomization-Works (upcoming))  
+[How Randomization Works](#How-Randomization-Works)  
 [How Fogwall Sanity Works (important)](How-Fogwall-Sanity-Works)  
 [Initial Setup](#Initial-Setup)  
 [Before you go back online](#Before-you-go-back-online)  
@@ -20,7 +20,7 @@
 [Co-op Toleration](#Co-op-Toleration)  
 [Contributors](#Contributors)  
 
-# How Randomization Works (upcoming)
+# How Randomization Works
 * Every loose item on the ground, and potentially fog walls, are "locations" or "checks". Some guaranteed drops are also locations, in addition to the White Sign Soapstone location from the first Solaire encounter.
 * All items in those locations will be shuffled into the randomized multiworld Item Pool. This means they can be found elsewhere, and that the items at those locations will themselves be replaced by other items in the Item Pool.
 * All keys and progression items (e.g. Lordvessel) will be forced into the Item Pool, unless they drop or are shoppable from non-randomized locations.
@@ -120,10 +120,10 @@
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
-## Version 0.0.22.0 (upcoming)
+## Version 0.0.22.0
 * Version update -> 0.0.22.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
-* Feature: The Item Pool is now generated based on the vanilla item pool, with slight modifications. You can actually get rings, and the Zweihander now! You can expect to get less Soul items / less souls from the average soul item as v0.0.21 and lower.
-* Feature: See received items! Item popups will now appear for items received by other players. You can disable showing the popup for non-progression or all items via the `/rippopup` text command in DSAP (see `/help` for details)
+* Feature: The Item Pool is now generated based on the vanilla item pool, with slight modifications. You can actually get rings, and the Zweihander now! You can expect to get less Soul items / less souls from the average soul item compared to v0.0.21 and lower.
+* Feature: See received items! Item popups will now appear for items received by other players. You can disable showing the popup for non-progression or all items via the `/ripshow` text command in DSAP (see `/help` for details)
 * Feature: See sent items! AP Items as DSR Items: Items for other players, and your own Fog Wall Keys now show what they are in the standard in-game item popup, instead of showing up as prism stones. And no more of those stones weighing down your bag! They do still *look* like prism stones, though.
 * Feature/Fix: Multi-save support! Now you (or somebody else!) can start a new character on your slot without risk of losing items! Note: Most local items will still have to be re-acquired in the new save. Same-slot seamless co-op play may also be possible (not thoroughly tested) - see the [Co-op Toleration](#Co-op-Toleration) section below.
 * Feature: "Excluded Location Behavior" yaml option added, to allow for not randomizing excluded areas at all, instead of just making them have non-priority, non-useful randomized items.
@@ -134,8 +134,8 @@
 * Update: Yaml option for "Locked Undead Asylum Fog Wall" was removed, and not folded into any other option. It too quickly caused BK mode.
 * Update: Yaml option for "Singular Boss Souls" was removed, due to being irrelevant.
 * Update: Yaml option for "Enable Master Key" was removed, due to being confusing. It is possible to add it into the pool via the Guaranteed Items option.
-* Update: Added multiple text commands to the client: `/connect`, `/unstuck`, a limited `/warp` command for re-accessing blocked areas, `/rippopup` for limiting popups for items received from other games.
-* Update: Saves will now keep track of the slot (and generated seed) they last connected to, and warn player if they the save you load into was both 1) made by a v0.0.22+ client and 2) previously connected to a different slot (and seed). This should help guard against accidentally sending the checks completed by a save which was used for a different generated multiworld. Does not protect against this when loading v0.0.21 and lower saves.
+* Update: Added multiple text commands to the client: `/connect`, `/unstuck`, a limited `/warp` command for re-accessing blocked areas, `/ripshow` for limiting popups for items received from other games.
+* Update: Saves will now keep track of the slot (and generated seed) they last connected to, and warn player if the save they load into was both 1) made by a v0.0.22+ client and 2) previously connected to a different slot (and seed). This should help guard against accidentally sending the checks completed by a save which was used for a different generated multiworld. Does not protect against this when loading v0.0.21 and lower saves.
 * Fix: Account for shop items and un-randomized drops being in logic, instead of also adding them to the pool.
 * Fix: Logic - Golden fogwalls no longer considered clearable until you can actually *place* the Lordvessel.
 * Fix: Location name: Renamed `DR: Soul of a Brave Warrior - Ruins/Domain Shortcut` to `DR: Soul of a Brave Warrior - Ruins/Domain Elevator` for clarity
