@@ -135,7 +135,7 @@
 * Update: Yaml option for "Singular Boss Souls" was removed, due to being irrelevant.
 * Update: Yaml option for "Enable Master Key" was removed, due to being confusing. It is possible to add it into the pool via the Guaranteed Items option.
 * Update: Added multiple text commands to the client: `/connect`, `/unstuck`, a limited `/warp` command for re-accessing blocked areas, `/rippopup` for limiting popups for items received from other games.
-* Update: Saves will now keep track of the slot (and generated seed) they last connected to, and warn player if they the save you load into was both 1) made by a v0.0.22+ client and 2) previously connected to a different slot (and seed). This should help guard against accidentally sending the checks completed by a save which was used for a different generated multiworld. Does not protect against this when loading v0.0.21 and lower saves.
+* Update: Saves will now keep track of the slot (and generated seed) they last connected to, and warn player if the save they load into was both 1) made by a v0.0.22+ client and 2) previously connected to a different slot (and seed). This should help guard against accidentally sending the checks completed by a save which was used for a different generated multiworld. Does not protect against this when loading v0.0.21 and lower saves.
 * Fix: Account for shop items and un-randomized drops being in logic, instead of also adding them to the pool.
 * Fix: Logic - Golden fogwalls no longer considered clearable until you can actually *place* the Lordvessel.
 * Fix: Location name: Renamed `DR: Soul of a Brave Warrior - Ruins/Domain Shortcut` to `DR: Soul of a Brave Warrior - Ruins/Domain Elevator` for clarity
