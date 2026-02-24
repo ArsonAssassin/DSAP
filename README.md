@@ -138,10 +138,10 @@
 * Update: Saves will now keep track of the slot (and generated seed) they last connected to, and warn player if they the save you load into was both 1) made by a v0.0.22+ client and 2) previously connected to a different slot (and seed). This should help guard against accidentally sending the checks completed by a save which was used for a different generated multiworld. Does not protect against this when loading v0.0.21 and lower saves.
 * Fix: Account for shop items and un-randomized drops being in logic, instead of also adding them to the pool.
 * Fix: Logic - Golden fogwalls no longer considered clearable until you can actually *place* the Lordvessel.
-* Fix: Location name: Renamed DR: `DR: Soul of a Brave Warrior - Ruins/Domain Shortcut` to `DR: Soul of a Brave Warrior - Ruins/Domain Elevator` for clarity
-* Fix: Location name: Renamed DR: `DR: Soul of a Brave Warrior - Chaos Door` to `DR: Soul of a Brave Warrior - Chaos Covenant Door`
+* Fix: Location name: Renamed `DR: Soul of a Brave Warrior - Ruins/Domain Shortcut` to `DR: Soul of a Brave Warrior - Ruins/Domain Elevator` for clarity
+* Fix: Location name: Renamed `DR: Soul of a Brave Warrior - Chaos Door` to `DR: Soul of a Brave Warrior - Chaos Covenant Door`
 * Fix: DLC Boss Fogs now made to work correctly.
-* Fix: Broken Pendant and Duke's Archives Cell Key should now only be in their vanilla locations, instead of also randomized into the Item Pool.
+* Fix: Broken Pendant, Duke's Archives Cell Key, Residence Key, Crest of Artorias, and Covenant of Artorias should now only be in their vanilla locations, instead of also randomized into the Item Pool.
 * Fix: Some improvements to client behavior after reconnection to AP Server.
 * Fix: Massive reduction of bandwidth and game data storage usage
 * Fix: Pressing `Enter` while in the client text box will now submit text commands.
