@@ -114,6 +114,7 @@ stages:
           # Update both version properties
           $csproj.Project.PropertyGroup.ApplicationVersion = $newVersion
           $csproj.Project.PropertyGroup.ApplicationDisplayVersion = $newVersion
+          $csproj.Project.PropertyGroup.Version = $newVersion
           $csproj.Save($csprojPath.FullName)
           
           # Set version for later tasks
