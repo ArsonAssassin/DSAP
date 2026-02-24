@@ -257,7 +257,7 @@ stages:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(solution)'
+        projects: '**/source/DSAP.Desktop/DSAP.Desktop.csproj'
         arguments: '-c Release -r win-x64 --self-contained true -p:PublishSingleFile=true'
         zipAfterPublish: false
     - task: DotNetCoreCLI@2
@@ -265,7 +265,7 @@ stages:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(solution)'
+        projects: '**/source/DSAP.Desktop/DSAP.Desktop.csproj'
         arguments: '-c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true'
         zipAfterPublish: false
     - task: DotNetCoreCLI@2
@@ -273,7 +273,7 @@ stages:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(solution)'
+        projects: '**/source/DSAP.Desktop/DSAP.Desktop.csproj'
         arguments: '-c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true'
         zipAfterPublish: false
     - task: DotNetCoreCLI@2
@@ -281,7 +281,7 @@ stages:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(solution)'
+        projects: '**/source/DSAP.Desktop/DSAP.Desktop.csproj'
         arguments: '-c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true'
         zipAfterPublish: false
     - task: PowerShell@2
