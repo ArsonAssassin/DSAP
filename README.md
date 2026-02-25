@@ -103,6 +103,7 @@
 
 # Known issues
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings. Randomized starting gear, and potentially gifts, is planned for the future.
+* v0.0.22.0: Crashes, incorrect items when too many non-local items are located within DSR, due to incorrectly built item params. Upgrade client to v0.0.22.1 (apworld is unchanged, same as v0.0.22.0).
 * v0.0.21.0: Dispeling of Golden fogwalls inconcorrectly considered in logic once player had Lordvessel, even if it cannot be placed at Firelink Altar.
 * v0.0.21.0: Boss fog walls in the DLC do not correctly "Lock" with boss fog wall locks on.
 * v0.0.21.0 and lower: Once a save receives an item from the server, it cannot be re-received to a new save or different player. Fixed with v0.0.22.0 (`Multi-save support!`).
@@ -120,6 +121,10 @@
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
+## Version 0.0.22.1 (Client Hotfix)
+* Client Version update -> 0.0.22.1. Fully compatible with 0.0.22.0 worlds, but not compatible with apworlds at or below v0.0.21.
+* Apworld is unchanged.
+* Fix: Crashes, incorrect items when too many non-local items are located within DSR, due to incorrectly built item params.
 ## Version 0.0.22.0
 * Version update -> 0.0.22.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
 * Feature: The Item Pool is now generated based on the vanilla item pool, with slight modifications. You can actually get rings, and the Zweihander now! You can expect to get less Soul items / less souls from the average soul item compared to v0.0.21 and lower.
