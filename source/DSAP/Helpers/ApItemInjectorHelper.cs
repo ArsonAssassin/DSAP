@@ -173,7 +173,7 @@ namespace DSAP.Helpers
             ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
 
             ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
-            uint new_buffer_string_offset = (ushort)(old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
+            uint new_buffer_string_offset = (old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
             uint addl_str_length = (uint)addedEntries.Aggregate(0, (total, x) => total + x.Value.Length + 1);
             uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
 
