@@ -120,236 +120,69 @@ namespace DSAP.Helpers
 
         private static bool upgradeGoods(List<KeyValuePair<long, string>> addedEntries)
         {
-            ulong resCap = Memory.ReadULong((ulong)(AddressHelper.SoloParamAob.Address + 0xF0));
-            uint old_buffer_size = Memory.ReadUInt(resCap + 0x30);
-            ulong old_buffer = Memory.ReadULong(resCap + 0x38);
-            ushort old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
-
-            /* first, read highest numbered param in list */
-            uint highest_id = Memory.ReadUInt(old_buffer + (ulong)(0x30 + ((old_buffer_num_entries - 1) * 0xc)));
-            if (addedEntries.First().Key <= highest_id)
+            // Read in the Param Structure (ParamSt),
+            // Modify it,
+            // Then save it back
+            bool success = ParamHelper.ReadFromBytes(out ParamSt<EquipGoodsParam> paramStruct, ParamHelper.EquipParamGoods_offset);
+            if (!success)
             {
-                Log.Logger.Warning($"Warning: Highest id in params detected as {highest_id}, >= one of our entries.");
-                Log.Logger.Warning($"Checking if params and msgs have already been updated...");
-
-                uint old_end_buffer_offset = old_buffer_size + (uint)(0x8 * old_buffer_num_entries) + 0xf;
-                ulong old_desc_area_loc = old_buffer + old_end_buffer_offset;
-                Log.Logger.Verbose($"old desc area loc: {old_desc_area_loc}");
-                DescArea old_desc_area = Memory.ReadObject<DescArea>(old_desc_area_loc);
-                Log.Logger.Debug("Read object: " + old_desc_area.ToString());
-                bool requires_reload = ValidateDescArea(old_desc_area, "EquipParamGoods");
-                if (requires_reload)
+                Log.Logger.Error("Error loading Goods Params");
+            }
+            if (paramStruct.DescArea != null)
+            {
+                bool reloadRequired = MiscHelper.ValidateDescArea(paramStruct.DescArea, "EquipParamGoods");
+                if (!reloadRequired)
                 {
-                    //int intermediate_buffer_size = old_desc_area.FullAllocLength;
-                    ulong intermediate_buffer_loc = old_buffer;
-                    // desc size 4, full alloc length 4, old address 8, old length 4, seed hash 4, slot 4
-                    // reset old buffer values
-                    old_buffer = old_desc_area.OldAddress;
-                    old_buffer_size = (uint)old_desc_area.OldLength;
-                    old_buffer_num_entries = Memory.ReadUShort(old_buffer + 0xA);
-
-                    /* Switch out the pointer so deallocated area isn't accessed by the game */
-                    Memory.Write(resCap + 0x30, old_buffer_size);
-                    Memory.Write(resCap + 0x38, old_buffer);
-
-                    // dealloc previously swapped-in area
-                    Memory.FreeMemory((nint)(intermediate_buffer_loc - 0x10));
-                    Log.Logger.Warning("Reloading EquipGoodsParams");
-                }
-                else
-                {
-                    Log.Logger.Information("EquipGoodsParams replacement not needed - skipping");
+                    Log.Logger.Debug("Not updating Goods Params. Either it was already updated, or there was an error.");
                     return false;
                 }
-
+                Log.Logger.Information("Reloading Goods Params");
             }
-
-            uint old_buffer_string_offset = Memory.ReadUInt(old_buffer + 0x0);
-            ushort old_buffer_params_offset = Memory.ReadUShort(old_buffer + 0x4);
+            // if we are here, we are updating the params.
 
             ushort new_entries = (ushort)addedEntries.Count();
 
             uint goods_param_size = 0x5c;
-            ushort new_buffer_num_entries = (ushort)(old_buffer_num_entries + new_entries);
 
-            ushort new_buffer_params_offset = (ushort)(old_buffer_params_offset + (0xc * new_entries));
-            uint new_buffer_string_offset = (old_buffer_string_offset + ((0xc + goods_param_size) * new_entries));
-            uint addl_str_length = (uint)addedEntries.Aggregate(0, (total, x) => total + x.Value.Length + 1);
-            uint new_endtable_size = (uint)(0x8 * new_buffer_num_entries);
+            // Get first entry's Param (e.g. White Sign Soapstone), use it as basis for new params.
+            byte[] parambytes = new byte[EquipGoodsParam.Size];
+            Array.Copy(paramStruct.ParamBytes, paramStruct.ParamEntries[0].paramOffset, parambytes, 0, parambytes.Length);
 
-            uint new_buffer_size = (uint)(old_buffer_size + addl_str_length + (0xc + goods_param_size) * new_entries);
-            uint new_buffer_alloc_size = (uint)(0x10 + new_buffer_size + (0x8 * new_buffer_num_entries) + 0xf + DescArea.size); // ensure enough for the binary search table and the prologue
-
-            ulong new_allocated_buffer = 0;
-            lock (_memAllocLock)
-            {
-                new_allocated_buffer = (ulong)Memory.Allocate(new_buffer_alloc_size);
-            }
-
-            ulong new_buffer = new_allocated_buffer + 0x10;
-            Log.Logger.Debug($"Allocated {new_buffer_alloc_size} bytes at {new_allocated_buffer.ToString("X")}");
-            Log.Logger.Debug($"Overwrite EquipParamGoods @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
-
-
-            /* Then, copy the header + pointer structs */
-            byte[] basebytes = Memory.ReadByteArray(old_buffer, old_buffer_params_offset);
-            Memory.WriteByteArray(new_buffer, basebytes);
-            /* Then, copy the params */
-            uint old_buffer_params_length = (uint)(goods_param_size * old_buffer_num_entries);
-            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)old_buffer_params_length);
-            Memory.WriteByteArray(new_buffer + new_buffer_params_offset, basebytes2);
-            /* Then, copy the strings */
-            uint old_buffer_strings_length = old_buffer_size - old_buffer_string_offset;
-            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_offset, (int)old_buffer_strings_length);
-            Memory.WriteByteArray(new_buffer + new_buffer_string_offset, basebytes3);
-
-            /* old buffer ends on the last string - last null terminator (shift-jis) */
-            byte[] parambytes = Memory.ReadByteArray(old_buffer + old_buffer_params_offset, (int)goods_param_size);
             parambytes[0x36] = 99; // max num
             parambytes[0x3a] = 1; // goods type = key
             parambytes[0x3b] = 0; // ref category = like key
             parambytes[0x3e] = 0; // use animation = 0
-            // Is Only One?
-            // Is Deposit?
-            ulong new_string_loc = new_buffer + new_buffer_string_offset + old_buffer_strings_length;
+                                  // Is Only One?
+                                  // Is Deposit?
 
-            // fix old entries' offsets
-            for (uint i = 0; i < old_buffer_num_entries; i++)
-            {
-                ulong currloc = new_buffer + 0x30 + i * 0xc;
-                uint poff = Memory.ReadUInt(currloc + 0x4);
-                uint soff = Memory.ReadUInt(currloc + 0x8);
-                poff = (uint)(poff + (0xc * new_entries));
-                soff = soff + (0xc + goods_param_size) * new_entries;
-                Memory.Write(currloc + 0x4, poff);
-                Memory.Write(currloc + 0x8, soff);
-            }
-
-            /* then add the new pointer structs, params, and strings, and pointers to each. */
+            // For each new item, "Add Item" to ParamSt
             for (uint i = 0; i < new_entries; i++)
             {
                 var entry = addedEntries.ToArray()[i];
-                byte[] stringbytes = Encoding.ASCII.GetBytes($"{entry.Value}\0");
                 uint newid = (uint)entry.Key;
+                byte[] stringbytes = Encoding.ASCII.GetBytes($"{entry.Value}\0");
                 // set sort bytes in param based on id - not sure if this is grabbing top or bottom 2 bytes!! But filling all 4 put the items at the top instead.
                 byte[] idbytes = BitConverter.GetBytes(newid);
-                parambytes[0x1c] = idbytes[0];
-                parambytes[0x1d] = idbytes[1];
+                parambytes[0x1c] = idbytes[0]; // sort byte 0
+                parambytes[0x1d] = idbytes[1]; // sort byte 1
                 //parambytes[0x1e] = idbytes[2];
                 //parambytes[0x1f] = idbytes[3];
                 byte[] iconbytes = BitConverter.GetBytes((short)2042);
-                parambytes[0x2c] = iconbytes[0];
-                parambytes[0x2d] = iconbytes[1];
+                parambytes[0x2c] = iconbytes[0]; // icon byte 0
+                parambytes[0x2d] = iconbytes[1]; // icon byte 1
                 parambytes[0x45] |= (byte)(0x30); // turn on isDrop and isDeposit bits
-
-                ulong currloc = new_buffer + old_buffer_params_offset + i * 0xc;
-                Memory.Write(currloc + 0x0, newid);
-
-                ulong new_param_loc = new_buffer + new_buffer_params_offset + (old_buffer_num_entries + i) * goods_param_size;
-                Memory.WriteByteArray(new_param_loc, parambytes);
-                Memory.Write(currloc + 0x4, new_param_loc - new_buffer);
-
-                Memory.WriteByteArray(new_string_loc, stringbytes);
-                Memory.Write(currloc + 0x8, new_string_loc - new_buffer);
-                new_string_loc += (uint)stringbytes.Length;
+                // This will add the item to the array, and append its string to the NewString buffer
+                paramStruct.addParam(newid, parambytes, stringbytes);
             }
+
             Log.Logger.Information($"Added {new_entries} items to EquipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
 
-            ulong post_string_loc = new_string_loc;
-            ulong saved_len = post_string_loc - new_buffer;
-            /* Then fix up the offsets */
-            Memory.Write(new_buffer + 0x0, new_buffer_string_offset);
-            Memory.Write(new_buffer + 0x4, new_buffer_params_offset);
-            Memory.Write(new_buffer + 0xA, new_buffer_num_entries);
+            ParamHelper.WriteFromParamSt(paramStruct, ParamHelper.EquipParamGoods_offset);
 
-            //Memory.Write(new_allocated_buffer, new_buffer_size);
-            Memory.Write(new_allocated_buffer, saved_len);
-
-            // copy over the endtable
-            ulong new_endtable_loc = new_buffer + ((saved_len + 0xf) & 0xFFFFFFFFFFFFFFF0);
-            ulong old_endtable_loc = old_buffer + ((old_buffer_size + 0xf) & 0xFFFFFFFFFFFFFFF0);
-            byte[] old_endtable = Memory.ReadByteArray(old_endtable_loc, 8 * old_buffer_num_entries);
-            Memory.WriteByteArray(new_endtable_loc, old_endtable);
-            // add our new entries to the endtable (binary search table)
-            for (uint i = 0; i < new_entries; i++)
-            {
-                var entry = addedEntries.ToArray()[i];
-                uint newid = (uint)entry.Key;
-                ulong curr_endtable_loc = new_endtable_loc + 8 * (i + old_buffer_num_entries);
-                Memory.Write(curr_endtable_loc, newid);
-                Memory.Write(curr_endtable_loc + 0x4, old_buffer_num_entries + i);
-            }
-            // end of data
-
-            // add desc area to end
-            uint end_buffer_offset = new_buffer_size + (uint)(0x8 * new_buffer_num_entries) + 0xf;
-            ulong desc_area_loc = new_buffer + end_buffer_offset;
-            Log.Logger.Verbose($"new desc area loc: {desc_area_loc}");
-            var seedHash = MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed);
-            var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
-
-            var new_desc_area = new DescArea((int)new_buffer_alloc_size, old_buffer, (int)old_buffer_size, seedHash, slot);
-            Memory.WriteObject<DescArea>(desc_area_loc, new_desc_area);
-            // end of data + metadata
-
-
-            /* Then switch out the pointer */
-            Memory.Write(resCap + 0x38, new_buffer);
-            Memory.Write(resCap + 0x30, saved_len);
             return true;
         }
 
-        private static bool ValidateDescArea(DescArea descArea, string checkArea)
-        {
-            bool requires_reload = false;
-            if (descArea.DescSize >= DescArea.size)
-            {
-                int old_slot = descArea.Slot;
-
-                if (descArea.SeedHash != MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed)) // different seed
-                {
-                    if (MiscHelper.IsInGame())
-                    {
-                        App.Client.AddOverlayMessage($"Error - check the client log");
-                        Log.Logger.Error("Different seed detected than your previous connection to Archipelago.");
-                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
-                        return false;
-                    }
-                    else
-                    {
-                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
-                        return true;
-                    }
-
-
-                }
-                else if (old_slot != App.Client.CurrentSession.ConnectionInfo.Slot) // different slot
-                {
-                    if (MiscHelper.IsInGame())
-                    {
-                        App.Client.AddOverlayMessage($"Error - check the client log");
-                        Log.Logger.Error("Different slotdetected than your previous connection to Archipelago.");
-                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
-                        return false;
-                    }
-                    else
-                    {
-                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
-                        return true;
-                    }
-                }
-                else // seed and slot checked out fine. Looks good, no need to reload.
-                {
-                    return false;
-                }
-            }
-            else // desc area too small
-            {
-                Log.Logger.Error($"Unknown metadata size detected on {checkArea}. A different mod may be interfering.");
-                Log.Logger.Error("Try restarting DSR without other mods.");
-                return false;
-            }
-        }
+        
 
         private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings, string msgsName)
         {
@@ -391,7 +224,7 @@ namespace DSAP.Helpers
                 Log.Logger.Verbose($"{msgsName} old desc area loc: {desc_area_loc.ToString("X")}, size: {old_buffer_size.ToString()}");
                 DescArea old_desc_area = Memory.ReadObject<DescArea>(desc_area_loc);
                 Log.Logger.Debug("Read object: " + old_desc_area.ToString() + " from " + desc_area_loc.ToString("X"));
-                bool update_required = ValidateDescArea(old_desc_area, msgsName);
+                bool update_required = MiscHelper.ValidateDescArea(old_desc_area, msgsName);
                 if (update_required)
                 {
                     ulong intermediate_buffer_loc = old_buffer; // save "swapped-in area" ptr
