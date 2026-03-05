@@ -1,17 +1,13 @@
 ﻿using Archipelago.Core.Util;
-using Avalonia.Media;
-using ReactiveUI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DSAP.Models
 {
     /* Item lots as they are written into memory */
-    internal class ItemLotParam
+    internal class ItemLotParam : IParam
     {
+        public static uint Size { get; set; } = 0x94;
+        public static int spOffset = 0x570;
 
         [MemoryOffset(0x00)]
         public int lotItemId01 { get; set; }

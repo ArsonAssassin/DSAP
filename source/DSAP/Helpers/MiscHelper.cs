@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP.Helpers
 {

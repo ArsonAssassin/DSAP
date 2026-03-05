@@ -51,6 +51,12 @@ namespace DSAP.Helpers
             local_ap_keys.Sort((a, b) => a.Key.CompareTo(b.Key));
             // add item removal hook. Filter only things that are remote items; min = after last fogwall/local ap key, max = last ap key
             AddAPItemHook(local_ap_keys.Last().Key + 1, added_names.Last().Key);
+
+            watch = System.Diagnostics.Stopwatch.StartNew();
+            testAddItemLot();
+            watch.Stop();
+            Log.Logger.Information($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
+            App.Client.AddOverlayMessage($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
         }
 
         private static void AddAPItemHook(long min, long max)
@@ -120,23 +126,16 @@ namespace DSAP.Helpers
 
         private static bool upgradeGoods(List<KeyValuePair<long, string>> addedEntries)
         {
-            // Read in the Param Structure (ParamSt),
+            // Read in the Param Structure
             // Modify it,
             // Then save it back
-            bool success = ParamHelper.ReadFromBytes(out ParamSt<EquipGoodsParam> paramStruct, ParamHelper.EquipParamGoods_offset);
-            if (!success)
+            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<EquipGoodsParam> paramStruct,
+                                                     EquipGoodsParam.spOffset,
+                                                     (ps) => ps.ParamEntries.Last().id >= 11109961);
+            if (!reloadRequired)
             {
-                Log.Logger.Error("Error loading Goods Params");
-            }
-            if (paramStruct.DescArea != null)
-            {
-                bool reloadRequired = MiscHelper.ValidateDescArea(paramStruct.DescArea, "EquipParamGoods");
-                if (!reloadRequired)
-                {
-                    Log.Logger.Debug("Not updating Goods Params. Either it was already updated, or there was an error.");
-                    return false;
-                }
-                Log.Logger.Information("Reloading Goods Params");
+                Log.Logger.Debug("Skipping reload of Item Lots");
+                return false;
             }
             // if we are here, we are updating the params.
 
@@ -172,17 +171,66 @@ namespace DSAP.Helpers
                 parambytes[0x2d] = iconbytes[1]; // icon byte 1
                 parambytes[0x45] |= (byte)(0x30); // turn on isDrop and isDeposit bits
                 // This will add the item to the array, and append its string to the NewString buffer
-                paramStruct.addParam(newid, parambytes, stringbytes);
+                paramStruct.AddParam(newid, parambytes, stringbytes);
             }
 
             Log.Logger.Information($"Added {new_entries} items to EquipParamGoods from {addedEntries.First().Key} to {addedEntries.Last().Key}");
 
-            ParamHelper.WriteFromParamSt(paramStruct, ParamHelper.EquipParamGoods_offset);
+            ParamHelper.WriteFromParamSt(paramStruct, EquipGoodsParam.spOffset);
 
             return true;
         }
 
-        
+        private static bool testAddItemLot() // List<KeyValuePair<long, string>> addedEntries)
+        {
+            // Read in the Param Structure
+            // Modify it,
+            // Then save it back
+            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<ItemLotParam> paramStruct,
+                                                     ItemLotParam.spOffset,
+                                                     (ps) => ps.ParamEntries.Last().id >= 99999990);
+            if (!reloadRequired)
+            {
+                Log.Logger.Debug("Skipping reload of Item Lots");
+                return false;
+            }
+            // if we are here, we are updating the params.
+
+            List<KeyValuePair<long, string>> addedEntries = [];
+            addedEntries.Add(new KeyValuePair<long, string>(1810261, "Handaxe 2"));
+            ushort new_entries = (ushort)addedEntries.Count();
+
+            // Get first entry's Param (e.g. White Sign Soapstone), use it as basis for new params.
+            byte[] parambytes = new byte[ItemLotParam.Size];
+            var copyentry = paramStruct.ParamEntries.Find((x) => x.id == 1810260);
+            Array.Copy(paramStruct.ParamBytes, copyentry.paramOffset, parambytes, 0, parambytes.Length);
+
+            Array.Copy(BitConverter.GetBytes(2000000), 0, parambytes, 0x0, sizeof(int)); // make it an arrow
+            parambytes[0x8a] = 98; // set to 98 arrows
+
+            // For each new item, "Add Item" to ParamSt
+            for (uint i = 0; i < new_entries; i++)
+            {
+                var entry = addedEntries.ToArray()[i];
+                uint newid = (uint)entry.Key;
+                byte[] stringbytes = Encoding.ASCII.GetBytes($"{entry.Value}\0");
+                // set sort bytes in param based on id - not sure if this is grabbing top or bottom 2 bytes!! But filling all 4 put the items at the top instead.
+                byte[] idbytes = BitConverter.GetBytes(newid);
+                // This will add the item to the array, and append its string to the NewString buffer
+                paramStruct.AddParam(newid, parambytes, stringbytes);
+            }
+
+            // add a dummy item at 99999998 so that we can know we've been here.
+            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
+            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Added {new_entries} items to ItemLotParams from {addedEntries.First().Key} to {addedEntries.Last().Key}");
+
+            ParamHelper.WriteFromParamSt(paramStruct, ItemLotParam.spOffset);
+
+            return true;
+        }
 
         private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings, string msgsName)
         {

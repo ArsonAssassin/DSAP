@@ -1,19 +1,14 @@
-﻿using Archipelago.Core.AvaloniaGUI.Logging;
-using Archipelago.Core.Util;
+﻿using Archipelago.Core.Util;
 using DSAP.Helpers;
-using DynamicData;
 using Serilog;
-using Silk.NET.Core.Native;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DSAP.Models
 {
-    public class ParamSt<ParamT> where ParamT : Param, new()
+    public class ParamStruct<ParamT> where ParamT : IParam, new()
     {
         const int PROLOGUE_SIZE = 0x10;
         const int HEADER_SIZE = 0x30;
@@ -24,13 +19,13 @@ namespace DSAP.Models
         public List<byte> AddedParamBytes { get; set; }
         public byte[] StringBytes { get; set; }
         public StringBuilder newStrings { get; set; }
-        public List<(uint id, uint paramOffset, uint strOffset)> ParamEntries { get; set; }
+        public List<(uint id, uint paramOffset, int strOffset)> ParamEntries { get; set; }
         private Type type { get; set; }
         internal DescArea DescArea { get; set; }
-        public ParamSt()
+        public ParamStruct()
         {
         }
-        public void ReadFromBytes(ulong bufferLoc, int bufferSize) 
+        public void ReadFromBytes(ulong bufferLoc, int bufferSize, Func<ParamStruct<ParamT>, bool> isUsedCondition)
         {
             BufferLoc = bufferLoc;
             BufferSize = bufferSize;
@@ -41,7 +36,7 @@ namespace DSAP.Models
             type = typeof(ParamT);
             AllBytes = Memory.ReadByteArray(BufferLoc - 0x10, (int)BufferSize + 0x10);
             int base_offset = 0x10;
-            uint string_offset = BitConverter.ToUInt32(AllBytes, base_offset + 0x0);
+            int string_offset = BitConverter.ToInt32(AllBytes, base_offset + 0x0);
             ushort paramsOffset = BitConverter.ToUInt16(AllBytes, base_offset + 0x4);
             ushort num_entries = BitConverter.ToUInt16(AllBytes, base_offset + 0xA);
 
@@ -50,10 +45,10 @@ namespace DSAP.Models
                 int ent_offset = base_offset + 0x30 + (i * 0xc);
                 uint ent_id = BitConverter.ToUInt32(AllBytes, ent_offset);
                 uint ent_param_offset = BitConverter.ToUInt32(AllBytes, ent_offset + 4) - paramsOffset;
-                uint ent_string_offset = BitConverter.ToUInt32(AllBytes, ent_offset + 8)  - string_offset;
+                int ent_string_offset = BitConverter.ToInt32(AllBytes, ent_offset + 8) - string_offset;
                 ParamEntries.Add((ent_id, ent_param_offset, ent_string_offset));
             }
-            uint endOfParamsOffset = string_offset;
+            uint endOfParamsOffset = (uint)string_offset;
             uint paramsLength = endOfParamsOffset - paramsOffset;
             // create and fill ParamBytes
             ParamBytes = new byte[paramsLength];
@@ -61,29 +56,29 @@ namespace DSAP.Models
 
 
             uint endOfStringsOffset = BitConverter.ToUInt32(AllBytes, 0);
-            uint stringlength = endOfStringsOffset - string_offset;
+            uint stringlength = endOfStringsOffset - (uint)string_offset;
             // create and fill StringBytes
             StringBytes = new byte[stringlength];
             Array.Copy(AllBytes, base_offset + string_offset, StringBytes, 0, stringlength);
 
-            // Have IDs greater than our minimum? Go get Desc Area / Signature.
-            if (ParamEntries.Last().id >= 11109961)
+            if (isUsedCondition(this))
             {
-                int end_buffer_offset = BufferSize + (0x8 * num_entries) + 0xf;
-                ulong desc_area_loc = BufferLoc + (ulong)end_buffer_offset;
+                int desc_offset = BufferSize + (0x8 * num_entries) + 0xf;
+                ulong desc_area_loc = BufferLoc + (ulong)desc_offset;
+                Log.Logger.Information($"Reading desc from {desc_area_loc} at offset {desc_offset}");
                 DescArea = Memory.ReadObject<DescArea>(desc_area_loc);
             }
         }
 
-        internal void addParam(uint newid, byte[] newParamBytes, byte[] stringBytes)
+        internal void AddParam(uint newid, byte[] newParamBytes, byte[] stringBytes)
         {
             uint paramOffset = (uint)ParamBytes.Length + (uint)AddedParamBytes.Count; // get index of "current end" of param bytes
             AddedParamBytes.AddRange(newParamBytes); // queue our new bytes to add to "params" section
-            uint stringOffset = (uint)StringBytes.Length + (uint)newStrings.ToString().Length; // get index of "current end" of strings
+            int stringOffset = StringBytes.Length + newStrings.ToString().Length; // get index of "current end" of strings
             newStrings.Append(Encoding.ASCII.GetString(stringBytes)); // queue our new string to "strings" section
             ParamEntries.Add(((uint)newid, paramOffset, stringOffset));
         }
-        internal byte[] generateWriteArray(out int shortLength)
+        internal byte[] GenerateWriteArray(out int shortLength)
         {
             // create new entries byte array
             byte[] EntriesBytes = new byte[12 * ParamEntries.Count];
@@ -113,7 +108,10 @@ namespace DSAP.Models
             {
                 Array.Copy(BitConverter.GetBytes(ParamEntries[i].id), 0, EntriesBytes, (12 * i), sizeof(uint));
                 Array.Copy(BitConverter.GetBytes(params_offset + ParamEntries[i].paramOffset), 0, EntriesBytes, (12 * i) + 4, sizeof(uint));
-                Array.Copy(BitConverter.GetBytes(string_offset + ParamEntries[i].strOffset), 0, EntriesBytes, (12 * i) + 8, sizeof(uint));
+                int stroffset = (int)string_offset + ParamEntries[i].strOffset;
+                if (ParamEntries[i].strOffset < 0)
+                    stroffset = 0; // write a 0 if element didn't have a string offset originally.
+                Array.Copy(BitConverter.GetBytes(stroffset), 0, EntriesBytes, (12 * i) + 8, sizeof(uint));
             }
 
             
@@ -140,8 +138,8 @@ namespace DSAP.Models
             }
 
             uint desc_offset = (uint)(prologue.Length + regular_size + 0xf + endTable.Length);
-            Log.Logger.Verbose($"new desc area offset: {desc_offset}");
-            int total_size = prologue.Length + regular_size + 0xf + endTable.Length + DescArea.size;
+            Log.Logger.Information($"new desc area offset: {desc_offset}");
+            int total_size = PROLOGUE_SIZE + regular_size + 0xf + endTable.Length + DescArea.size;
 
             var seedHash = MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed);
             var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
