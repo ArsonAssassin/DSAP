@@ -1184,6 +1184,7 @@ public partial class App : Application
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
         ItemLotHelper.OverwriteItemLots(ItemLotReplacementMap);
+        bool success = ItemLotHelper.AddInitItemLots();
         watch.Stop();
 
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
@@ -1560,6 +1561,9 @@ public partial class App : Application
                 Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
             }
         }
+        ItemLotHelper.UpdateCharaInits();
+        ParamHelper.RemoveWeaponRequirements();
+
         /* Set to only receive remote items and starting inventory */
         ReplaceItems();
     }

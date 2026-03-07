@@ -229,6 +229,12 @@ namespace DSAP.Helpers
             var list = JsonSerializer.Deserialize<List<LastBonfire>>(json, MiscHelper.GetJsonOptions());
             return list;
         }
+        public static List<Loadout> GetLoadouts()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Loadouts.json");
+            var list = JsonSerializer.Deserialize<List<Loadout>>(json, MiscHelper.GetJsonOptions());
+            return list;
+        }
         public static List<DarkSoulsItem> GetConsumables()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Consumables.json");

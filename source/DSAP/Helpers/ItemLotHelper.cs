@@ -469,5 +469,159 @@ namespace DSAP.Helpers
             LocationHelper.SetEventFlag(itemlotflag.Flag, 0);
             return;
         }
+        public static List<(int id, int baseid, int itemid, int quantity)> loadout_itemlots = [];
+        internal static bool UpdateCharaInits()
+        {
+            // Read in the Param Structure
+            // Modify it,
+            // Then save it back
+            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<CharaInitParam> paramStruct,
+                                                     CharaInitParam.spOffset,
+                                                     (ps) => ps.ParamEntries.Last().id >= 99999990);
+            if (!reloadRequired)
+            {
+                Log.Logger.Debug("Skipping reload of Moves");
+                return false;
+            }
+            // if we are here, we are updating the params.
+
+            loadout_itemlots = new List<(int id, int baseid, int itemid, int quantity)>();
+            var loadouts = MiscHelper.GetLoadouts();
+            var melee_weapons = MiscHelper.GetMeleeWeapons();
+            var ranged_weapons = MiscHelper.GetRangedWeapons();
+            var spell_tools = MiscHelper.GetSpellTools();
+            var catalysts = spell_tools.Where((x) => x.Name.Contains("Catalyst")).ToList();
+            var talismans = spell_tools.Where((x) => x.Name.Contains("Talisman")).ToList();
+            var shields = MiscHelper.GetShields();
+
+            Random random = new Random(MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed) + App.Client.CurrentSession.ConnectionInfo.Slot);
+
+            // modify our relevant entries
+            foreach (var kvp in paramStruct.ParamEntries)
+            {
+                var lo = loadouts.Find(x => x.Id == kvp.id);
+                if (lo == null)
+                    continue;
+
+                var items = new List<(int lotid, int item, int quantity)>();
+
+
+                switch (lo.Type)
+                {
+                    case Enums.DsrLoadoutType.Melee:
+                        items.Add((lo.SubRightWeapon, melee_weapons[random.Next(melee_weapons.Count)].Id, 1));
+                        break;
+                    case Enums.DsrLoadoutType.Ranged:
+                        items.Add((lo.SubRightWeapon, ranged_weapons[random.Next(ranged_weapons.Count)].Id, 1));
+                        break;
+                    case Enums.DsrLoadoutType.Magic:
+                        items.Add((lo.SubRightWeapon, catalysts[random.Next(catalysts.Count)].Id, 1));
+                        break;
+                    case Enums.DsrLoadoutType.Miracle:
+                        items.Add((lo.SubRightWeapon, talismans[random.Next(talismans.Count)].Id, 1));
+                        break;
+                    case Enums.DsrLoadoutType.Pyromancy:
+                        items.Add((lo.SubRightWeapon, spell_tools.Find(x => x.Name == "Pyromancy Flame").Id, 1));
+                        break;
+                    default:
+                        break;
+                }
+                
+                if (items.Count > 0)
+                    Array.Copy(BitConverter.GetBytes(items.Last().item), 0, paramStruct.ParamBytes, kvp.paramOffset + 0x14, sizeof(int));
+
+                items.Add((lo.RightWeapon, melee_weapons[random.Next(melee_weapons.Count)].Id, 1));
+                Array.Copy(BitConverter.GetBytes(items.Last().item), 0, paramStruct.ParamBytes, kvp.paramOffset + 0x10, sizeof(int));
+
+                
+                items.Add((lo.LeftWeapon, shields[random.Next(shields.Count)].Id, 1));
+                Array.Copy(BitConverter.GetBytes(items.Last().item), 0, paramStruct.ParamBytes, kvp.paramOffset + 0x18, sizeof(int));
+                //items.Add((lo.SubLeftWeapon, melee_weapons[random.Next(melee_weapons.Count)].Id, 1));
+                //Array.Copy(BitConverter.GetBytes(items.Last().item), 0, paramStruct.ParamBytes, kvp.paramOffset + 0x1c, sizeof(int));
+
+                var addeditems = 0;
+                foreach (var item in items)
+                {
+                    // if there isn't a spot for the item, give it with the "shield"
+                    int lotid = item.lotid;
+                    int baseid = item.lotid;
+                    if (item.lotid == -1)
+                    {
+                        addeditems++;
+                        baseid = lo.LeftWeapon;
+                        lotid = lo.LeftWeapon + addeditems;
+                    }
+                    loadout_itemlots.Add((lotid, baseid, item.item, item.quantity));
+                }
+            }
+
+
+
+            byte[] parambytes = new byte[EquipParamWeapon.Size];
+            // add a dummy item at 99999998 so that we can know we've been here.
+            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
+            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Added 1 items to CharaInit struct and updated chars");
+
+            ParamHelper.WriteFromParamSt(paramStruct, CharaInitParam.spOffset);
+
+            return true;
+        }
+        internal static bool AddInitItemLots()
+        {
+            // Read in the Param Structure
+            // Modify it,
+            // Then save it back
+            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<ItemLotParam> paramStruct,
+                                                     ItemLotParam.spOffset,
+                                                     (ps) => ps.ParamEntries.Last().id >= 99999990);
+            if (!reloadRequired)
+            {
+                Log.Logger.Debug("Skipping reload of Item Lots");
+                return false;
+            }
+            // if we are here, we are updating the params.
+
+            var updlots = loadout_itemlots;
+            byte[] parambytes = new byte[ItemLotParam.Size];
+            int new_entries = 0;
+            foreach (var newlot in updlots)
+            {
+                var foundlot = paramStruct.ParamEntries.Find((x) => x.id == newlot.baseid);
+                if (foundlot.id != 0) // found it, so update it
+                {
+                    
+                    if (newlot.id == foundlot.id) // based-on lot is the one to update
+                    {
+                        Log.Logger.Information($"updating item lot id {newlot.id}");
+                        Array.Copy(BitConverter.GetBytes(newlot.itemid), 0, paramStruct.ParamBytes, foundlot.paramOffset + 0x0, sizeof(int)); // lotItemId01
+                        paramStruct.ParamBytes[foundlot.paramOffset + 0x8a] = (byte) newlot.quantity; // lotItemNum01
+                    }
+                    else // add new entry based on the based-on lot
+                    {
+                        Log.Logger.Information($"Adding item lot id {newlot.id}, based on {newlot.baseid}");
+                        new_entries++;
+                        // copy in based on the based-on lot
+                        Array.Copy(paramStruct.ParamBytes, foundlot.paramOffset, parambytes, 0, parambytes.Length);
+                        Array.Copy(BitConverter.GetBytes(newlot.itemid), 0, parambytes, 0x0, sizeof(int)); // lotItemId01
+                        parambytes[0x8a] = (byte)newlot.quantity; // lotItemNum01
+                        paramStruct.AddParam((uint)newlot.id, parambytes, Encoding.ASCII.GetBytes("startitem"));
+                    }
+                }
+            }
+
+            // add a dummy item at 99999998 so that we can know we've been here.
+            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
+            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Added {new_entries} items to ItemLotParams");
+
+            ParamHelper.WriteFromParamSt(paramStruct, ItemLotParam.spOffset);
+
+            return true;
+        }
     }
 }

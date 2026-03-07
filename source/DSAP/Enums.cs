@@ -35,6 +35,14 @@ namespace DSAP
             BOSSFOGWALL = 2,
             EARLYFOGWALL = 3,
         }
+        public enum DsrLoadoutType
+        {
+            Melee = 1,
+            Ranged = 2,
+            Magic = 3,
+            Miracle = 4,
+            Pyromancy = 5,
+        }
 
         public enum ItemUpgrade
         {
