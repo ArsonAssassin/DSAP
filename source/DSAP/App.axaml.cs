@@ -1282,10 +1282,15 @@ public partial class App : Application
             }
             else
             {
-                Log.Logger.Warning($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.");
-                Client.AddOverlayMessage($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.");
+                Log.Logger.Error($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead. Check your client version (/diag).");
+                Client.AddOverlayMessage($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.  Check your client version (/diag).");
                 var filler = AllItems.First(x => x.Id == 380);
                 AddAbstractItem(filler, e.Item.IsProgression);
+                /* If after receiving item (or trap), player is still in game, then it received successfully */
+                if (MiscHelper.IsInGame())
+                {
+                    success = true; // proceed with it anyway, to avoid infinite loop. Necessary in case players sent weird items we don't expect - like "Door opened" event items, etc.
+                }
             }
         }
         e.Success = success;
