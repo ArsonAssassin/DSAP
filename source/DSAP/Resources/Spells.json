@@ -120,7 +120,7 @@
     "ApId": 11116014
   },
   {
-    "Name": "Cast Light",
+    "Name": "Sorcery: Cast Light",
     "Id": 3500,
     "StackLimit": 99,
     "UpgradeType": "None",
@@ -232,7 +232,7 @@
     "ApId": 11116028
   },
   {
-    "Name": "Fire Orb",
+    "Name": "Pyromancy: Fire Orb",
     "Id": 4010,
     "StackLimit": 99,
     "UpgradeType": "None",
@@ -288,7 +288,7 @@
     "ApId": 11116035
   },
   {
-    "Name": "Great Combustion",
+    "Name": "Pyromancy: Great Combustion",
     "Id": 4110,
     "StackLimit": 99,
     "UpgradeType": "None",
@@ -416,7 +416,7 @@
     "ApId": 11116051
   },
   {
-    "Name": "Replenishment",
+    "Name": "Miracle: Replenishment",
     "Id": 5040,
     "StackLimit": 99,
     "UpgradeType": "None",
@@ -456,7 +456,7 @@
     "ApId": 11116056
   },
   {
-    "Name": "Homeward",
+    "Name": "Miracle: Homeward",
     "Id": 5210,
     "StackLimit": 99,
     "UpgradeType": "None",
@@ -488,7 +488,7 @@
     "ApId": 11116060
   },
   {
-    "Name": "Seek Guidance",
+    "Name": "Miracle: Seek Guidance",
     "Id": 5400,
     "StackLimit": 99,
     "UpgradeType": "None",

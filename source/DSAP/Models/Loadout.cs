@@ -13,11 +13,11 @@ namespace DSAP.Models
         public int Dexterity { get; set; }
         public int Intelligence { get; set; }
         public int Faith { get; set; }
+        // the below fields are item lot ids, for where this stuff is found in asylum
         public int RightWeapon { get; set; }
         public int SubRightWeapon { get; set; }
         public int LeftWeapon { get; set; }
         public int SubLeftWeapon { get; set; }
-        public int Item { get; set; }
         public int Ammunition { get; set; }
 
         public Loadout()
