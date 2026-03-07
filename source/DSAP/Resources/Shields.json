@@ -1,5 +1,13 @@
 ﻿[
   {
+    "Name": "Dark Hand",
+    "Id": 904000,
+    "StackSize": 1,
+    "UpgradeType": "None",
+    "Category": "Shields",
+    "ApId": 11118075
+  },
+  {
     "Name": "Skull Lantern",
     "Id": 1396000,
     "StackSize": 1,

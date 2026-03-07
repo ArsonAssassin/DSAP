@@ -640,14 +640,6 @@
     "ApId": 11118074
   },
   {
-    "Name": "Dark Hand",
-    "Id": 904000,
-    "StackSize": 1,
-    "UpgradeType": "None",
-    "Category": "MeleeWeapons",
-    "ApId": 11118075
-  },
-  {
     "Name": "Spear",
     "Id": 1000000,
     "StackSize": 1,

@@ -814,7 +814,7 @@ _all_items_base = [
     ("Caestus", 8072, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Infusable),
     ("Claw", 8073, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Infusable),
     ("Dragon Bone Fist", 8074, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Unique),
-    ("Dark Hand", 8075, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.NotUpgradable),
+# Dark hand 8075 moved to shields
     ("Spear", 8076, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Infusable),
     ("Winged Spear", 8077, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Infusable),
     ("Partizan", 8078, DSRItemCategory.WEAPON, DSRWeaponType.Melee, DSRUpgradeType.Infusable),
@@ -906,6 +906,7 @@ _all_items_base = [
     ("Manus Catalyst", 8151, DSRItemCategory.WEAPON, DSRWeaponType.SpellTool, DSRUpgradeType.NotUpgradable),
     ("Oolacile Catalyst", 8152, DSRItemCategory.WEAPON, DSRWeaponType.SpellTool, DSRUpgradeType.NotUpgradable),
     
+    ("Dark Hand", 8075, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.NotUpgradable),
     ("Skull Lantern", 9000, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.NotUpgradable),
     ("East-West Shield", 9001, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
     ("Wooden Shield", 9002, DSRItemCategory.SHIELD, DSRWeaponType.Shield, DSRUpgradeType.InfusableRestricted),
