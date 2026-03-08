@@ -5,6 +5,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "RangedWeapons",
+    "Strength": 10,
+    "Dexterity": 12,
     "ApId": 11118096
   },
   {
@@ -13,6 +15,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "RangedWeapons",
+    "Strength": 13,
+    "Dexterity": 14,
     "ApId": 11118097
   },
   {
@@ -21,6 +25,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "RangedWeapons",
+    "Strength": 13,
+    "Dexterity": 18,
     "ApId": 11118098
   },
   {
@@ -29,6 +35,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "RangedWeapons",
+    "Strength": 30,
+    "Dexterity": 20,
     "ApId": 11118099
   },
   {
@@ -37,6 +45,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "RangedWeapons",
+    "Strength": 16,
+    "Dexterity": 12,
     "ApId": 11118100
   },
   {
@@ -45,6 +55,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "RangedWeapons",
+    "Strength": 10,
+    "Dexterity": 16,
     "ApId": 11118101
   },
   {
@@ -53,6 +65,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "RangedWeapons",
+    "Strength": 10,
+    "Dexterity": 8,
     "ApId": 11118102
   },
   {
@@ -61,6 +75,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "RangedWeapons",
+    "Strength": 14,
+    "Dexterity": 8,
     "ApId": 11118103
   },
   {
@@ -69,6 +85,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "RangedWeapons",
+    "Strength": 16,
+    "Dexterity": 14,
     "ApId": 11118104
   },
   {
@@ -77,6 +95,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "RangedWeapons",
+    "Strength": 20,
+    "Dexterity": 16,
     "ApId": 11118105
   },
   {
@@ -85,6 +105,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "RangedWeapons",
+    "Strength": 40,
+    "Dexterity": 20,
     "ApId": 11118135
   },
   {

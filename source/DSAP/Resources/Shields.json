@@ -13,6 +13,7 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "Shields",
+    "Strength": 5,
     "ApId": 11119000
   },
   {
@@ -21,6 +22,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 6,
     "ApId": 11119001
   },
   {
@@ -29,6 +31,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 7,
     "ApId": 11119002
   },
   {
@@ -37,6 +40,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 7,
     "ApId": 11119003
   },
   {
@@ -45,6 +49,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 5,
     "ApId": 11119004
   },
   {
@@ -53,6 +58,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 8,
+    "Dexterity": 11,
     "ApId": 11119005
   },
   {
@@ -61,6 +68,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 7,
+    "Dexterity": 13,
     "ApId": 11119006
   },
   {
@@ -69,6 +78,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 6,
     "ApId": 11119007
   },
   {
@@ -77,6 +87,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 6,
     "ApId": 11119008
   },
   {
@@ -85,6 +96,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 7,
     "ApId": 11119009
   },
   {
@@ -93,6 +105,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 6,
     "ApId": 11119010
   },
   {
@@ -101,6 +114,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119011
   },
   {
@@ -109,6 +123,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 8,
     "ApId": 11119012
   },
   {
@@ -117,6 +132,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119013
   },
   {
@@ -125,6 +141,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119014
   },
   {
@@ -133,6 +150,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119015
   },
   {
@@ -141,6 +159,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 11,
     "ApId": 11119016
   },
   {
@@ -149,6 +168,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 12,
     "ApId": 11119017
   },
   {
@@ -157,6 +177,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119018
   },
   {
@@ -165,6 +186,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119019
   },
   {
@@ -173,6 +195,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 6,
     "ApId": 11119020
   },
   {
@@ -181,6 +204,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 14,
     "ApId": 11119021
   },
   {
@@ -189,6 +213,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119022
   },
   {
@@ -197,6 +222,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
+    "Dexterity": 12,
     "ApId": 11119023
   },
   {
@@ -205,6 +232,7 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "Shields",
+    "Strength": 14,
     "ApId": 11119024
   },
   {
@@ -213,6 +241,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 12,
     "ApId": 11119025
   },
   {
@@ -221,6 +250,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 14,
     "ApId": 11119026
   },
   {
@@ -229,6 +259,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 16,
     "ApId": 11119027
   },
   {
@@ -237,6 +268,8 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 11,
+    "Dexterity": 14,
     "ApId": 11119028
   },
   {
@@ -245,6 +278,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 6,
     "ApId": 11119029
   },
   {
@@ -253,6 +287,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119030
   },
   {
@@ -261,6 +296,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 12,
     "ApId": 11119031
   },
   {
@@ -269,6 +305,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 16,
     "ApId": 11119032
   },
   {
@@ -277,6 +314,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 30,
     "ApId": 11119033
   },
   {
@@ -285,6 +323,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 36,
     "ApId": 11119034
   },
   {
@@ -293,6 +332,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 38,
     "ApId": 11119035
   },
   {
@@ -301,6 +341,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 50,
     "ApId": 11119036
   },
   {
@@ -309,6 +350,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 30,
     "ApId": 11119037
   },
   {
@@ -317,6 +359,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 34,
     "ApId": 11119038
   },
   {
@@ -325,6 +368,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119039
   },
   {
@@ -333,6 +377,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119040
   },
   {
@@ -341,6 +386,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 10,
     "ApId": 11119041
   },
   {
@@ -349,6 +395,7 @@
     "StackSize": 1,
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
+    "Strength": 34,
     "ApId": 11119042
   },
   {
@@ -357,6 +404,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "Shields",
+    "Strength": 31,
     "ApId": 11119043
   }
 ]
