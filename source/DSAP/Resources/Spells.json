@@ -5,6 +5,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 10,
     "ApId": 11116000
   },
   {
@@ -13,6 +15,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 14,
     "ApId": 11116001
   },
   {
@@ -21,6 +25,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 12,
     "ApId": 11116002
   },
   {
@@ -29,6 +35,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 16,
     "ApId": 11116003
   },
   {
@@ -37,6 +45,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 18,
     "ApId": 11116004
   },
   {
@@ -45,6 +55,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 24,
     "ApId": 11116005
   },
   {
@@ -53,6 +65,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 36,
     "ApId": 11116006
   },
   {
@@ -61,6 +75,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 44,
     "ApId": 11116007
   },
   {
@@ -69,6 +85,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 10,
     "ApId": 11116008
   },
   {
@@ -77,6 +95,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 15,
     "ApId": 11116009
   },
   {
@@ -85,6 +105,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 25,
     "ApId": 11116010
   },
   {
@@ -93,6 +115,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 10,
     "ApId": 11116011
   },
   {
@@ -101,6 +125,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 15,
     "ApId": 11116012
   },
   {
@@ -109,6 +135,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 14,
     "ApId": 11116013
   },
   {
@@ -117,6 +145,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 14,
     "ApId": 11116014
   },
   {
@@ -125,6 +155,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 14,
     "ApId": 11116015
   },
   {
@@ -133,6 +165,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 15,
     "ApId": 11116016
   },
   {
@@ -141,6 +175,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 10,
     "ApId": 11116017
   },
   {
@@ -149,6 +185,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 14,
     "ApId": 11116018
   },
   {
@@ -157,6 +195,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 15,
     "ApId": 11116019
   },
   {
@@ -165,6 +205,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 14,
     "ApId": 11116020
   },
   {
@@ -173,6 +215,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 16,
     "ApId": 11116021
   },
   {
@@ -181,6 +225,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Intelligence": 16,
     "ApId": 11116022
   },
   {
@@ -189,6 +235,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 50,
     "ApId": 11116023
   },
   {
@@ -197,6 +245,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 16,
     "ApId": 11116024
   },
   {
@@ -205,6 +255,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 16,
     "ApId": 11116025
   },
   {
@@ -213,6 +265,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 18,
     "ApId": 11116026
   },
   {
@@ -221,6 +275,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Intelligence": 32,
     "ApId": 11116027
   },
   {
@@ -229,6 +285,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116028
   },
   {
@@ -237,6 +294,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116029
   },
   {
@@ -245,6 +303,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116030
   },
   {
@@ -253,6 +312,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116031
   },
   {
@@ -261,6 +321,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116032
   },
   {
@@ -269,6 +330,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116033
   },
   {
@@ -277,6 +339,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116034
   },
   {
@@ -285,6 +348,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116035
   },
   {
@@ -293,6 +357,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116036
   },
   {
@@ -301,6 +366,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116037
   },
   {
@@ -309,6 +375,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116038
   },
   {
@@ -317,14 +384,16 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116039
   },
   {
-    "Name": "Iron Flesh",
+    "Name": "Pyromancy: Iron Flesh",
     "Id": 4300,
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
     "ApId": 11116040
   },
   {
@@ -333,6 +402,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
     "ApId": 11116041
   },
   {
@@ -341,6 +411,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
     "ApId": 11116042
   },
   {
@@ -349,6 +420,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
     "ApId": 11116043
   },
   {
@@ -357,6 +429,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116044
   },
   {
@@ -365,6 +438,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116045
   },
   {
@@ -373,6 +447,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116046
   },
   {
@@ -381,6 +456,7 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
     "ApId": 11116047
   },
   {
@@ -389,6 +465,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Heal",
+    "Faith": 12,
     "ApId": 11116048
   },
   {
@@ -397,14 +475,18 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Heal",
+    "Faith": 24,
     "ApId": 11116049
   },
   {
-    "Name": "Great Heal Excerpt",
+    "Name": "Miracle: Great Heal Excerpt",
     "Id": 5020,
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Heal",
+    "Faith": 14,
     "ApId": 11116050
   },
   {
@@ -413,6 +495,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Heal",
+    "Faith": 48,
     "ApId": 11116051
   },
   {
@@ -421,6 +505,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Heal",
+    "Faith": 16,
     "ApId": 11116052
   },
   {
@@ -429,6 +515,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Heal",
+    "Faith": 36,
     "ApId": 11116053
   },
   {
@@ -437,6 +525,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 0,
     "ApId": 11116054
   },
   {
@@ -445,6 +535,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 0,
     "ApId": 11116055
   },
   {
@@ -453,6 +545,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 0,
     "ApId": 11116056
   },
   {
@@ -461,6 +555,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 18,
     "ApId": 11116057
   },
   {
@@ -469,6 +565,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 12,
     "ApId": 11116058
   },
   {
@@ -477,6 +575,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 28,
     "ApId": 11116059
   },
   {
@@ -485,6 +585,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 18,
     "ApId": 11116060
   },
   {
@@ -493,6 +595,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 12,
     "ApId": 11116061
   },
   {
@@ -501,6 +605,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 20,
     "ApId": 11116062
   },
   {
@@ -509,6 +615,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 30,
     "ApId": 11116063
   },
   {
@@ -517,6 +625,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 50,
     "ApId": 11116064
   },
   {
@@ -525,6 +635,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 14,
     "ApId": 11116065
   },
   {
@@ -533,6 +645,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 24,
     "ApId": 11116066
   },
   {
@@ -541,6 +655,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 20,
     "ApId": 11116067
   },
   {
@@ -549,6 +665,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 18,
     "ApId": 11116068
   },
   {
@@ -557,6 +675,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Utility",
+    "Faith": 30,
     "ApId": 11116069
   },
   {
@@ -565,6 +685,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 30,
     "ApId": 11116070
   },
   {
@@ -573,6 +695,8 @@
     "StackLimit": 99,
     "UpgradeType": "None",
     "Category": "Spells",
+    "SpellCategory": "Attack",
+    "Faith": 30,
     "ApId": 11116071
   }
 ]

@@ -29,6 +29,13 @@ namespace DSAP
             DsrEvent = 0x11111111,
             Trap = 0x33333333
         }
+        public enum SpellCategory
+        {
+            None = 0,
+            Attack = 1,
+            Heal = 2,
+            Utility = 3,
+        }
         public enum DsrEventType
         {
             FOGWALL = 1,

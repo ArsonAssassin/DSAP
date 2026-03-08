@@ -104,6 +104,49 @@ namespace DSAP.Helpers
 
             return true;
         }
+        internal static bool RemoveSpellRequirements()
+        {
+            // Read in the Param Structure
+            // Modify it,
+            // Then save it back
+            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<MagicParam> paramStruct,
+                                                     MagicParam.spOffset,
+                                                     (ps) => ps.ParamEntries.Last().id >= 99999990);
+            if (!reloadRequired)
+            {
+                Log.Logger.Debug("Skipping reload of Magic");
+                return false;
+            }
+
+            // For each existing spell item, modify required int/faith
+            for (int i = 0; i < paramStruct.ParamEntries.Count; i++)
+            {
+                var ent = paramStruct.ParamEntries[i];
+                Log.Logger.Information($"{ent.id}: {paramStruct.ParamBytes[ent.paramOffset + MagicParam.Int_Requirement]}, {paramStruct.ParamBytes[ent.paramOffset + MagicParam.Faith_Requirement]} ");
+                Log.Logger.Information($"{paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_00_07]}, {paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_08_15]} ");
+                // if modifying int and faith requirements
+                paramStruct.ParamBytes[ent.paramOffset + MagicParam.Int_Requirement] = 0;   // int
+                paramStruct.ParamBytes[ent.paramOffset + MagicParam.Faith_Requirement] = 0; // faith
+                
+                // if removing vow restrictions
+                paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_00_07] = 0xff;   // spell usable while in no covenant and first 7
+                paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_08_15] = 0xff;   // spell usable while in any of the other covenants
+            }
+
+            // Get first entry's Param (e.g. White Sign Soapstone), use it as basis for new params.
+            byte[] parambytes = new byte[MagicParam.Size];
+
+            // add a dummy item at 99999998 so that we can know we've been here.
+            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
+            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Added 1 items to EquipParamWeapon struct and removed stat requirements");
+
+            ParamHelper.WriteFromParamSt(paramStruct, MagicParam.spOffset);
+
+            return true;
+        }
         internal static bool TestMoveChange(int field, int value)
         {
             // Read in the Param Structure
@@ -154,6 +197,10 @@ namespace DSAP.Helpers
             result = new ParamStruct<ParamT>();
 
             ulong ResCapLoc = Memory.ReadULong((ulong)(AddressHelper.SoloParamAob.Address + soloParamOffset));
+            if (ResCapLoc == 0)
+            {
+                Log.Logger.Error($"Could not find params at offset {soloParamOffset}");
+            }
             int BufferSize = (int)Memory.ReadUInt(ResCapLoc + 0x30);
             ulong BufferLoc = Memory.ReadULong(ResCapLoc + 0x38);
 
