@@ -40,7 +40,7 @@ namespace DSAP.Models
 
         override public string ToString()
         {
-            string result = $"{{\"size\":{DescSize}, \"FullAllocLength\":{FullAllocLength}, \"OldAddress\":{OldAddress.ToString("X")}, \"OldLength\":{OldLength}, \"SeedHash\":{SeedHash}, \"Slot\":{Slot} }}";
+            string result = $"{{\"size\":{DescSize}, \"FullAllocLength\":{FullAllocLength}, \"OldAddress\":{OldAddress:X}, \"OldLength\":{OldLength}, \"SeedHash\":{SeedHash}, \"Slot\":{Slot} }}";
             return result;
         }
 

@@ -57,9 +57,9 @@ namespace DSAP.Helpers
             var offset = AddressHelper.GetProgressionFlagOffset();
             var baseAddress = (ulong)Memory.ReadInt(offset);
             var baseAddress2 = (ulong)Memory.ReadInt(baseAddress);
-            Log.Logger.Verbose($"bfloc offset={offset},0x{offset.ToString("X")}");
-            Log.Logger.Verbose($"bfloc baseadd={baseAddress},0x{baseAddress.ToString("X")}");
-            Log.Logger.Verbose($"bfloc baseadd2={baseAddress2},0x{baseAddress2.ToString("X")}");
+            Log.Logger.Verbose($"bfloc offset={offset},0x{offset:X}");
+            Log.Logger.Verbose($"bfloc baseadd={baseAddress},0x{baseAddress:X}");
+            Log.Logger.Verbose($"bfloc baseadd2={baseAddress2},0x{baseAddress2:X}");
 
             foreach (var lot in lotFlags)
             {
@@ -163,7 +163,7 @@ namespace DSAP.Helpers
             int bit = 0;
             if ((wholebyte & (1 << AddressBit)) != 0)
                 bit = 1;
-            Log.Logger.Debug($"Read Bonfire Flag for {name} at {Address}/0x{Address.ToString("X")} = {wholebyte}, bit [{AddressBit}]={bit}");
+            Log.Logger.Debug($"Read Bonfire Flag for {name} at {Address}/0x{Address:X} = {wholebyte}, bit [{AddressBit}]={bit}");
             return bit == 1;
         }
 

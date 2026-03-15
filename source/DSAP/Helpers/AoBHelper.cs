@@ -33,27 +33,27 @@ namespace DSAP.Helpers
                     /* First, AoB search. This finds an instruction that references the global pointer with relative addressing */
                     nint baseAddress = (nint)AddressHelper.GetBaseAddress();
                     nint result = Memory.FindSignature(baseAddress, 0x1000000, Pattern, Mask);
-                    Log.Logger.Debug($"{Key}_aob found: 0x{result.ToInt64().ToString("X")}");
+                    Log.Logger.Debug($"{Key}_aob found: 0x{result.ToInt64():X}");
                     if (result != nint.Zero)
                     {
                         /* Get the relative offset */
                         uint offset = BitConverter.ToUInt32(Memory.ReadByteArray((ulong)(result + OperandOffset), OperandLength), 0);
                         if (offset != 0)
                         {
-                            Log.Logger.Debug($"{Key}_offset found: 0x{offset.ToString("X")}");
+                            Log.Logger.Debug($"{Key}_offset found: 0x{offset:X}");
                             /* Instruction position + instruction size + relative offset = global pointer position */
                             nint globalPtr = (nint)(result + offset + (OperandOffset + OperandLength));
-                            Log.Logger.Debug($"{Key}_ptr found: 0x{globalPtr.ToInt64().ToString("X")}");
+                            Log.Logger.Debug($"{Key}_ptr found: 0x{globalPtr.ToInt64():X}");
                             _pointer = globalPtr; /* cache the result */
                         }
                         else
                         {
-                            Log.Logger.Warning($"{Key}_offset not found: 0x{offset.ToString("X")}");
+                            Log.Logger.Warning($"{Key}_offset not found: 0x{offset:X}");
                         }
                     }
                     else
                     {
-                        Log.Logger.Error($"{Key}_aob not found: 0x{result.ToInt64().ToString("X")}");
+                        Log.Logger.Error($"{Key}_aob not found: 0x{result.ToInt64():X}");
                     }
                 }
                 return _pointer;

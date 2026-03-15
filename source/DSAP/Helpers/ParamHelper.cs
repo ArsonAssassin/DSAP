@@ -233,13 +233,13 @@ namespace DSAP.Helpers
 
             byte[] newBytes = input.GenerateWriteArray(out int shortLength);
             ulong allocArea = (ulong)Memory.Allocate((uint)newBytes.Length);
-            Log.Logger.Debug($"Allocated {newBytes.Length.ToString("X")} bytes at {allocArea.ToString("X")}");
+            Log.Logger.Debug($"Allocated {newBytes.Length:X} bytes at {allocArea:X}");
 
             Memory.WriteByteArray(allocArea, newBytes);
             ulong newBufferLoc = allocArea + 0x10; // get past prologue
 
             
-            Log.Logger.Debug($"Overwrite {typeof(ParamT).Name} @ {oldBufferLoc.ToString("X")} to {allocArea.ToString("X")}");
+            Log.Logger.Debug($"Overwrite {typeof(ParamT).Name} @ {oldBufferLoc:X} to {allocArea:X}");
 
             /* Then switch out the pointer */
             Memory.Write(resCapLoc + 0x38, newBufferLoc);
@@ -248,7 +248,7 @@ namespace DSAP.Helpers
             if (hadOldUpdatedArea)
             {
                 Memory.FreeMemory((nint)oldBufferLoc);
-                Log.Logger.Debug($"Free old {typeof(ParamT).Name} @ {oldBufferLoc.ToString("X")}");
+                Log.Logger.Debug($"Free old {typeof(ParamT).Name} @ {oldBufferLoc:X}");
             }
             return true;
         }

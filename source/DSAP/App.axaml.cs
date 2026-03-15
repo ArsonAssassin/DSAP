@@ -467,7 +467,7 @@ public partial class App : Application
         if (MiscHelper.IsInGame())
         {
             ulong baseb = AddressHelper.GetBaseBAddress();
-            Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
+            Log.Logger.Warning($"$Baseb={baseb:X}");
             var locs = Client.CurrentSession.Locations.AllLocationsChecked.Where(x => x == 11110499 || x == 11110500);
             foreach (var loc in locs)
             {
@@ -491,7 +491,7 @@ public partial class App : Application
             var gwynloc = (Location)LocationHelper.GetBossFlagLocations().Where(x => x.Name == "Gwyn, Lord of Cinder").First();
             if (gwynloc != null)
             {
-                Log.Logger.Warning($"{gwynloc.Name} at {gwynloc.Address.ToString("X")}_{gwynloc.AddressBit.ToString("X")} type {gwynloc.CheckType}.");
+                Log.Logger.Warning($"{gwynloc.Name} at {gwynloc.Address:X}_{gwynloc.AddressBit:X} type {gwynloc.CheckType}.");
 
                 bool result = gwynloc.Check();
                 if (result)
@@ -506,7 +506,7 @@ public partial class App : Application
                     sendingGoal = true;
                 }
                 byte gwynbyte = Memory.ReadByte(gwynloc.Address);
-                Log.Logger.Warning($"Gwyn byte={gwynbyte.ToString("X")}");
+                Log.Logger.Warning($"Gwyn byte={gwynbyte:X}");
             }
             else
             {
@@ -556,10 +556,10 @@ public partial class App : Application
             ushort slot = MiscHelper.GetSavedSlot();
 
             byte saveid = MiscHelper.GetSavedSaveId();
-            Log.Logger.Warning($"saved seedhash={seedhash}, slot={slot}, saveid={saveid.ToString("X")}");
+            Log.Logger.Warning($"saved seedhash={seedhash}, slot={slot}, saveid={saveid:X}");
 
             ulong baseb = AddressHelper.GetBaseBAddress();
-            Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
+            Log.Logger.Warning($"$Baseb={baseb:X}");
             if (baseb > 0)
             {
                 int ngplus = Memory.ReadByte(baseb + 0x78);
@@ -1029,7 +1029,7 @@ public partial class App : Application
                     }
                     else
                     {
-                        Log.Logger.Error($"Deathlink ignored - could not resolve hp location (bad hp value) {whp} @ {whpp}/0x{whpp.ToString("X")}.");
+                        Log.Logger.Error($"Deathlink ignored - could not resolve hp location (bad hp value) {whp} @ {whpp}/0x{whpp:X}.");
                         Client.AddOverlayMessage($"Deathlink ignored - could not resolve hp location (bad hp value).");
                     }
                 }

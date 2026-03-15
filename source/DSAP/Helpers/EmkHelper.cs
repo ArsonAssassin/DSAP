@@ -20,12 +20,12 @@ namespace DSAP.Helpers
             ulong eventhead_ptr = AddressHelper.GetEmkHeadAddress();
             int numevents = 0;
             if (eventhead_ptr != prevEventHeadPtr)
-                Log.Logger.Debug($"eventheadptr changed from {prevEventHeadPtr.ToString("X")} to {eventhead_ptr.ToString("X")}");
+                Log.Logger.Debug($"eventheadptr changed from {prevEventHeadPtr:X} to {eventhead_ptr:X}");
             if (eventhead_ptr != 0)
             {
                 ulong eventhead = Memory.ReadULong((ulong)eventhead_ptr);
                 if (eventhead != prevEventHead)
-                    Log.Logger.Debug($"eventhead changed from {prevEventHead.ToString("X")} to {eventhead.ToString("X")}");
+                    Log.Logger.Debug($"eventhead changed from {prevEventHead:X} to {eventhead:X}");
                 prevEventHead = eventhead;
                 prevEventHeadPtr = eventhead_ptr;
 
@@ -38,7 +38,7 @@ namespace DSAP.Helpers
                     if (numevents > 2000)
                     {
                         Log.Logger.Warning($"c events:{numevents}");
-                        Log.Logger.Warning($"thisemk = :{thisEmk.ToString("X")}");
+                        Log.Logger.Warning($"thisemk = :{thisEmk:X}");
                         break;
                     }
 
@@ -166,7 +166,7 @@ namespace DSAP.Helpers
                             if (numevents > 2000) // sanity check
                             {
                                 Log.Logger.Warning($"m events:{numevents}");
-                                Log.Logger.Warning($"thisemk = :{thisEmk.ToString("X")}");
+                                Log.Logger.Warning($"thisemk = :{thisEmk:X}");
                                 break;
                             }
 
@@ -187,14 +187,14 @@ namespace DSAP.Helpers
                                         emk.Deactivated = true;
                                         thisEmk = nextptr;
                                         updatedEmk = true;
-                                        Log.Logger.Debug($"Pulled event: {emk.Name} at {emk.Saved_Ptr.ToString("X")}");
+                                        Log.Logger.Debug($"Pulled event: {emk.Name} at {emk.Saved_Ptr:X}");
                                     }
                                 }
                                 else /* Player has event's key, but we found it in list? Destroy our "old" version, and stop interfering. */
                                 {
                                     emk.Saved_Ptr = 0;
                                     emk.Deactivated = false;
-                                    Log.Logger.Debug($"Un-pulled event: {emk.Name} at {emk.Saved_Ptr.ToString("X")}");
+                                    Log.Logger.Debug($"Un-pulled event: {emk.Name} at {emk.Saved_Ptr:X}");
                                 }
                             }
                         }
@@ -213,7 +213,7 @@ namespace DSAP.Helpers
                         if (emk.MapId3 == mapid3) /* Compare current mapid to event's valid mapid */
                         {
                             addingEmks.Add(emk);
-                            Log.Logger.Debug($"Re-adding event: {emk.Name} at {emk.Saved_Ptr.ToString("X")}");
+                            Log.Logger.Debug($"Re-adding event: {emk.Name} at {emk.Saved_Ptr:X}");
                         }
                     }
                 }

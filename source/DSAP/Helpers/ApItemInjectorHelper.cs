@@ -212,9 +212,9 @@ namespace DSAP.Helpers
                 // validate desc area
                 // If it's no good, reset it
                 ulong desc_area_loc = old_buffer + old_buffer_size;
-                Log.Logger.Verbose($"{msgsName} old desc area loc: {desc_area_loc.ToString("X")}, size: {old_buffer_size.ToString()}");
+                Log.Logger.Verbose($"{msgsName} old desc area loc: {desc_area_loc:X}, size: {old_buffer_size.ToString()}");
                 DescArea old_desc_area = Memory.ReadObject<DescArea>(desc_area_loc);
-                Log.Logger.Debug("Read object: " + old_desc_area.ToString() + " from " + desc_area_loc.ToString("X"));
+                Log.Logger.Debug("Read object: " + old_desc_area.ToString() + " from " + $"{desc_area_loc:X}");
                 bool update_required = MiscHelper.ValidateDescArea(old_desc_area, msgsName);
                 if (update_required)
                 {
@@ -263,8 +263,8 @@ namespace DSAP.Helpers
             {
                 Log.Logger.Error($"Error allocating {msgsName}, could not allocate {new_buffer_total_size} byte area.");
             }
-            //Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer.ToString("X")}");
-            Log.Logger.Information($"Updating {msgsName} text @ {old_buffer.ToString("X")} to {new_buffer.ToString("X")}");
+            //Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer:X}");
+            Log.Logger.Information($"Updating {msgsName} text @ {old_buffer:X} to {new_buffer:X}");
 
             // first, copy over header & old maps
             byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)(0x1c + old_buffer_num_spanmaps * 0xc));
@@ -299,7 +299,7 @@ namespace DSAP.Helpers
             }
             // point to end of last old string
             ulong curr_end_loc = new_buffer + new_buffer_string_start_offset + (old_buffer_size - old_buffer_string_start_offset);
-            Log.Logger.Debug($"{msgsName} curr end loc = {curr_end_loc.ToString("X")}, size: {(curr_end_loc - new_buffer).ToString()}");
+            Log.Logger.Debug($"{msgsName} curr end loc = {curr_end_loc:X}, size: {(curr_end_loc - new_buffer).ToString()}");
             ulong end_of_stroffs = new_buffer + new_buffer_stroff_start_offset + (4 * old_buffer_num_stroff_entries);
             for (uint i = 0; i < new_entries; i++)
             {
@@ -328,7 +328,7 @@ namespace DSAP.Helpers
             ulong new_desc_area_loc = new_buffer + new_buffer_size;
             Log.Logger.Verbose($"added {new_entries} entries to {msgsName}");
             Memory.WriteObject<DescArea>(new_desc_area_loc, new_desc_area);
-            Log.Logger.Verbose($"new Desc Area written to {new_desc_area_loc.ToString("X")}");
+            Log.Logger.Verbose($"new Desc Area written to {new_desc_area_loc:X}");
             // end here
 
             // fix up header area
@@ -357,7 +357,7 @@ namespace DSAP.Helpers
 
             byte[] newba = Encoding.Unicode.GetBytes(newptxt);
             Memory.WriteByteArray(strloc, newba);
-            Log.Logger.Information($"String found: {su16}, \n@{strloc.ToString("X")}");
+            Log.Logger.Information($"String found: {su16}, \n@{strloc:X}");
             Log.Logger.Information($"Wrote string {newptxt}");
         }
 

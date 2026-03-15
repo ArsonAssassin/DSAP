@@ -256,7 +256,7 @@ namespace DSAP.Helpers
         public static ulong GetItemLotParamOffset()
         {
             var foo = SoloParamAob.Address;
-            Log.Logger.Verbose($"solo param location {foo.ToString("X")}");
+            Log.Logger.Verbose($"solo param location {foo:X}");
             var next = MiscHelper.OffsetPointer(((ulong)foo), 0x570);
             var foo2 = Memory.ReadULong(next);
             next = MiscHelper.OffsetPointer(foo2, 0x38);
@@ -288,7 +288,7 @@ namespace DSAP.Helpers
             int flag = 960;
             var off = AddressHelper.GetEventFlagOffset(flag).Item1 + 3; // 3rd byte after this one
             // here we have 3 bytes of memory available.
-            Log.Logger.Debug($"saveid address = {(off + initoff).ToString("X")}");
+            Log.Logger.Debug($"saveid address = {(off + initoff):X}");
             return off + initoff;
         }
         public static ulong GetSaveSeedAddress()
@@ -297,7 +297,7 @@ namespace DSAP.Helpers
             int flag = 960;
             var off = AddressHelper.GetEventFlagOffset(flag).Item1 + 1; // 1st and 2nd byte after this one
             // here we have 3 bytes of memory available.
-            Log.Logger.Debug($"Seed address = {(off + initoff).ToString("X")}");
+            Log.Logger.Debug($"Seed address = {(off + initoff):X}");
             return off + initoff;
         }
         public static ulong GetSaveSlotAddress()
@@ -306,7 +306,7 @@ namespace DSAP.Helpers
             int flag = 1960;
             var off = AddressHelper.GetEventFlagOffset(flag).Item1 + 1; // Up to 3 bytes
             // here we have 3 bytes of memory available.
-            Log.Logger.Debug($"Slot address = {(off + initoff).ToString("X")}");
+            Log.Logger.Debug($"Slot address = {(off + initoff):X}");
             return off + initoff;
         }
 
