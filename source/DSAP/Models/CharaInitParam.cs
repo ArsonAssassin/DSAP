@@ -13,5 +13,6 @@
         public const int BOLT = 0x34;
         public const int SPELL_01 = 0x60;
         public const int ITEM_01 = 0x7c;
+        public const int ITEMNUM_01 = 0xcc;
     }
 }

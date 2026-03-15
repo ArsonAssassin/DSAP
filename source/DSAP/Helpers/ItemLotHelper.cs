@@ -547,6 +547,32 @@ namespace DSAP.Helpers
                 {
                     case Enums.DsrLoadoutType.Melee:
                         items.Add((loadout.SubRightWeapon, allowed_melee_weapons[random.Next(allowed_melee_weapons.Count)].Id, 1));
+                        if (loadout.Name == "Thief") // randomize thief item
+                        {
+                            var thief_items = new List<(byte quantity, String item_name)>([
+                                (99, "Throwing Knife"),
+                                (50, "Poison Throwing Knife"),
+                                (15, "Black Firebomb"),
+                                (40, "Firebomb"),
+                                (40, "Dung Pie"),
+                                (20, "Charcoal Pine Resin"),
+                                (20, "Gold Pine Resin"),
+                                (20, "Rotten Pine Resin"),
+                                (30, "Homeward Bone"),
+                                (20, "Green Blossom"),
+                                (10, "Elizabeth's Mushroom"),
+                                (15, "Blooming Purple Moss Clump")]);
+                            var thief_item = thief_items[random.Next(thief_items.Count)];
+                            var item_id = MiscHelper.GetConsumables().Find(x => x.Name == thief_item.item_name && x.Quantity == 1).Id;
+
+                            // display in the menu
+                            Array.Copy(BitConverter.GetBytes(item_id), 0, display_parambytes, CharaInitParam.ITEM_01, sizeof(int));
+                            
+                            // give it in game
+                            Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
+                            ingame_parambytes[CharaInitParam.ITEMNUM_01] = thief_item.quantity;
+                            Log.Logger.Warning($"Wrote to param {loadout.Id} at {CharaInitParam.ITEMNUM_01} value {thief_item.quantity}");
+                        }
                         break;
                     case Enums.DsrLoadoutType.Ranged:
                         var allowed_ranged_weapons = ranged_weapons;
@@ -659,8 +685,8 @@ namespace DSAP.Helpers
                 }
 
                 // write array back to params
-                Array.Copy(display_parambytes, 0, paramStruct.ParamBytes, charaInit_display.paramOffset, ItemLotParam.Size); // chara init for title screen
-                Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, ItemLotParam.Size); // chara init for in-game (some data, e.g. spells)
+                Array.Copy(display_parambytes, 0, paramStruct.ParamBytes, charaInit_display.paramOffset, CharaInitParam.Size); // chara init for title screen
+                Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); // chara init for in-game (some data, e.g. spells)
             }
 
 

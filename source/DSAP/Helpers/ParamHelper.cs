@@ -122,8 +122,6 @@ namespace DSAP.Helpers
             for (int i = 0; i < paramStruct.ParamEntries.Count; i++)
             {
                 var ent = paramStruct.ParamEntries[i];
-                Log.Logger.Information($"{ent.id}: {paramStruct.ParamBytes[ent.paramOffset + MagicParam.Int_Requirement]}, {paramStruct.ParamBytes[ent.paramOffset + MagicParam.Faith_Requirement]} ");
-                Log.Logger.Information($"{paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_00_07]}, {paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_08_15]} ");
                 // if modifying int and faith requirements
                 paramStruct.ParamBytes[ent.paramOffset + MagicParam.Int_Requirement] = 0;   // int
                 paramStruct.ParamBytes[ent.paramOffset + MagicParam.Faith_Requirement] = 0; // faith
