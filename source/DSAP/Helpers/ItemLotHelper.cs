@@ -513,7 +513,7 @@ namespace DSAP.Helpers
                 var allowed_melee_weapons = melee_weapons;
                 allowed_melee_weapons = melee_weapons.Where(x =>
                 {
-                    return (loadout.Strength * 3 >= x.Strength * 2)
+                    return (loadout.Strength * 3 >= x.Strength * 2) // use 2h strength (2 handing gives 50% str bonus)
                         && (loadout.Dexterity >= x.Dexterity)
                         && (loadout.Intelligence >= x.Intelligence)
                         && (loadout.Faith >= x.Faith);
@@ -578,7 +578,7 @@ namespace DSAP.Helpers
                         var allowed_ranged_weapons = ranged_weapons;
                         allowed_ranged_weapons = ranged_weapons.Where(x =>
                         {
-                            return (loadout.Strength >= x.Strength)
+                            return (loadout.Strength * 3 >= x.Strength * 2) // use 2h str - most ranged weapons require two hands anyway
                                 && (loadout.Dexterity >= x.Dexterity);
                         }).ToList();
 
