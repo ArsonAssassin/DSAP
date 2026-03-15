@@ -470,6 +470,10 @@ namespace DSAP.Helpers
             return;
         }
         public static List<(int id, int baseid, int itemid, int quantity)> loadout_itemlots = [];
+        /// <summary>
+        /// Update start character loadouts, and populate the "loadout specific item lots" (e.g. UA starter drops)
+        /// </summary>
+        /// <returns></returns>
         internal static bool UpdateCharaInits()
         {
             // Read in the Param Structure
@@ -485,13 +489,11 @@ namespace DSAP.Helpers
             }
             // if we are here, we are updating the params.
 
-            loadout_itemlots = new List<(int id, int baseid, int itemid, int quantity)>();
+            loadout_itemlots = new List<(int id, int baseid, int itemid, int quantity)>(); // initialize blank list
             var loadouts = MiscHelper.GetLoadouts();
-            var melee_weapons = MiscHelper.GetMeleeWeapons();
+            var melee_weapons = MiscHelper.GetMeleeWeapons().Where(x => !x.Name.Contains("Straight Sword Hilt") && !x.Name.Contains("Broken Straight Sword")).ToList();
             var ranged_weapons = MiscHelper.GetRangedWeapons().Where(x => !x.Name.Contains("Arrow") && !x.Name.Contains("Bolt")).ToList();
             var spell_tools = MiscHelper.GetSpellTools();
-            var catalysts = spell_tools.Where((x) => x.Name.Contains("Catalyst")).ToList();
-            var talismans = spell_tools.Where((x) => x.Name.Contains("Talisman")).ToList();
             var shields = MiscHelper.GetShields();
 
             Random random = new Random(MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed) + App.Client.CurrentSession.ConnectionInfo.Slot);
@@ -508,16 +510,53 @@ namespace DSAP.Helpers
                 byte[] ingame_parambytes = new byte[CharaInitParam.Size];
                 Array.Copy(paramStruct.ParamBytes, charaInit_ingame.paramOffset, ingame_parambytes, 0, CharaInitParam.Size);
 
-                var items = new List<(int lotid, int item, int quantity)>();
+                var allowed_melee_weapons = melee_weapons;
+                allowed_melee_weapons = melee_weapons.Where(x =>
+                {
+                    return (loadout.Strength * 3 >= x.Strength * 2)
+                        && (loadout.Dexterity >= x.Dexterity)
+                        && (loadout.Intelligence >= x.Intelligence)
+                        && (loadout.Faith >= x.Faith);
+                }).ToList(); // 2-handing weapons
 
+                var allowed_shields = shields;
+                allowed_shields = shields.Where(x =>
+                {
+                    return (loadout.Strength >= x.Strength)
+                        && (loadout.Dexterity >= x.Dexterity)
+                        && (loadout.Intelligence >= x.Intelligence)
+                        && (loadout.Faith >= x.Faith);
+                }).ToList(); // shield requires the strength
+
+                var allowed_spell_tools = spell_tools;
+                if (loadout.Type  == Enums.DsrLoadoutType.Magic || loadout.Type == Enums.DsrLoadoutType.Miracle) // only bother for faith/int casters
+                {
+                    allowed_spell_tools = spell_tools.Where(x =>
+                     {
+                         return (loadout.Strength >= x.Strength)
+                             && (loadout.Dexterity >= x.Dexterity)
+                             && (loadout.Intelligence >= x.Intelligence)
+                             && (loadout.Faith >= x.Faith);
+                     }).ToList(); // shield requires the strength
+                }
+
+                var items = new List<(int lotid, int item, int quantity)>(); // item lot updates for this loadout
+                
 
                 switch (loadout.Type)
                 {
                     case Enums.DsrLoadoutType.Melee:
-                        items.Add((loadout.SubRightWeapon, melee_weapons[random.Next(melee_weapons.Count)].Id, 1));
+                        items.Add((loadout.SubRightWeapon, allowed_melee_weapons[random.Next(allowed_melee_weapons.Count)].Id, 1));
                         break;
                     case Enums.DsrLoadoutType.Ranged:
-                        var weapon = ranged_weapons[random.Next(ranged_weapons.Count)];
+                        var allowed_ranged_weapons = ranged_weapons;
+                        allowed_ranged_weapons = ranged_weapons.Where(x =>
+                        {
+                            return (loadout.Strength >= x.Strength)
+                                && (loadout.Dexterity >= x.Dexterity);
+                        }).ToList();
+
+                        var weapon = allowed_ranged_weapons[random.Next(allowed_ranged_weapons.Count)];
                         List<DarkSoulsItem> ammo = [];
                         int ammotype = 1; // assume arrow
                         int ammo_amount = 99; // 99 for now. Make this an option
@@ -545,9 +584,13 @@ namespace DSAP.Helpers
                         items.Add((loadout.SubRightWeapon, weapon.Id, 1));
                         break;
                     case Enums.DsrLoadoutType.Magic:
+                        var catalysts = allowed_spell_tools.Where((x) => x.Name.Contains("Catalyst")).ToList();
+
                         items.Add((loadout.SubRightWeapon, catalysts[random.Next(catalysts.Count)].Id, 1));
                         var valid_spells = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Sorcery:")).ToList();
-                        var spell = valid_spells[random.Next(valid_spells.Count)];
+                        var allowed_spells = valid_spells;
+                        allowed_spells = valid_spells.Where(x => loadout.Intelligence > x.Intelligence).ToList();
+                        var spell = allowed_spells[random.Next(allowed_spells.Count)];
                         // no need to add spells to item lots - add directly to chara init only
                         int oldspellid = BitConverter.ToInt32(display_parambytes, CharaInitParam.SPELL_01);
                         int oldspellid2 = BitConverter.ToInt32(display_parambytes, CharaInitParam.ITEM_01);
@@ -559,9 +602,13 @@ namespace DSAP.Helpers
                         Log.Logger.Information($"Adding spell: {spell.Name}");
                         break;
                     case Enums.DsrLoadoutType.Miracle:
+                        var talismans = allowed_spell_tools.Where((x) => x.Name.Contains("Talisman")).ToList();
+
                         items.Add((loadout.SubRightWeapon, talismans[random.Next(talismans.Count)].Id, 1));
                         var valid_miracles = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Miracle:")).ToList();
-                        var miracle = valid_miracles[random.Next(valid_miracles.Count)];
+                        var allowed_miracles = valid_miracles;
+                        allowed_miracles = valid_miracles.Where(x => loadout.Faith> x.Faith).ToList();
+                        var miracle = allowed_miracles[random.Next(allowed_miracles.Count)];
                         // no need to add spells to item lots - add directly to chara init only
                         Array.Copy(BitConverter.GetBytes(miracle.Id), 0, display_parambytes, CharaInitParam.SPELL_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(miracle.Id), 0, display_parambytes, CharaInitParam.ITEM_01, sizeof(int));
@@ -588,10 +635,10 @@ namespace DSAP.Helpers
                     Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.SUBWEAPON_RIGHT, sizeof(int));
                     
 
-                items.Add((loadout.RightWeapon, melee_weapons[random.Next(melee_weapons.Count)].Id, 1));
+                items.Add((loadout.RightWeapon, allowed_melee_weapons[random.Next(allowed_melee_weapons.Count)].Id, 1));
                 Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.WEAPON_RIGHT, sizeof(int));
                 
-                items.Add((loadout.LeftWeapon, shields[random.Next(shields.Count)].Id, 1));
+                items.Add((loadout.LeftWeapon, allowed_shields[random.Next(allowed_shields.Count)].Id, 1));
                 Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.WEAPON_LEFT, sizeof(int));
                 
 

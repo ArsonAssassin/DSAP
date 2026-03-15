@@ -21,6 +21,10 @@ namespace DSAP.Models
         public SpellCategory SpellCategory { get; set; }
         public int Quantity { get; set; } = 1;
         public int ApId { get; set; }
+        public int Strength { get; set; }
+        public int Dexterity { get; set; }
+        public int Intelligence { get; set; }
+        public int Faith { get; set; }
 
     }
 }
