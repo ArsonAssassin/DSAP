@@ -496,6 +496,8 @@ namespace DSAP.Helpers
             var spell_tools = MiscHelper.GetSpellTools();
             var shields = MiscHelper.GetShields();
 
+            var gifts = MiscHelper.GetGiftParams();
+
             Random random = new Random(MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed) + App.Client.CurrentSession.ConnectionInfo.Slot);
 
             // modify our relevant entries
@@ -571,7 +573,7 @@ namespace DSAP.Helpers
                             // give it in game
                             Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
                             ingame_parambytes[CharaInitParam.ITEMNUM_01] = thief_item.quantity;
-                            Log.Logger.Warning($"Wrote to param {loadout.Id} at {CharaInitParam.ITEMNUM_01} value {thief_item.quantity}");
+                            Log.Logger.Debug($"Wrote to param {loadout.Id} at {CharaInitParam.ITEMNUM_01} value {thief_item.quantity}");
                         }
                         break;
                     case Enums.DsrLoadoutType.Ranged:
@@ -687,6 +689,80 @@ namespace DSAP.Helpers
                 // write array back to params
                 Array.Copy(display_parambytes, 0, paramStruct.ParamBytes, charaInit_display.paramOffset, CharaInitParam.Size); // chara init for title screen
                 Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); // chara init for in-game (some data, e.g. spells)
+            }
+
+            var available_gifts = new List<(byte quantity, string gift_name, String item_name, String description)>([
+                // default items
+                (3, "Goddess's Blessing", "Divine Blessing", "Wow! 3 divine blessings, what a steal!"),
+                (10, "Black Firebomb", "Black Firebomb", "That's...a lot of bombs."),
+                (1, "Twin Humanities", "Twin Humanities", "Two Humanities in one."),
+                (1, "Binoculars", "Binoculars", "Look out! Enjoy the views!"),
+                (1, "Pendant", "Pendant", "Useless item."),
+                (1, "Tiny Being's Ring", "Tiny Being's Ring", "Just a little ring, and it's its birthday."),
+                (1, "Old Witch's Ring", "Old Witch's Ring", "default description"),
+                // added items
+                (99, "Throwing Knives", "Throwing Knife", "Throwing Knife"),
+                (50, "Poison Throwing Knives", "Poison Throwing Knife", "Poison Throwing Knife"),
+                (40, "Firebombs", "Firebomb", "Firebomb"),
+                (40, "Dung Pies", "Dung Pie", "Dung Pie"),
+                (20, "Charcoal Pine Resins", "Charcoal Pine Resin", "Charcoal Pine Resin"),
+                (20, "Gold Pine Resins", "Gold Pine Resin", "Gold Pine Resin"),
+                (20, "Rotten Pine Resins", "Rotten Pine Resin", "Rotten Pine Resin"),
+                (30, "Homeward Bones", "Homeward Bone", "Homeward Bone"),
+                (20, "Green Blossoms", "Green Blossom", "Green Blossom"),
+                (10, "Elizabeth's Mushrooms", "Elizabeth's Mushroom", "Elizabeth's Mushroom"),
+                (15, "Blooming Purple Moss Clumps", "Blooming Purple Moss Clump", "Blooming Purple Moss Clump"),
+
+                (10, "Large Titanite Shards", "Large Titanite Shard", "Large Titanite Shard"),
+                (10, "Transient Curses", "Transient Curse", "Transient Curse"),
+
+                (1, "Dragon Head Stone", "Dragon Head Stone", "Dragon Head Stone"),
+                (1, "Chloranthy Ring", "Chloranthy Ring", "Chloranthy Ring"),
+                (1, "Wolf Ring", "Wolf Ring", "Wolf Ring"),
+                (1, "Hornet Ring", "Hornet Ring", "Hornet Ring"),
+                (1, "Hawk Ring", "Hawk Ring", "Hawk Ring"),
+                (1, "Rusted Iron Ring", "Rusted Iron Ring", "Rusted Iron Ring"),
+                (1, "Slumbering Dragoncrest Ring", "Slumbering Dragoncrest Ring", "Slumbering Dragoncrest Ring")
+                ]);
+
+            foreach (var gift in gifts)
+            {
+                var charaInit_ingame = paramStruct.ParamEntries.Find(x => x.id == gift.Id);
+                // also update text
+
+                // get current param bytes
+                byte[] ingame_parambytes = new byte[CharaInitParam.Size];
+                Array.Copy(paramStruct.ParamBytes, charaInit_ingame.paramOffset, ingame_parambytes, 0, CharaInitParam.Size);
+
+                var gift_entry = available_gifts[random.Next(available_gifts.Count)];
+                Log.Logger.Warning($"Gift {gift.Name} => {gift_entry.item_name} x {gift_entry.quantity}");
+                available_gifts.Remove(gift_entry);
+                var gift_item = App.AllItems.Find(x => x.Name == gift_entry.item_name && x.Quantity == 1);
+                var item_id = gift_item.Id;
+                var item_cat = gift_item.Category;
+
+                // clear ring
+                Array.Copy(BitConverter.GetBytes(0), 0, ingame_parambytes, CharaInitParam.ACCESSORY_01, sizeof(int));
+                // clear item
+                Array.Copy(BitConverter.GetBytes(0), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
+
+                if (gift_item.Category == Enums.DSItemCategory.Consumables)
+                {
+                    // update the chara init item
+                    Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
+                    ingame_parambytes[CharaInitParam.ITEMNUM_01] = gift_entry.quantity;
+                }
+                else if (gift_item.Category == Enums.DSItemCategory.Rings)
+                {
+                    // update the chara init ring
+                    Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ACCESSORY_01, sizeof(int));
+                }
+
+
+
+                // write array back to params
+                Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); // chara init for in-game (some data, e.g. spells)
+
             }
 
 

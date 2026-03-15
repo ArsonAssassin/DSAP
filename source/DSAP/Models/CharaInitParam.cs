@@ -14,5 +14,6 @@
         public const int SPELL_01 = 0x60;
         public const int ITEM_01 = 0x7c;
         public const int ITEMNUM_01 = 0xcc;
+        public const int ACCESSORY_01 = 0x40;
     }
 }
