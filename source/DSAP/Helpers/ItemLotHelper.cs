@@ -518,6 +518,13 @@ namespace DSAP.Helpers
             var spell_tools = MiscHelper.GetSpellTools();
             var shields = MiscHelper.GetShields();
 
+            var armors = MiscHelper.GetArmor();
+            var head_armor = armors.Where(x => ((x.Id / 1000) % 10) == 0).ToList(); // 0 in 1000s place = head armor
+            var body_armor = armors.Where(x => ((x.Id / 1000) % 10) == 1).ToList(); // 0 in 1000s place = body armor
+            var arms_armor = armors.Where(x => ((x.Id / 1000) % 10) == 2).ToList(); // 0 in 1000s place = arms armor
+            var legs_armor = armors.Where(x => ((x.Id / 1000) % 10) == 3).ToList(); // 0 in 1000s place = legs armor
+
+
             var gifts = MiscHelper.GetGiftParams();
 
             Random random = new Random(MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed) + App.Client.CurrentSession.ConnectionInfo.Slot);
@@ -709,9 +716,38 @@ namespace DSAP.Helpers
                     desc_line_1 = $"{class_weapon.Name}/{shield.Name}";
                     desc_line_2 = $"{secondary_weapon.Name}";
                 }
-                    
+                // randomize equipment
+                int head = BitConverter.ToInt32(display_parambytes, CharaInitParam.EQUIP_HEAD);
+                int body = BitConverter.ToInt32(display_parambytes, CharaInitParam.EQUIP_BODY);
+                int arms = BitConverter.ToInt32(display_parambytes, CharaInitParam.EQUIP_ARMS);
+                int legs = BitConverter.ToInt32(display_parambytes, CharaInitParam.EQUIP_LEGS);
+
                 
-                
+                if (head != 900000) // no head equipment
+                {
+                    int new_head = head_armor[random.Next(head_armor.Count)].Id;
+                    Array.Copy(BitConverter.GetBytes(new_head), 0, display_parambytes, CharaInitParam.EQUIP_HEAD, sizeof(int));
+                    Array.Copy(BitConverter.GetBytes(new_head), 0, ingame_parambytes, CharaInitParam.EQUIP_HEAD, sizeof(int));
+                }
+                if (body != 901000) // no body equipment
+                {
+                    int new_body = body_armor[random.Next(body_armor.Count)].Id;
+                    Array.Copy(BitConverter.GetBytes(new_body), 0, display_parambytes, CharaInitParam.EQUIP_BODY, sizeof(int));
+                    Array.Copy(BitConverter.GetBytes(new_body), 0, ingame_parambytes, CharaInitParam.EQUIP_BODY, sizeof(int));
+                }
+                if (arms != 902000) // no arms equipment
+                {
+                    int new_arms = arms_armor[random.Next(arms_armor.Count)].Id;
+                    Array.Copy(BitConverter.GetBytes(new_arms), 0, display_parambytes, CharaInitParam.EQUIP_ARMS, sizeof(int));
+                    Array.Copy(BitConverter.GetBytes(new_arms), 0, ingame_parambytes, CharaInitParam.EQUIP_ARMS, sizeof(int));
+                }
+                if (legs != 903000) // no legs equipment
+                {
+                    int new_legs = legs_armor[random.Next(legs_armor.Count)].Id;
+                    Array.Copy(BitConverter.GetBytes(new_legs), 0, display_parambytes, CharaInitParam.EQUIP_LEGS, sizeof(int));
+                    Array.Copy(BitConverter.GetBytes(new_legs), 0, ingame_parambytes, CharaInitParam.EQUIP_LEGS, sizeof(int));
+                }
+
 
                 // setup the "item lots" structure's info for all the items of this specific class
                 var addeditems = 0;
@@ -767,7 +803,7 @@ namespace DSAP.Helpers
 
                 (1, "Dragon Head Stone", "Dragon Head Stone", "(AP) Vow requirement\nremoval pending."),
                 (1, "Cloranthy Ring", "Cloranthy Ring", "(AP) Grants increased\nstamina regeneration"),
-                (1, "Wolf Ring", "Wolf Ring", "(AP) Increaed Poise"),
+                (1, "Wolf Ring", "Wolf Ring", "(AP) Increases Poise"),
                 (1, "Hornet Ring", "Hornet Ring", "(AP) Increased critical\ndamage."),
                 (1, "Hawk Ring", "Hawk Ring", "(AP) Increased bow range."),
                 (1, "Rusted Iron Ring", "Rusted Iron Ring", "(AP) Better movement\nthrough deep water\nand swamp."),
