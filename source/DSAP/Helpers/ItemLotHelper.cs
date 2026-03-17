@@ -476,17 +476,39 @@ namespace DSAP.Helpers
         /// <returns></returns>
         internal static bool UpdateCharaInits()
         {
-            // Read in the Param Structure
-            // Modify it,
-            // Then save it back
+            // Read in Chara Init params
             bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<CharaInitParam> paramStruct,
                                                      CharaInitParam.spOffset,
                                                      (ps) => ps.ParamEntries.Last().id >= 99999990);
             if (!reloadRequired)
             {
-                Log.Logger.Debug("Skipping reload of Moves");
+                Log.Logger.Debug("Skipping reload of Chara Inits");
                 return false;
             }
+            // Read in system text FMGs
+            bool reload2Required = MsgManHelper.ReadFromBytes(out MsgManStruct msgManStruct,
+                                                     0x3e0,
+                                                     (ps) => ps.MsgEntries.Last().id >= 99999990);
+            if (!reload2Required)
+            {
+                Log.Logger.Warning("Warning: Could not reload gift item names.");
+                //return false;
+            }
+
+            //print all fmgs in 0x3e0 for research
+            foreach (var msgentry in msgManStruct.MsgEntries)
+            {
+                if (msgentry.stringOffset >= 0)
+                {
+                    int maxbytes = msgManStruct.StringBytes.Length - msgentry.stringOffset;
+                    int readbytes = Math.Min(500, maxbytes);
+                    string s = Encoding.Unicode.GetString(msgManStruct.StringBytes, msgentry.stringOffset, readbytes);
+                    if (s.Split("\0").Length > 1)
+                        s = s.Split("\0")[0];
+                    Log.Logger.Warning($"Message id={msgentry.id}={s}");
+                }
+            }
+
             // if we are here, we are updating the params.
 
             loadout_itemlots = new List<(int id, int baseid, int itemid, int quantity)>(); // initialize blank list
@@ -531,7 +553,7 @@ namespace DSAP.Helpers
                 }).ToList(); // shield requires the strength
 
                 var allowed_spell_tools = spell_tools;
-                if (loadout.Type  == Enums.DsrLoadoutType.Magic || loadout.Type == Enums.DsrLoadoutType.Miracle) // only bother for faith/int casters
+                if (loadout.Type == Enums.DsrLoadoutType.Magic || loadout.Type == Enums.DsrLoadoutType.Miracle) // only bother for faith/int casters
                 {
                     allowed_spell_tools = spell_tools.Where(x =>
                      {
@@ -543,7 +565,9 @@ namespace DSAP.Helpers
                 }
 
                 var items = new List<(int lotid, int item, int quantity)>(); // item lot updates for this loadout
-                
+                var desc_line_1 = "";
+                var desc_line_2 = "";
+                var desc_line_3 = "";
 
                 switch (loadout.Type)
                 {
@@ -554,12 +578,12 @@ namespace DSAP.Helpers
                             var thief_items = new List<(byte quantity, String item_name)>([
                                 (99, "Throwing Knife"),
                                 (50, "Poison Throwing Knife"),
-                                (15, "Black Firebomb"),
-                                (40, "Firebomb"),
+                                (10, "Black Firebomb"),
+                                (20, "Firebomb"),
                                 (40, "Dung Pie"),
-                                (20, "Charcoal Pine Resin"),
-                                (20, "Gold Pine Resin"),
-                                (20, "Rotten Pine Resin"),
+                                (10, "Charcoal Pine Resin"),
+                                (10, "Gold Pine Resin"),
+                                (10, "Rotten Pine Resin"),
                                 (30, "Homeward Bone"),
                                 (20, "Green Blossom"),
                                 (10, "Elizabeth's Mushroom"),
@@ -569,11 +593,12 @@ namespace DSAP.Helpers
 
                             // display in the menu
                             Array.Copy(BitConverter.GetBytes(item_id), 0, display_parambytes, CharaInitParam.ITEM_01, sizeof(int));
-                            
+
                             // give it in game
                             Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
                             ingame_parambytes[CharaInitParam.ITEMNUM_01] = thief_item.quantity;
                             Log.Logger.Debug($"Wrote to param {loadout.Id} at {CharaInitParam.ITEMNUM_01} value {thief_item.quantity}");
+                            desc_line_3 = $"{thief_item.item_name} x{thief_item.quantity}";
                         }
                         break;
                     case Enums.DsrLoadoutType.Ranged:
@@ -595,20 +620,24 @@ namespace DSAP.Helpers
                         else if (weapon.Name.Contains("Greatbow"))
                         {
                             ammo = MiscHelper.GetRangedWeapons().Where(x => (x.Name.Contains("Dragonslayer") || x.Name.Contains("Gough")) && x.Quantity == 1).ToList();
-                        } 
+                        }
                         else // crossbows
                         {
                             ammo = MiscHelper.GetRangedWeapons().Where(x => x.Name.Contains("Bolt") && x.Quantity == 1).ToList();
                             ammotype = 2; // bolt
                         }
-                        items.Add((loadout.Ammunition, ammo[random.Next(ammo.Count)].Id, ammo_amount)); // add ammunition to the character screen
+                        items.Add((loadout.Ammunition, ammo[random.Next(ammo.Count)].Id, ammo_amount)); // add ammunition to the character screen";
                         // now add it to the item lot
-                        if (ammotype == 1) 
+                        if (ammotype == 1)
                             Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.ARROW, sizeof(int));
                         else
                             Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.BOLT, sizeof(int));
 
-                        // now add the ranged weapon itself to the character screen
+                        // add ammo to class description
+                        var ammo_item = App.AllItems.Find(x => x.Id == items.Last().item);
+                        desc_line_3 = $"{ammo_item.Name} x{ammo_amount}";
+
+                        // now add the ranged weapon itself to the item lot
                         items.Add((loadout.SubRightWeapon, weapon.Id, 1));
                         break;
                     case Enums.DsrLoadoutType.Magic:
@@ -620,14 +649,12 @@ namespace DSAP.Helpers
                         allowed_spells = valid_spells.Where(x => loadout.Intelligence > x.Intelligence).ToList();
                         var spell = allowed_spells[random.Next(allowed_spells.Count)];
                         // no need to add spells to item lots - add directly to chara init only
-                        int oldspellid = BitConverter.ToInt32(display_parambytes, CharaInitParam.SPELL_01);
-                        int oldspellid2 = BitConverter.ToInt32(display_parambytes, CharaInitParam.ITEM_01);
-                        Log.Logger.Information($"old spells:: {oldspellid}, {oldspellid2}");
                         Array.Copy(BitConverter.GetBytes(spell.Id), 0, display_parambytes, CharaInitParam.SPELL_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(spell.Id), 0, display_parambytes, CharaInitParam.ITEM_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(spell.Id), 0, ingame_parambytes, CharaInitParam.SPELL_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(spell.Id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
-                        Log.Logger.Information($"Adding spell: {spell.Name}");
+                        // add ammo to class description
+                        desc_line_3 = $"{spell.Name}";
                         break;
                     case Enums.DsrLoadoutType.Miracle:
                         var talismans = allowed_spell_tools.Where((x) => x.Name.Contains("Talisman")).ToList();
@@ -635,14 +662,14 @@ namespace DSAP.Helpers
                         items.Add((loadout.SubRightWeapon, talismans[random.Next(talismans.Count)].Id, 1));
                         var valid_miracles = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Miracle:")).ToList();
                         var allowed_miracles = valid_miracles;
-                        allowed_miracles = valid_miracles.Where(x => loadout.Faith> x.Faith).ToList();
+                        allowed_miracles = valid_miracles.Where(x => loadout.Faith > x.Faith).ToList();
                         var miracle = allowed_miracles[random.Next(allowed_miracles.Count)];
                         // no need to add spells to item lots - add directly to chara init only
                         Array.Copy(BitConverter.GetBytes(miracle.Id), 0, display_parambytes, CharaInitParam.SPELL_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(miracle.Id), 0, display_parambytes, CharaInitParam.ITEM_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(miracle.Id), 0, ingame_parambytes, CharaInitParam.SPELL_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(miracle.Id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
-                        Log.Logger.Information($"Adding miracle: {miracle.Name}");
+                        desc_line_3 = $"{miracle.Name}";
                         break;
                     case Enums.DsrLoadoutType.Pyromancy:
                         items.Add((loadout.SubRightWeapon, spell_tools.Find(x => x.Name.Contains("Pyromancy Flame")).Id, 1));
@@ -653,21 +680,37 @@ namespace DSAP.Helpers
                         Array.Copy(BitConverter.GetBytes(pyromancy.Id), 0, display_parambytes, CharaInitParam.ITEM_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(pyromancy.Id), 0, ingame_parambytes, CharaInitParam.SPELL_01, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(pyromancy.Id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
-                        Log.Logger.Information($"Adding pyromancy: {pyromancy.Name}, {pyromancy.Id}");
+                        desc_line_3 = $"{pyromancy.Name}";
                         break;
                     default:
                         break;
                 }
-                
-                if (items.Count > 0)
-                    Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.SUBWEAPON_RIGHT, sizeof(int));
-                    
 
+                // add the item to the character select
+                Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.SUBWEAPON_RIGHT, sizeof(int));
+                var class_weapon = App.AllItems.Find(x => x.Id == items.Last().item);
+                
                 items.Add((loadout.RightWeapon, allowed_melee_weapons[random.Next(allowed_melee_weapons.Count)].Id, 1));
                 Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.WEAPON_RIGHT, sizeof(int));
-                
+                var secondary_weapon = App.AllItems.Find(x => x.Id == items.Last().item);
+
                 items.Add((loadout.LeftWeapon, allowed_shields[random.Next(allowed_shields.Count)].Id, 1));
                 Array.Copy(BitConverter.GetBytes(items.Last().item), 0, display_parambytes, CharaInitParam.WEAPON_LEFT, sizeof(int));
+                var shield = App.AllItems.Find(x => x.Id == items.Last().item);
+
+                if (desc_line_3 == "")
+                {
+                    desc_line_1 = $"{class_weapon.Name}";
+                    desc_line_2 = $"{shield.Name}";
+                    desc_line_3 = $"{secondary_weapon.Name}";
+                }   
+                else
+                {
+                    desc_line_1 = $"{class_weapon.Name}/{shield.Name}";
+                    desc_line_2 = $"{secondary_weapon.Name}";
+                }
+                    
+                
                 
 
                 // setup the "item lots" structure's info for all the items of this specific class
@@ -689,42 +732,48 @@ namespace DSAP.Helpers
                 // write array back to params
                 Array.Copy(display_parambytes, 0, paramStruct.ParamBytes, charaInit_display.paramOffset, CharaInitParam.Size); // chara init for title screen
                 Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); // chara init for in-game (some data, e.g. spells)
+                // write it to messages
+
+                // write class description
+                uint msgid = (uint)(loadout.Id + 132320 - 3000);
+                msgManStruct.UpdateMsg(msgid, $"{desc_line_1}\n{desc_line_2}\n{desc_line_3}");
             }
 
+            //var added_gifts = new List<KeyValuePair<long, string>>();
             var available_gifts = new List<(byte quantity, string gift_name, String item_name, String description)>([
                 // default items
-                (3, "Goddess's Blessing", "Divine Blessing", "Wow! 3 divine blessings, what a steal!"),
-                (10, "Black Firebomb", "Black Firebomb", "That's...a lot of bombs."),
-                (1, "Twin Humanities", "Twin Humanities", "Two Humanities in one."),
-                (1, "Binoculars", "Binoculars", "Look out! Enjoy the views!"),
-                (1, "Pendant", "Pendant", "Useless item."),
-                (1, "Tiny Being's Ring", "Tiny Being's Ring", "Just a little ring, and it's its birthday."),
-                (1, "Old Witch's Ring", "Old Witch's Ring", "default description"),
+                (3, "Goddess's Blessing", "Divine Blessing", "(AP) Wow!\n3 divine blessings,\nwhat a steal!"),
+                (10, "Black Firebomb x10", "Black Firebomb", "(AP) A reliable favorite.\nInflict big ouchies."),
+                (1, "Twin Humanities", "Twin Humanities", "(AP) Two Humanities\nin one item."),
+                (1, "Binoculars", "Binoculars", "(AP) Enjoy the views!"),
+                (1, "Pendant", "Pendant", "(AP) Useless item."),
+                (1, "Tiny Being's Ring", "Tiny Being's Ring", "(AP) Ring belonging to\n just a little being,\n and it's its birthday."),
+                (1, "Old Witch's Ring", "Old Witch's Ring", "(AP) This ring grants\nyou slightly more HP."),
                 // added items
-                (99, "Throwing Knives", "Throwing Knife", "Throwing Knife"),
-                (50, "Poison Throwing Knives", "Poison Throwing Knife", "Poison Throwing Knife"),
-                (40, "Firebombs", "Firebomb", "Firebomb"),
-                (40, "Dung Pies", "Dung Pie", "Dung Pie"),
-                (20, "Charcoal Pine Resins", "Charcoal Pine Resin", "Charcoal Pine Resin"),
-                (20, "Gold Pine Resins", "Gold Pine Resin", "Gold Pine Resin"),
-                (20, "Rotten Pine Resins", "Rotten Pine Resin", "Rotten Pine Resin"),
-                (30, "Homeward Bones", "Homeward Bone", "Homeward Bone"),
-                (20, "Green Blossoms", "Green Blossom", "Green Blossom"),
-                (10, "Elizabeth's Mushrooms", "Elizabeth's Mushroom", "Elizabeth's Mushroom"),
-                (15, "Blooming Purple Moss Clumps", "Blooming Purple Moss Clump", "Blooming Purple Moss Clump"),
+                (99, "Throwing Knives x99", "Throwing Knife", "(AP) Throwing Knives."),
+                (50, "P.Throwing Knives x50", "Poison Throwing Knife", "(AP) Poison Throwing\nKnives."),
+                (20, "Firebomb x20", "Firebomb", "(AP) Firebombs.\nYou throw them,\nthey deal damage."),
+                (40, "Dung Pie x40", "Dung Pie", "(AP) Throw to inflict\nToxic on enemies."),
+                (10, "Charcoal P. Resin x10", "Charcoal Pine Resin", "(AP) Apply to weapon\nto deal fire damage."),
+                (10, "Gold P. Resin x10", "Gold Pine Resin", "(AP) Apply to weapon\nto deal lightning\ndamage."),
+                (10, "Rotten P. Resin x10", "Rotten Pine Resin", "(AP) Apply to weapon\nto apply poison buildup."),
+                (30, "Homeward Bone x30", "Homeward Bone", "(AP) Takes you home.\nSome consider this\nuseless, apparently."),
+                (20, "Green Blossom x20", "Green Blossom", "(AP) Grants increased\nstamina regeneration,\nfor a short time."),
+                (10, "Elizabeth's Mushroom x10", "Elizabeth's Mushroom", "(AP) Grants heatlh\nregeneration,for\na short time."),
+                (15, "B.P. Moss Clumps x15", "Blooming Purple Moss Clump", "(AP) Blooming Purple\nMoss Clumps - Cure\nmost ailments"),
 
-                (10, "Large Titanite Shards", "Large Titanite Shard", "Large Titanite Shard"),
-                (10, "Transient Curses", "Transient Curse", "Transient Curse"),
+                (10, "Large Titanite Shard x10", "Large Titanite Shard", "(AP) Upgrade materials."),
+                (10, "Transient Curse x10", "Transient Curse", "(AP) Lets your\nweapon hit ghosts."),
 
-                (1, "Dragon Head Stone", "Dragon Head Stone", "Dragon Head Stone"),
-                (1, "Chloranthy Ring", "Chloranthy Ring", "Chloranthy Ring"),
-                (1, "Wolf Ring", "Wolf Ring", "Wolf Ring"),
-                (1, "Hornet Ring", "Hornet Ring", "Hornet Ring"),
-                (1, "Hawk Ring", "Hawk Ring", "Hawk Ring"),
-                (1, "Rusted Iron Ring", "Rusted Iron Ring", "Rusted Iron Ring"),
-                (1, "Slumbering Dragoncrest Ring", "Slumbering Dragoncrest Ring", "Slumbering Dragoncrest Ring")
+                (1, "Dragon Head Stone", "Dragon Head Stone", "(AP) Vow requirement\nremoval pending."),
+                (1, "Cloranthy Ring", "Cloranthy Ring", "(AP) Grants increased\nstamina regeneration"),
+                (1, "Wolf Ring", "Wolf Ring", "(AP) Increaed Poise"),
+                (1, "Hornet Ring", "Hornet Ring", "(AP) Increased critical\ndamage."),
+                (1, "Hawk Ring", "Hawk Ring", "(AP) Increased bow range."),
+                (1, "Rusted Iron Ring", "Rusted Iron Ring", "(AP) Better movement\nthrough deep water\nand swamp."),
+                (1, "Slumbering Dragoncrest Ring", "Slumbering Dragoncrest Ring", "(AP) Silences your\nfootsteps.")
                 ]);
-
+            
             foreach (var gift in gifts)
             {
                 var charaInit_ingame = paramStruct.ParamEntries.Find(x => x.id == gift.Id);
@@ -757,15 +806,26 @@ namespace DSAP.Helpers
                     // update the chara init ring
                     Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ACCESSORY_01, sizeof(int));
                 }
-
-
-
                 // write array back to params
-                Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); // chara init for in-game (some data, e.g. spells)
-
+                Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); 
+                
+                // write new gift name
+                uint msgid = (uint)(gift.Id + 132050 - 2400);
+                msgManStruct.UpdateMsg(msgid, gift_entry.gift_name);
+                // write gift description
+                uint descid = (uint)(gift.Id + 132350 - 2400);
+                msgManStruct.UpdateMsg(descid, gift_entry.description);
+                Log.Logger.Debug($"Added messages for gift {gift.Id} to replace {gift.Name} with {gift_entry.gift_name}");
             }
 
+            msgManStruct.UpdateMsg(401303, "New Game (AP)");
+            msgManStruct.UpdateMsg(401311, $"DSAP {App.DSOptions?.VersionInfoString()}");
 
+
+            msgManStruct.AddMsg(99999998, ""); // mark that we've been here
+            msgManStruct.MsgEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Added gifts to menu text struct");
+            MsgManHelper.WriteFromMsgManStruct(msgManStruct, 0x3e0); // write the gift names
 
             byte[] parambytes = new byte[EquipParamWeapon.Size];
             // add a dummy item at 99999998 so that we can know we've been here.
@@ -775,7 +835,7 @@ namespace DSAP.Helpers
             paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
             Log.Logger.Information($"Added 1 items to CharaInit struct and updated chars");
 
-            ParamHelper.WriteFromParamSt(paramStruct, CharaInitParam.spOffset);
+            ParamHelper.WriteFromParamSt(paramStruct, CharaInitParam.spOffset); // write the chara init params
 
             return true;
         }
@@ -805,13 +865,13 @@ namespace DSAP.Helpers
                     
                     if (newlot.id == foundlot.id) // based-on lot is the one to update
                     {
-                        Log.Logger.Information($"updating item lot id {newlot.id}");
+                        Log.Logger.Verbose($"updating item lot id {newlot.id}");
                         Array.Copy(BitConverter.GetBytes(newlot.itemid), 0, paramStruct.ParamBytes, foundlot.paramOffset + 0x0, sizeof(int)); // lotItemId01
                         paramStruct.ParamBytes[foundlot.paramOffset + 0x8a] = (byte) newlot.quantity; // lotItemNum01
                     }
                     else // add new entry based on the based-on lot
                     {
-                        Log.Logger.Information($"Adding item lot id {newlot.id}, based on {newlot.baseid}");
+                        Log.Logger.Verbose($"Adding item lot id {newlot.id}, based on {newlot.baseid}");
                         new_entries++;
                         // copy in based on the based-on lot
                         Array.Copy(paramStruct.ParamBytes, foundlot.paramOffset, parambytes, 0, parambytes.Length);

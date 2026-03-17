@@ -175,7 +175,7 @@ namespace DSAP.Helpers
 
             return true;
         }
-        private static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings, string msgsName)
+        internal static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings, string msgsName)
         {
             ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
 
