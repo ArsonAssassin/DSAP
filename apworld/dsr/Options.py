@@ -47,7 +47,7 @@ class LogicToAccessCatacombs(Choice):
     - **no_logic:** (not recommended) Catacombs is in-logic as soon as you get to Firelink Shrine.
     - **undead_merchant:** Access to Undead Merchant in the Upper Undead Burg puts Catacombs in-logic.
     - **andre:** Access to Andre puts Catacombs in-logic.
-    - **andre_or_undead_merchant:** Access to either Andre or Undead Merchant puts Catacombs in-logic.
+    - **andre_or_undead_merchant:** (default) Access to either Andre or Undead Merchant puts Catacombs in-logic.
     - **ornstein_and_smough:** Access to Ornstein and Smough puts Catcombs in-logic."""
     display_name = "Logic Requirement to Access Catacombs"
     option_no_logic = 0
@@ -57,8 +57,88 @@ class LogicToAccessCatacombs(Choice):
     option_ornstein_and_smough = 4
     default = 3
 
+class RandomizeStartingLoadouts(DefaultOnToggle):
+    """Randomize each class's starting weapons, shields, and armors.
+    This will also randomize the thief's master key, which would break logic.
+    Shields will always be 1-handed-wieldable with starting stats.
+    Weapons will always be at least 2-handed-wieldable with starting stats.
+    You can see what weapons/shield/item each class starts with in their description.
+    Starting spells are randomized separately.""" 
+    display_name = "Randomize Starting Loadout"
+
+class RandomizeStartingGifts(DefaultOnToggle):
+    """Randomize the starting gift options to a subset of a custom item pool.
+    This pool includes many additional consumable options, and some rings.
+    This pool also includes most of the default gifts, except Master key, which breaks logic.
+    """
+    display_name = "Randomize Starting Gifts"
+
+class RequireOneHandedStartingWeapons(DefaultOnToggle):
+    """If randomize_starting_loadouts is on, this option determines if each class's weapons can be wielded with one hand with their starting stats.
+    Ignored if no_weapon_requirements is true."""
+    display_name = "Require One Handed Starting Weapons"
+
+class ExtraStartingWeaponForMeleeClasses(Toggle):
+    """If randomize_starting_loadouts is on, this option determines if melee classes will get a second melee weapon."""
+    display_name = "Extra Starting Weapon For Melee Classes"
+    
+class ExtraStartingShieldForAllClasses(Toggle):
+    """If randomize_starting_loadouts is on, this option determines if all classes will get a second starting shield."""
+    display_name = "Extra Starting Shield For All Classes"
+
+class StartingSorcery(Choice):
+    """How to randomize starting sorceries.
+    Limited to spells the sorcerer can cast with their starting stats, unless "remove_spell_stat_requirements" is on.
+
+    - **Soul Arrow:** Default option - vanilla starting sorcery
+    - **Any:** Any sorcery
+    - **Attack:** Any attack sorcery"""
+    display_name = "Starting Sorcery"
+    option_soul_arrow = 0
+    option_any = 1
+    option_attack = 2
+    default = 0
+
+class StartingMiracle(Choice):
+    """How to randomize starting miracles.
+    Limited to spells the cleric can cast with their starting stats, unless "remove_spell_stat_requirements" is on.
+
+    - **Heal:** Default option - vanilla starting miracle
+    - **Any:** Any miracle
+    - **Healing:** Any healing miracle"""
+    display_name = "Starting Miracle"
+    option_heal = 0
+    option_any = 1
+    option_healing = 3
+    default = 0
+
+class StartingPyromancy(Choice):
+    """How to randomize starting pyromancies.
+
+    - **Fireball:** Default option - vanilla starting pyromancy
+    - **Any:** Any pyromancy
+    - **Attack:** Any attack pyromancy"""
+    display_name = "Starting Pyromancy"
+    option_fireball = 0
+    option_any = 1
+    option_attack = 2
+    default = 0
+
+class NoWeaponRequirements(Toggle):
+    """Removes weapon and shield stat requirements."""
+    display_name = "No Weapon Stat Requirements"
+
+class NoSpellStatRequirements(Toggle):
+    """Removes stat requirements for casting all miracles and sorceries."""
+    display_name = "No Spell Stat Requirements"
+
+class NoMiracleCovenantRequirements(DefaultOnToggle):
+    """Removes covenant requirements for casting certain miracles."""
+    display_name = "No Miracle Covenant Requirements"
+
 class UpgradedWeaponsPercentage(Range):
     """Percentage of weapons (including shields) in the pool that will be replaced with upgraded versions, if possible.
+    Does not affect starting equipment.
     Choose a higher value for an easier time."""
     display_name = "Upgraded Weapons Percentage"
     range_start = 0
@@ -111,6 +191,19 @@ option_groups = [
     OptionGroup("Logic", [
         LogicToAccessCatacombs,
         ]),
+    OptionGroup("Equipment", [
+        RandomizeStartingLoadouts,
+        RandomizeStartingGifts,
+        RequireOneHandedStartingWeapons,
+        ExtraStartingWeaponForMeleeClasses,
+        ExtraStartingShieldForAllClasses,
+        StartingSorcery,
+        StartingMiracle,
+        StartingPyromancy,
+        NoWeaponRequirements,
+        NoSpellStatRequirements,
+        NoMiracleCovenantRequirements
+        ]),
     OptionGroup("Upgraded Weapons", [
         UpgradedWeaponsPercentage,
         UpgradedWeaponsAllowedInfusions,
@@ -129,6 +222,19 @@ class DSROption(PerGameCommonOptions):
     fogwall_sanity: FogwallSanity
     boss_fogwall_sanity: BossFogwallSanity
     logic_to_access_catacombs: LogicToAccessCatacombs
+
+    randomize_starting_loadouts: RandomizeStartingLoadouts
+    randomize_starting_gifts: RandomizeStartingGifts
+    require_one_handed_starting_weapons: RequireOneHandedStartingWeapons
+    extra_starting_weapon_for_melee_classes: ExtraStartingWeaponForMeleeClasses
+    extra_starting_shield_for_all_classes: ExtraStartingShieldForAllClasses
+    starting_sorcery: StartingSorcery
+    starting_miracle: StartingMiracle
+    starting_pyromancy: StartingPyromancy
+    no_weapon_requirements: NoWeaponRequirements
+    no_spell_stat_requirements: NoSpellStatRequirements
+    no_miracle_covenant_requirements: NoMiracleCovenantRequirements
+
     upgraded_weapons_percentage: UpgradedWeaponsPercentage
     upgraded_weapons_allowed_infusions: UpgradedWeaponsAllowedInfusions
     upgraded_weapons_adjusted_levels : UpgradedWeaponsAdjustedLevels
