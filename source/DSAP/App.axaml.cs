@@ -1567,8 +1567,10 @@ public partial class App : Application
             }
         }
         ItemLotHelper.UpdateCharaInits();
-        //ParamHelper.RemoveWeaponRequirements(); 
-        ParamHelper.RemoveSpellRequirements();
+        if (DSOptions.NoWeaponRequirements)
+            ParamHelper.RemoveWeaponRequirements(); 
+        if (DSOptions.NoSpellStatRequirements || DSOptions.NoMiracleCovenantRequirements)
+            ParamHelper.RemoveSpellRequirements();
 
         /* Set to only receive remote items and starting inventory */
         ReplaceItems();

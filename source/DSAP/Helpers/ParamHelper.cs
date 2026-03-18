@@ -94,7 +94,6 @@ namespace DSAP.Helpers
             }
 
             // add a dummy item at 99999998 so that we can know we've been here.
-            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
             paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
 
             paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
@@ -122,24 +121,32 @@ namespace DSAP.Helpers
             for (int i = 0; i < paramStruct.ParamEntries.Count; i++)
             {
                 var ent = paramStruct.ParamEntries[i];
-                // if modifying int and faith requirements
-                paramStruct.ParamBytes[ent.paramOffset + MagicParam.Int_Requirement] = 0;   // int
-                paramStruct.ParamBytes[ent.paramOffset + MagicParam.Faith_Requirement] = 0; // faith
                 
-                // if removing vow restrictions
-                paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_00_07] = 0xff;   // spell usable while in no covenant and first 7
-                paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_08_15] = 0xff;   // spell usable while in any of the other covenants
+                if (App.DSOptions.NoSpellStatRequirements) // Remove int and faith requirements
+                {
+                    paramStruct.ParamBytes[ent.paramOffset + MagicParam.Int_Requirement] = 0;   // int
+                    paramStruct.ParamBytes[ent.paramOffset + MagicParam.Faith_Requirement] = 0; // faith
+                }
+                if (App.DSOptions.NoMiracleCovenantRequirements) // Remove vow restrictions
+                {   
+                    paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_00_07] = 0xff;   // spell usable while in no covenant and first 7
+                    paramStruct.ParamBytes[ent.paramOffset + MagicParam.VOW_08_15] = 0xff;   // spell usable while in any of the other covenants
+                }
             }
+
+            if (App.DSOptions.NoSpellStatRequirements) // Remove int and faith requirements
+                Log.Logger.Information("Removed spell stat requirements.");
+            if (App.DSOptions.NoMiracleCovenantRequirements) // Remove vow restrictions
+                Log.Logger.Information("Removed spell covenant requirements.");
 
             // Get first entry's Param (e.g. White Sign Soapstone), use it as basis for new params.
             byte[] parambytes = new byte[MagicParam.Size];
 
             // add a dummy item at 99999998 so that we can know we've been here.
-            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
             paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
 
             paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
-            Log.Logger.Information($"Added 1 items to EquipParamWeapon struct and removed stat requirements");
+            Log.Logger.Debug($"Added 1 items to Spells struct and removed stat or vow requirements");
 
             ParamHelper.WriteFromParamSt(paramStruct, MagicParam.spOffset);
 
