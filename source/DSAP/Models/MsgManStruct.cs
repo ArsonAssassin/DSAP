@@ -120,11 +120,18 @@ namespace DSAP.Models
 
             byte[] StringOffsetTableBytes = new byte[4 * MsgEntries.Count];
 
-            // do this naively (1 per string) for now. Optimize later
             var spans = new List<(int StrOffIndex, uint startid, uint endid)>();
             int j = 0;
+            int lastspan = -1;
+
             foreach (var entry in MsgEntries) {
-                spans.Add((j, entry.id, entry.id));
+                if (spans.Count > 0 && spans[lastspan].endid + 1 == entry.id) // if this is at the end of span
+                    spans[lastspan] = (spans[lastspan].StrOffIndex, spans[lastspan].startid, entry.id); // add it to span
+                else
+                {
+                    spans.Add((j, entry.id, entry.id));
+                    lastspan++;
+                }
                 j++;
             }
 

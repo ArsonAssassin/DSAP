@@ -11,7 +11,7 @@ namespace DSAP.Helpers
     internal class MsgManHelper
     {
         // return = whether reload is required
-        public static bool ReadFromBytes(out MsgManStruct result, int msgManOffset, Func<MsgManStruct, bool> isUsedCondition)
+        public static bool ReadMsgManStruct(out MsgManStruct result, int msgManOffset, Func<MsgManStruct, bool> isUsedCondition)
         {
             result = new MsgManStruct();
 

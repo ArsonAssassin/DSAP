@@ -486,7 +486,7 @@ namespace DSAP.Helpers
                 return false;
             }
             // Read in system text FMGs
-            bool reload2Required = MsgManHelper.ReadFromBytes(out MsgManStruct msgManStruct,
+            bool reload2Required = MsgManHelper.ReadMsgManStruct(out MsgManStruct msgManStruct,
                                                      0x3e0,
                                                      (ps) => ps.MsgEntries.Last().id >= 99999990);
             if (!reload2Required)
