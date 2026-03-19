@@ -378,6 +378,7 @@
     "UpgradeType": "InfusableRestricted",
     "Category": "Shields",
     "Strength": 10,
+    "Faith": 18,
     "ApId": 11119040
   },
   {
