@@ -37,9 +37,9 @@ namespace DSAP.Helpers
 
             var tasks = new List<Task>
                 {
-                Task.Run(() => { AddMsgs(0x380, added_names, "Item Names"); }), // names
-                Task.Run(() => { AddMsgs(0x378, added_captions, "Item Captions"); }), // captions
-                Task.Run(() => { AddMsgs(0x328, added_captions, "Item Descriptions"); }), // info
+                Task.Run(() => { AddMsgs(MsgManStruct.OFFSET_ITEM_NAMES, added_names, "Item Names"); }), // names
+                Task.Run(() => { AddMsgs(MsgManStruct.OFFSET_ITEM_CAPTIONS, added_captions, "Item Captions"); }), // captions
+                Task.Run(() => { AddMsgs(MsgManStruct.OFFSET_ITEM_DESCRIPTIONS, added_captions, "Item Descriptions"); }), // info
                 };
             await Task.WhenAll(tasks);
 
@@ -175,170 +175,27 @@ namespace DSAP.Helpers
 
             return true;
         }
-        internal static void AddMsgs(uint offset, List<KeyValuePair<long, string>> instrings, string msgsName)
+        internal static void AddMsgs(int msgManOffset, List<KeyValuePair<long, string>> instrings, string msgsName)
         {
-            ulong MsgMan = Memory.ReadULong(0x141c7e3e8);
-
-            ulong old_buffer = Memory.ReadULong(MsgMan + offset);
-            ulong old_buffer_size = Memory.ReadUInt(old_buffer + 0x4);
-            ulong old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
-            // structure of buffer:
-            // string end/size@ 0x04
-            // num of span maps 0x0c
-            // # stroff entries 0x10
-            // stroff table  at 0x14
-            // span maps start  0x1c
-            // span maps have <offset> <min> <max>. Offset is # of entries into string offset table
-            // after span maps is string offset table
-            // There are (number of items, = 0x110 vanilla) in string offset table
-            // Then there are the strings
-            // New buffer will need added:
-            //  1. (optionally) +c bytes for another map,
-            //  2. 0x4 bytes per added id in the string offset table
-            //  3. [n] bytes for each string including null char, in Unicode
-            // New buffer will need updated:
-            //     (optionally) num of span maps
-            //     string offset at 0x14
-            //     span map entry if not adding a new one
-            //     each string offset entry
-            //     end of strings/size of all
-
-            // get highest entry in span maps table
-            // check its id against known ids, if higher do desc area validation
-            uint highest_id = Memory.ReadUInt(old_buffer + 0x1c + 0xc * (old_buffer_num_spanmaps - 1) + 0x8);
-            Log.Logger.Verbose($"msgs highest id = {highest_id}");
-            if (highest_id >= instrings.First().Key) // conflict
+            // Read in system text FMGs
+            bool reloadRequired = MsgManHelper.ReadMsgManStruct(out MsgManStruct msgManStruct,
+                                                     msgManOffset,
+                                                     (ps) => ps.MsgEntries.Last().id >= 99999990);
+            if (!reloadRequired)
             {
-                // validate desc area
-                // If it's no good, reset it
-                ulong desc_area_loc = old_buffer + old_buffer_size;
-                Log.Logger.Verbose($"{msgsName} old desc area loc: {desc_area_loc:X}, size: {old_buffer_size.ToString()}");
-                DescArea old_desc_area = Memory.ReadObject<DescArea>(desc_area_loc);
-                Log.Logger.Debug("Read object: " + old_desc_area.ToString() + " from " + $"{desc_area_loc:X}");
-                bool update_required = MiscHelper.ValidateDescArea(old_desc_area, msgsName);
-                if (update_required)
-                {
-                    ulong intermediate_buffer_loc = old_buffer; // save "swapped-in area" ptr
-                    // reset old buffer values
-                    old_buffer = old_desc_area.OldAddress;
-                    old_buffer_size = (ulong)old_desc_area.OldLength;
-                    old_buffer_num_spanmaps = Memory.ReadUShort(old_buffer + 0xc);
-
-                    /* Switch out the pointer so deallocated area isn't accessed by the game */
-                    Memory.Write(MsgMan + offset, old_buffer);
-
-                    // dealloc previously swapped-in area
-                    Memory.FreeMemory((nint)(intermediate_buffer_loc));
-                    Log.Logger.Information($"Reloading {msgsName} text changes");
-                }
-                else
-                {
-                    Log.Logger.Information($"{msgsName} text update not needed - skipping");
-                    return;
-                }
+                Log.Logger.Warning($"Warning: Could not reload {msgsName} msgs.");
+                return;
             }
 
-            ulong old_buffer_num_stroff_entries = Memory.ReadUShort(old_buffer + 0x10);
-            ulong old_buffer_stroff_start_offset = Memory.ReadUInt(old_buffer + 0x14);
-
-            ulong new_entries = (ulong)(instrings.Last().Key - instrings.First().Key + 1);
-            ulong total_String_size = 0;
-            ulong new_buffer = 0;
-            ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
-            ulong old_buffer_string_start_offset = old_buffer_stroff_start_offset + (old_buffer_num_stroff_entries * 4);
-            ulong new_buffer_string_start_offset = old_buffer_string_start_offset + 0xc + 4 * new_entries;
-            foreach (var entry in instrings)
-            {
-                total_String_size += (ulong)Encoding.Unicode.GetBytes(entry.Value).Length;
-            }
-            //calculate size
-            ulong new_buffer_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size;
-            ulong new_buffer_total_size = old_buffer_size + 0xc + 0x4 * new_entries + total_String_size + (ulong)DescArea.size;
-
-            lock (_memAllocLock)
-            {
-                new_buffer = (ulong)Memory.Allocate((uint)new_buffer_total_size);
-            }
-            if (new_buffer == 0)
-            {
-                Log.Logger.Error($"Error allocating {msgsName}, could not allocate {new_buffer_total_size} byte area.");
-            }
-            //Log.Logger.Information($"Allocated {new_buffer_total_size} bytes at {new_buffer:X}");
-            Log.Logger.Information($"Updating {msgsName} text @ {old_buffer:X} to {new_buffer:X}");
-
-            // first, copy over header & old maps
-            byte[] basebytes = Memory.ReadByteArray(old_buffer, (int)(0x1c + old_buffer_num_spanmaps * 0xc));
-            Memory.WriteByteArray(new_buffer, basebytes);
-            // Then, copy over existing string offset table
-
-            //ulong new_buffer_stroff_start_offset = old_buffer_stroff_start_offset + 0xc;
+            foreach (var input in instrings)
+                msgManStruct.AddMsg((uint)input.Key, input.Value);
 
 
-            byte[] basebytes2 = Memory.ReadByteArray(old_buffer + old_buffer_stroff_start_offset, (int)(old_buffer_num_stroff_entries * 4));
-            Memory.WriteByteArray(new_buffer + new_buffer_stroff_start_offset, basebytes2);
-            // Then, copy over existing strings
-            byte[] basebytes3 = Memory.ReadByteArray(old_buffer + old_buffer_string_start_offset, (int)(old_buffer_size - old_buffer_string_start_offset));
-            Memory.WriteByteArray(new_buffer + new_buffer_string_start_offset, basebytes3);
+            msgManStruct.AddMsg(99999998, ""); // add dummy message to mark that we've been here
+            msgManStruct.MsgEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Updated {msgsName} struct");
 
-            // add new span map
-            ulong new_spanmap_loc = new_buffer + old_buffer_stroff_start_offset; // old buffer stroffs started where this would
-            Memory.Write(new_spanmap_loc, (int)old_buffer_num_stroff_entries); // next str off index will be the next available number (0 indexed) - aka current max
-            Memory.Write(new_spanmap_loc + 0x4, (int)instrings.First().Key);
-            Memory.Write(new_spanmap_loc + 0x8, (int)instrings.Last().Key);
-
-            // Correct bad string offsets in table - increase by 0xc for the new spanmap, and 0x4 for each new string
-            for (uint i = 0; i < old_buffer_num_stroff_entries; i++)
-            {
-                ulong stroff_loc = new_buffer + new_buffer_stroff_start_offset + 4 * i;
-                uint stroff_val = Memory.ReadUInt(stroff_loc);
-                if (stroff_val != 0)
-                {
-                    stroff_val += (uint)(0xc + (new_entries * 4));
-                    Memory.Write(stroff_loc, stroff_val);
-                }
-            }
-            // point to end of last old string
-            ulong curr_end_loc = new_buffer + new_buffer_string_start_offset + (old_buffer_size - old_buffer_string_start_offset);
-            Log.Logger.Debug($"{msgsName} curr end loc = {curr_end_loc:X}, size: {(curr_end_loc - new_buffer).ToString()}");
-            ulong end_of_stroffs = new_buffer + new_buffer_stroff_start_offset + (4 * old_buffer_num_stroff_entries);
-            for (uint i = 0; i < new_entries; i++)
-            {
-                ulong curr_stroff_loc = end_of_stroffs + 4 * i;
-                byte[] ba = Encoding.Unicode.GetBytes("\0");
-                if (instrings.Any(x => x.Key == instrings.First().Key + i))
-                {
-                    ba = Encoding.Unicode.GetBytes(instrings.Find(x => x.Key == instrings.First().Key + i).Value);
-                    Memory.Write(curr_stroff_loc, (int)(curr_end_loc - new_buffer)); // point stroff entry to string position
-                                                                                     // Then write the string
-                    Memory.WriteByteArray(curr_end_loc, ba);
-                    curr_end_loc += (ulong)ba.Length;
-                }
-                else
-                {
-                    Memory.Write(curr_stroff_loc, 0); // clear stroff entry
-                }   
-            }
-            // end of data here
-            // add desc area
-            var seedHash = MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed);
-            var slot = App.Client.CurrentSession.ConnectionInfo.Slot;
-            var new_desc_area = new DescArea((int)new_buffer_total_size, old_buffer, (int)old_buffer_size, seedHash, slot);
-
-            
-            ulong new_desc_area_loc = new_buffer + new_buffer_size;
-            Log.Logger.Verbose($"added {new_entries} entries to {msgsName}");
-            Memory.WriteObject<DescArea>(new_desc_area_loc, new_desc_area);
-            Log.Logger.Verbose($"new Desc Area written to {new_desc_area_loc:X}");
-            // end here
-
-            // fix up header area
-            Memory.Write(new_buffer + 0x4, new_desc_area_loc - new_buffer);
-            Memory.Write(new_buffer + 0xc, old_buffer_num_spanmaps + 1);
-            Memory.Write(new_buffer + 0x10, old_buffer_num_stroff_entries + new_entries);
-            Memory.Write(new_buffer + 0x14, new_buffer_stroff_start_offset);
-
-            /* Then switch out the pointer */
-            Memory.Write(MsgMan + offset, new_buffer);
+            MsgManHelper.WriteFromMsgManStruct(msgManStruct, msgManOffset); // write the msgs update
         }
         private static void UpdateItemText(ulong strloc, int len, string newstring)
         {

@@ -11,6 +11,10 @@ namespace DSAP.Models
     public class MsgManStruct
     {
         const int HEADER_SIZE = 0x1c;
+        public const int OFFSET_SYSTEM_TEXT = 0x3e0;
+        public const int OFFSET_ITEM_NAMES = 0x380;
+        public const int OFFSET_ITEM_CAPTIONS = 0x378;
+        public const int OFFSET_ITEM_DESCRIPTIONS = 0x328;
         public int BufferSize { get; set; }
         public ulong BufferLoc { get; set; }
         public byte[] AllBytes { get; set; }

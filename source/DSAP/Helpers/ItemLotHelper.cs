@@ -487,7 +487,7 @@ namespace DSAP.Helpers
             }
             // Read in system text FMGs
             bool reload2Required = MsgManHelper.ReadMsgManStruct(out MsgManStruct msgManStruct,
-                                                     0x3e0,
+                                                     MsgManStruct.OFFSET_SYSTEM_TEXT,
                                                      (ps) => ps.MsgEntries.Last().id >= 99999990);
             if (!reload2Required)
             {
@@ -495,19 +495,19 @@ namespace DSAP.Helpers
                 //return false;
             }
 
-            //print all fmgs in 0x3e0 for research
-            foreach (var msgentry in msgManStruct.MsgEntries)
-            {
-                if (msgentry.stringOffset >= 0)
-                {
-                    int maxbytes = msgManStruct.StringBytes.Length - msgentry.stringOffset;
-                    int readbytes = Math.Min(500, maxbytes);
-                    string s = Encoding.Unicode.GetString(msgManStruct.StringBytes, msgentry.stringOffset, readbytes);
-                    if (s.Split("\0").Length > 1)
-                        s = s.Split("\0")[0];
-                    Log.Logger.Warning($"Message id={msgentry.id}={s}");
-                }
-            }
+            //print all fmgs in SYSTEM TEXT for research
+            //foreach (var msgentry in msgManStruct.MsgEntries)
+            //{
+            //    if (msgentry.stringOffset >= 0)
+            //    {
+            //        int maxbytes = msgManStruct.StringBytes.Length - msgentry.stringOffset;
+            //        int readbytes = Math.Min(500, maxbytes);
+            //        string s = Encoding.Unicode.GetString(msgManStruct.StringBytes, msgentry.stringOffset, readbytes);
+            //        if (s.Split("\0").Length > 1)
+            //            s = s.Split("\0")[0];
+            //        Log.Logger.Warning($"Message id={msgentry.id}={s}");
+            //    }
+            //}
 
             // if we are here, we are updating the params.
 
@@ -1022,7 +1022,7 @@ namespace DSAP.Helpers
             msgManStruct.AddMsg(99999998, ""); // add dummy message to mark that we've been here
             msgManStruct.MsgEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
             Log.Logger.Information($"Updated system text struct");
-            MsgManHelper.WriteFromMsgManStruct(msgManStruct, 0x3e0); // write the gift names + system text updates
+            MsgManHelper.WriteFromMsgManStruct(msgManStruct, MsgManStruct.OFFSET_SYSTEM_TEXT); // write the gift names + system text updates
 
             byte[] parambytes = new byte[EquipParamWeapon.Size];
             // add a dummy item at 99999998 so that we can know we've been here.
