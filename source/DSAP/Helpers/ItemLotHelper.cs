@@ -471,13 +471,14 @@ namespace DSAP.Helpers
         }
         public static List<(int id, int baseid, int itemid, int quantity)> loadout_itemlots = [];
         /// <summary>
-        /// Update start character loadouts, and populate the "loadout specific item lots" (e.g. UA starter drops)
+        /// Update start character loadouts and gifts, populate the "loadout specific item lots" (e.g. UA starter drops), and update descriptions.
+        /// Since this updates system text for their descriptions, also update "New Game" text and add version info to top left of main menu in this function
         /// </summary>
         /// <returns></returns>
-        internal static bool UpdateCharaInits()
+        internal static bool RandomizeStartingLoadouts()
         {
             // Read in Chara Init params
-            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<CharaInitParam> paramStruct,
+            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<CharaInitParam> charaParamStruct,
                                                      CharaInitParam.spOffset,
                                                      (ps) => ps.ParamEntries.Last().id >= 99999990);
             if (!reloadRequired)
@@ -524,74 +525,27 @@ namespace DSAP.Helpers
             var arms_armor = armors.Where(x => ((x.Id / 1000) % 10) == 2).ToList(); // 0 in 1000s place = arms armor
             var legs_armor = armors.Where(x => ((x.Id / 1000) % 10) == 3).ToList(); // 0 in 1000s place = legs armor
 
-
-            var gifts = MiscHelper.GetGiftParams();
-
             Random random = new Random(MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed) + App.Client.CurrentSession.ConnectionInfo.Slot);
 
-            // modify our relevant entries
+            // For each class loadout slot, randomize it
             foreach (var loadout in loadouts)
             {
-                var charaInit_display = paramStruct.ParamEntries.Find(x => x.id == loadout.Id);
-                var charaInit_ingame = paramStruct.ParamEntries.Find(x => x.id == loadout.Id - 1000);
+                var charaInit_display = charaParamStruct.ParamEntries.Find(x => x.id == loadout.Id);
+                var charaInit_ingame = charaParamStruct.ParamEntries.Find(x => x.id == loadout.Id - 1000);
 
                 // get current param bytes
                 byte[] display_parambytes = new byte[CharaInitParam.Size];
-                Array.Copy(paramStruct.ParamBytes, charaInit_display.paramOffset, display_parambytes, 0, CharaInitParam.Size);
+                Array.Copy(charaParamStruct.ParamBytes, charaInit_display.paramOffset, display_parambytes, 0, CharaInitParam.Size);
                 byte[] ingame_parambytes = new byte[CharaInitParam.Size];
-                Array.Copy(paramStruct.ParamBytes, charaInit_ingame.paramOffset, ingame_parambytes, 0, CharaInitParam.Size);
+                Array.Copy(charaParamStruct.ParamBytes, charaInit_ingame.paramOffset, ingame_parambytes, 0, CharaInitParam.Size);
 
                 var allowed_melee_weapons = melee_weapons;
                 var allowed_shields = shields;
                 var allowed_spell_tools = spell_tools;
-                if (!App.DSOptions.NoWeaponRequirements)
-                {
-                    // melee weapons
-                    allowed_melee_weapons = melee_weapons.Where(x =>
-                    {
-                        return (loadout.Strength * 3 >= x.Strength * 2) // use 2h strength (2 handing gives 50% str bonus)
-                            && (loadout.Dexterity >= x.Dexterity)
-                            && (loadout.Intelligence >= x.Intelligence)
-                            && (loadout.Faith >= x.Faith);
-                    }).ToList(); // 2-handable weapons
 
-                    if (App.DSOptions.RequireOneHandedStartingWeapons) // limit it further
-                    {
-                        allowed_melee_weapons = allowed_melee_weapons.Where(x =>
-                        {
-                            return loadout.Strength >= x.Strength; // limit to 1h strength
-                        }).ToList();
-                    }
-                    // shields
-                    allowed_shields = allowed_shields.Where(x =>
-                    {
-                        return (loadout.Strength >= x.Strength)
-                            && (loadout.Dexterity >= x.Dexterity)
-                            && (loadout.Intelligence >= x.Intelligence)
-                            && (loadout.Faith >= x.Faith);
-                    }).ToList(); // shield requires the strength
-                    // spell tools
-                    if (loadout.Type == Enums.DsrLoadoutType.Magic || loadout.Type == Enums.DsrLoadoutType.Miracle) // only bother for faith/int casters
-                    {
-                        allowed_spell_tools = spell_tools.Where(x =>
-                        {
-                            return (loadout.Strength * 3 >= x.Strength * 2) // use 2h strength (2 handing gives 50% str bonus)
-                                && (loadout.Dexterity >= x.Dexterity)
-                                && (loadout.Intelligence >= x.Intelligence)
-                                && (loadout.Faith >= x.Faith);
-                        }).ToList(); // 2-handable weapons
-
-                        if (App.DSOptions.RequireOneHandedStartingWeapons) // limit it further
-                        {
-                            allowed_spell_tools = allowed_spell_tools.Where(x =>
-                            {
-                                return loadout.Strength >= x.Strength; // limit to 1h strength
-                            }).ToList();
-                        }
-                    }
-                }
-
-
+                allowed_melee_weapons = melee_weapons.Where(x => WeaponEquipable(loadout, x)).ToList();
+                allowed_shields = shields.Where(x => ShieldEquipable(loadout, x)).ToList();
+                allowed_spell_tools = spell_tools.Where(x => WeaponEquipable(loadout, x)).ToList();
 
                 DarkSoulsItem? weapon = null;
                 DarkSoulsItem? shield = null;
@@ -606,81 +560,11 @@ namespace DSAP.Helpers
 
 
                 var itemLots = new List<(int lotid, int item, int quantity)>(); // item lot updates for this loadout
-                var desc_line_1 = "";
-                var desc_line_2 = "";
-                var desc_line_3 = "";
                 var special_line = "";
 
-                // Randomize spells for caster classes
-                switch (loadout.Type)
-                {   
-                    case Enums.DsrLoadoutType.Magic:
-                        var valid_sorceries = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Sorcery:")).ToList();
-                        var allowed_sorceries = valid_sorceries;
-                        if (!App.DSOptions.NoSpellStatRequirements) // if we have stat requirements, limit our list of spells
-                            allowed_sorceries = valid_sorceries.Where(x => loadout.Intelligence > x.Intelligence).ToList();
-                        // Then limit our spell list by user choice
-                        if (App.DSOptions.StartingSorcery == 0) // default - soul arrow
-                        {
-                            allowed_sorceries = allowed_sorceries.Where(x => x.Name == "Sorcery: Soul Arrow").ToList();
-                        }
-                        if (App.DSOptions.StartingSorcery == 1) // any spell - we already have this list
-                        {
-                            ;
-                        }
-                        if (App.DSOptions.StartingSorcery == 2) // attack
-                        {
-                            allowed_sorceries = allowed_sorceries.Where(x => x.SpellCategory == Enums.SpellCategory.Attack).ToList();
-                        }
-                        spell = allowed_sorceries[random.Next(allowed_sorceries.Count)];
-                        break;
-                    case Enums.DsrLoadoutType.Miracle:
-                        var valid_miracles = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Miracle:")).ToList();
-                        var allowed_miracles = valid_miracles;
-                        if (!App.DSOptions.NoSpellStatRequirements) // if we have stat requirements, limit our list of spells
-                            allowed_miracles = valid_miracles.Where(x => loadout.Faith > x.Faith).ToList();
-                        
-                        if (!App.DSOptions.NoMiracleCovenantRequirements) // if we have covenant requirements, limit list of spells further
-                        {
-                            List<string> covenantMiracles = new List<string>(["Bountiful Sunlight", "Darkmoon Blade", "Soothing Sunlight", "Sunlight Spear"]);
-                            allowed_miracles = allowed_miracles.Where(x => !covenantMiracles.Contains($"Miracle: {x.Name}")).ToList();
-                        }
-                        // Then limit our spell list by user choice
-                        if (App.DSOptions.StartingMiracle == 0) // default - heal
-                        {
-                            allowed_miracles = allowed_miracles.Where(x => x.Name == "Miracle: Heal").ToList();
-                        }
-                        if (App.DSOptions.StartingMiracle == 1) // any miracle - we already have this list
-                        {
-                            ;
-                        }
-                        if (App.DSOptions.StartingMiracle == 3) // healing
-                        {
-                            allowed_miracles = allowed_miracles.Where(x => x.SpellCategory == Enums.SpellCategory.Heal).ToList();
-                        }
-                        spell = allowed_miracles[random.Next(allowed_miracles.Count)];
-                        break;
-                    case Enums.DsrLoadoutType.Pyromancy:
-                        var valid_pyromancies = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Pyromancy:")).ToList();
-                        // Then limit our spell list by user choice
-                        if (App.DSOptions.StartingPyromancy == 0) // default - heal
-                        {
-                            valid_pyromancies = valid_pyromancies.Where(x => x.Name == "Pyromancy: Fireball").ToList();
-                        }
-                        if (App.DSOptions.StartingPyromancy == 1) // any miracle - we already have this list
-                        {
-                            ;
-                        }
-                        if (App.DSOptions.StartingPyromancy == 2) // Attack
-                        {
-                            valid_pyromancies = valid_pyromancies.Where(x => x.SpellCategory == Enums.SpellCategory.Attack).ToList();
-                        }
-                        spell = valid_pyromancies[random.Next(valid_pyromancies.Count)];
-                        break;
-                    default:
-                        break;
-                }
-
+                // Get starter spell for the caster classes
+                spell = GetStarterSpell(loadout, random);
+                
                 if (spell != null)
                 {
                     // no need to add spells to item lots - add directly to chara inits only
@@ -726,24 +610,8 @@ namespace DSAP.Helpers
                             }
                             break;
                         case Enums.DsrLoadoutType.Ranged:
-                            var allowed_ranged_weapons = ranged_weapons;
-                            if (!App.DSOptions.NoWeaponRequirements) // if there are weapon requirements, limit available weapons
-                            {
-                                allowed_ranged_weapons = ranged_weapons.Where(x =>
-                                {
-                                    return (loadout.Strength * 3 >= x.Strength * 2) // use 2h str - most ranged weapons require two hands anyway
-                                        && (loadout.Dexterity >= x.Dexterity);
-                                }).ToList();
-
-                                if (App.DSOptions.RequireOneHandedStartingWeapons) // limit it further if required
-                                {
-                                    allowed_ranged_weapons = allowed_ranged_weapons.Where(x =>
-                                    {
-                                        return loadout.Strength >= x.Strength; // limit to 1h strength
-                                    }).ToList();
-                                }
-                            }
-
+                            var allowed_ranged_weapons = ranged_weapons.Where(x => WeaponEquipable(loadout, x)).ToList();
+                            
                             sub_weapon = allowed_ranged_weapons[random.Next(allowed_ranged_weapons.Count)];
                             List<DarkSoulsItem> allowed_ammos = [];
                             
@@ -811,16 +679,18 @@ namespace DSAP.Helpers
                         Log.Logger.Debug($"Wrote to param {loadout.Id} at {CharaInitParam.ITEMNUM_01} value {thief_item_quantity}");
                         special_line = $"{thief_item.Name} x{thief_item_quantity}";
                     }
+
+                    // randomize "main" weapon
                     weapon = allowed_melee_weapons[random.Next(allowed_melee_weapons.Count)];
                     itemLots.Add((loadout.RightWeapon, weapon.Id, 1));
                     Array.Copy(BitConverter.GetBytes(weapon.Id), 0, display_parambytes, CharaInitParam.WEAPON_RIGHT, sizeof(int));
 
+                    // randomize main shield
                     shield = allowed_shields[random.Next(allowed_shields.Count)];
                     itemLots.Add((loadout.LeftWeapon, shield.Id, 1));
                     Array.Copy(BitConverter.GetBytes(shield.Id), 0, display_parambytes, CharaInitParam.WEAPON_LEFT, sizeof(int));
 
-                    //randomize armors
-                    // randomize equipment
+                    //randomize armors/equipment
                     int head = BitConverter.ToInt32(display_parambytes, CharaInitParam.EQUIP_HEAD);
                     int body = BitConverter.ToInt32(display_parambytes, CharaInitParam.EQUIP_BODY);
                     int arms = BitConverter.ToInt32(display_parambytes, CharaInitParam.EQUIP_ARMS);
@@ -851,62 +721,23 @@ namespace DSAP.Helpers
                         Array.Copy(BitConverter.GetBytes(new_legs), 0, display_parambytes, CharaInitParam.EQUIP_LEGS, sizeof(int));
                         Array.Copy(BitConverter.GetBytes(new_legs), 0, ingame_parambytes, CharaInitParam.EQUIP_LEGS, sizeof(int));
                     }
+                    // done randomizing equipment
 
-                    // setup class description
-                    var desc_strings = new List<string>([]);
-                    if (weapon != null)
-                        desc_strings.Add(weapon.Name);
-                    if (sub_weapon != null)
-                        desc_strings.Add(sub_weapon.Name);
-                    if (shield != null)
-                        desc_strings.Add(shield.Name);
-                    if (sub_shield!= null)
-                        desc_strings.Add(sub_shield.Name);
-                    if (special_line != "")
-                        desc_strings.Add(special_line);
-
-                    if (desc_strings.Count == 5)
-                    {
-                        desc_line_1 = $"{desc_strings[0]}/{desc_strings[1]}";
-                        desc_line_2 = $"{desc_strings[2]}/{desc_strings[3]}";
-                        desc_line_3 = $"{desc_strings[4]}";
-                    }
-                    else if (desc_strings.Count == 4)
-                    {
-                        desc_line_1 = $"{desc_strings[0]}";
-                        desc_line_2 = $"{desc_strings[1]}/{desc_strings[2]}";
-                        desc_line_3 = $"{desc_strings[3]}";
-                    }
-                    else if (desc_strings.Count == 3)
-                    {
-                        desc_line_1 = $"{desc_strings[0]}";
-                        desc_line_2 = $"{desc_strings[1]}";
-                        desc_line_3 = $"{desc_strings[2]}";
-                    }
-                    else if (desc_strings.Count == 2)
-                    {
-                        desc_line_1 = $"{desc_strings[0]}";
-                        desc_line_2 = $"{desc_strings[1]}";
-                        desc_line_3 = "";
-                    }
-                    else
-                        Log.Logger.Warning("Error building randomized starting loadout descriptions: unexpected count.");
+                    string desc_line = BuildClassDescString(weapon, sub_weapon, shield, sub_shield, special_line);
 
                     // write class description
                     uint msgid = (uint)(loadout.Id + 132320 - 3000);
-                    msgManStruct.UpdateMsg(msgid, $"{desc_line_1}\n{desc_line_2}\n{desc_line_3}");
+                    msgManStruct.UpdateMsg(msgid, $"{desc_line}");
                 }
                 else 
                 {
                     if (special_line != "") // if only spells rando'd, set class description to them
                     {
-                        desc_line_1 = special_line;
-
                         // write class description
                         uint msgid = (uint)(loadout.Id + 132320 - 3000);
-                        msgManStruct.UpdateMsg(msgid, $"{desc_line_1}\n{desc_line_2}\n{desc_line_3}");
+                        msgManStruct.UpdateMsg(msgid, $"{special_line}");
                     }
-                    // else no rando done
+                    // else no rando done, so no message update
                 }
 
                 // setup the "item lots" structure's info for all the items of this specific class
@@ -926,18 +757,124 @@ namespace DSAP.Helpers
                 }
 
                 // write array back to params
-                Array.Copy(display_parambytes, 0, paramStruct.ParamBytes, charaInit_display.paramOffset, CharaInitParam.Size); // chara init for title screen
-                Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); // chara init for in-game (some data, e.g. spells)
+                Array.Copy(display_parambytes, 0, charaParamStruct.ParamBytes, charaInit_display.paramOffset, CharaInitParam.Size); // chara init for title screen
+                Array.Copy(ingame_parambytes, 0, charaParamStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size); // chara init for in-game (some data, e.g. spells)
                 // write it to messages
 
-            }
+            } // end of foreach loadout loop
 
             if (App.DSOptions.RandomizeStartingGifts)
             {
-                //var added_gifts = new List<KeyValuePair<long, string>>();
-                var available_gifts = new List<(byte quantity, string gift_name, String item_name, String description)>([
-                    // default items
-                    (3, "Goddess's Blessing", "Divine Blessing", "(AP) Wow!\n3 divine blessings,\nwhat a steal!"),
+                RandomizeGifts(charaParamStruct, msgManStruct, random);
+            }
+
+            // additional updates to interface
+            msgManStruct.UpdateMsg(401303, "New Game (AP)");
+            msgManStruct.UpdateMsg(401311, $"DSAP {App.DSOptions?.VersionInfoString()}");
+
+            
+            msgManStruct.AddMsg(99999998, "");  // add dummy message to mark that we've updated them
+            msgManStruct.MsgEntries.Sort((x, y) => (x.id.CompareTo(y.id))); // sort for write
+            MsgManHelper.WriteFromMsgManStruct(msgManStruct, MsgManStruct.OFFSET_SYSTEM_TEXT); // write the gift names + system text updates
+            Log.Logger.Information($"Updated system text struct");
+
+            // add a dummy chara init at 99999998 to know we've updated them
+            byte[] parambytes = new byte[CharaInitParam.Size];
+            charaParamStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+            charaParamStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Added 1 items to CharaInit struct and updated chars");
+
+            ParamHelper.WriteFromParamSt(charaParamStruct, CharaInitParam.spOffset); // write the chara init params
+
+            return true;
+        }
+
+        private static bool ShieldEquipable(Loadout loadout, DarkSoulsItem x)
+        {
+            if (App.DSOptions.NoWeaponRequirements)
+                return true;
+            else
+                return (loadout.Strength >= x.Strength) // use 1h strength
+                && (loadout.Dexterity >= x.Dexterity)
+                && (loadout.Intelligence >= x.Intelligence)
+                && (loadout.Faith >= x.Faith);
+        }
+
+        private static bool WeaponEquipable(Loadout loadout, DarkSoulsItem x)
+        {
+            if (App.DSOptions.NoWeaponRequirements)
+                return true;
+            if (App.DSOptions.RequireOneHandedStartingWeapons)
+                return (loadout.Strength >= x.Strength) // use 1h strength
+                && (loadout.Dexterity >= x.Dexterity)
+                && (loadout.Intelligence >= x.Intelligence)
+                && (loadout.Faith >= x.Faith);
+            else
+                return (loadout.Strength * 3 >= x.Strength * 2) // use 2h strength (2 handing gives 50% str bonus)
+                    && (loadout.Dexterity >= x.Dexterity)
+                    && (loadout.Intelligence >= x.Intelligence)
+                    && (loadout.Faith >= x.Faith);
+        }
+
+        private static string BuildClassDescString(DarkSoulsItem weapon, DarkSoulsItem? sub_weapon, DarkSoulsItem shield, DarkSoulsItem? sub_shield, string special_line)
+        {
+            var desc_line_1 = "";
+            var desc_line_2 = "";
+            var desc_line_3 = "";
+
+            // setup class description
+            var desc_strings = new List<string>([]);
+            if (weapon != null)
+                desc_strings.Add(weapon.Name);
+            if (sub_weapon != null)
+                desc_strings.Add(sub_weapon.Name);
+            if (shield != null)
+                desc_strings.Add(shield.Name);
+            if (sub_shield != null)
+                desc_strings.Add(sub_shield.Name);
+            if (special_line != "")
+                desc_strings.Add(special_line);
+
+            if (desc_strings.Count == 5)
+            {
+                desc_line_1 = $"{desc_strings[0]}/{desc_strings[1]}";
+                desc_line_2 = $"{desc_strings[2]}/{desc_strings[3]}";
+                desc_line_3 = $"{desc_strings[4]}";
+            }
+            else if (desc_strings.Count == 4)
+            {
+                desc_line_1 = $"{desc_strings[0]}";
+                desc_line_2 = $"{desc_strings[1]}/{desc_strings[2]}";
+                desc_line_3 = $"{desc_strings[3]}";
+            }
+            else if (desc_strings.Count == 3)
+            {
+                desc_line_1 = $"{desc_strings[0]}";
+                desc_line_2 = $"{desc_strings[1]}";
+                desc_line_3 = $"{desc_strings[2]}";
+            }
+            else if (desc_strings.Count == 2)
+            {
+                desc_line_1 = $"{desc_strings[0]}";
+                desc_line_2 = $"{desc_strings[1]}";
+                desc_line_3 = "";
+            }
+            else
+                Log.Logger.Warning("Error building randomized starting loadout descriptions: unexpected count.");
+            return $"{desc_line_1}\n{desc_line_2}\n{desc_line_3}";
+        }
+
+        // Given the read-in structs for chara init params and system/title menu msgs, update them to randomize gifts.
+        // Assumes caller will write the structs back
+        private static void RandomizeGifts(ParamStruct<CharaInitParam> charaParamStruct, MsgManStruct msgManStruct, Random random)
+        {
+            var gifts = MiscHelper.GetGiftParams();
+
+            //var added_gifts = new List<KeyValuePair<long, string>>();
+            var available_gifts = new List<(byte quantity, string gift_name, String item_name, String description)>([
+                // default items
+                (3, "Goddess's Blessing", "Divine Blessing", "(AP) Wow!\n3 divine blessings,\nwhat a steal!"),
                     (10, "Black Firebomb x10", "Black Firebomb", "(AP) A reliable favorite.\nInflict big ouchies."),
                     (1, "Twin Humanities", "Twin Humanities", "(AP) Two Humanities\nin one item."),
                     (1, "Binoculars", "Binoculars", "(AP) Enjoy the views!"),
@@ -967,75 +904,128 @@ namespace DSAP.Helpers
                     (1, "Hawk Ring", "Hawk Ring", "(AP) Increased bow range."),
                     (1, "Rusted Iron Ring", "Rusted Iron Ring", "(AP) Better movement\nthrough deep water\nand swamp."),
                     (1, "Sl. Dragoncrest Ring", "Slumbering Dragoncrest Ring", "(AP) Slumbering\nDragoncrest Ring\nSilences your footsteps.")
-                ]);
+            ]);
 
-                foreach (var gift in gifts)
+            foreach (var gift in gifts)
+            {
+                var charaInit_ingame = charaParamStruct.ParamEntries.Find(x => x.id == gift.Id);
+                // also update text
+
+                // get current param bytes
+                byte[] ingame_parambytes = new byte[CharaInitParam.Size];
+                Array.Copy(charaParamStruct.ParamBytes, charaInit_ingame.paramOffset, ingame_parambytes, 0, CharaInitParam.Size);
+
+                var gift_entry = available_gifts[random.Next(available_gifts.Count)];
+                Log.Logger.Warning($"Gift {gift.Name} => {gift_entry.item_name} x {gift_entry.quantity}");
+                available_gifts.Remove(gift_entry);
+                var gift_item = App.AllItems.Find(x => x.Name == gift_entry.item_name && x.Quantity == 1);
+                var item_id = gift_item.Id;
+                var item_cat = gift_item.Category;
+
+                // clear ring
+                Array.Copy(BitConverter.GetBytes(0), 0, ingame_parambytes, CharaInitParam.ACCESSORY_01, sizeof(int));
+                // clear item
+                Array.Copy(BitConverter.GetBytes(0), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
+
+                if (gift_item.Category == Enums.DSItemCategory.Consumables)
                 {
-                    var charaInit_ingame = paramStruct.ParamEntries.Find(x => x.id == gift.Id);
-                    // also update text
-
-                    // get current param bytes
-                    byte[] ingame_parambytes = new byte[CharaInitParam.Size];
-                    Array.Copy(paramStruct.ParamBytes, charaInit_ingame.paramOffset, ingame_parambytes, 0, CharaInitParam.Size);
-
-                    var gift_entry = available_gifts[random.Next(available_gifts.Count)];
-                    Log.Logger.Warning($"Gift {gift.Name} => {gift_entry.item_name} x {gift_entry.quantity}");
-                    available_gifts.Remove(gift_entry);
-                    var gift_item = App.AllItems.Find(x => x.Name == gift_entry.item_name && x.Quantity == 1);
-                    var item_id = gift_item.Id;
-                    var item_cat = gift_item.Category;
-
-                    // clear ring
-                    Array.Copy(BitConverter.GetBytes(0), 0, ingame_parambytes, CharaInitParam.ACCESSORY_01, sizeof(int));
-                    // clear item
-                    Array.Copy(BitConverter.GetBytes(0), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
-
-                    if (gift_item.Category == Enums.DSItemCategory.Consumables)
-                    {
-                        // update the chara init item
-                        Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
-                        ingame_parambytes[CharaInitParam.ITEMNUM_01] = gift_entry.quantity;
-                    }
-                    else if (gift_item.Category == Enums.DSItemCategory.Rings)
-                    {
-                        // update the chara init ring
-                        Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ACCESSORY_01, sizeof(int));
-                    }
-                    // write array back to params
-                    Array.Copy(ingame_parambytes, 0, paramStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size);
-
-                    // write new gift name
-                    uint msgid = (uint)(gift.Id + 132050 - 2400);
-                    msgManStruct.UpdateMsg(msgid, gift_entry.gift_name);
-                    // write gift description
-                    uint descid = (uint)(gift.Id + 132350 - 2400);
-                    msgManStruct.UpdateMsg(descid, gift_entry.description);
-                    Log.Logger.Debug($"Added messages for gift {gift.Id} to replace {gift.Name} with {gift_entry.gift_name}");
+                    // update the chara init item
+                    Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
+                    ingame_parambytes[CharaInitParam.ITEMNUM_01] = gift_entry.quantity;
                 }
+                else if (gift_item.Category == Enums.DSItemCategory.Rings)
+                {
+                    // update the chara init ring
+                    Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ACCESSORY_01, sizeof(int));
+                }
+                // write array back to params
+                Array.Copy(ingame_parambytes, 0, charaParamStruct.ParamBytes, charaInit_ingame.paramOffset, CharaInitParam.Size);
+
+                // write new gift name
+                uint msgid = (uint)(gift.Id + 132050 - 2400);
+                msgManStruct.UpdateMsg(msgid, gift_entry.gift_name);
+                // write gift description
+                uint descid = (uint)(gift.Id + 132350 - 2400);
+                msgManStruct.UpdateMsg(descid, gift_entry.description);
+                Log.Logger.Debug($"Added messages for gift {gift.Id} to replace {gift.Name} with {gift_entry.gift_name}");
             }
-            
-
-            msgManStruct.UpdateMsg(401303, "New Game (AP)");
-            msgManStruct.UpdateMsg(401311, $"DSAP {App.DSOptions?.VersionInfoString()}");
-
-
-            msgManStruct.AddMsg(99999998, ""); // add dummy message to mark that we've been here
-            msgManStruct.MsgEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
-            Log.Logger.Information($"Updated system text struct");
-            MsgManHelper.WriteFromMsgManStruct(msgManStruct, MsgManStruct.OFFSET_SYSTEM_TEXT); // write the gift names + system text updates
-
-            byte[] parambytes = new byte[EquipParamWeapon.Size];
-            // add a dummy item at 99999998 so that we can know we've been here.
-            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
-            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
-
-            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
-            Log.Logger.Information($"Added 1 items to CharaInit struct and updated chars");
-
-            ParamHelper.WriteFromParamSt(paramStruct, CharaInitParam.spOffset); // write the chara init params
-
-            return true;
         }
+
+        private static DarkSoulsItem? GetStarterSpell(Loadout loadout, Random random)
+        {
+            DarkSoulsItem spell = null;
+            // Randomize spells for caster classes
+            switch (loadout.Type)
+            {
+                case Enums.DsrLoadoutType.Magic:
+                    var valid_sorceries = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Sorcery:")).ToList();
+                    var allowed_sorceries = valid_sorceries;
+                    if (!App.DSOptions.NoSpellStatRequirements) // if we have stat requirements, limit our list of spells
+                        allowed_sorceries = valid_sorceries.Where(x => loadout.Intelligence > x.Intelligence).ToList();
+                    // Then limit our spell list by user choice
+                    if (App.DSOptions.StartingSorcery == 0) // default - soul arrow
+                    {
+                        allowed_sorceries = allowed_sorceries.Where(x => x.Name == "Sorcery: Soul Arrow").ToList();
+                    }
+                    if (App.DSOptions.StartingSorcery == 1) // any spell - we already have this list
+                    {
+                        ;
+                    }
+                    if (App.DSOptions.StartingSorcery == 2) // attack
+                    {
+                        allowed_sorceries = allowed_sorceries.Where(x => x.SpellCategory == Enums.SpellCategory.Attack).ToList();
+                    }
+                    spell = allowed_sorceries[random.Next(allowed_sorceries.Count)];
+                    break;
+                case Enums.DsrLoadoutType.Miracle:
+                    var valid_miracles = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Miracle:")).ToList();
+                    var allowed_miracles = valid_miracles;
+                    if (!App.DSOptions.NoSpellStatRequirements) // if we have stat requirements, limit our list of spells
+                        allowed_miracles = valid_miracles.Where(x => loadout.Faith > x.Faith).ToList();
+
+                    if (!App.DSOptions.NoMiracleCovenantRequirements) // if we have covenant requirements, limit list of spells further
+                    {
+                        List<string> covenantMiracles = new List<string>(["Bountiful Sunlight", "Darkmoon Blade", "Soothing Sunlight", "Sunlight Spear"]);
+                        allowed_miracles = allowed_miracles.Where(x => !covenantMiracles.Contains($"Miracle: {x.Name}")).ToList();
+                    }
+                    // Then limit our spell list by user choice
+                    if (App.DSOptions.StartingMiracle == 0) // default - heal
+                    {
+                        allowed_miracles = allowed_miracles.Where(x => x.Name == "Miracle: Heal").ToList();
+                    }
+                    if (App.DSOptions.StartingMiracle == 1) // any miracle - we already have this list
+                    {
+                        ;
+                    }
+                    if (App.DSOptions.StartingMiracle == 3) // healing
+                    {
+                        allowed_miracles = allowed_miracles.Where(x => x.SpellCategory == Enums.SpellCategory.Heal).ToList();
+                    }
+                    spell = allowed_miracles[random.Next(allowed_miracles.Count)];
+                    break;
+                case Enums.DsrLoadoutType.Pyromancy:
+                    var valid_pyromancies = MiscHelper.GetSpells().Where(x => x.Name.StartsWith("Pyromancy:")).ToList();
+                    // Then limit our spell list by user choice
+                    if (App.DSOptions.StartingPyromancy == 0) // default - heal
+                    {
+                        valid_pyromancies = valid_pyromancies.Where(x => x.Name == "Pyromancy: Fireball").ToList();
+                    }
+                    if (App.DSOptions.StartingPyromancy == 1) // any miracle - we already have this list
+                    {
+                        ;
+                    }
+                    if (App.DSOptions.StartingPyromancy == 2) // Attack
+                    {
+                        valid_pyromancies = valid_pyromancies.Where(x => x.SpellCategory == Enums.SpellCategory.Attack).ToList();
+                    }
+                    spell = valid_pyromancies[random.Next(valid_pyromancies.Count)];
+                    break;
+                default:
+                    break;
+            }
+            return spell;
+        }
+
         internal static bool AddInitItemLots()
         {
             // Read in the Param Structure

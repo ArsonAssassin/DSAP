@@ -1566,7 +1566,7 @@ public partial class App : Application
                 Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
             }
         }
-        ItemLotHelper.UpdateCharaInits();
+        ItemLotHelper.RandomizeStartingLoadouts();
         if (DSOptions.NoWeaponRequirements)
             ParamHelper.RemoveWeaponRequirements(); 
         if (DSOptions.NoSpellStatRequirements || DSOptions.NoMiracleCovenantRequirements)
