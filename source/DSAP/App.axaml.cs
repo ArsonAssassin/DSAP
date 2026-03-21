@@ -41,7 +41,9 @@ public partial class App : Application
     private const bool DO_NOT_CONNECT = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
+    public static Dictionary<int, DarkSoulsItem> AllItemsByApId { get; set; }
     // 
+    private static Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = [];
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
     private static Dictionary<string, Tuple<int, string>> SlotLocToItemUpgMap = [];
     // Logging
@@ -381,10 +383,10 @@ public partial class App : Application
             if (cmdparts.Length == 2)
                 MonitorEventFlag(Int32.Parse(cmdparts[1]));
         }
-        else if (command.StartsWith("/get")) // for debugging
-        {
-            AddItemWithMessage((int)DSItemCategory.KeyItems, 11100970, 1);
-        }
+        //else if (command.StartsWith("/get")) // for debugging
+        //{
+        //    AddItemWithMessage((int)DSItemCategory.KeyItems, 11100970, 1);
+        //}
         else /* send any not-specifically-handled message to normal processing */
         {
             Client?.SendMessage(a.Command);
@@ -735,6 +737,7 @@ public partial class App : Application
         
 
         AllItems = MiscHelper.GetAllItems();
+        AllItemsByApId = AllItems.ToDictionary(x => x.ApId, x => x);
         Client.Connected += OnConnectedAsync;
         Client.Disconnected += OnDisconnected;
         Client.GameDisconnected += OnGameDisconnected;
@@ -1084,6 +1087,18 @@ public partial class App : Application
             Log.Logger.Information($"Sending Goal for location id: {locid}");
             SendGoal();
         }
+        else
+        {
+            // if it's in our scouted locs & not in our own game,
+            if (scoutedLocationInfo.TryGetValue(e.CompletedLocation.Id, out var value) && value.Player.Slot != Client.CurrentSession.ConnectionInfo.Slot)
+            {
+                bool isProgression = (value.Flags & Archipelago.MultiClient.Net.Enums.ItemFlags.Advancement) != 0;
+                if (itemPopupFilter == 'A' || (isProgression && itemPopupFilter == 'P'))
+                {
+                    AddItemWithMessage((int)DSItemCategory.KeyItems, (int)value.LocationId, 1); // put a message (item will be ignored)
+                }
+            }
+        }
 
         Log.Logger.Debug($"Location Completed: {e.CompletedLocation.Name} at {e.CompletedLocation.Id}");
     }
@@ -1184,7 +1199,6 @@ public partial class App : Application
     private static void UpdateItemLots()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
-        
         // Read in the Param Structure
         // Modify it,
         // Then save it back
@@ -1264,28 +1278,13 @@ public partial class App : Application
             }
             
             var fog_key = MiscHelper.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
-
-            // First, ignore any items which came from "item lots". Player already got them!
-            if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot && LocationHelper.GetItemLotLocations().Any(x => x.Id == e.LocationId))    
+            if (fog_key != null) // make sure to receive fog key items; then later received the "unlock event"
             {
-                if (fog_key == null) // If it's a fog wall key, also receive the actual item now, then event later
-                {
-                    Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
-                    return;
-                }   
+                AddItemWithMessage((int)DSItemCategory.KeyItems, fog_key.Id, 1);
             }
-            else // in any spot that isn't a local item lot
-            {
-                if (fog_key != null) // make sure to receive fog keys
-                {
-                    AddItemWithMessage((int)DSItemCategory.KeyItems, fog_key.Id, 1);
-                }
-            }
-            // otherwise, player needs to get the item first.
 
             var itemId = e.Item.Id;
-            var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
-            if (itemToReceive != null)
+            if (AllItemsByApId.TryGetValue((int)itemId, out var itemToReceive))
             {
                 Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 Client.AddOverlayMessage($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
@@ -1549,6 +1548,8 @@ public partial class App : Application
         Client.LocationManager.EnableLocationsCondition = () => SaveidSet && MiscHelper.IsInGame();
 
 
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        
         /* Initialize flag to off - to prevent receiving items until we have set the saveid */
         SaveidSet = false; 
 
@@ -1576,7 +1577,7 @@ public partial class App : Application
 
             var locids = Client.CurrentSession.Locations.AllLocations.ToArray();
 
-            Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
+            scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
 
             await ApItemInjectorHelper.AddAPItems(scoutedLocationInfo);
 
@@ -1590,6 +1591,10 @@ public partial class App : Application
 
         /* Set to only receive remote items and starting inventory */
         UpdateItemLots();
+        watch.Stop();
+        Log.Logger.Information($"Finished setup, took {watch.ElapsedMilliseconds}ms total");
+        Client.AddOverlayMessage($"Finished setup, took {watch.ElapsedMilliseconds}ms total");
+
     }
 
     private void OnDisconnected(object sender, EventArgs args)
@@ -1604,6 +1609,7 @@ public partial class App : Application
         SlotLocToItemUpgMap = [];
         EmkControllers = [];
         ItemLotReplacementMap = [];
+        scoutedLocationInfo = [];
     }
     private void OnGameDisconnected(object sender, EventArgs args)
     {

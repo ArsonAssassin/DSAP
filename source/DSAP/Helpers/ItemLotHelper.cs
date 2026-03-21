@@ -51,7 +51,6 @@ namespace DSAP.Helpers
             Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
-            Dictionary<int, ItemLot> specialResult = new Dictionary<int, ItemLot>();
 
             var itemflags = LocationHelper.GetItemLotFlags().Where((x) => x.IsEnabled).ToList();
 
@@ -63,35 +62,17 @@ namespace DSAP.Helpers
                 i++;
                 int locId = ((int)k);
                 string target = v.Player.Name;
-                ItemLotFlag? lot = itemflags.Find(x => x.Id == locId);
-                if (lot != null) /* found a location in our "item lots" */
+                var lots = itemflags.Where(x => x.Id == locId);
+                foreach (var lot in lots) /* found a location in our "item lots" */
                 {
                     ItemLotItem newLotItem = new ItemLotItem { };
                     if (v.Player.Slot == App.Client.CurrentSession.ConnectionInfo.Slot) // it is us
                     {
                         /* Found an item of our own, located in our own game. 
                                  * Validate that it's in the itemflags we've been given, and find the matching item. */
-                        DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == v.ItemId);
-                        if (item != null)
+                        if (App.AllItemsByApId.TryGetValue((int)v.ItemId, out var item))
                         {
-                            DarkSoulsItem repitem = item;
-                            if (item.Category == Enums.DSItemCategory.AnyWeapon)
-                            {
-                                Log.Logger.Verbose($"Attempting to upgrade item: {App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id} ({item.Name})");
-                                if (App.DSOptions.UpgradedWeaponsPercentage > 0
-                                    && slotLocToItemUpgMap.TryGetValue($"{App.Client.CurrentSession.ConnectionInfo.Slot}:{lot.Id}", out var itemupg))
-                                {
-                                    if (itemupg.Item1 == item.ApId) // if item apid matches
-                                        repitem = MiscHelper.UpgradeItem(repitem, itemupg.Item2);
-                                    else
-                                    {
-                                        Log.Logger.Error($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                        App.Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{item.ApId}', for item {item.Name} at {lot.Name}.");
-                                    }
-                                }
-                            }
-
-                            Log.Logger.Verbose($"Item {i} at location id{locId}/itemlotid={lot.ItemLotParamId} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
+                            Log.Logger.Verbose($"Item {i}/{locId} for target = {target}");
                             newLotItem = new ItemLotItem
                             {
                                 CumulateLotPoint = 0,
@@ -99,30 +80,10 @@ namespace DSAP.Helpers
                                 EnableLuck = false,
                                 GetItemFlagId = -1,
                                 LotItemBasePoint = 100,
-                                LotItemCategory = (int)repitem.Category,
-                                LotItemNum = (byte)repitem.Quantity,
-                                LotItemId = repitem.Id
+                                LotItemCategory = (int)Enums.DSItemCategory.KeyItems,
+                                LotItemNum = 1,
+                                LotItemId = locId
                             };
-
-                            if (item.Category == Enums.DSItemCategory.DsrEvent || item.Category == Enums.DSItemCategory.Trap)
-                            {
-                                Log.Logger.Verbose($"Item at loc {locId} detected as {item.Name} in category {item.Category} - replaced with AP item.");
-                                var newspecialitemlot = new ItemLot
-                                {
-                                    Rarity = 1,
-                                    GetItemFlagId = -1,
-                                    CumulateNumFlagId = -1,
-                                    CumulateNumMax = 0,
-                                    Items = []
-                                };
-
-                                if (!specialResult.TryAdd(lot.Id, newspecialitemlot))
-                                    addonitems++;
-                                specialResult[lot.Id].Items.Add(newLotItem);
-
-                                // replace with the AP item with the right fogwall key/trap
-                                newLotItem.LotItemCategory = (int)Enums.DSItemCategory.KeyItems;
-                            }
                         }
                         else
                         {
@@ -278,18 +239,9 @@ namespace DSAP.Helpers
 
                     if (newItemLot.numPlaced > newItemLot.Items.Count)
                     {
-                        if (currentItemLotFlag == (int)Enums.SpecialItemLotIds.KeyToTheSeal
-                         || currentItemLotFlag == (int)Enums.SpecialItemLotIds.WhiteSignSoapstone)
-                        {
-                            Log.Logger.Debug($"Special lot detected, sending to additional locations for lot id={param_entry.id}");
-                            replaceidx = 0;
-                        }
-                        else
-                        {
-                            Log.Logger.Warning($"More items detected than are placable, for lot id={param_entry.id}");
-                            App.Client.AddOverlayMessage($"More items detected than are placable, for lot id={param_entry.id}");
-                            continue; /* don't place anything there */
-                        }
+                        Log.Logger.Warning($"More items detected than are placable, for lot id={param_entry.id}");
+                        App.Client.AddOverlayMessage($"More items detected than are placable, for lot id={param_entry.id}");
+                        continue; /* don't place anything there */
                     }
 
                     try
@@ -673,8 +625,7 @@ namespace DSAP.Helpers
                             Array.Copy(BitConverter.GetBytes(ammo.Id), 0, display_parambytes, CharaInitParam.BOLT, sizeof(int));
                         
                         // add ammo to class description
-                        var ammo_item = App.AllItems.Find(x => x.Id == itemLots.Last().item);
-                        special_line = $"{ammo_item.Name} x{ammo_quantity}";
+                        special_line = $"{ammo.Name} x{ammo_quantity}";
                     }
 
                     if (thief_item != null)
@@ -1034,7 +985,6 @@ namespace DSAP.Helpers
         {
             var updlots = loadout_itemlots;
             byte[] parambytes = new byte[ItemLotParam.Size];
-            Log.Logger.Warning($"sizeof updlots = {updlots.Count}");
             foreach (var newlot in updlots)
             {
                 var foundlot = paramStruct.ParamEntries.Find((x) => x.id == newlot.baseid);

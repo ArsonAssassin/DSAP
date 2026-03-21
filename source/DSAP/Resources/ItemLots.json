@@ -303,6 +303,18 @@
     "Id": 11110100
   },
   {
+    "Name": "White Sign Soapstone",
+    "Flag": 50000000,
+    "ItemLotParamId": 6007,
+    "Id": 11110055
+  },
+  {
+    "Name": "Key to the Seal",
+    "Flag": 50000100,
+    "ItemLotParamId": 6180,
+    "Id": 11110340
+  },
+  {
     "Name": "Butcher Knife",
     "Flag": 50006530,
     "ItemLotParamId": 6530,
