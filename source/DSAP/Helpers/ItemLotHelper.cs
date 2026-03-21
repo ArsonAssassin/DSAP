@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -246,12 +247,25 @@ namespace DSAP.Helpers
         /// <param name="itemLotIds">A map of location ids to item Lots that replace them</param>
         public static void OverwriteItemLots(Dictionary<int, ItemLot> itemLotIds)
         {
-            var startAddress = AddressHelper.GetItemLotParamOffset();
-            var dataOffset = Memory.ReadUInt(startAddress + 0x4);
-            var rowCount = Memory.ReadUShort(startAddress + 0xA);
-            var foundItems = 0;
-            const int rowSize = 148; // Size of each ItemLotParam
-            Log.Logger.Debug($"ItemParam list rowcount='{rowCount}'");
+            // Read in the Param Structure
+            // Modify it,
+            // Then save it back
+            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<ItemLotParam> paramStruct,
+                                                     ItemLotParam.spOffset,
+                                                     (ps) => ps.ParamEntries.Last().id >= 99999990);
+            if (!reloadRequired)
+            {
+                Log.Logger.Debug("Skipping reload of Item Lots");
+                //return false;
+            }
+
+            Log.Logger.Debug($"ItemParam list rowcount='{paramStruct.ParamEntries.Count}'");
+
+            // if we are here, we are updating the params.
+            int new_entries = 0;
+            int foundItems = 0;
+            AddInitItemLots(paramStruct, ref new_entries);
+
             var tasks = new List<Task>();
 
             /* Reset the "number of itemlots placed" per id */
@@ -259,23 +273,12 @@ namespace DSAP.Helpers
             {
                 pair.Value.numPlaced = 0;
             }
-
-            for (int i = 0; i < rowCount; i++)
+            foreach (var param_entry in paramStruct.ParamEntries)
             {
-                var currentAddress = startAddress + dataOffset + (ulong)(i * rowSize);
-                var currentItemLotId = Memory.ReadInt(currentAddress + 0x80);  // GetItemFlagId is at offset 0x80
-
-                /* Only if we are using Verbose logging, read in every ItemLotParam to print it out. */
-                if (Log.Logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
-                {
-                    var itemlotparams = Memory.ReadObject<ItemLotParam>(currentAddress);
-                    Log.Logger.Verbose($"ilp '{i}'=" + itemlotparams.ToString());
-                }
-
+                var currentItemLotId = BitConverter.ToInt32(paramStruct.ParamBytes, (int)param_entry.paramOffset + 0x80);
                 ItemLot newItemLot;
                 if (itemLotIds.TryGetValue(currentItemLotId, out newItemLot))
                 {
-
                     foundItems++;
                     // We found the correct item lot or are using the default, now let's overwrite it
 
@@ -300,55 +303,30 @@ namespace DSAP.Helpers
                         }
                     }
 
-
-                    /* Parallelize the writing of memory to many tasks for speed-up. */
-                    tasks.Add(Task.Run(() =>
+                    try
                     {
-                        try
-                        {
+                        WriteItemLot(paramStruct, param_entry, newItemLot, replaceidx);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Logger.Warning($"Overwrite Exception:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
+                        App.Client.AddOverlayMessage($"Overwrite Exception:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
+                    }
 
-                            for (int j = 0; j < 8; j++)
-                            {
-                                OverwriteSingleItem(currentAddress, newItemLot.Items[replaceidx], j);
-                                //RemoveSingleItem(currentAddress, j);
-                            }
-
-                            //   Memory.Write(currentAddress + 0x80, newItemLot.GetItemFlagId);
-                            Memory.Write(currentAddress + 0x84, newItemLot.CumulateNumFlagId);
-                            Memory.WriteByte(currentAddress + 0x88, newItemLot.CumulateNumMax);
-                            Memory.WriteByte(currentAddress + 0x89, newItemLot.Rarity);
-
-                            // Write EnableLuck and CumulateReset as a single ushort
-                            ushort bitfield = 0;
-                            for (int j = 0; j < 8; j++)
-                            {
-                                if (j < newItemLot.Items.Count)
-                                {
-                                    if (newItemLot.Items[j].EnableLuck)
-                                        bitfield |= (ushort)(1 << j);
-                                    if (newItemLot.Items[j].CumulateReset)
-                                        bitfield |= (ushort)(1 << (j + 8));
-                                }
-                                // If item doesn't exist, its bits remain 0
-                            }
-                            Memory.Write(currentAddress + 0x92, bitfield);
-
-                        }
-                        catch (Exception e)
-                        {
-                            Log.Logger.Warning($"Overwrite Exception:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
-                            App.Client.AddOverlayMessage($"Overwrite Exception:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
-                        }
-                    }));
-
-                    Log.Logger.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} has been overwritten at {currentAddress} to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
+                    Log.Logger.Verbose($"ItemLot id={param_entry.id} with GetItemFlagId {currentItemLotId} has been overwritten to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
                 }
                 else
                 {
-                    Log.Logger.Verbose($"i='{i}' ItemLot with GetItemFlagId {currentItemLotId} not overwritten.");
+                    Log.Logger.Verbose($"id='{param_entry.id}' ItemLot with GetItemFlagId {currentItemLotId} not overwritten.");
                 }
-
             }
+            ///* Only if we are using Verbose logging, read in every ItemLotParam to print it out. */
+            //if (Log.Logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
+            //{
+            //    var itemlotparams = Memory.ReadObject<ItemLotParam>(currentAddress);
+            //    Log.Logger.Verbose($"ilp '{i}'=" + itemlotparams.ToString());
+            //}
+
             int discrepancy_warnings = 0;
             foreach (var pair in itemLotIds)
             {
@@ -370,8 +348,6 @@ namespace DSAP.Helpers
                 }
             }
 
-            Task.WaitAll(tasks.ToArray());
-
             Log.Logger.Information($"{foundItems} items overwritten");
             App.Client.AddOverlayMessage($"{foundItems} items overwritten");
 
@@ -380,6 +356,52 @@ namespace DSAP.Helpers
                 Log.Logger.Error($"Failed to overwrite items. Retry: restart game & client and reconnect");
                 App.Client.AddOverlayMessage($"Failed to overwrite items. Retry: restart game & client and reconnect");
             }
+
+            byte[] parambytes = new byte[ItemLotParam.Size];
+            // add a dummy item at 99999998 so that we can know we've been here.
+            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
+            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+            Log.Logger.Information($"Added {new_entries} items to ItemLotParams");
+
+            ParamHelper.WriteFromParamSt(paramStruct, ItemLotParam.spOffset);
+        }
+
+        private static void WriteItemLot(ParamStruct<ItemLotParam> paramStruct, (uint id, uint paramOffset, int strOffset) param_entry, ItemLot newItemLot, short replaceidx)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                OverwriteSingleItem(paramStruct, param_entry, newItemLot.Items[replaceidx], j);
+            }
+            
+            //   Memory.Write(currentAddress + 0x80, newItemLot.GetItemFlagId);
+            Array.Copy(BitConverter.GetBytes(newItemLot.CumulateNumFlagId), 0, paramStruct.ParamBytes, param_entry.paramOffset + 0x84, 4);
+            paramStruct.ParamBytes[param_entry.paramOffset + 0x88] = newItemLot.CumulateNumMax;
+            paramStruct.ParamBytes[param_entry.paramOffset + 0x89] = newItemLot.Rarity;
+
+            // Write EnableLuck and CumulateReset as a single ushort
+            ushort bitfield = 0;
+            for (int j = 0; j < 8; j++)
+            {
+                if (j < newItemLot.Items.Count)
+                {
+                    if (newItemLot.Items[j].EnableLuck)
+                        bitfield |= (ushort)(1 << j);
+                    if (newItemLot.Items[j].CumulateReset)
+                        bitfield |= (ushort)(1 << (j + 8));
+                }
+                // If item doesn't exist, its bits remain 0
+            }
+            Array.Copy(BitConverter.GetBytes(bitfield), 0, paramStruct.ParamBytes, param_entry.paramOffset + 0x92, sizeof(ushort));
+        }
+        public static void OverwriteSingleItem(ParamStruct<ItemLotParam> paramStruct, (uint id, uint paramOffset, int strOffset) param_entry, ItemLotItem newItemLot, int position)
+        {
+            Array.Copy(BitConverter.GetBytes(newItemLot.LotItemId), 0, paramStruct.ParamBytes, param_entry.paramOffset + 4 * position, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(newItemLot.LotItemCategory), 0, paramStruct.ParamBytes, param_entry.paramOffset + 0x20 + 4 * position, sizeof(int));
+            Array.Copy(BitConverter.GetBytes((ushort)newItemLot.LotItemBasePoint), 0, paramStruct.ParamBytes, param_entry.paramOffset + 0x40 + 2 * position, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)newItemLot.CumulateLotPoint), 0, paramStruct.ParamBytes, param_entry.paramOffset + 0x50 + 2 * position, sizeof(ushort));
+            paramStruct.ParamBytes[param_entry.paramOffset + 0x8A + position] = newItemLot.LotItemNum;
         }
         public static void OverwriteSingleItem(ulong address, ItemLotItem newItemLot, int position)
         {
@@ -1026,24 +1048,10 @@ namespace DSAP.Helpers
             return spell;
         }
 
-        internal static bool AddInitItemLots()
+        internal static bool AddInitItemLots(ParamStruct<ItemLotParam> paramStruct, ref int new_entries)
         {
-            // Read in the Param Structure
-            // Modify it,
-            // Then save it back
-            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<ItemLotParam> paramStruct,
-                                                     ItemLotParam.spOffset,
-                                                     (ps) => ps.ParamEntries.Last().id >= 99999990);
-            if (!reloadRequired)
-            {
-                Log.Logger.Debug("Skipping reload of Item Lots");
-                return false;
-            }
-            // if we are here, we are updating the params.
-
             var updlots = loadout_itemlots;
             byte[] parambytes = new byte[ItemLotParam.Size];
-            int new_entries = 0;
             foreach (var newlot in updlots)
             {
                 var foundlot = paramStruct.ParamEntries.Find((x) => x.id == newlot.baseid);
@@ -1068,15 +1076,6 @@ namespace DSAP.Helpers
                     }
                 }
             }
-
-            // add a dummy item at 99999998 so that we can know we've been here.
-            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
-            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
-
-            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
-            Log.Logger.Information($"Added {new_entries} items to ItemLotParams");
-
-            ParamHelper.WriteFromParamSt(paramStruct, ItemLotParam.spOffset);
 
             return true;
         }

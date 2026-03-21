@@ -1184,7 +1184,7 @@ public partial class App : Application
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
         ItemLotHelper.OverwriteItemLots(ItemLotReplacementMap);
-        bool success = ItemLotHelper.AddInitItemLots();
+        //bool success = ItemLotHelper.AddInitItemLots();
         watch.Stop();
 
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");

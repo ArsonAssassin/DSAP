@@ -35,14 +35,10 @@ namespace DSAP.Helpers
             // add items
             bool do_replacements = upgradeGoods(added_names);
 
-            var tasks = new List<Task>
-                {
-                Task.Run(() => { AddMsgs(MsgManStruct.OFFSET_ITEM_NAMES, added_names, "Item Names"); }), // names
-                Task.Run(() => { AddMsgs(MsgManStruct.OFFSET_ITEM_CAPTIONS, added_captions, "Item Captions"); }), // captions
-                Task.Run(() => { AddMsgs(MsgManStruct.OFFSET_ITEM_DESCRIPTIONS, added_captions, "Item Descriptions"); }), // info
-                };
-            await Task.WhenAll(tasks);
-
+            AddMsgs(MsgManStruct.OFFSET_ITEM_NAMES, added_names, "Item Names"); // names
+            AddMsgs(MsgManStruct.OFFSET_ITEM_CAPTIONS, added_captions, "Item Captions"); // captions
+            AddMsgs(MsgManStruct.OFFSET_ITEM_DESCRIPTIONS, added_captions, "Item Descriptions"); // info
+            
             watch.Stop();
             Log.Logger.Information($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
             App.Client.AddOverlayMessage($"Finished adding new items params + msg text, took {watch.ElapsedMilliseconds}ms");
