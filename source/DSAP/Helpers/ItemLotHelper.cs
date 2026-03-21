@@ -39,21 +39,21 @@ namespace DSAP.Helpers
         };
 
         /// <summary>
-        /// Build a mapping of the location flag values in eventflags to the ItemLot that should come from there, for items in our own game.
+        /// Build a mapping of the location flag values in itemflags to the ItemLot that should come from there, for items in our own game.
         /// </summary>
         /// <details>
         /// This is used for replacing item lots in our own game.
         /// </details>
-        /// <param name="eventflags">A list of location flags of which items will be found.</param>
         /// <param name="resultMap">A dictionary mapping itemlot flags to "item lots".</param>
         /// <returns></returns>
-        public static void BuildFlagToLotMap(out Dictionary<int, ItemLot> resultMap,
-            List<EventFlag> eventflags,
+        public static void BuildLotParamIdToLotMap(out Dictionary<int, ItemLot> resultMap,
             Dictionary<string, Tuple<int, string>> slotLocToItemUpgMap,
             Dictionary<long, ScoutedItemInfo> scoutedLocationInfo)
         {
             Dictionary<int, ItemLot> result = new Dictionary<int, ItemLot>();
             Dictionary<int, ItemLot> specialResult = new Dictionary<int, ItemLot>();
+
+            var itemflags = LocationHelper.GetItemLotFlags().Where((x) => x.IsEnabled).ToList();
 
             var addonitems = 0;
 
@@ -63,14 +63,14 @@ namespace DSAP.Helpers
                 i++;
                 int locId = ((int)k);
                 string target = v.Player.Name;
-                EventFlag? lot = eventflags.Find(x => x.Id == locId);
+                ItemLotFlag? lot = itemflags.Find(x => x.Id == locId);
                 if (lot != null) /* found a location in our "item lots" */
                 {
                     ItemLotItem newLotItem = new ItemLotItem { };
                     if (v.Player.Slot == App.Client.CurrentSession.ConnectionInfo.Slot) // it is us
                     {
                         /* Found an item of our own, located in our own game. 
-                                 * Validate that it's in the eventflags we've been given, and find the matching item. */
+                                 * Validate that it's in the itemflags we've been given, and find the matching item. */
                         DarkSoulsItem? item = App.AllItems.Find(x => x.ApId == v.ItemId);
                         if (item != null)
                         {
@@ -91,7 +91,7 @@ namespace DSAP.Helpers
                                 }
                             }
 
-                            Log.Logger.Verbose($"Item {i} at location id{locId}/flag={lot.Flag} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
+                            Log.Logger.Verbose($"Item {i} at location id{locId}/itemlotid={lot.ItemLotParamId} ({lot.Name}) is {target}/{repitem.Id}({repitem.Name})");
                             newLotItem = new ItemLotItem
                             {
                                 CumulateLotPoint = 0,
@@ -126,9 +126,9 @@ namespace DSAP.Helpers
                         }
                         else
                         {
-                            Log.Logger.Warning($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
+                            Log.Logger.Error($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
                             App.Client.AddOverlayMessage($"Item {i} not found for loc {locId} lotnull {lot == null}, {target} itemnull {item == null}");
-                            Log.Logger.Warning($"Item at loc {locId} replaced with prism stone instead.");
+                            Log.Logger.Error($"Item at loc {locId} replaced with prism stone instead.");
                             App.Client.AddOverlayMessage($"Item at loc {locId} replaced with prism stone instead.");
                             newLotItem = prismStoneLotItem;
                         }
@@ -157,9 +157,9 @@ namespace DSAP.Helpers
                         CumulateNumMax = 0,
                         Items = []
                     };
-                    if (!result.TryAdd(lot.Flag, newitemlot))
+                    if (!result.TryAdd(lot.ItemLotParamId, newitemlot))
                         addonitems++;
-                    result[lot.Flag].Items.Add(newLotItem);
+                    result[lot.ItemLotParamId].Items.Add(newLotItem);
                 }
             }
             Log.Logger.Debug($"replacement dict size = {result.Count}");
@@ -167,12 +167,15 @@ namespace DSAP.Helpers
 
 
             /* Populate frampt chest with rubbish */
-            const int frampt_base = 50004000;
+            const int frampt_base = 4000;
             /* Iterate over each pair of entries in the pair of lists */
-            for (i = 0; i <= 69; i++)
+            for (i = 0; i <= 76; i++)
             {
-                /* Skip estus flask + upgrades */
-                if (i >= 38 && i <= 45)
+                /* for some reason these lots skip 9-ending flags */
+                if (i % 10 == 9) 
+                    continue;
+                /* Skip estus flask + its upgrades */
+                if (i >= 42 && i <= 50)
                     continue;
 
                 int lotflag = frampt_base + i;
@@ -245,26 +248,9 @@ namespace DSAP.Helpers
         ///  Overwrite all of the item lots at once. 
         /// </summary>
         /// <param name="itemLotIds">A map of location ids to item Lots that replace them</param>
-        public static void OverwriteItemLots(Dictionary<int, ItemLot> itemLotIds)
+        public static void OverwriteItemLots(ParamStruct<ItemLotParam> paramStruct, Dictionary<int, ItemLot> itemLotIds)
         {
-            // Read in the Param Structure
-            // Modify it,
-            // Then save it back
-            bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<ItemLotParam> paramStruct,
-                                                     ItemLotParam.spOffset,
-                                                     (ps) => ps.ParamEntries.Last().id >= 99999990);
-            if (!reloadRequired)
-            {
-                Log.Logger.Debug("Skipping reload of Item Lots");
-                //return false;
-            }
-
-            Log.Logger.Debug($"ItemParam list rowcount='{paramStruct.ParamEntries.Count}'");
-
-            // if we are here, we are updating the params.
-            int new_entries = 0;
             int foundItems = 0;
-            AddInitItemLots(paramStruct, ref new_entries);
 
             var tasks = new List<Task>();
 
@@ -275,9 +261,12 @@ namespace DSAP.Helpers
             }
             foreach (var param_entry in paramStruct.ParamEntries)
             {
-                var currentItemLotId = BitConverter.ToInt32(paramStruct.ParamBytes, (int)param_entry.paramOffset + 0x80);
+                var currentItemLotFlag = BitConverter.ToInt32(paramStruct.ParamBytes, (int)param_entry.paramOffset + 0x80);
                 ItemLot newItemLot;
-                if (itemLotIds.TryGetValue(currentItemLotId, out newItemLot))
+                //int olditem_id = BitConverter.ToInt32(paramStruct.ParamBytes, (int)param_entry.paramOffset + 0x0);
+                //int olditem_cat = BitConverter.ToInt32(paramStruct.ParamBytes, (int)param_entry.paramOffset + 0x20);
+                //var olditem = App.AllItems.Find(x => x.Id == olditem_id && (int)x.Category == olditem_cat);
+                if (itemLotIds.TryGetValue((int)param_entry.id, out newItemLot))
                 {
                     foundItems++;
                     // We found the correct item lot or are using the default, now let's overwrite it
@@ -285,20 +274,20 @@ namespace DSAP.Helpers
                     /* Check if we still have items to replace this location with */
                     short replaceidx = newItemLot.numPlaced;
                     newItemLot.numPlaced++;
-                    Log.Logger.Verbose($"Incremented lot id numplaced id={currentItemLotId}, curr = {itemLotIds[currentItemLotId].numPlaced}");
+                    Log.Logger.Verbose($"Incremented lot id numplaced id={param_entry.id}, curr = {itemLotIds[(int)param_entry.id].numPlaced}");
 
                     if (newItemLot.numPlaced > newItemLot.Items.Count)
                     {
-                        if (currentItemLotId == (int)Enums.SpecialItemLotIds.KeyToTheSeal
-                         || currentItemLotId == (int)Enums.SpecialItemLotIds.WhiteSignSoapstone)
+                        if (currentItemLotFlag == (int)Enums.SpecialItemLotIds.KeyToTheSeal
+                         || currentItemLotFlag == (int)Enums.SpecialItemLotIds.WhiteSignSoapstone)
                         {
-                            Log.Logger.Debug($"Special lot detected, sending to additional locations for lot id={currentItemLotId}");
+                            Log.Logger.Debug($"Special lot detected, sending to additional locations for lot id={param_entry.id}");
                             replaceidx = 0;
                         }
                         else
                         {
-                            Log.Logger.Warning($"More items detected than are placable, for lot id={currentItemLotId}");
-                            App.Client.AddOverlayMessage($"More items detected than are placable, for lot id={currentItemLotId}");
+                            Log.Logger.Warning($"More items detected than are placable, for lot id={param_entry.id}");
+                            App.Client.AddOverlayMessage($"More items detected than are placable, for lot id={param_entry.id}");
                             continue; /* don't place anything there */
                         }
                     }
@@ -313,11 +302,13 @@ namespace DSAP.Helpers
                         App.Client.AddOverlayMessage($"Overwrite Exception:{e.Message}, {replaceidx} lc {newItemLot.Items.Count}");
                     }
 
-                    Log.Logger.Verbose($"ItemLot id={param_entry.id} with GetItemFlagId {currentItemLotId} has been overwritten to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
+                    //Log.Logger.Verbose($"ItemLot id={param_entry.id} name={olditem?.Name} with GetItemFlagId {currentItemLotId} has been overwritten to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
+                    Log.Logger.Verbose($"ItemLot id={param_entry.id} with GetItemFlagId {currentItemLotFlag} has been overwritten to give {newItemLot.Items[replaceidx].LotItemId} in {newItemLot.Items[replaceidx].LotItemCategory}.");
                 }
                 else
                 {
-                    Log.Logger.Verbose($"id='{param_entry.id}' ItemLot with GetItemFlagId {currentItemLotId} not overwritten.");
+                    //Log.Logger.Verbose($"ItemLot id='{param_entry.id}' name={olditem?.Name} with GetItemFlagId {currentItemLotId} not overwritten.");
+                    Log.Logger.Verbose($"ItemLot id='{param_entry.id}' with GetItemFlagId {currentItemLotFlag} not overwritten.");
                 }
             }
             ///* Only if we are using Verbose logging, read in every ItemLotParam to print it out. */
@@ -357,15 +348,6 @@ namespace DSAP.Helpers
                 App.Client.AddOverlayMessage($"Failed to overwrite items. Retry: restart game & client and reconnect");
             }
 
-            byte[] parambytes = new byte[ItemLotParam.Size];
-            // add a dummy item at 99999998 so that we can know we've been here.
-            Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
-            paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
-
-            paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
-            Log.Logger.Information($"Added {new_entries} items to ItemLotParams");
-
-            ParamHelper.WriteFromParamSt(paramStruct, ItemLotParam.spOffset);
         }
 
         private static void WriteItemLot(ParamStruct<ItemLotParam> paramStruct, (uint id, uint paramOffset, int strOffset) param_entry, ItemLot newItemLot, short replaceidx)
@@ -1052,12 +1034,12 @@ namespace DSAP.Helpers
         {
             var updlots = loadout_itemlots;
             byte[] parambytes = new byte[ItemLotParam.Size];
+            Log.Logger.Warning($"sizeof updlots = {updlots.Count}");
             foreach (var newlot in updlots)
             {
                 var foundlot = paramStruct.ParamEntries.Find((x) => x.id == newlot.baseid);
                 if (foundlot.id != 0) // found it, so update it
                 {
-                    
                     if (newlot.id == foundlot.id) // based-on lot is the one to update
                     {
                         Log.Logger.Verbose($"updating item lot id {newlot.id}");

@@ -189,7 +189,7 @@ namespace DSAP.Models
             Array.Copy(BitConverter.GetBytes(string_offset_table_offset), 0, header, 0x14, sizeof(int));
 
             uint desc_offset = (uint)size;
-            Log.Logger.Information($"new desc area offset: {desc_offset}");
+            Log.Logger.Debug($"new desc area offset: {desc_offset}");
             int total_size = size + DescArea.size;
 
             var seedHash = MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed);

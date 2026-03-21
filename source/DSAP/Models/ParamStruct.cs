@@ -138,7 +138,7 @@ namespace DSAP.Models
             }
 
             uint desc_offset = (uint)(prologue.Length + regular_size + 0xf + endTable.Length);
-            Log.Logger.Information($"new desc area offset: {desc_offset}");
+            Log.Logger.Debug($"new desc area offset: {desc_offset}");
             int total_size = PROLOGUE_SIZE + regular_size + 0xf + endTable.Length + DescArea.size;
 
             var seedHash = MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed);

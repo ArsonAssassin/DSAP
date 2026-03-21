@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1180,11 +1181,40 @@ public partial class App : Application
             Log.Logger.Information($"You do not have {displayableEventType} locking enabled");
         }
     }
-    private static void ReplaceItems()
+    private static void UpdateItemLots()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
-        ItemLotHelper.OverwriteItemLots(ItemLotReplacementMap);
+        
+        // Read in the Param Structure
+        // Modify it,
+        // Then save it back
+        bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<ItemLotParam> paramStruct,
+                                                 ItemLotParam.spOffset,
+                                                 (ps) => ps.ParamEntries.Last().id >= 99999990);
+        if (!reloadRequired)
+        {
+            Log.Logger.Debug("Skipping reload of Item Lots");
+            //return false;
+        }
+
+        Log.Logger.Debug($"ItemParam list rowcount='{paramStruct.ParamEntries.Count}'");
+
+        // if we are here, we are updating the params.
+        int new_entries = 0;
+        ItemLotHelper.AddInitItemLots(paramStruct, ref new_entries);
+        ItemLotHelper.OverwriteItemLots(paramStruct, ItemLotReplacementMap);
         //bool success = ItemLotHelper.AddInitItemLots();
+
+        // add a dummy item at 99999998 so that we can know we've been here.
+        byte[] parambytes = new byte[ItemLotParam.Size];
+        Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
+        paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+        paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+        Log.Logger.Information($"Added {new_entries} items to ItemLotParams");
+
+        ParamHelper.WriteFromParamSt(paramStruct, ItemLotParam.spOffset);
+
         watch.Stop();
 
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
@@ -1544,27 +1574,13 @@ public partial class App : Application
 
             SlotLocToItemUpgMap = MiscHelper.BuildSlotLocationToItemUpgMap(slotData, currentSlot);
 
-            var itemflags = LocationHelper.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList();
             var locids = Client.CurrentSession.Locations.AllLocations.ToArray();
 
             Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
 
             await ApItemInjectorHelper.AddAPItems(scoutedLocationInfo);
 
-            ItemLotHelper.BuildFlagToLotMap(out ItemLotReplacementMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
-
-            var nonItemLotFlags = LocationHelper.GetBossFlags().Cast<EventFlag>().ToList();
-            nonItemLotFlags.AddRange(LocationHelper.GetBonfireFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(LocationHelper.GetDoorFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(LocationHelper.GetFogWallFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(LocationHelper.GetMiscFlags().Cast<EventFlag>());
-
-            //var nonItemLotFlags = MiscHelper.GetDoorFlags().Cast<EventFlag>().ToList();
-            Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
-            foreach (var item in nonItemLotFlags)
-            {
-                Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
-            }
+            ItemLotHelper.BuildLotParamIdToLotMap(out ItemLotReplacementMap, SlotLocToItemUpgMap, scoutedLocationInfo);
         }
         ItemLotHelper.RandomizeStartingLoadouts();
         if (DSOptions.NoWeaponRequirements)
@@ -1573,7 +1589,7 @@ public partial class App : Application
             ParamHelper.RemoveSpellRequirements();
 
         /* Set to only receive remote items and starting inventory */
-        ReplaceItems();
+        UpdateItemLots();
     }
 
     private void OnDisconnected(object sender, EventArgs args)
