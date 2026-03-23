@@ -14,7 +14,19 @@ namespace DSAP.Models
         public uint apiver_minor;
         public uint apiver_revision;
         public uint apiver_build;
-
+        // equipment
+        public bool RandomizeStartingLoadouts { get; set; }
+        public bool RandomizeStartingGifts { get; set; }
+        public bool RequireOneHandedStartingWeapons { get; set; }
+        public bool ExtraStartingWeaponForMeleeClasses { get; set; }
+        public bool ExtraStartingShieldForAllClasses { get; set; }
+        public uint StartingSorcery { get; set; }
+        public uint StartingMiracle { get; set; }
+        public uint StartingPyromancy { get; set; }
+        public bool NoWeaponRequirements { get; set; }
+        public bool NoSpellStatRequirements { get; set; }
+        public bool NoMiracleCovenantRequirements { get; set; }
+        // weapon upgrades
         public uint UpgradedWeaponsPercentage { get; set; }
         public List<String> UpgradedWeaponsAllowedInfusionTypes { get; set; } = [];
         public bool UpgradedWeaponsAdjustedLevels { get; set; }
@@ -94,6 +106,33 @@ namespace DSAP.Models
                 outofdate = true;
             }
 
+            // Equipment options group start
+            RandomizeStartingLoadouts = GetBool("randomize_starting_loadouts");
+            RandomizeStartingGifts = GetBool("randomize_starting_gifts");
+            RequireOneHandedStartingWeapons = GetBool("require_one_handed_starting_weapons");
+            ExtraStartingWeaponForMeleeClasses = GetBool("extra_starting_weapon_for_melee_classes");
+            ExtraStartingShieldForAllClasses = GetBool("extra_starting_shield_for_all_classes");
+
+            if (App.Client.Options.ContainsKey("starting_sorcery"))
+                StartingSorcery = ((JsonElement)App.Client.Options["starting_sorcery"]).GetUInt32();
+            else
+                StartingSorcery = 0;
+
+            if (App.Client.Options.ContainsKey("starting_miracle"))
+                StartingMiracle = ((JsonElement)App.Client.Options["starting_miracle"]).GetUInt32();
+            else
+                StartingMiracle = 0;
+
+            if (App.Client.Options.ContainsKey("starting_pyromancy"))
+                StartingPyromancy = ((JsonElement)App.Client.Options["starting_pyromancy"]).GetUInt32();
+            else
+                StartingPyromancy = 0;
+
+            NoWeaponRequirements = GetBool("no_weapon_requirements");
+            NoSpellStatRequirements = GetBool("no_spell_stat_requirements");
+            NoMiracleCovenantRequirements = GetBool("no_miracle_covenant_requirements");
+            // Equipment options group end
+
 
             if (App.Client.Options.ContainsKey("upgraded_weapons_percentage"))
                 UpgradedWeaponsPercentage = ((JsonElement)App.Client.Options["upgraded_weapons_percentage"]).GetUInt32();
@@ -102,15 +141,9 @@ namespace DSAP.Models
                 Log.Logger.Warning("No 'upgraded weapons percentage' found. 'Weapon Upgrade' behavior will not occur.");
                 UpgradedWeaponsPercentage = 0;
             }
-                
 
-            if (App.Client.Options.ContainsKey("upgraded_weapons_adjusted_levels"))
-            {
-                if (((JsonElement)App.Client.Options["upgraded_weapons_adjusted_levels"]).GetUInt32() > 0)
-                    UpgradedWeaponsAdjustedLevels = true;
-                else
-                    UpgradedWeaponsAdjustedLevels = false;
-            }
+
+            UpgradedWeaponsAdjustedLevels = GetBool("upgraded_weapons_adjusted_levels");
 
             if (App.Client.Options.ContainsKey("upgraded_weapons_min_level"))
                 UpgradedWeaponsMinLevel = ((JsonElement)App.Client.Options["upgraded_weapons_min_level"]).GetUInt32();
@@ -123,7 +156,15 @@ namespace DSAP.Models
                 UpgradedWeaponsAllowedInfusionTypes.AddRange(JsonSerializer.Deserialize<string[]>(allowed_infusions.ToString()));
             }
         }
-
+        internal bool GetBool(string str)
+        {
+            if (App.Client.Options.ContainsKey(str))
+            {
+                if (((JsonElement)App.Client.Options[str]).GetUInt32() > 0)
+                    return true;
+            }
+            return false;
+        }
         public string ToString()
         {
             string result = $"[UpgradedWeaponsPercentage={UpgradedWeaponsPercentage},";

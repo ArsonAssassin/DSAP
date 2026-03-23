@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +41,9 @@ public partial class App : Application
     private const bool DO_NOT_CONNECT = false;
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
+    public static Dictionary<int, DarkSoulsItem> AllItemsByApId { get; set; }
     // 
+    private static Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = [];
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
     private static Dictionary<string, Tuple<int, string>> SlotLocToItemUpgMap = [];
     // Logging
@@ -380,10 +383,10 @@ public partial class App : Application
             if (cmdparts.Length == 2)
                 MonitorEventFlag(Int32.Parse(cmdparts[1]));
         }
-        else if (command.StartsWith("/get")) // for debugging
-        {
-            AddItemWithMessage((int)DSItemCategory.KeyItems, 11100970, 1);
-        }
+        //else if (command.StartsWith("/get")) // for debugging
+        //{
+        //    AddItemWithMessage((int)DSItemCategory.KeyItems, 11100970, 1);
+        //}
         else /* send any not-specifically-handled message to normal processing */
         {
             Client?.SendMessage(a.Command);
@@ -467,7 +470,7 @@ public partial class App : Application
         if (MiscHelper.IsInGame())
         {
             ulong baseb = AddressHelper.GetBaseBAddress();
-            Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
+            Log.Logger.Warning($"$Baseb={baseb:X}");
             var locs = Client.CurrentSession.Locations.AllLocationsChecked.Where(x => x == 11110499 || x == 11110500);
             foreach (var loc in locs)
             {
@@ -491,7 +494,7 @@ public partial class App : Application
             var gwynloc = (Location)LocationHelper.GetBossFlagLocations().Where(x => x.Name == "Gwyn, Lord of Cinder").First();
             if (gwynloc != null)
             {
-                Log.Logger.Warning($"{gwynloc.Name} at {gwynloc.Address.ToString("X")}_{gwynloc.AddressBit.ToString("X")} type {gwynloc.CheckType}.");
+                Log.Logger.Warning($"{gwynloc.Name} at {gwynloc.Address:X}_{gwynloc.AddressBit:X} type {gwynloc.CheckType}.");
 
                 bool result = gwynloc.Check();
                 if (result)
@@ -506,7 +509,7 @@ public partial class App : Application
                     sendingGoal = true;
                 }
                 byte gwynbyte = Memory.ReadByte(gwynloc.Address);
-                Log.Logger.Warning($"Gwyn byte={gwynbyte.ToString("X")}");
+                Log.Logger.Warning($"Gwyn byte={gwynbyte:X}");
             }
             else
             {
@@ -556,10 +559,10 @@ public partial class App : Application
             ushort slot = MiscHelper.GetSavedSlot();
 
             byte saveid = MiscHelper.GetSavedSaveId();
-            Log.Logger.Warning($"saved seedhash={seedhash}, slot={slot}, saveid={saveid.ToString("X")}");
+            Log.Logger.Warning($"saved seedhash={seedhash}, slot={slot}, saveid={saveid:X}");
 
             ulong baseb = AddressHelper.GetBaseBAddress();
-            Log.Logger.Warning($"$Baseb={baseb.ToString("X")}");
+            Log.Logger.Warning($"$Baseb={baseb:X}");
             if (baseb > 0)
             {
                 int ngplus = Memory.ReadByte(baseb + 0x78);
@@ -734,6 +737,7 @@ public partial class App : Application
         
 
         AllItems = MiscHelper.GetAllItems();
+        AllItemsByApId = AllItems.ToDictionary(x => x.ApId, x => x);
         Client.Connected += OnConnectedAsync;
         Client.Disconnected += OnDisconnected;
         Client.GameDisconnected += OnGameDisconnected;
@@ -1029,7 +1033,7 @@ public partial class App : Application
                     }
                     else
                     {
-                        Log.Logger.Error($"Deathlink ignored - could not resolve hp location (bad hp value) {whp} @ {whpp}/0x{whpp.ToString("X")}.");
+                        Log.Logger.Error($"Deathlink ignored - could not resolve hp location (bad hp value) {whp} @ {whpp}/0x{whpp:X}.");
                         Client.AddOverlayMessage($"Deathlink ignored - could not resolve hp location (bad hp value).");
                     }
                 }
@@ -1082,6 +1086,18 @@ public partial class App : Application
         {
             Log.Logger.Information($"Sending Goal for location id: {locid}");
             SendGoal();
+        }
+        else
+        {
+            // if it's in our scouted locs & not in our own game,
+            if (scoutedLocationInfo.TryGetValue(e.CompletedLocation.Id, out var value) && value.Player.Slot != Client.CurrentSession.ConnectionInfo.Slot)
+            {
+                bool isProgression = (value.Flags & Archipelago.MultiClient.Net.Enums.ItemFlags.Advancement) != 0;
+                if (itemPopupFilter == 'A' || (isProgression && itemPopupFilter == 'P'))
+                {
+                    AddItemWithMessage((int)DSItemCategory.KeyItems, (int)value.LocationId, 1); // put a message (item will be ignored)
+                }
+            }
         }
 
         Log.Logger.Debug($"Location Completed: {e.CompletedLocation.Name} at {e.CompletedLocation.Id}");
@@ -1180,10 +1196,39 @@ public partial class App : Application
             Log.Logger.Information($"You do not have {displayableEventType} locking enabled");
         }
     }
-    private static void ReplaceItems()
+    private static void UpdateItemLots()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
-        ItemLotHelper.OverwriteItemLots(ItemLotReplacementMap);
+        // Read in the Param Structure
+        // Modify it,
+        // Then save it back
+        bool reloadRequired = ParamHelper.ReadFromBytes(out ParamStruct<ItemLotParam> paramStruct,
+                                                 ItemLotParam.spOffset,
+                                                 (ps) => ps.ParamEntries.Last().id >= 99999990);
+        if (!reloadRequired)
+        {
+            Log.Logger.Debug("Skipping reload of Item Lots");
+            //return false;
+        }
+
+        Log.Logger.Debug($"ItemParam list rowcount='{paramStruct.ParamEntries.Count}'");
+
+        // if we are here, we are updating the params.
+        int new_entries = 0;
+        ItemLotHelper.AddInitItemLots(paramStruct, ref new_entries);
+        ItemLotHelper.OverwriteItemLots(paramStruct, ItemLotReplacementMap);
+        //bool success = ItemLotHelper.AddInitItemLots();
+
+        // add a dummy item at 99999998 so that we can know we've been here.
+        byte[] parambytes = new byte[ItemLotParam.Size];
+        Array.Copy(BitConverter.GetBytes(-1), 0, parambytes, 0x80, sizeof(int)); // overwrite getitemflagid with -1, so it isn't used
+        paramStruct.AddParam(99999998, parambytes, Encoding.ASCII.GetBytes("")); // mark that we've been here
+
+        paramStruct.ParamEntries.Sort((x, y) => (x.id.CompareTo(y.id)));
+        Log.Logger.Information($"Added {new_entries} items to ItemLotParams");
+
+        ParamHelper.WriteFromParamSt(paramStruct, ItemLotParam.spOffset);
+
         watch.Stop();
 
         Log.Logger.Information($"Finished overwriting items, took {watch.ElapsedMilliseconds}ms");
@@ -1233,28 +1278,13 @@ public partial class App : Application
             }
             
             var fog_key = MiscHelper.GetDsrEventItems().Find(x => x.ApId == e.Item.Id);
-
-            // First, ignore any items which came from "item lots". Player already got them!
-            if (e.Player.Slot == Client.CurrentSession.ConnectionInfo.Slot && LocationHelper.GetItemLotLocations().Any(x => x.Id == e.LocationId))    
+            if (fog_key != null) // make sure to receive fog key items; then later received the "unlock event"
             {
-                if (fog_key == null) // If it's a fog wall key, also receive the actual item now, then event later
-                {
-                    Log.Logger.Debug($"Skipping item receive for item lot item at loc {e.LocationId}");
-                    return;
-                }   
+                AddItemWithMessage((int)DSItemCategory.KeyItems, fog_key.Id, 1);
             }
-            else // in any spot that isn't a local item lot
-            {
-                if (fog_key != null) // make sure to receive fog keys
-                {
-                    AddItemWithMessage((int)DSItemCategory.KeyItems, fog_key.Id, 1);
-                }
-            }
-            // otherwise, player needs to get the item first.
 
             var itemId = e.Item.Id;
-            var itemToReceive = AllItems.FirstOrDefault(x => x.ApId == itemId);
-            if (itemToReceive != null)
+            if (AllItemsByApId.TryGetValue((int)itemId, out var itemToReceive))
             {
                 Log.Logger.Information($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
                 Client.AddOverlayMessage($"Received {itemToReceive.Name} ({itemToReceive.ApId})");
@@ -1281,10 +1311,15 @@ public partial class App : Application
             }
             else
             {
-                Log.Logger.Warning($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.");
-                Client.AddOverlayMessage($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.");
+                Log.Logger.Error($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead. Check your client version (/diag).");
+                Client.AddOverlayMessage($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.  Check your client version (/diag).");
                 var filler = AllItems.First(x => x.Id == 380);
                 AddAbstractItem(filler, e.Item.IsProgression);
+                /* If after receiving item (or trap), player is still in game, then it received successfully */
+                if (MiscHelper.IsInGame())
+                {
+                    success = true; // proceed with it anyway, to avoid infinite loop. Necessary in case players sent weird items we don't expect - like "Door opened" event items, etc.
+                }
             }
         }
         e.Success = success;
@@ -1513,6 +1548,8 @@ public partial class App : Application
         Client.LocationManager.EnableLocationsCondition = () => SaveidSet && MiscHelper.IsInGame();
 
 
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        
         /* Initialize flag to off - to prevent receiving items until we have set the saveid */
         SaveidSet = false; 
 
@@ -1538,30 +1575,26 @@ public partial class App : Application
 
             SlotLocToItemUpgMap = MiscHelper.BuildSlotLocationToItemUpgMap(slotData, currentSlot);
 
-            var itemflags = LocationHelper.GetItemLotFlags().Where((x) => x.IsEnabled).Cast<EventFlag>().ToList();
             var locids = Client.CurrentSession.Locations.AllLocations.ToArray();
 
-            Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
+            scoutedLocationInfo = await Client.CurrentSession.Locations.ScoutLocationsAsync(false, locids);
 
             await ApItemInjectorHelper.AddAPItems(scoutedLocationInfo);
 
-            ItemLotHelper.BuildFlagToLotMap(out ItemLotReplacementMap, itemflags, SlotLocToItemUpgMap, scoutedLocationInfo);
-
-            var nonItemLotFlags = LocationHelper.GetBossFlags().Cast<EventFlag>().ToList();
-            nonItemLotFlags.AddRange(LocationHelper.GetBonfireFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(LocationHelper.GetDoorFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(LocationHelper.GetFogWallFlags().Cast<EventFlag>());
-            nonItemLotFlags.AddRange(LocationHelper.GetMiscFlags().Cast<EventFlag>());
-
-            //var nonItemLotFlags = MiscHelper.GetDoorFlags().Cast<EventFlag>().ToList();
-            Log.Logger.Debug($"nonitemlotflags count = {nonItemLotFlags.Count}");
-            foreach (var item in nonItemLotFlags)
-            {
-                Log.Logger.Verbose($"nonitemlotflags flag {item.Flag} id {item.Id} name {item.Name}");
-            }
+            ItemLotHelper.BuildLotParamIdToLotMap(out ItemLotReplacementMap, SlotLocToItemUpgMap, scoutedLocationInfo);
         }
+        ItemLotHelper.RandomizeStartingLoadouts();
+        if (DSOptions.NoWeaponRequirements)
+            ParamHelper.RemoveWeaponRequirements(); 
+        if (DSOptions.NoSpellStatRequirements || DSOptions.NoMiracleCovenantRequirements)
+            ParamHelper.RemoveSpellRequirements();
+
         /* Set to only receive remote items and starting inventory */
-        ReplaceItems();
+        UpdateItemLots();
+        watch.Stop();
+        Log.Logger.Information($"Finished setup, took {watch.ElapsedMilliseconds}ms total");
+        Client.AddOverlayMessage($"Finished setup, took {watch.ElapsedMilliseconds}ms total");
+
     }
 
     private void OnDisconnected(object sender, EventArgs args)
@@ -1576,6 +1609,7 @@ public partial class App : Application
         SlotLocToItemUpgMap = [];
         EmkControllers = [];
         ItemLotReplacementMap = [];
+        scoutedLocationInfo = [];
     }
     private void OnGameDisconnected(object sender, EventArgs args)
     {

@@ -1,5 +1,6 @@
 ﻿using Archipelago.Core.Util;
 using Serilog;
+using System;
 
 namespace DSAP.Models
 {
@@ -39,7 +40,19 @@ namespace DSAP.Models
 
         override public string ToString()
         {
-            string result = $"{{\"size\":{DescSize}, \"FullAllocLength\":{FullAllocLength}, \"OldAddress\":{OldAddress.ToString("X")}, \"OldLength\":{OldLength}, \"SeedHash\":{SeedHash}, \"Slot\":{Slot} }}";
+            string result = $"{{\"size\":{DescSize}, \"FullAllocLength\":{FullAllocLength}, \"OldAddress\":{OldAddress:X}, \"OldLength\":{OldLength}, \"SeedHash\":{SeedHash}, \"Slot\":{Slot} }}";
+            return result;
+        }
+
+        public byte[] GetBytes()
+        {
+            byte[] result = new byte[0x1c];
+            Array.Copy(BitConverter.GetBytes(DescSize), 0, result, 0x0, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(FullAllocLength), 0, result, 0x4, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(OldAddress), 0, result, 0x8, sizeof(ulong));
+            Array.Copy(BitConverter.GetBytes(OldLength), 0, result, 0x10, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(SeedHash), 0, result, 0x14, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(Slot), 0, result, 0x18, sizeof(int));
             return result;
         }
     }

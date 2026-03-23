@@ -9,12 +9,68 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using static DSAP.Enums;
 using Location = Archipelago.Core.Models.Location;
 namespace DSAP.Helpers
 {
     public class MiscHelper
-    {        
+    {
+        /// <summary>
+        /// Determine if a reload of this area should be done
+        /// </summary>
+        /// <param name="descArea"></param>
+        /// <param name="checkArea"></param>
+        /// <returns>whether reload is required</returns>
+        internal static bool ValidateDescArea(DescArea descArea, string checkArea)
+        {
+            bool requires_reload = false;
+            if (descArea.DescSize >= DescArea.size)
+            {
+                int old_slot = descArea.Slot;
+
+                if (descArea.SeedHash != MiscHelper.HashSeed(App.Client.CurrentSession.RoomState.Seed)) // different seed
+                {
+                    if (MiscHelper.IsInGame())
+                    {
+                        App.Client.AddOverlayMessage($"Error - check the client log");
+                        Log.Logger.Error("Different seed detected than your previous connection to Archipelago.");
+                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
+                        return false;
+                    }
+                    else
+                    {
+                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
+                        return true;
+                    }
+
+
+                }
+                else if (old_slot != App.Client.CurrentSession.ConnectionInfo.Slot) // different slot
+                {
+                    if (MiscHelper.IsInGame())
+                    {
+                        App.Client.AddOverlayMessage($"Error - check the client log");
+                        Log.Logger.Error("Different slotdetected than your previous connection to Archipelago.");
+                        Log.Logger.Error("However, you are loaded into a save. Try again while not loaded in.");
+                        return false;
+                    }
+                    else
+                    {
+                        Log.Logger.Information("Different seed detected than your previous load. Resetting area");
+                        return true;
+                    }
+                }
+                else // seed and slot checked out fine. Looks good, no need to reload.
+                {
+                    return false;
+                }
+            }
+            else // desc area too small
+            {
+                Log.Logger.Error($"Unknown metadata size detected on {checkArea}. A different mod may be interfering.");
+                Log.Logger.Error("Try restarting DSR without other mods.");
+                return false;
+            }
+        }
         internal static int GetPlayerHP()
         {
             return Memory.ReadInt(AddressHelper.GetPlayerHPAddress());
@@ -171,6 +227,18 @@ namespace DSAP.Helpers
         {
             var json = MiscHelper.OpenEmbeddedResource("DSAP.Resources.LastBonfire.json");
             var list = JsonSerializer.Deserialize<List<LastBonfire>>(json, MiscHelper.GetJsonOptions());
+            return list;
+        }
+        public static List<Loadout> GetLoadouts()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Loadouts.json");
+            var list = JsonSerializer.Deserialize<List<Loadout>>(json, MiscHelper.GetJsonOptions());
+            return list;
+        }
+        public static List<EventFlag> GetGiftParams()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.GiftParams.json");
+            var list = JsonSerializer.Deserialize<List<EventFlag>>(json, MiscHelper.GetJsonOptions());
             return list;
         }
         public static List<DarkSoulsItem> GetConsumables()

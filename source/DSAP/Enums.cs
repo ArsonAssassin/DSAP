@@ -29,11 +29,26 @@ namespace DSAP
             DsrEvent = 0x11111111,
             Trap = 0x33333333
         }
+        public enum SpellCategory
+        {
+            None = 0,
+            Attack = 1,
+            Heal = 2,
+            Utility = 3,
+        }
         public enum DsrEventType
         {
             FOGWALL = 1,
             BOSSFOGWALL = 2,
             EARLYFOGWALL = 3,
+        }
+        public enum DsrLoadoutType
+        {
+            Melee = 1,
+            Ranged = 2,
+            Magic = 3,
+            Miracle = 4,
+            Pyromancy = 5,
         }
 
         public enum ItemUpgrade

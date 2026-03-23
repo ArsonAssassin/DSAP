@@ -5,6 +5,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 5,
+    "Dexterity": 8,
     "ApId": 11118000
   },
   {
@@ -13,6 +15,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 5,
+    "Dexterity": 14,
     "ApId": 11118001
   },
   {
@@ -21,6 +25,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 5,
+    "Dexterity": 0,
     "ApId": 11118002
   },
   {
@@ -29,6 +35,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 6,
+    "Dexterity": 12,
     "ApId": 11118003
   },
   {
@@ -37,6 +45,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 6,
+    "Dexterity": 20,
     "ApId": 11118004
   },
   {
@@ -45,6 +55,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 8,
+    "Dexterity": 10,
     "ApId": 11118005
   },
   {
@@ -53,6 +65,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 10,
+    "Dexterity": 10,
     "ApId": 11118006
   },
   {
@@ -61,6 +75,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 10,
+    "Dexterity": 10,
     "ApId": 11118007
   },
   {
@@ -69,6 +85,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 8,
+    "Dexterity": 8,
     "ApId": 11118008
   },
   {
@@ -77,6 +95,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 10,
+    "Dexterity": 14,
     "ApId": 11118009
   },
   {
@@ -85,6 +105,8 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 10,
     "ApId": 11118010
   },
   {
@@ -93,6 +115,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 12,
+    "Dexterity": 12,
     "ApId": 11118123
   },
   {
@@ -101,6 +125,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 10,
+    "Dexterity": 10,
     "ApId": 11118011
   },
   {
@@ -109,6 +135,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 22,
     "ApId": 11118012
   },
   {
@@ -117,6 +145,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 10,
+    "Dexterity": 10,
     "ApId": 11118013
   },
   {
@@ -125,6 +155,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 16,
     "ApId": 11118014
   },
   {
@@ -133,6 +165,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 10,
     "ApId": 11118015
   },
   {
@@ -141,6 +175,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 6,
+    "Dexterity": 6,
     "ApId": 11118016
   },
   {
@@ -149,6 +185,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 10,
     "ApId": 11118017
   },
   {
@@ -157,6 +195,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 10,
     "ApId": 11118018
   },
   {
@@ -165,6 +205,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 0,
     "ApId": 11118019
   },
   {
@@ -173,6 +215,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 14,
     "ApId": 11118020
   },
   {
@@ -181,6 +225,8 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "MeleeWeapons",
+    "Strength": 20,
+    "Dexterity": 10,
     "ApId": 11118021
   },
   {
@@ -189,6 +235,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 40,
+    "Dexterity": 10,
     "ApId": 11118022
   },
   {
@@ -197,6 +245,10 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 18,
+    "Intelligence": 20,
+    "Faith": 20,
     "ApId": 11118023
   },
   {
@@ -205,6 +257,9 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 10,
+    "Intelligence": 28,
     "ApId": 11118024
   },
   {
@@ -213,6 +268,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 20,
+    "Dexterity": 18,
     "ApId": 11118025
   },
   {
@@ -221,6 +278,10 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 18,
+    "Intelligence": 18,
+    "Faith": 18,
     "ApId": 11118124
   },
   {
@@ -229,6 +290,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 20,
+    "Dexterity": 10,
     "ApId": 11118026
   },
   {
@@ -237,6 +300,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 10,
     "ApId": 11118027
   },
   {
@@ -245,6 +310,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 28,
+    "Dexterity": 10,
     "ApId": 11118028
   },
   {
@@ -253,6 +320,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 40,
     "ApId": 11118029
   },
   {
@@ -261,6 +329,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 50,
+    "Dexterity": 10,
     "ApId": 11118030
   },
   {
@@ -269,6 +339,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 32,
+    "Dexterity": 18,
     "ApId": 11118031
   },
   {
@@ -277,6 +349,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 7,
+    "Dexterity": 13,
     "ApId": 11118032
   },
   {
@@ -285,6 +359,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 9,
+    "Dexterity": 13,
     "ApId": 11118033
   },
   {
@@ -293,6 +369,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 9,
+    "Dexterity": 14,
     "ApId": 11118034
   },
   {
@@ -301,6 +379,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 7,
     "ApId": 11118035
   },
   {
@@ -309,6 +388,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 7,
+    "Dexterity": 20,
     "ApId": 11118036
   },
   {
@@ -317,6 +398,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 11,
+    "Dexterity": 13,
     "ApId": 11118037
   },
   {
@@ -325,6 +408,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 13,
     "ApId": 11118038
   },
   {
@@ -333,6 +418,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 28,
+    "Dexterity": 13,
     "ApId": 11118039
   },
   {
@@ -341,6 +428,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 13,
     "ApId": 11118040
   },
   {
@@ -349,6 +438,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 14,
+    "Dexterity": 14,
     "ApId": 11118041
   },
   {
@@ -357,6 +448,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 20,
+    "Dexterity": 16,
     "ApId": 11118042
   },
   {
@@ -365,6 +458,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 14,
+    "Dexterity": 20,
     "ApId": 11118043
   },
   {
@@ -373,6 +468,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 14,
     "ApId": 11118044
   },
   {
@@ -381,6 +478,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 5,
+    "Dexterity": 12,
     "ApId": 11118045
   },
   {
@@ -389,6 +488,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 7,
+    "Dexterity": 12,
     "ApId": 11118046
   },
   {
@@ -397,6 +498,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 10,
+    "Dexterity": 12,
     "ApId": 11118047
   },
   {
@@ -405,6 +508,9 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 8,
+    "Dexterity": 16,
+    "Intelligence": 16,
     "ApId": 11118048
   },
   {
@@ -413,6 +519,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 8,
+    "Dexterity": 20,
     "ApId": 11118049
   },
   {
@@ -421,6 +529,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 8,
+    "Dexterity": 8,
     "ApId": 11118050
   },
   {
@@ -429,6 +539,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 12,
+    "Dexterity": 8,
     "ApId": 11118051
   },
   {
@@ -437,6 +549,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 18,
+    "Dexterity": 12,
     "ApId": 11118052
   },
   {
@@ -445,6 +559,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 24,
     "ApId": 11118053
   },
   {
@@ -453,6 +568,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 36,
+    "Dexterity": 8,
     "ApId": 11118054
   },
   {
@@ -461,6 +578,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 14,
+    "Dexterity": 14,
     "ApId": 11118055
   },
   {
@@ -469,6 +588,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 32,
+    "Dexterity": 8,
     "ApId": 11118056
   },
   {
@@ -477,6 +598,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 46,
     "ApId": 11118057
   },
   {
@@ -485,6 +607,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 50,
+    "Dexterity": 8,
     "ApId": 11118125
   },
   {
@@ -493,6 +617,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 36,
+    "Dexterity": 18,
     "ApId": 11118126
   },
   {
@@ -501,6 +627,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 10,
     "ApId": 11118058
   },
   {
@@ -509,6 +636,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 12,
     "ApId": 11118059
   },
   {
@@ -517,6 +645,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 11,
     "ApId": 11118060
   },
   {
@@ -525,6 +654,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 11,
+    "Dexterity": 10,
     "ApId": 11118061
   },
   {
@@ -533,6 +664,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 14,
     "ApId": 11118062
   },
   {
@@ -541,6 +673,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 12,
     "ApId": 11118063
   },
   {
@@ -549,6 +682,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 14,
     "ApId": 11118064
   },
   {
@@ -557,6 +691,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
     "ApId": 11118127
   },
   {
@@ -565,6 +700,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 14,
     "ApId": 11118065
   },
   {
@@ -573,6 +709,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 28,
     "ApId": 11118066
   },
   {
@@ -581,6 +718,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 50,
+    "Faith": 30,
     "ApId": 11118067
   },
   {
@@ -589,6 +728,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 46,
     "ApId": 11118068
   },
   {
@@ -597,6 +737,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 40,
     "ApId": 11118069
   },
   {
@@ -605,6 +746,7 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 26,
     "ApId": 11118070
   },
   {
@@ -613,6 +755,7 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 58,
     "ApId": 11118071
   },
   {
@@ -621,6 +764,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 5,
+    "Dexterity": 8,
     "ApId": 11118072
   },
   {
@@ -629,6 +774,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 6,
+    "Dexterity": 14,
     "ApId": 11118073
   },
   {
@@ -637,15 +784,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 20,
     "ApId": 11118074
-  },
-  {
-    "Name": "Dark Hand",
-    "Id": 904000,
-    "StackSize": 1,
-    "UpgradeType": "None",
-    "Category": "MeleeWeapons",
-    "ApId": 11118075
   },
   {
     "Name": "Spear",
@@ -653,6 +793,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 11,
+    "Dexterity": 10,
     "ApId": 11118076
   },
   {
@@ -661,6 +803,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 13,
+    "Dexterity": 15,
     "ApId": 11118077
   },
   {
@@ -669,6 +813,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 13,
+    "Dexterity": 12,
     "ApId": 11118078
   },
   {
@@ -677,6 +823,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 12,
+    "Dexterity": 10,
     "ApId": 11118079
   },
   {
@@ -685,6 +833,9 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 16,
+    "Intelligence": 24,
     "ApId": 11118080
   },
   {
@@ -693,6 +844,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 22,
     "ApId": 11118081
   },
   {
@@ -701,6 +854,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 10,
     "ApId": 11118082
   },
   {
@@ -709,6 +864,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 24,
+    "Dexterity": 24,
     "ApId": 11118083
   },
   {
@@ -717,6 +874,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 12,
+    "Intelligence": 14,
     "ApId": 11118084
   },
   {
@@ -725,6 +884,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 12,
     "ApId": 11118085
   },
   {
@@ -733,6 +894,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 36,
+    "Dexterity": 12,
     "ApId": 11118086
   },
   {
@@ -741,6 +904,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 14,
     "ApId": 11118087
   },
   {
@@ -749,6 +914,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 12,
     "ApId": 11118088
   },
   {
@@ -757,6 +924,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 32,
+    "Dexterity": 18,
     "ApId": 11118089
   },
   {
@@ -765,6 +934,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 15,
+    "Dexterity": 12,
     "ApId": 11118090
   },
   {
@@ -773,6 +944,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 14,
+    "Dexterity": 12,
     "ApId": 11118091
   },
   {
@@ -781,6 +954,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 14,
+    "Dexterity": 14,
     "ApId": 11118092
   },
   {
@@ -789,6 +964,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 14,
     "ApId": 11118093
   },
   {
@@ -797,6 +974,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 7,
+    "Dexterity": 14,
     "ApId": 11118094
   },
   {
@@ -805,6 +984,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 8,
+    "Dexterity": 16,
     "ApId": 11118095
   },
   {
@@ -813,6 +994,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 9,
+    "Dexterity": 25,
     "ApId": 11118128
   },
   {
@@ -821,6 +1004,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 6,
+    "Dexterity": 25,
     "ApId": 11118129
   },
   {
@@ -829,6 +1014,10 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 22,
+    "Dexterity": 18,
+    "Intelligence": 18,
+    "Faith": 18,
     "ApId": 11118130
   },
   {
@@ -837,6 +1026,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 48,
+    "Dexterity": 10,
     "ApId": 11118131
   },
   {
@@ -845,6 +1036,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 15,
+    "Dexterity": 12,
     "ApId": 11118132
   },
   {
@@ -853,6 +1046,8 @@
     "StackSize": 1,
     "UpgradeType": "Infusable",
     "Category": "MeleeWeapons",
+    "Strength": 15,
+    "Dexterity": 10,
     "ApId": 11118133
   },
   {
@@ -861,6 +1056,8 @@
     "StackSize": 1,
     "UpgradeType": "Unique",
     "Category": "MeleeWeapons",
+    "Strength": 20,
+    "Dexterity": 16,
     "ApId": 11118134
   },
   {
@@ -869,6 +1066,8 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "MeleeWeapons",
+    "Strength": 11,
+    "Dexterity": 10,
     "ApId": 11118300
   },
   {
@@ -877,6 +1076,8 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "MeleeWeapons",
+    "Strength": 9,
+    "Dexterity": 13,
     "ApId": 11118301
   },
   {
@@ -885,6 +1086,7 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "MeleeWeapons",
+    "Strength": 10,
     "ApId": 11118302
   },
   {
@@ -893,6 +1095,8 @@
     "StackSize": 1,
     "UpgradeType": "None",
     "Category": "MeleeWeapons",
+    "Strength": 16,
+    "Dexterity": 12,
     "ApId": 11118303
   }
 ]
