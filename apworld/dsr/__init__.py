@@ -377,7 +377,7 @@ class DSRWorld(World):
         create_connection("The Duke's Archives - After First Seath Encounter", "The Duke's Archives - Cell Door")
         create_connection("The Duke's Archives - Cell Door", "The Duke's Archives - Getting out of Cell")
         create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - After Archive Prison Extra Key")
-        create_connection("The Duke's Archives - After Archive Prison Extra Key", "The Duke's Archives - After Archive Tower Giant Door Key")
+        create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - After Archive Tower Giant Door Key")
         create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - Giant Cell")
         create_connection("The Duke's Archives - After Archive Tower Giant Door Key", "The Duke's Archives - Courtyard")
         create_connection("The Duke's Archives - Courtyard", "Crystal Cave")
@@ -684,7 +684,7 @@ class DSRWorld(World):
                 
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After First Seath Encounter -> The Duke's Archives - Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - After Archive Prison Extra Key -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
         set_rule(self.multiworld.get_location("DA: Broken Pendant", self.player), lambda state: state.has("Dusk Rescued", self.player))
         set_rule(self.multiworld.get_entrance("Crystal Cave -> Crystal Cave - After Seath", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))
