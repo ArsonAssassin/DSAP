@@ -736,10 +736,10 @@ public partial class App : Application
 
         if (!DO_NOT_CONNECT)
         {
-            if (e.Host.StartsWith("/connect ")) e.Host = e.Host.Substring("/connect ".Length); // trim "/connect " off front
+            if (e.Host != null && e.Host.StartsWith("/connect ")) e.Host = e.Host.Substring("/connect ".Length); // trim "/connect " off front
             // trim extra spaces before defaulting
-            e.Host.Trim(); 
-            e.Slot.Trim();
+            if (e.Host != null) e.Host.Trim();
+            if (e.Slot != null) e.Slot.Trim();
             // default to most basic local-hosted setup if they were empty
             if (e.Host == null || e.Host == "") e.Host = "localhost:38281";
             if (e.Slot == null || e.Slot == "") e.Slot = "Player1";
