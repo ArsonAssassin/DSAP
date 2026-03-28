@@ -1,0 +1,36 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+        <Border Width="">
+        <Grid RowDefinitions="*,50" Margin="5,5,5,5">
+            <StackPanel>
+                <RadioButton>hi</RadioButton>		
+            </StackPanel>
+            <Button Grid.Row="2" HorizontalAlignment="Center">Hide Window</Button>
+        </Grid>
+    </Border>
+  </Design.PreviewWith>
+
+  <!-- Add Styles Here -->
+  <Style Selector="Grid">
+      <Setter Property="Background" Value="{StaticResource BackgroundMedium}"></Setter>
+  </Style>
+  <Style Selector="StackPanel > Label">
+      <Setter Property="Foreground" Value="{StaticResource ForegroundWhite}"></Setter>
+  </Style>
+  <Style Selector="CheckBox">
+      <Setter Property="Foreground" Value="{StaticResource ForegroundWhite}"></Setter>
+  </Style>
+  <Style Selector="StackPanel">
+      <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+      <!--<Setter Property="Background" Value="DarkGray"></Setter> -->
+  </Style>
+  <Style Selector="RadioButton">
+      <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+      <!--<Setter Property="Background" Value="Green"></Setter> -->
+  </Style>
+  <Style Selector="RadioButton ContentPresenter">
+      <!--<Setter Property="Foreground" Value="Red"></Setter> -->
+      <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+  </Style>
+</Styles>

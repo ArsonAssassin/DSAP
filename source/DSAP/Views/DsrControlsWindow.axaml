@@ -1,0 +1,120 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DSAP.ViewModels"
+        x:DataType="vm:DsrControlsWindowModel"
+        mc:Ignorable="d" d:DesignWidth="250" 
+        Width="300" Height="250"
+        x:Class="DSAP.DsrControlsWindow"
+        Title="DsrControlsWindow">
+    <!-- WindowStartupLocation="CenterOwner" ExtendClientAreaChromeHints="NoChrome" ExtendClientAreaToDecorationsHint="True" -->
+    <Window.Resources>
+    <Color x:Key="BackgroundDark">#202020</Color>
+		<Color x:Key="BackgroundDarker">#101010</Color>
+		<Color x:Key="BackgroundMedium">#373737</Color>
+		<Color x:Key="BackgroundLight">DarkGray</Color>
+		<Color x:Key="ForegroundWhite">White</Color>
+		<Color x:Key="ForegroundBlack">Black</Color>
+		<Color x:Key="ShadowColor">#40000000</Color>
+		<Color x:Key="ActiveControl">#269FFF</Color>
+		<Color x:Key="Transparent">#00000000</Color>
+		<Color x:Key="Test">#FF0000</Color>
+		<CornerRadius x:Key="WindowCornerRadius">10</CornerRadius>
+		<CornerRadius x:Key="WindowTopCornerRadius">10,10,0,0</CornerRadius>
+		<CornerRadius x:Key="WindowBottomCornerRadius">0,0,10,10</CornerRadius>
+
+		<SolidColorBrush x:Key="BrushBackgroundDark" Color="{StaticResource BackgroundDark}"/>
+		<SolidColorBrush x:Key="BrushBackgroundDarker" Color="{StaticResource BackgroundDarker}"/>
+		<SolidColorBrush x:Key="BrushBackgroundMedium" Color="{StaticResource BackgroundMedium}"/>
+		<SolidColorBrush x:Key="BrushBackgroundLight" Color="{StaticResource BackgroundLight}"/>
+		<SolidColorBrush x:Key="BrushForegroundWhite" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="BrushForegroundBlack" Color="{StaticResource ForegroundBlack}"/>
+		<SolidColorBrush x:Key="BrushShadow" Color="{StaticResource ShadowColor}"/>
+
+		
+		<SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource BackgroundLight}"/>
+		<SolidColorBrush x:Key="ButtonForeground" Color="{StaticResource ForegroundBlack}"/>
+		<SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource BackgroundMedium}"/>
+		<SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{StaticResource ForegroundWhite}"/>
+
+		<SolidColorBrush x:Key="ToggleButtonBackground" Color="{StaticResource BackgroundLight}"/>
+		<SolidColorBrush x:Key="ToggleButtonForeground" Color="{StaticResource ForegroundBlack}"/>
+		<SolidColorBrush x:Key="ToggleButtonBackgroundPointerOver" Color="{StaticResource BackgroundMedium}"/>
+		<SolidColorBrush x:Key="ToggleButtonForegroundPointerOver" Color="{StaticResource ForegroundWhite}"/>
+		
+		<SolidColorBrush x:Key="ButtonForegroundDisabled" Color="{StaticResource ForegroundBlack}" />
+		<SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="{StaticResource BackgroundMedium}" />
+
+		<SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{StaticResource Transparent}"/>
+		<SolidColorBrush x:Key="TextControlForegroundDisabled" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="{StaticResource Transparent}"/>
+		
+		<SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TextControlForegroundFocused" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TextControlBackground" Color="{StaticResource BackgroundMedium}"/>
+		<SolidColorBrush x:Key="TextControlBorderBrush" Color="{StaticResource Transparent}"/>
+		<SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{StaticResource BackgroundMedium}"/>
+
+		<SolidColorBrush x:Key="ToggleSwitchContentForeground" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="ToggleSwitchFillOn" Color="{StaticResource ActiveControl}"/>
+		<SolidColorBrush x:Key="ToggleSwitchFillOff" Color="{StaticResource BackgroundDark}"/>
+		<SolidColorBrush x:Key="ToggleSwitchKnobFillOn" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="ToggleSwitchKnobFillOff" Color="{StaticResource ForegroundWhite}"/>
+
+		<SolidColorBrush x:Key="ComboBoxForeground" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="ComboBoxBackground" Color="{StaticResource BackgroundMedium}"/>
+
+		<SolidColorBrush x:Key="MenuFlyoutItemBackground" Color="{StaticResource BackgroundDark}"/>
+		
+		<SolidColorBrush x:Key="TabControlForeground" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TabControlBackground" Color="{StaticResource BackgroundDark}"/>
+		<SolidColorBrush x:Key="TabItemHeaderForegroundSelected" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TabItemHeaderForegroundSelectedPointerOver" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TabItemHeaderBackgroundSelectedPointerOver" Color="{StaticResource BackgroundMedium}"/>
+		<SolidColorBrush x:Key="TabItemHeaderForegroundUnselected" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TabItemHeaderForegroundUnselectedPointerOver" Color="{StaticResource ForegroundWhite}"/>
+		<SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOver" Color="{StaticResource BackgroundMedium}"/>
+    </Window.Resources>
+    <Window.Styles>
+		<StyleInclude Source="/Styles/DsrControlsStyles.axaml"></StyleInclude>
+    </Window.Styles>
+    <Window.DataContext>
+        <vm:DsrControlsWindowModel></vm:DsrControlsWindowModel>
+    </Window.DataContext>
+    <Border Width="" Background="{StaticResource BackgroundDarker}">
+    <Grid RowDefinitions="*,50" Margin="5,5,5,5">
+        <StackPanel>
+            <Label>Show Found item popups (you->you)</Label>
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton IsChecked="{Binding FoundItemProgressive}">Progressive</ToggleButton>
+                <ToggleButton IsChecked="{Binding FoundItemUseful}">Useful</ToggleButton>	
+                <ToggleButton IsChecked="{Binding FoundItemTrap}">Trap</ToggleButton>	
+                <ToggleButton IsChecked="{Binding FoundItemFiller}">Filler</ToggleButton>	
+            </StackPanel>
+            <Label>Show Sent Item popups (you->others)</Label>
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton IsChecked="{Binding SentItemProgressive}">Progressive</ToggleButton>
+                <ToggleButton IsChecked="{Binding SentItemUseful}">Useful</ToggleButton>   
+                <ToggleButton IsChecked="{Binding SentItemTrap}">Trap</ToggleButton>   
+                <ToggleButton IsChecked="{Binding SentItemFiller}">Filler</ToggleButton>   
+            </StackPanel>
+            <Label>Show Received item popups (others->you)</Label>
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton IsChecked="{Binding ReceivedItemProgressive}">Progressive</ToggleButton>
+                <ToggleButton IsChecked="{Binding ReceivedItemUseful}">Useful</ToggleButton>   
+                <ToggleButton IsChecked="{Binding ReceivedItemTrap}">Trap</ToggleButton>   
+                <ToggleButton IsChecked="{Binding ReceivedItemFiller}">Filler</ToggleButton>   
+            </StackPanel>
+        </StackPanel>
+        <ToggleButton Grid.Row="2" 
+                Content="Deathlink" 
+                IsChecked="{Binding Deathlink}"
+                HorizontalContentAlignment="Center"/>
+				<!--IsEnabled="{Binding DeathlinkButtonEnabled}"
+				Command="{Binding ToggleDeathlinkClicked}"-->
+    </Grid>
+    </Border>
+</Window>
