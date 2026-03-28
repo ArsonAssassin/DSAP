@@ -83,8 +83,8 @@
   * If either DSAP or DSR crashed, note the time of the error, then open "Event Viewer" from the start menu, go to Windows Logs->Application, and look for an "Error" level log entry. Right click the relevant entry to copy the details as text, and provide the file with your report. If there are multiple Error entries at the time of error, provide both.
 
 # Compatibility
-* This version has been tested with Dark Souls Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.5. 
-* Linux, even through Proton/Wine, is not yet supported
+* This version has been tested with Dark Souls: Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.6. Using incorrect versions of Dark Souls: Remastered may result in a crash upon connecting.
+* Linux now has preliminary support via Proton with v0.1.0. You should be able to add `PROTON_REMOTE_DEBUG_CMD="/full/path/to/DSAP.client.exe" %command%` to your steam Launch Options (tested with Proton Hotfix branch on 2026-03-27) to run both DSAP and DS:R in the same environment. It has not been thoroughly tested, however, so 1) consider it unstable, 2) let us know how it plays/runs (whether well or badly), and 3) Please report any issues.
 
 # Frequently Asked Questions (FAQ)
 * Q: Can I use this with seamless co-op?
@@ -94,7 +94,7 @@
 * Q: Does this work with Prepare to Die edition?
   * A: No, The current release only works with Dark Souls Remastered. There may be potential to make it compatible with PTDE but not until we are feature-complete on remastered, as there isn't a way to legally obtain a new copy of PTDE anymore.
 * Q: Does this work on Linux?
-  * A: Not yet. We plan to enable it by having DSAP and DSR run together within Proton, but **critical parts of that setup are not yet working**.
+  * A: With v0.1.0 - DSAP seems to work under Proton! Huge thanks to discord user @theabysmalkraken for finding the missing piece. See [Compatibility](Compatibility) section above for more details.
 * Q: Can I randomized starting gear? 
   * A: Not yet - this is planned for the future. Currently, it is recommended to create your character before connecting with the DSAP client.
 * Q: Is there a tracker?
@@ -104,6 +104,7 @@
 # Known issues
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic. Randomized Character creation/gifts replaces the master key from the thief's starting item and the starting gifts respectively.
 * Placing Lord Souls at Firelink Altar does not open the door - This seems to be due to not having received some number of the Lord Souls or Lordvessel. We could use information for this - If you see this, please run the /lordvessel command, which will both provide diagnostic information & the missing items. Please provide a screenshot of the output with any additional context you can provide about the missing items to the dark-souls-1 channel in the AP discord (such as, if you know it, did the items come in while you were offline, was it with other items, etc).
+* v0.0.22.0 and v0.0.21.0: Hard lock / infinite loop of receiving Rubbish if player has been /send'd a valid AP item that the client doesn't know about (Estus flask, Event items, etc). Resolved in v0.1.0 with an error message instead.
 * v0.0.21.0: Dispelling of Golden fogwalls inconcorrectly considered in logic once player had Lordvessel, even if it cannot be placed at Firelink Altar.
 * v0.0.21.0: Boss fog walls in the DLC do not correctly "Lock" with boss fog wall locks on.
 * v0.0.21.0 and lower: Once a save receives an item from the server, it cannot be re-received to a new save or different player. Fixed with v0.0.22.0 (`Multi-save support!`).
@@ -123,6 +124,7 @@
 # Changelog
 ## Version 0.1.0
 * Version update -> 0.1.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
+* Feature: Linux support - huge thanks to discord user @theabysmalkraken. From basic tests appears to work, but not tested thoroughly - should be considered somewhat more unstable.
 * Feature: Starting loadout, gifts, and spells randomization - including yaml options for controlling them. See the options for more details.
 * Feature: Server-delivered items - Items will now always be delivered by the server. This may cause a slightly delayed item popup.
 * Feature: Synced "looted" items between saves - Now upon starting a new save on an in-progress slot, you'll get all the items that slot ever looted. For now, "empty" items at those locations will still exist in the world. Possible due to Server-delivered items.
