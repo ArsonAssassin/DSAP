@@ -65,8 +65,7 @@ namespace DSAP.Models
                 /* While in beta?, bumping up "minor" (or major) will indicate breaking compatibility */
                 /* Updating revision or build indicates no change to api. */
                 if ((apiver_major > currmajor) ||
-                    (apiver_major == currmajor && apiver_minor > currminor) ||
-                    (apiver_major == currmajor && apiver_minor == currminor && apiver_revision > currrevision))
+                    (apiver_major == currmajor && apiver_minor > currminor))
                 {
                     Log.Logger.Error("Apworld detected that is too advanced for the DSAP client. Upgrade your client.");
                     Log.Logger.Error("Otherwise, expect errors and instability.");
