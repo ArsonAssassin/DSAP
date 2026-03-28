@@ -143,7 +143,7 @@ class DSRWorld(World):
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Upper Undead Burg - Taurus Demon",
-            "Upper Undead Burg - After Taurus Demon",
+            "Upper Undead Burg - Hellkite Bridge",
             "Undead Parish - Before Fog", 
             "Undead Parish - Fog", 
             "Undead Parish", 
@@ -289,8 +289,8 @@ class DSRWorld(World):
         create_connection_2way("Upper Undead Burg - Fog", "Upper Undead Burg")
         create_connection("Upper Undead Burg", "Undead Burg Basement Door")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Taurus Demon")
-        create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - After Taurus Demon")
-        create_connection_2way("Upper Undead Burg - After Taurus Demon", "Undead Parish - Before Fog")
+        create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - Hellkite Bridge")
+        create_connection_2way("Upper Undead Burg - Hellkite Bridge", "Undead Parish - Before Fog")
 
         create_connection("Upper Undead Burg", "Upper Undead Burg - Pine Resin Chest")
         
@@ -622,8 +622,8 @@ class DSRWorld(World):
         #set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After Fog -> Northern Undead Asylum - F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Northern Undead Asylum - Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Burg Basement Door", self.player), lambda state:state.has("Taurus Demon Defeated", self.player) and state.has ("Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Taurus Demon -> Upper Undead Burg - After Taurus Demon", self.player), lambda state:state.has("Taurus Demon Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Hellkite Bridge -> Undead Burg Basement Door", self.player), lambda state:state.has ("Basement Key", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Taurus Demon -> Upper Undead Burg - Hellkite Bridge", self.player), lambda state:state.has("Taurus Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         

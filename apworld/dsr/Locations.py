@@ -61,7 +61,7 @@ class DSRLocation(Location):
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Upper Undead Burg - Taurus Demon",
-            "Upper Undead Burg - After Taurus Demon",
+            "Upper Undead Burg - Hellkite Bridge",
             "Undead Parish - Before Fog", 
             "Undead Parish - Fog", 
             "Undead Parish", 
@@ -272,7 +272,7 @@ location_tables = {
     DSRLocationData(11110799, f"UB: Boss Fog Wall - Taurus Demon", f"Boss Fog Wall Key - Taurus Demon", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110053, f"UB: Taurus Demon Defeated", f"Taurus Demon Defeated", DSRLocationCategory.BOSS),
 ],
-"Upper Undead Burg - After Taurus Demon": [
+"Upper Undead Burg - Hellkite Bridge": [
     DSRLocationData(11110054, f"UB: Large Soul of a Lost Undead - After Taurus", f"Large Soul of a Lost Undead", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110055, f"UB: White Sign Soapstone", f"White Sign Soapstone", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110056, f"UB: Claymore", f"Claymore", DSRLocationCategory.ITEM_LOT),
