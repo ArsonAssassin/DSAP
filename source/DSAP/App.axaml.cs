@@ -234,10 +234,8 @@ public partial class App : Application
             if (cmdparts.Length == 1)
             {
                 Log.Logger.Warning("WARNING: You are attempting to reset your save.");
-                Log.Logger.Warning("This will resend any items received from non-item lot checks,");
-                Log.Logger.Warning("  and any received from other players or the server.");
-                Log.Logger.Warning("This will NOT send items in this seed which would be");
-                Log.Logger.Warning("  located at any item lots you have already picked up.");
+                Log.Logger.Warning("This will resend all items received for your game,");
+                Log.Logger.Warning("  both from other players and for all your own checks.");
                 Log.Logger.Warning("If you understand and wish to continue, type:");
                 Log.Logger.Warning("  /resetsave confirm");
             }
@@ -1412,7 +1410,7 @@ public partial class App : Application
         }
         else if (seed == roomseed) // "correct seed"
         {
-            if (slot == connslot)
+            if (slot == connslot) // seed and slot match
             {
                 byte saveid = MiscHelper.GetSavedSaveId(); // check saveid
                 if (saveid == 0) // no saveid? Get a new saveid
@@ -1420,8 +1418,24 @@ public partial class App : Application
                     byte newsaveid = await Client.RequestNewSaveId();
                     MiscHelper.SetSavedSaveId(newsaveid);
                     saveid = newsaveid;
+                    success = await Client.UpdateSaveId(saveid);
                 }
-                success = await Client.UpdateSaveId(saveid);
+                else // has saveid
+                {
+                    success = await Client.UpdateSaveId(saveid);
+                    if (!success) // failed to match saveid...might be a new room with same seed, but a save from a previous room
+                    {
+
+                        Log.Logger.Error($"Your saved slot # and seed match existing information on the server.");
+                        Log.Logger.Error($"However, your saveid was not detected - probably because this is a new room of this seed.");
+                        Log.Logger.Warning("\nRECOMMENDED: Close DSAP and start a new save.");
+                        Log.Logger.Warning("\nIf you want to reset the saved slot for this game save and have this save treated as a new save: Type /resetsave");
+                        Log.Logger.Warning("If you loaded the wrong save: Switch to a correct save, then type /saveloaded");
+                        CheckSaveId = false; // don't keep sending message until user has /resetsave or /saveloaded
+                    }
+                }
+                
+
             }
             else // seed matches, but slot does not
             {
