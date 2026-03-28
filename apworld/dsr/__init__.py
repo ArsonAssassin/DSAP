@@ -238,7 +238,7 @@ class DSRWorld(World):
             "Kiln of the First Flame",
             "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
-            "Sanctuary Garden - Santuary Guardian",
+            "Sanctuary Garden - Sanctuary Guardian",
             "Oolacile Sanctuary", 
             "Royal Wood", 
             "Royal Wood - Artorias",
@@ -412,8 +412,8 @@ class DSRWorld(World):
 
         # DLC Entrances
         create_connection("Darkroot Basin", "Sanctuary Garden")
-        create_connection("Sanctuary Garden", "Sanctuary Garden - Santuary Guardian")
-        create_connection("Sanctuary Garden - Santuary Guardian", "Oolacile Sanctuary")
+        create_connection("Sanctuary Garden", "Sanctuary Garden - Sanctuary Guardian")
+        create_connection("Sanctuary Garden - Sanctuary Guardian", "Oolacile Sanctuary")
         create_connection("Oolacile Sanctuary", "Royal Wood")
         create_connection("Royal Wood", "Royal Wood - Artorias")
         create_connection("Royal Wood", "Oolacile Township")
@@ -728,7 +728,7 @@ class DSRWorld(World):
         # DLC areas
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
 
-        set_rule(self.multiworld.get_entrance("Sanctuary Garden - Santuary Guardian -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Sanctuary Garden - Sanctuary Guardian -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - Behind Light-Dispelled Walls", self.player), lambda state: state.has("Skull Lantern", self.player))
@@ -818,7 +818,7 @@ class DSRWorld(World):
         add_boss_fog_rule("Boss Fog Wall Key - Gwyn", "Kiln of the First Flame", "Kiln of the First Flame - Gwyn")
 
         # dlc bosses
-        add_boss_fog_rule("Boss Fog Wall Key - Sanctuary Guardian", "Sanctuary Garden", "Sanctuary Garden - Santuary Guardian")
+        add_boss_fog_rule("Boss Fog Wall Key - Sanctuary Guardian", "Sanctuary Garden", "Sanctuary Garden - Sanctuary Guardian")
         add_boss_fog_rule("Boss Fog Wall Key - Artorias", "Royal Wood", "Royal Wood - Artorias")
         add_boss_fog_rule("Boss Fog Wall Key - Manus", "Chasm of the Abyss", "Chasm of the Abyss - Manus")
 

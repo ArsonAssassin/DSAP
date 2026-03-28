@@ -156,7 +156,7 @@ class DSRLocation(Location):
             "Kiln of the First Flame",
             "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
-            "Sanctuary Garden - Santuary Guardian",
+            "Sanctuary Garden - Sanctuary Guardian",
             "Oolacile Sanctuary", 
             "Royal Wood", 
             "Royal Wood - Artorias",
@@ -1094,7 +1094,7 @@ location_tables = {
 "Sanctuary Garden": [     
     DSRLocationData(11110721, f"SG: Oolacile - Sanctuary Garden lit", f"Oolacile - Sanctuary Garden lit", DSRLocationCategory.BONFIRE),
 ],
-"Sanctuary Garden - Santuary Guardian": [
+"Sanctuary Garden - Sanctuary Guardian": [
     DSRLocationData(11110815, f"SG: Boss Fog Wall - Sanctuary Guardian", f"Boss Fog Wall Key - Sanctuary Guardian", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110722, f"SG: Sanctuary Guardian Defeated", f"Sanctuary Guardian Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110723, f"SG: Guardian Soul", f"Guardian Soul", DSRLocationCategory.ENEMY_DROP),

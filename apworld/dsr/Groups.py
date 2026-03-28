@@ -115,13 +115,16 @@ category_to_loc_name_map = {
 # regions to add to "All DLC regions" group
 dlc_regions = [
     "Sanctuary Garden",
-    "Oolacile Sanctuary", 
-    "Royal Wood", 
+    "Sanctuary Garden - Sanctuary Guardian",
+    "Oolacile Sanctuary",
+    "Royal Wood",
+    "Royal Wood - Artorias",
     "Royal Wood - After Hawkeye Gough",
-    "Oolacile Township", 
+    "Oolacile Township",
     "Oolacile Township - Behind Light-Dispelled Walls",
     "Oolacile Township - After Crest Key",
-    "Chasm of the Abyss", 
+    "Chasm of the Abyss",
+    "Chasm of the Abyss - Manus",
 ]
 
 # Map door+shortcut regions to their "parent" region
