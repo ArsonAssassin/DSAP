@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaXaml Remove="Styles\DsrControlsStyles.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\Armor.json" />
     <None Remove="Resources\Bonfires.json" />
     <None Remove="Resources\Bosses.json" />
@@ -34,6 +38,10 @@
     <None Remove="Resources\Traps.json" />
     <None Remove="Resources\UpgradeMaterials.json" />
     <None Remove="Resources\UsableItems.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Styles\DsrControlsStyles.axaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -72,5 +80,11 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\DsrControlsWindow.axaml.cs">
+      <DependentUpon>Views\DsrControlsWindow.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

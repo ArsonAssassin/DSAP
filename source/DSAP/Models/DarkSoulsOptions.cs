@@ -62,11 +62,10 @@ namespace DSAP.Models
                 if (substrs2.Length > 3)
                     currbuild = uint.Parse(substrs2[3]);
 
-                /* While still in alpha, bumping up "revision" (or anything higher) will indicate breaking compatibility */
-                /* Updating revision indicates no change. */
+                /* While in beta?, bumping up "minor" (or major) will indicate breaking compatibility */
+                /* Updating revision or build indicates no change to api. */
                 if ((apiver_major > currmajor) ||
-                    (apiver_major == currmajor && apiver_minor > currminor) ||
-                    (apiver_major == currmajor && apiver_minor == currminor && apiver_revision > currrevision))
+                    (apiver_major == currmajor && apiver_minor > currminor))
                 {
                     Log.Logger.Error("Apworld detected that is too advanced for the DSAP client. Upgrade your client.");
                     Log.Logger.Error("Otherwise, expect errors and instability.");
@@ -74,21 +73,12 @@ namespace DSAP.Models
                 }
                 /* is apworld gen'd with a lower version? */
                 if ((apiver_major < currmajor) ||
-                    (apiver_major == currmajor && apiver_minor < currminor) ||
-                    (apiver_major == currmajor && apiver_minor == currminor && apiver_revision < currrevision))
+                    (apiver_major == currmajor && apiver_minor < currminor))
                 {
-                    // specific allowed backward compatibility. v0.0.21 client with v0.0.20 world
-                    if (currmajor == apiver_major && currminor == apiver_minor && 
-                        currrevision == 21 && apiver_revision == 20) 
-                    {
-                        /* it's ok */
-                    }
-                    else // otherwise, revision bump indicates issues.
-                    {
-                        Log.Logger.Error("Apworld detected that is too old for this version of the DSAP client.");
-                        Log.Logger.Error("Otherwise, expect errors and instability.");
-                        outofdate = true;
-                    }
+                    // revision bump indicates issues.
+                    Log.Logger.Error("Apworld detected that is too old for this version of the DSAP client.");
+                    Log.Logger.Error("Otherwise, expect errors and instability.");
+                    outofdate = true;
                 }
                 Log.Logger.Information($"Client api level {currmajor}.{currminor}.{currrevision}.{currbuild}, " +
                     $"apworld api level {apiver_major}.{apiver_minor}.{apiver_revision}.{apiver_build}");

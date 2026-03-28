@@ -7,6 +7,8 @@ using Archipelago.Core.Traps;
 using Archipelago.Core.Util;
 using Archipelago.Core.Util.Overlay;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
+using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.Models;
 using Avalonia;
@@ -15,6 +17,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using DSAP.Helpers;
 using DSAP.Models;
+using DSAP.ViewModels;
 using ReactiveUI;
 using Serilog;
 using System;
@@ -35,6 +38,7 @@ namespace DSAP;
 public partial class App : Application
 {
     public static MainWindowViewModel Context;
+    public static DsrControlsWindowModel ControlsContext;
     private DeathLinkService _deathlinkService;
     DateTime lastDeathLinkTime = DateTime.MinValue;
     private const bool DEBUG_TXTLOG = false;
@@ -51,12 +55,11 @@ public partial class App : Application
     // Deathlink
     private static readonly object _deathlinkLock = new object(); // lock that protects IsHandlingDeathLink and lastDeathLinkTime
     private bool IsHandlingDeathlink = false;
-    private bool deathlink_enabled = false;
+    internal bool deathlink_enabled { get; private set; } = false;
     TimeSpan graceperiod = new TimeSpan(0, 0, 25);
     // Item popups
     static DateTime lastItemReceived = DateTime.MinValue;
     static uint batchItemsReceived = 0;
-    static char itemPopupFilter = 'A';
     //
     public static DarkSoulsOptions DSOptions;
     public static bool SaveidSet = false;
@@ -68,6 +71,7 @@ public partial class App : Application
     private bool overlayInitialized = false;
     private static uint connect_command_step = 0;
     private bool firstConnectionStarted = false;
+    private DsrControlsWindow dsrControlsWindow;
 
     public override void Initialize()
     {
@@ -83,6 +87,7 @@ public partial class App : Application
             {
                 DataContext = Context
             };
+            desktop.ShutdownMode = Avalonia.Controls.ShutdownMode.OnMainWindowClose; // needed because otherwise "hidden" Controls window results in main window close leaving app running
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -106,6 +111,14 @@ public partial class App : Application
         Context.AutoscrollEnabled = true;
 
         Context.ConnectButtonEnabled = true;
+
+        ControlsContext = new DsrControlsWindowModel();
+        dsrControlsWindow = new DsrControlsWindow()
+        {
+            DataContext = ControlsContext
+        };
+        //dsrControlsWindow.InitializeComponent();
+        Context.CustomControlsWindow = dsrControlsWindow;
 
     }
     public void Context_CommandReceived(object? sender, ArchipelagoCommandEventArgs a)
@@ -133,7 +146,6 @@ public partial class App : Application
             Log.Logger.Warning(" /warp [DLC/AP/FA] - warp to the DLC/Archives Prison/Firelink Altar if you've been locked out.");
             Log.Logger.Warning("--- Client Settings ---");
             Log.Logger.Warning(" /deathlink [on/off/toggle] - change your deathlink status (does not persist beyond current session).");
-            Log.Logger.Warning(" /ripshow [All/Progression/None] - set which received item popups will show.");
             Log.Logger.Warning("--- End of DSAP commands. ---");
             Client?.SendMessage(a.Command); /* send original command through client for the rest of /help - maybe player will have something if they are an admin. */
         }
@@ -216,44 +228,14 @@ public partial class App : Application
                     Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [DLC, AP, FA].");
             }
         }
-        else if (command.StartsWith("/ripshow"))
-        {
-            string[] cmdparts = command.Split(" ");
-            if (cmdparts.Length == 1)
-            {
-                Log.Logger.Warning(" /ripshow [All/Progression/None] - set which received item popups will show.");
-                string curr_value = "";
-                if (itemPopupFilter == 'A') curr_value = "All items";
-                if (itemPopupFilter == 'P') curr_value = "Progression items only";
-                if (itemPopupFilter == 'N') curr_value = "No items";
-                Log.Logger.Warning($" Current setting: {curr_value} will display item popups");
-
-            }
-            else // if (cmdparts.Length > 1)
-            {
-                if ("APN".Contains(cmdparts[1].ToUpper()[0]))
-                {
-                    itemPopupFilter = cmdparts[1].ToUpper()[0];
-                    string curr_value = "";
-                    if (itemPopupFilter == 'A') curr_value = "All items";
-                    if (itemPopupFilter == 'P') curr_value = "Progression items only";
-                    if (itemPopupFilter == 'N') curr_value = "No items";
-                    Log.Logger.Information($"Updated item popup filter to {curr_value}");
-                }
-                else
-                    Log.Logger.Warning($"Invalid command: \"{a.Command}\". Second argument must be one of [A, P, N].");
-            }
-        }
         else if (command.StartsWith("/resetsave"))
         {
             string[] cmdparts = command.Split(" ");
             if (cmdparts.Length == 1)
             {
                 Log.Logger.Warning("WARNING: You are attempting to reset your save.");
-                Log.Logger.Warning("This will resend any items received from non-item lot checks,");
-                Log.Logger.Warning("  and any received from other players or the server.");
-                Log.Logger.Warning("This will NOT send items in this seed which would be");
-                Log.Logger.Warning("  located at any item lots you have already picked up.");
+                Log.Logger.Warning("This will resend all items received for your game,");
+                Log.Logger.Warning("  both from other players and for all your own checks.");
                 Log.Logger.Warning("If you understand and wish to continue, type:");
                 Log.Logger.Warning("  /resetsave confirm");
             }
@@ -367,6 +349,41 @@ public partial class App : Application
         else if (command.StartsWith("/diag")) // print diagnostic info
         {
             PrintDiagnosticInfo();
+        }
+        else if (command.StartsWith("/lordvessel")) // check lordvessel event flags
+        {
+            if (!Client.IsConnected || !MiscHelper.IsInGame())
+            {
+                Log.Logger.Information("You cannot run this command while not connected & in game. Processing terminated.");
+                return;
+            }
+            List<(string shortItemName, int placeflag, string longItemName, bool placed, bool received)> items = 
+                [
+                ("Lordvessel  ", 11800100, "Lordvessel", false, false),
+                ("Nito Soul   ", 11800201, "Lord Soul (Nito)", false, false),
+                ("Boc Soul    ", 11800202, "Lord Soul (Bed of Chaos)", false, false),
+                ("4 Kings Soul", 11800203, "Bequeathed Lord Soul Shard (Four Kings)", false, false),
+                ("Seath Soul  ", 11800204, "Bequeathed Lord Soul Shard (Seath)", false, false),
+                ];
+
+            var received_items = Client.CurrentSession.Items.AllItemsReceived.Where(x => x.ItemName == "Lordvessel" || x.ItemName.Contains("Lord Soul")).ToList();
+            foreach (var item in items)
+            {
+                bool placed = CheckEventFlag(item.placeflag) == 1;
+                var received = received_items.Find(x => x.ItemName == item.longItemName);
+                string received_text = "false";
+                if (received != null)
+                    received_text = $"True\n -> From {received.Player} in {received.ItemGame}, locid={received.LocationId}, locname={received.LocationName}, index={Client.CurrentSession.Items.AllItemsReceived.IndexOf(received)}";
+                Log.Logger.Warning($"{item.shortItemName} placed = {placed}, received = {received_text}");
+                if (received != null && !placed) // received it but didn't place it
+                {
+                    Log.Logger.Warning($"{item.shortItemName} 'received' but not placed. Sending to player.");
+                    if (AllItemsByApId.TryGetValue((int)received.ItemId, out var dsr_item))
+                    {
+                        AddItemWithMessage((int)DSItemCategory.KeyItems, dsr_item.Id, 1);
+                    }
+                }
+            }
         }
         else if (command.StartsWith("/cef")) // check event flag
         {
@@ -576,7 +593,7 @@ public partial class App : Application
     }
 
     /* Add an abstract "item" which can be a trap, event, or normal item */
-    public static void AddAbstractItem(DarkSoulsItem item, bool isProgression)
+    public static void AddAbstractItem(DarkSoulsItem item, bool doPopup)
     {
         int category = (int)item.Category;
         if (category == (int)DSItemCategory.Trap)
@@ -589,7 +606,7 @@ public partial class App : Application
         }
         else
         {
-            if (itemPopupFilter == 'A' || (isProgression && itemPopupFilter == 'P' ))
+            if (doPopup)
             {
                 AddItemWithMessage(category, item.Id, item.Quantity);
             }
@@ -752,9 +769,14 @@ public partial class App : Application
 
         if (!DO_NOT_CONNECT)
         {
+            if (e.Host != null && e.Host.StartsWith("/connect ")) e.Host = e.Host.Substring("/connect ".Length); // trim "/connect " off front
+            // trim extra spaces before defaulting
+            if (e.Host != null) e.Host.Trim();
+            if (e.Slot != null) e.Slot.Trim();
+            // default to most basic local-hosted setup if they were empty
+            if (e.Host == null || e.Host == "") e.Host = "localhost:38281";
+            if (e.Slot == null || e.Slot == "") e.Slot = "Player1";
 
-            if (e.Host == null) e.Host = "localhost:38281";
-            if (e.Slot == null) e.Slot = "Player1";
             await Client.Connect(e.Host, "Dark Souls Remastered");
 
             if (!Client.IsConnected)
@@ -779,6 +801,8 @@ public partial class App : Application
             {
                 SetDeathlink(true);
             }
+            if (ControlsContext.Deathlink != deathlink_enabled) // if button wasn't set correctly
+                ControlsContext.Deathlink = deathlink_enabled;
 
             if (!overlayInitialized) // only init overlay if it hasn't already been initialized (initing it twice causes a crash)
             {
@@ -846,8 +870,6 @@ public partial class App : Application
 
         Context.ConnectButtonEnabled = true;
         Context.UnstuckButtonEnabled = true;
-
-
     }
 
     private void StartInGameWatcher()
@@ -1092,11 +1114,9 @@ public partial class App : Application
             // if it's in our scouted locs & not in our own game,
             if (scoutedLocationInfo.TryGetValue(e.CompletedLocation.Id, out var value) && value.Player.Slot != Client.CurrentSession.ConnectionInfo.Slot)
             {
-                bool isProgression = (value.Flags & Archipelago.MultiClient.Net.Enums.ItemFlags.Advancement) != 0;
-                if (itemPopupFilter == 'A' || (isProgression && itemPopupFilter == 'P'))
-                {
+                bool will_popup = WillPopupSend(value.Player, value.Flags);
+                if (will_popup)
                     AddItemWithMessage((int)DSItemCategory.KeyItems, (int)value.LocationId, 1); // put a message (item will be ignored)
-                }
             }
         }
 
@@ -1134,7 +1154,7 @@ public partial class App : Application
         else
             SetDeathlink(true);
     }
-    private void SetDeathlink(bool enable)
+    internal void SetDeathlink(bool enable)
     {
         if (enable && !deathlink_enabled)
         {
@@ -1257,8 +1277,9 @@ public partial class App : Application
 
         if (SaveidSet && MiscHelper.IsInGame() && MiscHelper.CanPopupItems())
         {
+            bool will_popup = WillPopupReceive(e.Player, e.Item);
             // For items that will give popups, limit how often they send
-            if (itemPopupFilter == 'A' || (e.Item.IsProgression && itemPopupFilter == 'P')) // Progression items, or all items if filtering is off
+            if (will_popup)
             {
                 if (lastItemReceived > dtnow.AddMilliseconds(-250))
                 {
@@ -1301,7 +1322,7 @@ public partial class App : Application
                         Client.AddOverlayMessage($"Item upgrade error: '{itemupg.Item1}' != '{itemToReceive.ApId}', for item {itemToReceive.Name}.");
                     }
                 }
-                AddAbstractItem(itemToReceive, e.Item.IsProgression);
+                AddAbstractItem(itemToReceive, will_popup);
 
                 /* If after receiving item (or trap), player is still in game, then it received successfully */
                 if (MiscHelper.IsInGame())
@@ -1314,7 +1335,7 @@ public partial class App : Application
                 Log.Logger.Error($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead. Check your client version (/diag).");
                 Client.AddOverlayMessage($"Unable to identify received item {e.Item.Name} {itemId}, receiving rubbish instead.  Check your client version (/diag).");
                 var filler = AllItems.First(x => x.Id == 380);
-                AddAbstractItem(filler, e.Item.IsProgression);
+                AddAbstractItem(filler, will_popup);
                 /* If after receiving item (or trap), player is still in game, then it received successfully */
                 if (MiscHelper.IsInGame())
                 {
@@ -1344,6 +1365,50 @@ public partial class App : Application
             });
         }
     }
+    private static bool WillPopupReceive(PlayerInfo player, Item item)
+    {
+        bool willsend = false;
+        if (player.Slot == Client.CurrentSession.ConnectionInfo.Slot) // from and to ourself
+        {
+            if (item.IsProgression && ControlsContext.FoundItemProgressive)
+                willsend = true;
+            else if (item.IsUseful && ControlsContext.FoundItemUseful)
+                willsend = true;
+            else if (item.IsTrap && ControlsContext.FoundItemTrap)
+                willsend = true;
+            else if (ControlsContext.FoundItemFiller && item.flags == 0)
+                willsend = true;
+        }
+        else // from someone else
+        {
+            if (item.IsProgression && ControlsContext.ReceivedItemProgressive)
+                willsend = true;
+            else if (item.IsUseful && ControlsContext.ReceivedItemUseful)
+                willsend = true;
+            else if (item.IsTrap && ControlsContext.ReceivedItemTrap)
+                willsend = true;
+            else if (ControlsContext.ReceivedItemFiller && item.flags == 0)
+                willsend = true;
+        }
+        return willsend;
+    }
+    private static bool WillPopupSend(PlayerInfo player, ItemFlags flags)
+    {
+        bool willsend = false;
+        if (player.Slot != Client.CurrentSession.ConnectionInfo.Slot) // to somebody else
+        {
+            if (((flags & ItemFlags.Advancement) != 0) && ControlsContext.SentItemProgressive)
+                willsend = true;
+            else if (((flags & ItemFlags.NeverExclude) != 0) && ControlsContext.SentItemUseful)
+                willsend = true;
+            else if (((flags & ItemFlags.Trap) != 0) && ControlsContext.SentItemTrap)
+                willsend = true;
+            else if (ControlsContext.SentItemFiller && flags == 0)
+                willsend = true;
+        }
+        return willsend;
+    }
+
     // Upon loading in, check if save slot is good.
     private static async Task<bool> CheckClientSave()
     {
@@ -1380,7 +1445,7 @@ public partial class App : Application
         }
         else if (seed == roomseed) // "correct seed"
         {
-            if (slot == connslot)
+            if (slot == connslot) // seed and slot match
             {
                 byte saveid = MiscHelper.GetSavedSaveId(); // check saveid
                 if (saveid == 0) // no saveid? Get a new saveid
@@ -1388,8 +1453,24 @@ public partial class App : Application
                     byte newsaveid = await Client.RequestNewSaveId();
                     MiscHelper.SetSavedSaveId(newsaveid);
                     saveid = newsaveid;
+                    success = await Client.UpdateSaveId(saveid);
                 }
-                success = await Client.UpdateSaveId(saveid);
+                else // has saveid
+                {
+                    success = await Client.UpdateSaveId(saveid);
+                    if (!success) // failed to match saveid...might be a new room with same seed, but a save from a previous room
+                    {
+
+                        Log.Logger.Error($"Your saved slot # and seed match existing information on the server.");
+                        Log.Logger.Error($"However, your saveid was not detected - probably because this is a new room of this seed.");
+                        Log.Logger.Warning("\nRECOMMENDED: Close DSAP and start a new save.");
+                        Log.Logger.Warning("\nIf you want to reset the saved slot for this game save and have this save treated as a new save: Type /resetsave");
+                        Log.Logger.Warning("If you loaded the wrong save: Switch to a correct save, then type /saveloaded");
+                        CheckSaveId = false; // don't keep sending message until user has /resetsave or /saveloaded
+                    }
+                }
+                
+
             }
             else // seed matches, but slot does not
             {

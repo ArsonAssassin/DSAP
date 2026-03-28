@@ -61,7 +61,7 @@ class DSRLocation(Location):
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Upper Undead Burg - Taurus Demon",
-            "Upper Undead Burg - After Taurus Demon",
+            "Upper Undead Burg - Hellkite Bridge",
             "Undead Parish - Before Fog", 
             "Undead Parish - Fog", 
             "Undead Parish", 
@@ -156,7 +156,7 @@ class DSRLocation(Location):
             "Kiln of the First Flame",
             "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
-            "Sanctuary Garden - Santuary Guardian",
+            "Sanctuary Garden - Sanctuary Guardian",
             "Oolacile Sanctuary", 
             "Royal Wood", 
             "Royal Wood - Artorias",
@@ -272,7 +272,7 @@ location_tables = {
     DSRLocationData(11110799, f"UB: Boss Fog Wall - Taurus Demon", f"Boss Fog Wall Key - Taurus Demon", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110053, f"UB: Taurus Demon Defeated", f"Taurus Demon Defeated", DSRLocationCategory.BOSS),
 ],
-"Upper Undead Burg - After Taurus Demon": [
+"Upper Undead Burg - Hellkite Bridge": [
     DSRLocationData(11110054, f"UB: Large Soul of a Lost Undead - After Taurus", f"Large Soul of a Lost Undead", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110055, f"UB: White Sign Soapstone", f"White Sign Soapstone", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110056, f"UB: Claymore", f"Claymore", DSRLocationCategory.ITEM_LOT),
@@ -1094,7 +1094,7 @@ location_tables = {
 "Sanctuary Garden": [     
     DSRLocationData(11110721, f"SG: Oolacile - Sanctuary Garden lit", f"Oolacile - Sanctuary Garden lit", DSRLocationCategory.BONFIRE),
 ],
-"Sanctuary Garden - Santuary Guardian": [
+"Sanctuary Garden - Sanctuary Guardian": [
     DSRLocationData(11110815, f"SG: Boss Fog Wall - Sanctuary Guardian", f"Boss Fog Wall Key - Sanctuary Guardian", DSRLocationCategory.BOSS_FOG_WALL),
     DSRLocationData(11110722, f"SG: Sanctuary Guardian Defeated", f"Sanctuary Guardian Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110723, f"SG: Guardian Soul", f"Guardian Soul", DSRLocationCategory.ENEMY_DROP),

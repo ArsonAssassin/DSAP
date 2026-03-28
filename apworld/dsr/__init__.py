@@ -143,7 +143,7 @@ class DSRWorld(World):
             "Upper Undead Burg", 
             "Upper Undead Burg - Pine Resin Chest",
             "Upper Undead Burg - Taurus Demon",
-            "Upper Undead Burg - After Taurus Demon",
+            "Upper Undead Burg - Hellkite Bridge",
             "Undead Parish - Before Fog", 
             "Undead Parish - Fog", 
             "Undead Parish", 
@@ -238,7 +238,7 @@ class DSRWorld(World):
             "Kiln of the First Flame",
             "Kiln of the First Flame - Gwyn",
             "Sanctuary Garden", 
-            "Sanctuary Garden - Santuary Guardian",
+            "Sanctuary Garden - Sanctuary Guardian",
             "Oolacile Sanctuary", 
             "Royal Wood", 
             "Royal Wood - Artorias",
@@ -289,8 +289,8 @@ class DSRWorld(World):
         create_connection_2way("Upper Undead Burg - Fog", "Upper Undead Burg")
         create_connection("Upper Undead Burg", "Undead Burg Basement Door")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Taurus Demon")
-        create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - After Taurus Demon")
-        create_connection_2way("Upper Undead Burg - After Taurus Demon", "Undead Parish - Before Fog")
+        create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - Hellkite Bridge")
+        create_connection_2way("Upper Undead Burg - Hellkite Bridge", "Undead Parish - Before Fog")
 
         create_connection("Upper Undead Burg", "Upper Undead Burg - Pine Resin Chest")
         
@@ -412,8 +412,8 @@ class DSRWorld(World):
 
         # DLC Entrances
         create_connection("Darkroot Basin", "Sanctuary Garden")
-        create_connection("Sanctuary Garden", "Sanctuary Garden - Santuary Guardian")
-        create_connection("Sanctuary Garden - Santuary Guardian", "Oolacile Sanctuary")
+        create_connection("Sanctuary Garden", "Sanctuary Garden - Sanctuary Guardian")
+        create_connection("Sanctuary Garden - Sanctuary Guardian", "Oolacile Sanctuary")
         create_connection("Oolacile Sanctuary", "Royal Wood")
         create_connection("Royal Wood", "Royal Wood - Artorias")
         create_connection("Royal Wood", "Oolacile Township")
@@ -622,8 +622,8 @@ class DSRWorld(World):
         #set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After Fog -> Northern Undead Asylum - F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Northern Undead Asylum - Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Undead Burg Basement Door", self.player), lambda state:state.has("Taurus Demon Defeated", self.player) and state.has ("Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Taurus Demon -> Upper Undead Burg - After Taurus Demon", self.player), lambda state:state.has("Taurus Demon Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Hellkite Bridge -> Undead Burg Basement Door", self.player), lambda state:state.has ("Basement Key", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Taurus Demon -> Upper Undead Burg - Hellkite Bridge", self.player), lambda state:state.has("Taurus Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         
@@ -728,7 +728,7 @@ class DSRWorld(World):
         # DLC areas
         set_rule(self.multiworld.get_entrance("Darkroot Basin -> Sanctuary Garden", self.player), lambda state: state.has("Broken Pendant", self.player))
 
-        set_rule(self.multiworld.get_entrance("Sanctuary Garden - Santuary Guardian -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Sanctuary Garden - Sanctuary Guardian -> Oolacile Sanctuary", self.player), lambda state: state.has("Sanctuary Guardian Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Royal Wood -> Oolacile Township", self.player), lambda state: state.has("Artorias the Abysswalker Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - After Crest Key", self.player), lambda state: state.has("Crest Key", self.player))
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - Behind Light-Dispelled Walls", self.player), lambda state: state.has("Skull Lantern", self.player))
@@ -818,7 +818,7 @@ class DSRWorld(World):
         add_boss_fog_rule("Boss Fog Wall Key - Gwyn", "Kiln of the First Flame", "Kiln of the First Flame - Gwyn")
 
         # dlc bosses
-        add_boss_fog_rule("Boss Fog Wall Key - Sanctuary Guardian", "Sanctuary Garden", "Sanctuary Garden - Santuary Guardian")
+        add_boss_fog_rule("Boss Fog Wall Key - Sanctuary Guardian", "Sanctuary Garden", "Sanctuary Garden - Sanctuary Guardian")
         add_boss_fog_rule("Boss Fog Wall Key - Artorias", "Royal Wood", "Royal Wood - Artorias")
         add_boss_fog_rule("Boss Fog Wall Key - Manus", "Chasm of the Abyss", "Chasm of the Abyss - Manus")
 
@@ -896,7 +896,7 @@ class DSRWorld(World):
             "itemsId": items_id,
             "itemsUpgrades": items_upgrades,
             "itemsAddress": items_address,
-            "apworld_api_version" : "0.0.22.0" # Manually set our apworld api level, for detecting compatibility with client
+            "apworld_api_version" : "0.1.0.0" # Manually set our apworld api level, for detecting compatibility with client
         }
 
         self.items_id = items_id

@@ -83,8 +83,8 @@
   * If either DSAP or DSR crashed, note the time of the error, then open "Event Viewer" from the start menu, go to Windows Logs->Application, and look for an "Error" level log entry. Right click the relevant entry to copy the details as text, and provide the file with your report. If there are multiple Error entries at the time of error, provide both.
 
 # Compatibility
-* This version has been tested with Dark Souls Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.5. 
-* Linux, even through Proton/Wine, is not yet supported
+* This version has been tested with Dark Souls: Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.6. Using incorrect versions of Dark Souls: Remastered may result in a crash upon connecting.
+* Linux now has preliminary support via Proton with v0.1.0. You should be able to add `PROTON_REMOTE_DEBUG_CMD="/full/path/to/DSAP.client.exe" %command%` to your steam Launch Options (tested with Proton Hotfix branch on 2026-03-27) to run both DSAP and DS:R in the same environment. It has not been thoroughly tested, however, so 1) consider it unstable, 2) let us know how it plays/runs (whether well or badly), and 3) Please report any issues.
 
 # Frequently Asked Questions (FAQ)
 * Q: Can I use this with seamless co-op?
@@ -94,7 +94,7 @@
 * Q: Does this work with Prepare to Die edition?
   * A: No, The current release only works with Dark Souls Remastered. There may be potential to make it compatible with PTDE but not until we are feature-complete on remastered, as there isn't a way to legally obtain a new copy of PTDE anymore.
 * Q: Does this work on Linux?
-  * A: Not yet. We plan to enable it by having DSAP and DSR run together within Proton, but **critical parts of that setup are not yet working**.
+  * A: With v0.1.0 - DSAP seems to work under Proton! Huge thanks to discord user @theabysmalkraken for finding the missing piece. See [Compatibility](Compatibility) section above for more details.
 * Q: Can I randomized starting gear? 
   * A: Not yet - this is planned for the future. Currently, it is recommended to create your character before connecting with the DSAP client.
 * Q: Is there a tracker?
@@ -102,9 +102,10 @@
   * Universal Tracker (UT) also works, and in it you can import the maps from the poptracker pack. UT download can be found at https://github.com/FarisTheAncient/Archipelago/releases
 
 # Known issues
-* Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings. Randomized starting gear, and potentially gifts, is planned for the future.
-* v0.0.22.0: Crashes, incorrect items when too many non-local items are located within DSR, due to incorrectly built item params. Upgrade client to v0.0.22.1 (apworld is unchanged, same as v0.0.22.0).
-* v0.0.21.0: Dispeling of Golden fogwalls inconcorrectly considered in logic once player had Lordvessel, even if it cannot be placed at Firelink Altar.
+* Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic. Randomized Character creation/gifts replaces the master key from the thief's starting item and the starting gifts respectively.
+* Placing Lord Souls at Firelink Altar does not open the door - This seems to be due to not having received some number of the Lord Souls or Lordvessel. We could use information for this - If you see this, please run the /lordvessel command, which will both provide diagnostic information & the missing items. Please provide a screenshot of the output with any additional context you can provide about the missing items to the dark-souls-1 channel in the AP discord (such as, if you know it, did the items come in while you were offline, was it with other items, etc).
+* v0.0.22.0 and v0.0.21.0: Hard lock / infinite loop of receiving Rubbish if player has been /send'd a valid AP item that the client doesn't know about (Estus flask, Event items, etc). Resolved in v0.1.0 with an error message instead.
+* v0.0.21.0: Dispelling of Golden fogwalls inconcorrectly considered in logic once player had Lordvessel, even if it cannot be placed at Firelink Altar.
 * v0.0.21.0: Boss fog walls in the DLC do not correctly "Lock" with boss fog wall locks on.
 * v0.0.21.0 and lower: Once a save receives an item from the server, it cannot be re-received to a new save or different player. Fixed with v0.0.22.0 (`Multi-save support!`).
 * v0.0.21.0 and lower: Prism stone received at locations in DSR player's game which are replaced with other multiworld players' items. Updated to no longer occur with v0.0.22.0 (`AP items as DSR items`).
@@ -121,10 +122,30 @@
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
+## Version 0.1.0
+* Version update -> 0.1.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
+* Feature: Linux support - huge thanks to discord user @theabysmalkraken. From basic tests appears to work, but not tested thoroughly - should be considered somewhat more unstable.
+* Feature: Starting loadout, gifts, and spells randomization - including yaml options for controlling them. See the options for more details.
+* Feature: Server-delivered items - Items will now always be delivered by the server. This may cause a slightly delayed item popup.
+* Feature: Synced "looted" items between saves - Now upon starting a new save on an in-progress slot, you'll get all the items that slot ever looted. For now, "empty" items at those locations will still exist in the world. Possible due to Server-delivered items.
+* Feature: Custom Controls window for client settings. Settings do not yet persist between sessions, but are a lot easier to change. Deathlink can be more easily toggled from here as well.
+* Feature - Item popup options - In the "Custom Controls" window, player can now change the categories of items for which they will get popups. Works for both items from your own game & items sent from others' games.
+* Feature: Yaml option - Remove weapon stat requirements
+* Feature: Yaml option - Remove spell stat requirements
+* Feature: Yaml option - Remove miracle covenant requirements - some miracles have 
+* Feature: Add /lordvessel command - For players to use if placing all 4 souls at the Firelink Altar doesn't open the Kiln door. Intended to catch the case where the client didn't receive the items correctly - both getting diagnostics & making player whole (gives them the missing "received" items). Please provide the output to us in the dark-souls-1 discord channel if you have to use this command to help us debug this issue!
+* QoL: Sanitization on host and slot, remove "/connect " prefix if it's in host string, and trim spaces from both strings.
+* Fix: Logic - Basement Door access no longer requires Taurus Demon defeat
+* Fix: Unreceivable items causing infinite rubbish loop. Now they will just display an error message instead.
+* Code quality: massive refactoring of code which updates DSR item lots, messages, and params
+* Fix: Improved messaging for case where player connects with save from a previous instance of a multiworld (when a 2nd room is created from 1 seed / AP_####.zip).
+* Fix: DLC Boss Fog Walls added to `All DLC regions` location group.
+
 ## Version 0.0.22.1 (Client Hotfix)
 * Client Version update -> 0.0.22.1. Fully compatible with 0.0.22.0 worlds, but not compatible with apworlds at or below v0.0.21.
 * Apworld is unchanged.
 * Fix: Crashes, incorrect items when too many non-local items are located within DSR, due to incorrectly built item params.
+
 ## Version 0.0.22.0
 * Version update -> 0.0.22.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
 * Feature: The Item Pool is now generated based on the vanilla item pool, with slight modifications. You can actually get rings, and the Zweihander now! You can expect to get less Soul items / less souls from the average soul item compared to v0.0.21 and lower.
@@ -201,9 +222,6 @@
 * General: Better error mesaging (#50, #65, #68, etc)
 
 # Roadmap
-## v0.1.0 (planned)
-* Feature: Starting Item randomization
-
 ## v0.2.0 (planned)
 * Feature: Shop Items randomized
 
@@ -297,9 +315,9 @@ As of v0.0.22.0, using the Seamless Co-op mod may work with DSAP. It has not bee
         This must be done before doing any checks, so it is recommended to do so **before hosting or joining** the host's session.
         On first connect, you will need to head to the Undead Asylum bonfire and get your co-op items before joining the other's session.
 * Q: What items are shared?
-  * A: Any items sent by other slots will be sent to both players. Any fog wall keys found in this slot's own world will be sent to both players. Any checks the co-op players get for other slots will be sent immediately when the first player picks it up or makes the check.
+  * A: Any items sent by other slots will be sent to both players. Any items found in your own world should also be immediately sent to both players. Any items found in your world for other worlds will be sent to the server as a check only once (even if it appears to send multiple times).
 * Q: What items aren't shared?
-  * A: Everything else - any items that the player would normally get the item popup for in-game will need to be received by each player. For boss kills, when the boss is killed with both players in the session, they will both get the item. For items on the ground, each player will have to pick them up individually.
+  * A: Unrandomized items (mostly enemy drops), and the "fake" randomized item locations in DSR. The latter means that when 1 player picks up such an item, the 2nd player will still see an "item pickup" in the world, but it will be empty if they go to pick it up. This is because the server will have already sent the actual item to both players, and this is what triggers the item receive notification. Because the server will not re-send the item, there will be no notification on picking up such items on the 2nd+ time.
 
 # Contributors:
 * ArsonAssassin - Creator and Maintainer
