@@ -350,6 +350,41 @@ public partial class App : Application
         {
             PrintDiagnosticInfo();
         }
+        else if (command.StartsWith("/lordvessel")) // check lordvessel event flags
+        {
+            if (!Client.IsConnected || !MiscHelper.IsInGame())
+            {
+                Log.Logger.Information("You cannot run this command while not connected & in game. Processing terminated.");
+                return;
+            }
+            List<(string shortItemName, int placeflag, string longItemName, bool placed, bool received)> items = 
+                [
+                ("Lordvessel  ", 11800100, "Lordvessel", false, false),
+                ("Nito Soul   ", 11800201, "Lord Soul (Nito)", false, false),
+                ("Boc Soul    ", 11800202, "Lord Soul (Bed of Chaos)", false, false),
+                ("4 Kings Soul", 11800203, "Bequeathed Lord Soul Shard (Four Kings)", false, false),
+                ("Seath Soul  ", 11800204, "Bequeathed Lord Soul Shard (Seath)", false, false),
+                ];
+
+            var received_items = Client.CurrentSession.Items.AllItemsReceived.Where(x => x.ItemName == "Lordvessel" || x.ItemName.Contains("Lord Soul")).ToList();
+            foreach (var item in items)
+            {
+                bool placed = CheckEventFlag(item.placeflag) == 1;
+                var received = received_items.Find(x => x.ItemName == item.longItemName);
+                string received_text = "false";
+                if (received != null)
+                    received_text = $"True\n -> From {received.Player} in {received.ItemGame}, locid={received.LocationId}, locname={received.LocationName}, index={Client.CurrentSession.Items.AllItemsReceived.IndexOf(received)}";
+                Log.Logger.Warning($"{item.shortItemName} placed = {placed}, received = {received_text}");
+                if (received != null && !placed) // received it but didn't place it
+                {
+                    Log.Logger.Warning($"{item.shortItemName} 'received' but not placed. Sending to player.");
+                    if (AllItemsByApId.TryGetValue((int)received.ItemId, out var dsr_item))
+                    {
+                        AddItemWithMessage((int)DSItemCategory.KeyItems, dsr_item.Id, 1);
+                    }
+                }
+            }
+        }
         else if (command.StartsWith("/cef")) // check event flag
         {
             string[] cmdparts = command.Split(" ");

@@ -105,6 +105,7 @@
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic, regardless of your yaml settings. Randomized starting gear, and potentially gifts, is planned for the future.
 * v0.0.22.0: Crashes, incorrect items when too many non-local items are located within DSR, due to incorrectly built item params. Upgrade client to v0.0.22.1 (apworld is unchanged, same as v0.0.22.0).
 * v0.0.21.0: Dispeling of Golden fogwalls inconcorrectly considered in logic once player had Lordvessel, even if it cannot be placed at Firelink Altar.
+* Placing Lord Souls at Firelink Altar does not open the door - This seems to be due to not having received some number of the Lord Souls or Lordvessel. We could use information for this - If you see this, please run the /lordvessel command, which will both provide diagnostic information & the missing items. Please provide a screenshot of the output with any additional context you can provide about the missing items to the dark-souls-1 channel in the AP discord (such as, if you know it, did the items come in while you were offline, was it with other items, etc).
 * v0.0.21.0: Boss fog walls in the DLC do not correctly "Lock" with boss fog wall locks on.
 * v0.0.21.0 and lower: Once a save receives an item from the server, it cannot be re-received to a new save or different player. Fixed with v0.0.22.0 (`Multi-save support!`).
 * v0.0.21.0 and lower: Prism stone received at locations in DSR player's game which are replaced with other multiworld players' items. Updated to no longer occur with v0.0.22.0 (`AP items as DSR items`).
@@ -121,10 +122,14 @@
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
+## Version 0.1.0
+* Feature: Add /lordvessel command - For players to use if placing all 4 souls at the Firelink Altar doesn't open the Kiln door. Intended to catch the case where the client didn't receive the items correctly - both getting diagnostics & making player whole (gives them the missing "received" items). Please provide the output to us in the dark-souls-1 discord channel if you have to use this command to help us debug this issue!
+
 ## Version 0.0.22.1 (Client Hotfix)
 * Client Version update -> 0.0.22.1. Fully compatible with 0.0.22.0 worlds, but not compatible with apworlds at or below v0.0.21.
 * Apworld is unchanged.
 * Fix: Crashes, incorrect items when too many non-local items are located within DSR, due to incorrectly built item params.
+
 ## Version 0.0.22.0
 * Version update -> 0.0.22.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
 * Feature: The Item Pool is now generated based on the vanilla item pool, with slight modifications. You can actually get rings, and the Zweihander now! You can expect to get less Soul items / less souls from the average soul item compared to v0.0.21 and lower.
@@ -201,9 +206,6 @@
 * General: Better error mesaging (#50, #65, #68, etc)
 
 # Roadmap
-## v0.1.0 (planned)
-* Feature: Starting Item randomization
-
 ## v0.2.0 (planned)
 * Feature: Shop Items randomized
 
