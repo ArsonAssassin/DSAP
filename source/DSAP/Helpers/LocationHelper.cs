@@ -53,7 +53,7 @@ namespace DSAP.Helpers
         public static List<ILocation> GetBonfireFlagLocations()
         {
             List<ILocation> locations = new List<ILocation>();
-            var lotFlags = GetBonfireFlags();
+            var lotFlags = GetBonfireFlags().Where(x => x.Offset != 0);
             var offset = AddressHelper.GetProgressionFlagOffset();
             var baseAddress = (ulong)Memory.ReadInt(offset);
             var baseAddress2 = (ulong)Memory.ReadInt(baseAddress);

@@ -46,6 +46,7 @@ public partial class App : Application
     public static ArchipelagoClient Client { get; set; }
     public static List<DarkSoulsItem> AllItems { get; set; }
     public static Dictionary<int, DarkSoulsItem> AllItemsByApId { get; set; }
+    public static List<BonfireWarp> AllBonfireWarps { get; set; }
     // 
     private static Dictionary<long, ScoutedItemInfo> scoutedLocationInfo = [];
     private static Dictionary<int, ItemLot> ItemLotReplacementMap = new Dictionary<int, ItemLot>();
@@ -604,6 +605,10 @@ public partial class App : Application
         {
             ReceiveEventItem(item.ApId);
         }
+        else if (category == (int)DSItemCategory.BonfireWarp)
+        {
+            ReceiveBonfireWarpItem(item.ApId);
+        }
         else
         {
             if (doPopup)
@@ -755,6 +760,7 @@ public partial class App : Application
 
         AllItems = MiscHelper.GetAllItems();
         AllItemsByApId = AllItems.ToDictionary(x => x.ApId, x => x);
+        AllBonfireWarps = MiscHelper.GetBonfireWarpInfos();
         Client.Connected += OnConnectedAsync;
         Client.Disconnected += OnDisconnected;
         Client.GameDisconnected += OnGameDisconnected;
@@ -1579,6 +1585,28 @@ public partial class App : Application
             Log.Logger.Error($"Error, received item {ApId}, but no emk controller found. Check that your AP world and client match.");
         }
         // On next event scan, it'll re-add it if needed
+    }
+    private static void ReceiveBonfireWarpItem(int ApId)
+    {
+        /* Find the bonfire warp in the bonfire warp flags list,
+         * and set its progression flag to unlock the warp point. */
+
+        BonfireWarp? bonfire = AllBonfireWarps.Find(x => x.ItemId == ApId);
+        if (bonfire != null)
+        {
+            var bit = bonfire.AddressBit;
+            var progOffset = AddressHelper.GetProgressionFlagOffset();
+            var baseAddress = (ulong)Memory.ReadInt(progOffset);
+            var baseAddress2 = (ulong)Memory.ReadInt(baseAddress);
+
+            var address = bonfire.Offset + baseAddress2;
+            Memory.WriteBit(address, bit, true);
+            Log.Logger.Debug($"Marked {bonfire.Name} flag as true at {address:X}[{bit}]");
+        }
+        else
+        {
+            Log.Logger.Error($"Error, received item {ApId}, but no bonfire found. Check that your AP world and client match.");
+        }
     }
 
     private static void LogItem(Item item, int quantity)

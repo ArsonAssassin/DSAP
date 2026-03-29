@@ -8,7 +8,7 @@ from worlds.AutoWorld import World, WebWorld
 from worlds.generic.Rules import set_rule, add_rule, add_item_rule
 
 from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildRequiredItemPool, BuildGuaranteedItemPool, UpgradeEquipment
-from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories
+from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories, location_locked_categories
 from .Groups import location_name_groups, item_name_groups
 from .Options import DSROption, option_groups, LogicToAccessCatacombs
 
@@ -73,8 +73,9 @@ class DSRWorld(World):
         # Trigger a regen in UT
         return slot_data
     # End UT support
-    gc = 0
-    bc = 0
+    gc = 0 # good create
+    bc = 0 # "bad" create (ignored item)
+    bw = 0 # bonfire warp
 
 
 
@@ -114,7 +115,7 @@ class DSRWorld(World):
         self.enabled_location_categories.add(DSRLocationCategory.EVENT)
         self.enabled_location_categories.add(DSRLocationCategory.BOSS)
         self.enabled_location_categories.add(DSRLocationCategory.ITEM_LOT)
-        self.enabled_location_categories.add(DSRLocationCategory.BONFIRE)
+        self.enabled_location_categories.add(DSRLocationCategory.BONFIRE_WARP)
         # self.enabled_location_categories.add(DSRLocationCategory.DOOR)
         if (self.options.fogwall_sanity.value == True):
             self.enabled_location_categories.add(DSRLocationCategory.FOG_WALL)
@@ -435,6 +436,7 @@ class DSRWorld(World):
 
             if (location.category in self.enabled_location_categories and 
                 location.category not in location_skip_categories # [DSRLocationCategory.EVENT, DSRLocationCategory.DOOR]:
+                and location.category not in location_locked_categories
                 and not (self.options.excluded_location_behavior == "do_not_randomize" and location.name in self.all_excluded_locations)): 
                 self.gc = self.gc + 1
                 default_item = location.default_item
@@ -449,6 +451,21 @@ class DSRWorld(World):
                     self.location_name_to_id[location.name],
                     new_region
                 )
+            elif (location.category in self.enabled_location_categories and
+                  location.category in location_locked_categories): # DSRLocationCategory.BONFIRE_WARP
+                self.bw = self.bw + 1
+                default_item = location.default_item
+                # Place bonfire warp locations statically
+                event_item = self.create_item(default_item)
+                new_location = DSRLocation(
+                    self.player,
+                    location.name,
+                    location.category,
+                    default_item,
+                    self.location_name_to_id[location.name],
+                    new_region
+                )
+                new_location.place_locked_item(event_item)
             else:
                 self.bc = self.bc + 1
                 default_item = location.default_item
@@ -491,7 +508,9 @@ class DSRWorld(World):
         # print("Creating items")
         for location in self.multiworld.get_locations(self.player):            
             item_data = item_dictionary[location.default_item_name]
-            if item_data.category in [DSRItemCategory.SKIP] or location.category in location_skip_categories: # [DSRLocationCategory.EVENT]:
+            if (item_data.category in [DSRItemCategory.SKIP] 
+             or location.category in location_skip_categories 
+             or location.category in location_locked_categories): # [DSRLocationCategory.EVENT]:
                 # print("Adding skip item: " + location.default_item_name + " for location: " + location.name)
                 skip_itemlocs.append((self.create_item(location.default_item_name), location))
                 skipitempool.append(self.create_item(location.default_item_name))

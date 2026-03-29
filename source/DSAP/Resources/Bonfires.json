@@ -2,237 +2,300 @@
   {
     "Name": "Undead Asylum - Courtyard",
     "Id": 11110002,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Undead Asylum - Interior",
     "Id": 11110005,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Firelink Shrine",
-    "Id": 11110013,
+    "Id": 11110831,
     "Offset": "0x1A",
-    "AddressBit": 7
+    "AddressBit": 7,
+    "ItemId": 11111300,
+    "DsrId": 11109900,
+    "ItemName": "Warp Unlock - Firelink Shrine"
   },
   {
     "Name": "Undead Burg",
     "Id": 11110039,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Undead Burg - Sunlight Altar",
-    "Id": 11110058,
+    "Id": 11110832,
     "Offset": "0x1A",
-    "AddressBit": 2
+    "AddressBit": 2,
+    "ItemId": 11111301,
+    "DsrId": 11109901,
+    "ItemName": "Warp Unlock - Sunlight Altar"
   },
   {
     "Name": "Undead Parish",
-    "Id": 11110066,
+    "Id": 11110833,
     "Offset": "0x19",
-    "AddressBit": 0
+    "AddressBit": 0,
+    "ItemId": 11111302,
+    "DsrId": 11109902,
+    "ItemName": "Warp Unlock - Undead Parish"
   },
   {
     "Name": "Darkroot Garden",
     "Id": 11110194,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Darkroot Basin",
     "Id": 11110189,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Depths",
-    "Id": 11110132,
+    "Id": 11110834,
     "Offset": "0x19",
-    "AddressBit": 1
+    "AddressBit": 1,
+    "ItemId": 11111303,
+    "DsrId": 11109903,
+    "ItemName": "Warp Unlock - Depths"
   },
   {
     "Name": "Blighttown Catwalk",
     "Id": 11110138,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Blighttown Swamp",
     "Id": 11110152,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
-    "Name": "Quelaag's Domain",
-    "Id": 11110165,
+    "Name": "Daughter of Chaos",
+    "Id": 11110835,
     "Offset": "0x1A",
-    "AddressBit": 5
+    "AddressBit": 5,
+    "ItemId": 11111304,
+    "DsrId": 11109904,
+    "ItemName": "Warp Unlock - Daughter of Chaos"
   },
   {
     "Name": "The Great Hollow",
     "Id": 11110214,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Ash Lake",
     "Id": 11110226,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Ash Lake - Stone Dragon",
-    "Id": 11110231,
+    "Id": 11110836,
     "Offset": "0x1A",
-    "AddressBit": 6
+    "AddressBit": 6,
+    "ItemId": 11111305,
+    "DsrId": 11109905,
+    "ItemName": "Warp Unlock - Stone Dragon"
   },
   {
     "Name": "Demon Ruins - Entrance",
     "Id": 11110405,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Demon Ruins - Staircase",
     "Id": 11110412,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Demon Ruins - Catacombs",
     "Id": 11110421,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Lost Izalith - Lava Pits",
     "Id": 11110426,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Lost Izalith - Past illusory wall",
     "Id": 11110433,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Lost Izalith - Heart of Chaos",
     "Id": 11110447,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Sen's Fortress",
     "Id": 11110252,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Anor Londo",
-    "Id": 11110261,
+    "Id": 11110837,
     "Offset": "0x1A",
-    "AddressBit": 4
+    "AddressBit": 4,
+    "ItemId": 11111306,
+    "DsrId": 11109906,
+    "ItemName": "Warp Unlock - Anor Londo"
   },
   {
     "Name": "Anor Londo - Darkmoon Tomb",
-    "Id": 11110267,
+    "Id": 11110838,
     "Offset": "0x19",
-    "AddressBit": 7
+    "AddressBit": 7,
+    "ItemId": 11111307,
+    "DsrId": 11109907,
+    "ItemName": "Warp Unlock - Darkmoon Tomb"
   },
   {
     "Name": "Anor Londo - Residence",
     "Id": 11110273,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Anor Londo - Chamber of the Princess",
-    "Id": 11110555,
+    "Id": 11110839,
     "Offset": "0x1A",
-    "AddressBit": 0
+    "AddressBit": 0,
+    "ItemId": 11111308,
+    "DsrId": 11109908,
+    "ItemName": "Warp Unlock - Chamber of the Princess"
   },
   {
     "Name": "Painted World",
-    "Id": 11110299,
+    "Id": 11110840,
     "Offset": "0x18",
-    "AddressBit": 7
+    "AddressBit": 7,
+    "ItemId": 11111309,
+    "DsrId": 11109909,
+    "ItemName": "Warp Unlock - Painted World"
   },
   {
     "Name": "Duke's Archives - Entrance",
     "Id": 11110360,
-    "Offset": "0x18",
-    "AddressBit": 5
+    "Offset": "0x00"
   },
   {
     "Name": "Duke's Archives - Cell",
     "Id": 11110367,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Duke's Archives - Balcony",
-    "Id": 11110382,
-    "Offset": "0x1A"
+    "Id": 11110841,
+    "Offset": "0x18",
+    "AddressBit": 5,
+    "ItemId": 11111310,
+    "DsrId": 11109910,
+    "ItemName": "Warp Unlock - Duke's Archives"
   },
   {
     "Name": "Crystal Cave",
-    "Id": 11110402,
+    "Id": 11110842,
     "Offset": "0x18",
-    "AddressBit": 4
+    "AddressBit": 4,
+    "ItemId": 11111311,
+    "DsrId": 11109911,
+    "ItemName": "Warp Unlock - Crystal Cave"
   },
   {
     "Name": "Catacombs - Necromancer cave",
     "Id": 11110448,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Catacombs - Vamos",
-    "Id": 11110461,
+    "Id": 11110843,
     "Offset": "0x18",
-    "AddressBit": 3
+    "AddressBit": 3,
+    "ItemId": 11111312,
+    "DsrId": 11109912,
+    "ItemName": "Warp Unlock - Catacombs"
   },
   {
     "Name": "Catacombs - past illusory wall",
     "Id": 11110458,
-    "Offset": "0x1A"
+    "Offset": "0x00"
   },
   {
     "Name": "Tomb of the Giants - Patches",
-    "Id": 11110475,
-    "Offset": "0x1A"
+    "Id": 11110844,
+    "Offset": "0x18",
+    "AddressBit": 6,
+    "ItemId": 11111313,
+    "DsrId": 11109913,
+    "ItemName": "Warp Unlock - Tomb of the Giants"
   },
   {
     "Name": "Tomb of the Giants",
     "Id": 11110483,
-    "Offset": "0x18",
-    "AddressBit": 6
+    "Offset": "0x00"
   },
   {
     "Name": "Tomb of the Giants - Altar of the Gravelord",
-    "Id": 11110496,
+    "Id": 11110845,
     "Offset": "0x1A",
-    "AddressBit": 1
+    "AddressBit": 1,
+    "ItemId": 11111314,
+    "DsrId": 11109914,
+    "ItemName": "Warp Unlock - Altar of the Gravelord"
   },
   {
     "Name": "The Abyss",
-    "Id": 11110359,
+    "Id": 11110846,
     "Offset": "0x1A",
-    "AddressBit": 3
+    "AddressBit": 3,
+    "ItemId": 11111315,
+    "DsrId": 11109915,
+    "ItemName": "Warp Unlock - The Abyss"
   },
   {
     "Name": "Oolacile - Sanctuary Garden",
-    "Id": 11110721,
+    "Id": 11110847,
     "Offset": "0x19",
-    "AddressBit": 6
+    "AddressBit": 6,
+    "ItemId": 11111316,
+    "DsrId": 11109916,
+    "ItemName": "Warp Unlock - Sanctuary Garden"
   },
   {
     "Name": "Oolacile - Sanctuary",
-    "Id": 11110724,
+    "Id": 11110848,
     "Offset": "0x19",
-    "AddressBit": 5
+    "AddressBit": 5,
+    "ItemId": 11111317,
+    "DsrId": 11109917,
+    "ItemName": "Warp Unlock - Oolacile Sanctuary"
   },
   {
     "Name": "Oolacile - Township",
-    "Id": 11110753,
+    "Id": 11110849,
     "Offset": "0x19",
-    "AddressBit": 4
+    "AddressBit": 4,
+    "ItemId": 11111318,
+    "DsrId": 11109918,
+    "ItemName": "Warp Unlock - Oolacile Township"
   },
   {
     "Name": "Oolacile - Township Dungeon",
-    "Id": 11110768,
+    "Id": 11110850,
     "Offset": "0x19",
-    "AddressBit": 2
+    "AddressBit": 2,
+    "ItemId": 11111319,
+    "DsrId": 11109919,
+    "ItemName": "Warp Unlock - Oolacile Township Dungeon"
   },
   {
     "Name": "Chasm of the Abyss",
-    "Id": 11110780,
+    "Id": 11110851,
     "Offset": "0x19",
-    "AddressBit": 3
+    "AddressBit": 3,
+    "ItemId": 11111320,
+    "DsrId": 11109920,
+    "ItemName": "Warp Unlock - Chasm of the Abyss"
   }
 ]

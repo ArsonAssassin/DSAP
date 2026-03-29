@@ -14,7 +14,8 @@ class DSRLocationCategory(IntEnum):
     ENEMY_DROP = 6,
     FOG_WALL = 7,
     BOSS_FOG_WALL = 8,
-    SHOP_ITEM = 9
+    SHOP_ITEM = 9,
+    BONFIRE_WARP = 10
 
 
 class DSRLocationData(NamedTuple):
@@ -187,7 +188,11 @@ location_skip_categories = {
     DSRLocationCategory.BONFIRE
 }
 
-# Last id used = 830
+location_locked_categories = {
+    DSRLocationCategory.BONFIRE_WARP
+}
+
+# Last id used = 851
 location_tables = {
 "Undead Asylum Cell": [
     DSRLocationData(11110000, f"UA: Dungeon Cell Key", f"Dungeon Cell Key", DSRLocationCategory.SKIP),
@@ -219,6 +224,7 @@ location_tables = {
 ],
 "Firelink Shrine": [
     DSRLocationData(11110013, f"FS: Firelink Shrine lit", f"Firelink Shrine lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110831, f"FS: Firelink Shrine Bonfire", f"Bonfire Warp Unlock - Firelink Shrine", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110014, f"FS: Firebomb - Outside Petrus", f"Firebomb x6", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110015, f"FS: Humanity - Firelink Well", f"Humanity x3", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110016, f"FS: Soul of a Lost Undead - Outside Firelink Elevator", f"Soul of a Lost Undead",  DSRLocationCategory.ITEM_LOT),
@@ -278,6 +284,7 @@ location_tables = {
     DSRLocationData(11110056, f"UB: Claymore", f"Claymore", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110057, f"UB: Soul of a Nameless Soldier - Hellkite Bridge", f"Soul of a Nameless Soldier", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110058, f"UB: Undead Burg - Sunlight Altar lit", f"Undead Burg - Sunlight Altar lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110832, f"UB: Sunlight Altar Bonfire", f"Bonfire Warp Unlock - Sunlight Altar", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110059, f"UB: Undead Burg Sunlight Altar opened", f"Door Filler", DSRLocationCategory.DOOR),
 ],
 "Upper Undead Burg - Pine Resin Chest": [
@@ -295,6 +302,7 @@ location_tables = {
 "Undead Parish": [ # After Fog
     DSRLocationData(11110065, f"UP: Knight Shield", f"Knight Shield", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110066, f"UP: Undead Parish lit", f"Undead Parish lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110833, f"UP: Undead Parish Bonfire", f"Bonfire Warp Unlock - Undead Parish", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110067, f"UP: Halberd", f"Halberd", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110068, f"UP: Basement Key", f"Basement Key", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110830, f"UP: Andre", f"Andre Access", DSRLocationCategory.EVENT),
@@ -417,6 +425,7 @@ location_tables = {
 "Depths - After Sewer Chamber Key": [
     DSRLocationData(11110131, f"DE: Depths Bonfire Room opened", f"Door Filler", DSRLocationCategory.DOOR),
     DSRLocationData(11110132, f"DE: Depths lit", f"Depths lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110834, f"DE: Depths Bonfire", f"Bonfire Warp Unlock - Depths", DSRLocationCategory.BONFIRE_WARP),
 ],
 "Depths to Blighttown Door": [
     DSRLocationData(11110130, f"DE: Depths -> Blighttown opened", f"Door Filler", DSRLocationCategory.DOOR),
@@ -476,6 +485,7 @@ location_tables = {
 "Lower Blighttown - After Quelaag": [
     DSRLocationData(11110560, f"BT: Soul of Quelaag", f"Soul of Quelaag", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110165, f"BT: Quelaag's Domain lit", f"Quelaag's Domain lit", DSRLocationCategory.BONFIRE),    
+    DSRLocationData(11110835, f"BT: Daughter of Chaos Bonfire", f"Bonfire Warp Unlock - Daughter of Chaos", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110556, f"BT: Bell of Awakening #2 rung", f"Bell of Awakening #2", DSRLocationCategory.EVENT),
 ],
 "Upper Blighttown VotD Side": [
@@ -612,6 +622,7 @@ location_tables = {
     DSRLocationData(11110229, f"ASH: Dragon Scale - Ash Lake Log", f"Dragon Scale", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110230, f"ASH: Miracle: Great Magic Barrier", f"Miracle: Great Magic Barrier", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110231, f"ASH: Ash Lake - Stone Dragon lit", f"Ash Lake - Stone Dragon lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110836, f"ASH: Stone Dragon Bonfire", f"Bonfire Warp Unlock - Stone Dragon", DSRLocationCategory.BONFIRE_WARP),
 ],
 "Sen's Fortress": [
     DSRLocationData(11110614, f"SF: Large Soul of a Proud Knight - Corpse after Ladder out of Pit", f"Large Soul of a Proud Knight", DSRLocationCategory.ITEM_LOT),
@@ -665,6 +676,7 @@ location_tables = {
 ],
 "Anor Londo": [
     DSRLocationData(11110261, f"AL: Anor Londo lit", f"Anor Londo lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110837, f"AL: Anor Londo Bonfire", f"Bonfire Warp Unlock - Anor Londo", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110262, f"AL: Demon Titanite - Anor Londo Giants", f"Demon Titanite", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110263, f"AL: Crystal Halberd", f"Crystal Halberd", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110264, f"AL: Twinkling Titanite - Anor Londo", f"Twinkling Titanite", DSRLocationCategory.ITEM_LOT),
@@ -674,6 +686,7 @@ location_tables = {
 "Anor Londo - After First Fog": [
     DSRLocationData(11110791, f"AL: Fog Wall - Anor Londo #1 (Rafters)", f"Fog Wall Key - Anor Londo #1 (Rafters)", DSRLocationCategory.FOG_WALL),
     DSRLocationData(11110267, f"AL: Anor Londo - Darkmoon Tomb lit", f"Anor Londo - Darkmoon Tomb lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110838, f"AL: Darkmoon Tomb Bonfire", f"Bonfire Warp Unlock - Darkmoon Tomb", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110268, f"AL: Ring of the Sun's Firstborn", f"Ring of the Sun's Firstborn", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110269, f"AL: Sorcery: Great Magic Weapon", f"Sorcery: Great Magic Weapon", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110270, f"AL: Black Iron Helm", f"Black Iron Helm", DSRLocationCategory.ITEM_LOT),
@@ -733,9 +746,11 @@ location_tables = {
     DSRLocationData(11110671, f"AL: Brass Leggings", f"Brass Leggings", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110298, f"AL: Miracle: Sunlight Blade", f"Miracle: Sunlight Blade", DSRLocationCategory.ITEM_LOT),    
     DSRLocationData(11110555, f"AL: Anor Londo Chamber of the Princess lit", f"Anor Londo Chamber of the Princess lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110839, f"AL: Chamber of the Princess Bonfire", f"Bonfire Warp Unlock - Chamber of the Princess", DSRLocationCategory.BONFIRE_WARP),
 ],
 "Painted World of Ariamis": [
     DSRLocationData(11110299, f"PW: Painted World lit", f"Painted World lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110840, f"PW: Painted World Bonfire", f"Bonfire Warp Unlock - Painted World", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110571, f"PW: Soul of a Proud Knight - Corpse up First Staircase", f"Soul of a Proud Knight", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110301, f"PW: Soul of a Proud Knight - Painted World Corvid Ambush", f"Soul of a Proud Knight", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110302, f"PW: Twin Humanities - Painted World", f"Twin Humanities", DSRLocationCategory.ITEM_LOT),
@@ -836,6 +851,7 @@ location_tables = {
 "The Abyss - After Four Kings": [
     DSRLocationData(11110358, f"TA: Bequeathed Lord Soul Shard (Four Kings)", f"Bequeathed Lord Soul Shard (Four Kings)", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110359, f"TA: The Abyss lit", f"The Abyss lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110846, f"TA: The Abyss Bonfire", f"Bonfire Warp Unlock - The Abyss", DSRLocationCategory.BONFIRE_WARP),
 ],
 "The Duke's Archives": [
     DSRLocationData(11110360, f"DA: Duke's Archives - Entrance lit", f"Duke's Archives - Entrance lit", DSRLocationCategory.BONFIRE),
@@ -875,6 +891,7 @@ location_tables = {
     DSRLocationData(11110380, f"DA: Twinkling Titanite - Archives Chest 2", f"Twinkling Titanite", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110381, f"DA: Sorcery: Strong Magic Shield", f"Sorcery: Strong Magic Shield", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110382, f"DA: Duke's Archives - Balcony lit", f"Duke's Archives - Balcony lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110841, f"DA: Duke's Archives Balcony Bonfire", f"Bonfire Warp Unlock - Duke's Archives", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110383, f"DA: Duke's Archives Bookshelf Door opened", f"Door Filler", DSRLocationCategory.DOOR),
     DSRLocationData(11110384, f"DA: Blue Titanite Chunk - Archives Chest", f"Blue Titanite Chunk", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110385, f"DA: Enchanted Falchion", f"Enchanted Falchion", DSRLocationCategory.ENEMY_DROP), 
@@ -910,6 +927,7 @@ location_tables = {
 "Crystal Cave - After Seath": [
     DSRLocationData(11110401, f"CC: Bequeathed Lord Soul Shard (Seath)", f"Bequeathed Lord Soul Shard (Seath)", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110402, f"CC: Crystal Cave lit", f"Crystal Cave lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110842, f"CC: Crystal Cave Bonfire", f"Bonfire Warp Unlock - Crystal Cave", DSRLocationCategory.BONFIRE_WARP),
 ],
 "The Duke's Archives - First Arena after Seath's Death": [
     DSRLocationData(11110403, f"DA: Large Magic Ember", f"Large Magic Ember", DSRLocationCategory.ITEM_LOT),
@@ -1010,6 +1028,7 @@ location_tables = {
     DSRLocationData(11110459, f"TC: Catacombs Door 2 opened", f"Door Filler", DSRLocationCategory.DOOR),
     DSRLocationData(11110460, f"TC: Green Titanite Shard - On Platform near Vamos", f"Green Titanite Shard", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110461, f"TC: Catacombs - Vamos lit", f"Catacombs - Vamos lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110843, f"TC: Catacombs Vamos Bonfire", f"Bonfire Warp Unlock - Catacombs", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110462, f"TC: Miracle: Tranquil Walk of Peace", f"Miracle: Tranquil Walk of Peace", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110463, f"TC: Titanite Demon near Tomb", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110464, f"TC: Eye of Death - Catacombs Titanite Demon", f"Eye of Death x3", DSRLocationCategory.ITEM_LOT),
@@ -1038,6 +1057,7 @@ location_tables = {
     DSRLocationData(11110473, f"TotG: Large Soul of a Proud Knight - Upper Giant Coffin", f"Large Soul of a Proud Knight", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110474, f"TotG: Humanity - Corpse on Ledge", f"Humanity", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110475, f"TotG: Tomb of the Giants - Patches lit", f"Tomb of the Giants - Patches lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110844, f"TotG: Tomb of the Giants Patches Bonfire", f"Bonfire Warp Unlock - Tomb of the Giants", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110476, f"TotG: Large Soul of a Proud Knight - Patches Pit 1", f"Large Soul of a Proud Knight", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110477, f"TotG: Large Soul of a Proud Knight - Patches Pit 2", f"Large Soul of a Proud Knight", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110491, f"TotG: White Titanite Chunk - Patches Kick", f"White Titanite Chunk", DSRLocationCategory.ITEM_LOT),
@@ -1076,6 +1096,7 @@ location_tables = {
 "Tomb of the Giants - After Nito": [
     DSRLocationData(11110495, f"TotG: Lord Soul (Nito)", f"Lord Soul (Nito)", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110496, f"TotG: Tomb of the Giants - Altar of the Gravelord lit", f"Tomb of the Giants - Altar of the Gravelord lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110845, f"TotG: Altar of the Gravelord Bonfire", f"Bonfire Warp Unlock - Altar of the Gravelord", DSRLocationCategory.BONFIRE_WARP),
 ],
 "Firelink Altar": [ 
     DSRLocationData(11110828, f"FA: Lordvessel Placed", f"Lordvessel Placed", DSRLocationCategory.EVENT),
@@ -1093,6 +1114,7 @@ location_tables = {
 ],
 "Sanctuary Garden": [     
     DSRLocationData(11110721, f"SG: Oolacile - Sanctuary Garden lit", f"Oolacile - Sanctuary Garden lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110847, f"SG: Sanctuary Garden Bonfire", f"Bonfire Warp Unlock - Sanctuary Garden", DSRLocationCategory.BONFIRE_WARP),
 ],
 "Sanctuary Garden - Sanctuary Guardian": [
     DSRLocationData(11110815, f"SG: Boss Fog Wall - Sanctuary Guardian", f"Boss Fog Wall Key - Sanctuary Guardian", DSRLocationCategory.BOSS_FOG_WALL),
@@ -1101,6 +1123,7 @@ location_tables = {
 ],                         
 "Oolacile Sanctuary": [    
     DSRLocationData(11110724, f"OS: Sanctuary lit", f"Oolacile - Sanctuary lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110848, f"OS: Oolacile Sanctuary Bonfire", f"Bonfire Warp Unlock - Oolacile Sanctuary", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110725, f"OS: Humanity - Corpse Near Bonfire", f"Humanity", DSRLocationCategory.ITEM_LOT),
 ],
 "Royal Wood": [
@@ -1141,6 +1164,7 @@ location_tables = {
 "Oolacile Township": [    
     DSRLocationData(11110752, f"OT: Rubbish - Outside of Door", f"Rubbish", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110753, f"OT: Oolacile - Township lit", f"Oolacile - Township lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110849, f"OT: Oolacile Township Bonfire", f"Bonfire Warp Unlock - Oolacile Township", DSRLocationCategory.BONFIRE_WARP),
     DSRLocationData(11110754, f"OT: Soul of a Hero - 2F Behind Stairs To Gough", f"Soul of a Hero", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110755, f"OT: Large Soul of a Proud Knight - Early Oolacile Rooftop", f"Large Soul of a Proud Knight", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110756, f"OT: Soul of a Brave Warrior - By First Sorceress", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
@@ -1154,6 +1178,7 @@ location_tables = {
     DSRLocationData(11110766, f"OT: Twin Humanities - Drop onto Roof", f"Twin Humanities", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110767, f"OT: Soul of a Brave Warrior - Corpse in Corner of Statue Hallway", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110768, f"OT: Oolacile - Township Dungeon lit", f"Oolacile - Township Dungeon lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110850, f"OT: Oolacile Township Dungeon Bonfire", f"Bonfire Warp Unlock - Oolacile Township Dungeon", DSRLocationCategory.BONFIRE_WARP),
 ],
 "Oolacile Township - Behind Light-Dispelled Walls": [    # "let there be light" required
     DSRLocationData(11110757, f"OT: Silver Pendant", f"Silver Pendant", DSRLocationCategory.ITEM_LOT), 
@@ -1178,6 +1203,7 @@ location_tables = {
     DSRLocationData(11110778, f"CotA: Manus, father of the Abyss Defeated", f"Manus, Father of the Abyss Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110779, f"CotA: Soul of Manus", f"Soul of Manus", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110780, f"CotA: Chasm of the Abyss lit", f"Chasm of the Abyss lit", DSRLocationCategory.BONFIRE),
+    DSRLocationData(11110851, f"OCotA: Chasm of the Abyss Bonfire", f"Bonfire Warp Unlock - Chasm of the Abyss", DSRLocationCategory.BONFIRE_WARP),
 ]}
 
 location_dictionary: Dict[str, DSRLocationData] = {}

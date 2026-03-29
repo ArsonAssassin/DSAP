@@ -27,6 +27,7 @@ namespace DSAP
             MysteryArmor = 0x10000000,
             MysteryGoods = 0x40000000,
             DsrEvent = 0x11111111,
+            BonfireWarp = 0x11111112,
             Trap = 0x33333333
         }
         public enum SpellCategory
