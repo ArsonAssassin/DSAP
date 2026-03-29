@@ -1,0 +1,164 @@
+﻿[
+	{
+		"Quantity": 3,
+		"DisplayName": "Goddess's Blessing",
+		"ItemName": "Divine Blessing",
+		"Description": "(AP) Wow!\n3 divine blessings,\nwhat a steal!"
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "Black Firebomb x10",
+		"ItemName": "Black Firebomb",
+		"Description": "(AP) A reliable favorite.\nInflict big ouchies."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Twin Humanities",
+		"ItemName": "Twin Humanities",
+		"Description": "(AP) Two Humanities\nin one item."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Binoculars",
+		"ItemName": "Binoculars",
+		"Description": "(AP) Enjoy the views!"
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Pendant",
+		"ItemName": "Pendant",
+		"Description": "(AP) Useless item."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Tiny Being's Ring",
+		"ItemName": "Tiny Being's Ring",
+		"Description": "(AP) Ring belonging to\n just a little being,\n and it's its birthday."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Old Witch's Ring",
+		"ItemName": "Old Witch's Ring",
+		"Description": "(AP) This ring grants\nyou slightly more HP."
+	},
+	{
+		"Quantity": 99,
+		"DisplayName": "Throwing Knives x99",
+		"ItemName": "Throwing Knife",
+		"Description": "(AP) Throwing Knives."
+	},
+	{
+		"Quantity": 50,
+		"DisplayName": "P.Throwing Knives x50",
+		"ItemName": "Poison Throwing Knife",
+		"Description": "(AP) Poison Throwing\nKnives."
+	},
+	{
+		"Quantity": 20,
+		"DisplayName": "Firebomb x20",
+		"ItemName": "Firebomb",
+		"Description": "(AP) Firebombs.\nYou throw them,\nthey deal damage."
+	},
+	{
+		"Quantity": 40,
+		"DisplayName": "Dung Pie x40",
+		"ItemName": "Dung Pie",
+		"Description": "(AP) Throw to inflict\nToxic on enemies."
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "Charcoal P. Resin x10",
+		"ItemName": "Charcoal Pine Resin",
+		"Description": "(AP) Apply to weapon\nto deal fire damage."
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "Gold P. Resin x10",
+		"ItemName": "Gold Pine Resin",
+		"Description": "(AP) Apply to weapon\nto deal lightning\ndamage."
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "Rotten P. Resin x10",
+		"ItemName": "Rotten Pine Resin",
+		"Description": "(AP) Apply to weapon\nto apply poison buildup."
+	},
+	{
+		"Quantity": 30,
+		"DisplayName": "Homeward Bone x30",
+		"ItemName": "Homeward Bone",
+		"Description": "(AP) Takes you home.\nSome consider them\nuseless, apparently."
+	},
+	{
+		"Quantity": 15,
+		"DisplayName": "Green Blossom x15",
+		"ItemName": "Green Blossom",
+		"Description": "(AP) Grants increased\nstamina regeneration,\nfor a short time."
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "Elizabeth's Mushroom x10",
+		"ItemName": "Elizabeth's Mushroom",
+		"Description": "(AP) Grants heatlh\nregeneration,for\na short time."
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "B.P. Moss Clumps x10",
+		"ItemName": "Blooming Purple Moss Clump",
+		"Description": "(AP) Blooming Purple\nMoss Clumps - Cure\nmost ailments"
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "Large Titanite Shard x10",
+		"ItemName": "Large Titanite Shard",
+		"Description": "(AP) Upgrade materials."
+	},
+	{
+		"Quantity": 10,
+		"DisplayName": "Transient Curse x10",
+		"ItemName": "Transient Curse",
+		"Description": "(AP) Lets your\nweapon hit ghosts."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Dragon Head Stone",
+		"ItemName": "Dragon Head Stone",
+		"Description": "(AP) Vow requirement\nremoval pending."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Cloranthy Ring",
+		"ItemName": "Cloranthy Ring",
+		"Description": "(AP) Grants increased\nstamina regeneration"
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Wolf Ring",
+		"ItemName": "Wolf Ring",
+		"Description": "(AP) Increases Poise"
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Hornet Ring",
+		"ItemName": "Hornet Ring",
+		"Description": "(AP) Increased critical\ndamage."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Hawk Ring",
+		"ItemName": "Hawk Ring",
+		"Description": "(AP) Increased bow range."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Rusted Iron Ring",
+		"ItemName": "Rusted Iron Ring",
+		"Description": "(AP) Better movement\nthrough deep water\nand swamp."
+	},
+	{
+		"Quantity": 1,
+		"DisplayName": "Sl. Dragoncrest Ring",
+		"ItemName": "Slumbering Dragoncrest Ring",
+		"Description": "(AP) Slumbering\nDragoncrest Ring\nSilences your footsteps."
+	}
+]

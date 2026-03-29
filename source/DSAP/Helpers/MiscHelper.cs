@@ -241,6 +241,12 @@ namespace DSAP.Helpers
             var list = JsonSerializer.Deserialize<List<EventFlag>>(json, MiscHelper.GetJsonOptions());
             return list;
         }
+        public static List<Gift> GetGiftsPool()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.GiftsPool.json");
+            var list = JsonSerializer.Deserialize<List<Gift>>(json, MiscHelper.GetJsonOptions());
+            return list;
+        }
         public static List<DarkSoulsItem> GetConsumables()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.Consumables.json");

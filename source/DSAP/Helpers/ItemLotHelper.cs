@@ -6,6 +6,7 @@ using Serilog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -554,9 +555,9 @@ namespace DSAP.Helpers
                                     (10, "Gold Pine Resin"),
                                     (10, "Rotten Pine Resin"),
                                     (30, "Homeward Bone"),
-                                    (20, "Green Blossom"),
+                                    (15, "Green Blossom"),
                                     (10, "Elizabeth's Mushroom"),
-                                    (15, "Blooming Purple Moss Clump")]);
+                                    (10, "Blooming Purple Moss Clump")]);
                                 var thief_item_entry = thief_items[random.Next(thief_items.Count)];
                                 thief_item = MiscHelper.GetConsumables().Find(x => x.Name == thief_item_entry.item_name && x.Quantity == 1);
                                 thief_item_quantity = thief_item_entry.quantity;
@@ -827,40 +828,8 @@ namespace DSAP.Helpers
             var gifts = MiscHelper.GetGiftParams();
 
             //var added_gifts = new List<KeyValuePair<long, string>>();
-            var available_gifts = new List<(byte quantity, string gift_name, String item_name, String description)>([
-                // default items
-                (3, "Goddess's Blessing", "Divine Blessing", "(AP) Wow!\n3 divine blessings,\nwhat a steal!"),
-                    (10, "Black Firebomb x10", "Black Firebomb", "(AP) A reliable favorite.\nInflict big ouchies."),
-                    (1, "Twin Humanities", "Twin Humanities", "(AP) Two Humanities\nin one item."),
-                    (1, "Binoculars", "Binoculars", "(AP) Enjoy the views!"),
-                    (1, "Pendant", "Pendant", "(AP) Useless item."),
-                    (1, "Tiny Being's Ring", "Tiny Being's Ring", "(AP) Ring belonging to\n just a little being,\n and it's its birthday."),
-                    (1, "Old Witch's Ring", "Old Witch's Ring", "(AP) This ring grants\nyou slightly more HP."),
-                    // added items
-                    (99, "Throwing Knives x99", "Throwing Knife", "(AP) Throwing Knives."),
-                    (50, "P.Throwing Knives x50", "Poison Throwing Knife", "(AP) Poison Throwing\nKnives."),
-                    (20, "Firebomb x20", "Firebomb", "(AP) Firebombs.\nYou throw them,\nthey deal damage."),
-                    (40, "Dung Pie x40", "Dung Pie", "(AP) Throw to inflict\nToxic on enemies."),
-                    (10, "Charcoal P. Resin x10", "Charcoal Pine Resin", "(AP) Apply to weapon\nto deal fire damage."),
-                    (10, "Gold P. Resin x10", "Gold Pine Resin", "(AP) Apply to weapon\nto deal lightning\ndamage."),
-                    (10, "Rotten P. Resin x10", "Rotten Pine Resin", "(AP) Apply to weapon\nto apply poison buildup."),
-                    (30, "Homeward Bone x30", "Homeward Bone", "(AP) Takes you home.\nSome consider this\nuseless, apparently."),
-                    (20, "Green Blossom x20", "Green Blossom", "(AP) Grants increased\nstamina regeneration,\nfor a short time."),
-                    (10, "Elizabeth's Mushroom x10", "Elizabeth's Mushroom", "(AP) Grants heatlh\nregeneration,for\na short time."),
-                    (15, "B.P. Moss Clumps x15", "Blooming Purple Moss Clump", "(AP) Blooming Purple\nMoss Clumps - Cure\nmost ailments"),
-
-                    (10, "Large Titanite Shard x10", "Large Titanite Shard", "(AP) Upgrade materials."),
-                    (10, "Transient Curse x10", "Transient Curse", "(AP) Lets your\nweapon hit ghosts."),
-
-                    (1, "Dragon Head Stone", "Dragon Head Stone", "(AP) Vow requirement\nremoval pending."),
-                    (1, "Cloranthy Ring", "Cloranthy Ring", "(AP) Grants increased\nstamina regeneration"),
-                    (1, "Wolf Ring", "Wolf Ring", "(AP) Increases Poise"),
-                    (1, "Hornet Ring", "Hornet Ring", "(AP) Increased critical\ndamage."),
-                    (1, "Hawk Ring", "Hawk Ring", "(AP) Increased bow range."),
-                    (1, "Rusted Iron Ring", "Rusted Iron Ring", "(AP) Better movement\nthrough deep water\nand swamp."),
-                    (1, "Sl. Dragoncrest Ring", "Slumbering Dragoncrest Ring", "(AP) Slumbering\nDragoncrest Ring\nSilences your footsteps.")
-            ]);
-
+            var available_gifts = MiscHelper.GetGiftsPool();
+            
             foreach (var gift in gifts)
             {
                 var charaInit_ingame = charaParamStruct.ParamEntries.Find(x => x.id == gift.Id);
@@ -871,9 +840,9 @@ namespace DSAP.Helpers
                 Array.Copy(charaParamStruct.ParamBytes, charaInit_ingame.paramOffset, ingame_parambytes, 0, CharaInitParam.Size);
 
                 var gift_entry = available_gifts[random.Next(available_gifts.Count)];
-                Log.Logger.Warning($"Gift {gift.Name} => {gift_entry.item_name} x {gift_entry.quantity}");
+                Log.Logger.Debug($"Gift {gift.Name} => {gift_entry.ItemName} x {gift_entry.Quantity}");
                 available_gifts.Remove(gift_entry);
-                var gift_item = App.AllItems.Find(x => x.Name == gift_entry.item_name && x.Quantity == 1);
+                var gift_item = App.AllItems.Find(x => x.Name == gift_entry.ItemName && x.Quantity == 1);
                 var item_id = gift_item.Id;
                 var item_cat = gift_item.Category;
 
@@ -886,7 +855,7 @@ namespace DSAP.Helpers
                 {
                     // update the chara init item
                     Array.Copy(BitConverter.GetBytes(item_id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));
-                    ingame_parambytes[CharaInitParam.ITEMNUM_01] = gift_entry.quantity;
+                    ingame_parambytes[CharaInitParam.ITEMNUM_01] = gift_entry.Quantity;
                 }
                 else if (gift_item.Category == Enums.DSItemCategory.Rings)
                 {
@@ -898,11 +867,11 @@ namespace DSAP.Helpers
 
                 // write new gift name
                 uint msgid = (uint)(gift.Id + 132050 - 2400);
-                msgManStruct.UpdateMsg(msgid, gift_entry.gift_name);
+                msgManStruct.UpdateMsg(msgid, gift_entry.DisplayName);
                 // write gift description
                 uint descid = (uint)(gift.Id + 132350 - 2400);
-                msgManStruct.UpdateMsg(descid, gift_entry.description);
-                Log.Logger.Debug($"Added messages for gift {gift.Id} to replace {gift.Name} with {gift_entry.gift_name}");
+                msgManStruct.UpdateMsg(descid, gift_entry.Description);
+                Log.Logger.Debug($"Added messages for gift {gift.Id} to replace {gift.Name} with {gift_entry.DisplayName}");
             }
         }
 
