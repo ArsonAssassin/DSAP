@@ -84,7 +84,7 @@
 
 # Compatibility
 * This version has been tested with Dark Souls: Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.6. Using incorrect versions of Dark Souls: Remastered may result in a crash upon connecting.
-* Linux now has preliminary support via Proton with v0.1.0. You should be able to add `PROTON_REMOTE_DEBUG_CMD="/full/path/to/DSAP.client.exe" %command%` to your steam Launch Options (tested with Proton Hotfix branch on 2026-03-27) to run both DSAP and DS:R in the same environment. It has not been thoroughly tested, however, so 1) consider it unstable, 2) let us know how it plays/runs (whether well or badly), and 3) Please report any issues.
+* (v0.1.0 upcoming) Linux has preliminary support via Proton with v0.1.0. You should be able to add `PROTON_REMOTE_DEBUG_CMD="/full/path/to/DSAP.client.exe" %command%` to your steam Launch Options (tested with Proton Hotfix branch on 2026-03-27) to run both DSAP and DS:R in the same environment. It has not been thoroughly tested, however, so 1) consider it unstable, 2) let us know how it plays/runs (whether well or badly), and 3) Please report any issues.
 
 # Frequently Asked Questions (FAQ)
 * Q: Can I use this with seamless co-op?
@@ -94,7 +94,7 @@
 * Q: Does this work with Prepare to Die edition?
   * A: No, The current release only works with Dark Souls Remastered. There may be potential to make it compatible with PTDE but not until we are feature-complete on remastered, as there isn't a way to legally obtain a new copy of PTDE anymore.
 * Q: Does this work on Linux?
-  * A: With v0.1.0 - DSAP seems to work under Proton! Huge thanks to discord user @theabysmalkraken for finding the missing piece. See [Compatibility](Compatibility) section above for more details.
+  * A: With v0.1.0 (upcoming) - DSAP seems to work under Proton! Huge thanks to discord user @theabysmalkraken for finding the missing piece. See [Compatibility](Compatibility) section above for more details.
 * Q: Can I randomized starting gear? 
   * A: Not yet - this is planned for the future. Currently, it is recommended to create your character before connecting with the DSAP client.
 * Q: Is there a tracker?
@@ -122,7 +122,7 @@
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
-## Version 0.1.0
+## Version 0.1.0 (upcoming)
 * Version update -> 0.1.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
 * Feature: Linux support - huge thanks to discord user @theabysmalkraken. From basic tests appears to work, but not tested thoroughly - should be considered somewhat more unstable.
 * Feature: Starting loadout, gifts, and spells randomization - including yaml options for controlling them. See the options for more details.
