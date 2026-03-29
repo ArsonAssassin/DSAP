@@ -124,9 +124,9 @@ class DSRLocation(Location):
             "The Abyss - After Four Kings", 
             "The Duke's Archives", 
             "The Duke's Archives - After First Seath Encounter",
-            "The Duke's Archives - Cell Door",
-            "The Duke's Archives - Getting out of Cell",
+            "The Duke's Archives - After Archive Tower Cell Key",
             "The Duke's Archives - After Archive Prison Extra Key",
+            "The Duke's Archives - Out of Cell",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
             "The Duke's Archives - Courtyard",
             "The Duke's Archives - Giant Cell", 
@@ -851,11 +851,16 @@ location_tables = {
     DSRLocationData(11110367, f"DA: Duke's Archives Cell lit", f"Duke's Archives Cell lit", DSRLocationCategory.BONFIRE),
     DSRLocationData(11110369, f"DA: Archive Tower Cell Key", f"Archive Tower Cell Key", DSRLocationCategory.ENEMY_DROP),
 ],
-"The Duke's Archives - Cell Door": [
+"The Duke's Archives - After Archive Tower Cell Key": [
     DSRLocationData(11110368, f"DA: Duke's Archives Cell Door opened", f"Door Filler", DSRLocationCategory.DOOR),
+    DSRLocationData(11110370, f"DA: Archive Prison Extra Key", f"Archive Prison Extra Key", DSRLocationCategory.ITEM_LOT), # in the other "cell key" cell
 ],
-"The Duke's Archives - Getting out of Cell": [
-    DSRLocationData(11110370, f"DA: Archive Prison Extra Key", f"Archive Prison Extra Key", DSRLocationCategory.ITEM_LOT),
+"The Duke's Archives - After Archive Prison Extra Key": [
+    # DSRLocationData(11110371, f"DA: Large Soul of a Brave Warrior - In Reah's Cell", f"Firebomb", DSRLocationCategory.ITEM_LOT), # does not exist
+    DSRLocationData(11110374, f"DA: Large Soul of a Brave Warrior - Archives Cell", f"Large Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
+    DSRLocationData(11110375, f"DA: Soul of a Brave Warrior - Archives Cell Scafolding", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
+],
+"The Duke's Archives - Out of Cell": [
     DSRLocationData(11110372, f"DA: Maiden Hood", f"Maiden Hood", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110679, f"DA: Maiden Robe", f"Maiden Robe", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110680, f"DA: Maiden Gloves", f"Maiden Gloves", DSRLocationCategory.ITEM_LOT),
@@ -864,11 +869,6 @@ location_tables = {
     DSRLocationData(11110376, f"DA: Archive Tower Giant Door Key", f"Archive Tower Giant Door Key", DSRLocationCategory.ITEM_LOT),
     DSRLocationData(11110377, f"DA: Miracle: Soothing Sunlight", f"Firebomb", DSRLocationCategory.ENEMY_DROP), 
     DSRLocationData(11110378, f"DA: Miracle: Bountiful Sunlight", f"Firebomb", DSRLocationCategory.ENEMY_DROP),
-],
-"The Duke's Archives - After Archive Prison Extra Key": [    
-    # DSRLocationData(11110371, f"DA: Large Soul of a Brave Warrior - In Reah's Cell", f"Firebomb", DSRLocationCategory.ITEM_LOT), # does not exist
-    DSRLocationData(11110374, f"DA: Large Soul of a Brave Warrior - Archives Cell", f"Large Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
-    DSRLocationData(11110375, f"DA: Soul of a Brave Warrior - Archives Cell Scafolding", f"Soul of a Brave Warrior", DSRLocationCategory.ITEM_LOT),
 ],
 "The Duke's Archives - After Archive Tower Giant Door Key": [    
     DSRLocationData(11110379, f"DA: Avelyn", f"Avelyn", DSRLocationCategory.ITEM_LOT),

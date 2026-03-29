@@ -65,7 +65,7 @@ namespace DSAP.Models
             {
                 int desc_offset = BufferSize + (0x8 * num_entries) + 0xf;
                 ulong desc_area_loc = BufferLoc + (ulong)desc_offset;
-                Log.Logger.Information($"Reading desc from {desc_area_loc} at offset {desc_offset}");
+                Log.Logger.Debug($"Reading desc from {desc_area_loc:X} at offset {desc_offset}");
                 DescArea = Memory.ReadObject<DescArea>(desc_area_loc);
             }
         }
@@ -78,24 +78,52 @@ namespace DSAP.Models
             newStrings.Append(Encoding.ASCII.GetString(stringBytes)); // queue our new string to "strings" section
             ParamEntries.Add(((uint)newid, paramOffset, stringOffset));
         }
+        internal void FinalizeParams() // update params and string bytes with added params and strings.
+        {
+            if (AddedParamBytes.Count > 0)
+            {
+                // create new params byte array
+                byte[] newParamBytes = new byte[ParamBytes.Length + AddedParamBytes.Count];
+                Array.Copy(ParamBytes, newParamBytes, ParamBytes.Length);
+                Array.Copy(AddedParamBytes.ToArray(), 0, newParamBytes, 0 + ParamBytes.Length, AddedParamBytes.ToArray().Length);
+                ParamBytes = newParamBytes;
+                AddedParamBytes = [];
+            }
+            
+            if (Encoding.ASCII.GetBytes(newStrings.ToString()).Length > 0)
+            {
+                // create new strings byte array
+                byte[] newStringBytes = new byte[StringBytes.Length + Encoding.ASCII.GetBytes(newStrings.ToString()).Length];
+                Array.Copy(StringBytes, newStringBytes, StringBytes.Length);
+                Array.Copy(Encoding.ASCII.GetBytes(newStrings.ToString()), 0, newStringBytes, 0 + StringBytes.Length, Encoding.ASCII.GetBytes(newStrings.ToString()).Length);
+                StringBytes = newStringBytes;
+                newStrings = new StringBuilder("");
+            }
+        }
         internal byte[] GenerateWriteArray(out int shortLength)
         {
             // create new entries byte array
             byte[] EntriesBytes = new byte[12 * ParamEntries.Count];
 
-            // create new params byte array
-            byte[] newParamBytes = new byte[ParamBytes.Length + AddedParamBytes.Count];
-            Array.Copy(ParamBytes, newParamBytes, ParamBytes.Length);
-            Array.Copy(AddedParamBytes.ToArray(), 0, newParamBytes, 0 + ParamBytes.Length, AddedParamBytes.ToArray().Length);
-            ParamBytes = newParamBytes;
-            AddedParamBytes = [];
+            if (AddedParamBytes.Count > 0)
+            {
+                // create new params byte array
+                byte[] newParamBytes = new byte[ParamBytes.Length + AddedParamBytes.Count];
+                Array.Copy(ParamBytes, newParamBytes, ParamBytes.Length);
+                Array.Copy(AddedParamBytes.ToArray(), 0, newParamBytes, 0 + ParamBytes.Length, AddedParamBytes.ToArray().Length);
+                ParamBytes = newParamBytes;
+                AddedParamBytes = [];
+            }
 
-            // create new strings byte array
-            byte[] newStringBytes = new byte[StringBytes.Length + Encoding.ASCII.GetBytes(newStrings.ToString()).Length];
-            Array.Copy(StringBytes, newStringBytes, StringBytes.Length);
-            Array.Copy(Encoding.ASCII.GetBytes(newStrings.ToString()), 0, newStringBytes, 0 + StringBytes.Length, Encoding.ASCII.GetBytes(newStrings.ToString()).Length);
-            StringBytes = newStringBytes;
-            newStrings = new StringBuilder("");
+            if (Encoding.ASCII.GetBytes(newStrings.ToString()).Length > 0)
+            {
+                // create new strings byte array
+                byte[] newStringBytes = new byte[StringBytes.Length + Encoding.ASCII.GetBytes(newStrings.ToString()).Length];
+                Array.Copy(StringBytes, newStringBytes, StringBytes.Length);
+                Array.Copy(Encoding.ASCII.GetBytes(newStrings.ToString()), 0, newStringBytes, 0 + StringBytes.Length, Encoding.ASCII.GetBytes(newStrings.ToString()).Length);
+                StringBytes = newStringBytes;
+                newStrings = new StringBuilder("");
+            }
 
             // get offsets for filling in EntriesBytes
             ushort num_entries = (ushort)ParamEntries.Count;

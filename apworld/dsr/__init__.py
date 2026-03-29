@@ -206,9 +206,9 @@ class DSRWorld(World):
             "The Abyss - After Four Kings", 
             "The Duke's Archives", 
             "The Duke's Archives - After First Seath Encounter",
-            "The Duke's Archives - Cell Door",
-            "The Duke's Archives - Getting out of Cell",
+            "The Duke's Archives - After Archive Tower Cell Key",
             "The Duke's Archives - After Archive Prison Extra Key",
+            "The Duke's Archives - Out of Cell",
             "The Duke's Archives - After Archive Tower Giant Door Key", 
             "The Duke's Archives - Courtyard",
             "The Duke's Archives - Giant Cell", 
@@ -287,7 +287,7 @@ class DSRWorld(World):
         
         create_connection_2way("Upper Undead Burg - Before Fog", "Upper Undead Burg - Fog")
         create_connection_2way("Upper Undead Burg - Fog", "Upper Undead Burg")
-        create_connection("Upper Undead Burg", "Undead Burg Basement Door")
+        create_connection("Upper Undead Burg - Hellkite Bridge", "Undead Burg Basement Door")
         create_connection("Upper Undead Burg", "Upper Undead Burg - Taurus Demon")
         create_connection("Upper Undead Burg - Taurus Demon", "Upper Undead Burg - Hellkite Bridge")
         create_connection_2way("Upper Undead Burg - Hellkite Bridge", "Undead Parish - Before Fog")
@@ -374,12 +374,12 @@ class DSRWorld(World):
         create_connection("Painted World of Ariamis - After Fog", "Painted World of Ariamis - Crossbreed Priscilla")
 
         create_connection("The Duke's Archives", "The Duke's Archives - After First Seath Encounter")
-        create_connection("The Duke's Archives - After First Seath Encounter", "The Duke's Archives - Cell Door")
+        create_connection("The Duke's Archives - After First Seath Encounter", "The Duke's Archives - After Archive Tower Cell Key")
         create_connection("The Duke's Archives - After First Seath Encounter", "The Duke's Archives - After Archive Prison Extra Key")
-        create_connection("The Duke's Archives - Cell Door", "The Duke's Archives - Getting out of Cell")
-        create_connection("The Duke's Archives - Cell Door", "The Duke's Archives - After Archive Prison Extra Key")
-        create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - After Archive Tower Giant Door Key")
-        create_connection("The Duke's Archives - Getting out of Cell", "The Duke's Archives - Giant Cell")
+        create_connection("The Duke's Archives - After Archive Prison Extra Key", "The Duke's Archives - Out of Cell")
+        create_connection("The Duke's Archives - After Archive Tower Cell Key", "The Duke's Archives - Out of Cell")
+        create_connection("The Duke's Archives - Out of Cell", "The Duke's Archives - After Archive Tower Giant Door Key")
+        create_connection("The Duke's Archives - Out of Cell", "The Duke's Archives - Giant Cell")
         create_connection("The Duke's Archives - After Archive Tower Giant Door Key", "The Duke's Archives - Courtyard")
         create_connection("The Duke's Archives - Courtyard", "Crystal Cave")
         create_connection("Crystal Cave", "Crystal Cave - After Seath")
@@ -623,8 +623,8 @@ class DSRWorld(World):
         #set_rule(self.multiworld.get_entrance("Undead Asylum Cell Door -> Northern Undead Asylum", self.player), lambda state: state.has("Dungeon Cell Key", self.player))      
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After Fog -> Northern Undead Asylum - F2 East Door", self.player), lambda state: state.has("Undead Asylum F2 East Key", self.player))
         set_rule(self.multiworld.get_entrance("Northern Undead Asylum - After F2 East Door -> Northern Undead Asylum - Big Pilgrim Door", self.player), lambda state: state.has("Big Pilgrim's Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Hellkite Bridge -> Undead Burg Basement Door", self.player), lambda state:state.has ("Basement Key", self.player))
-        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Taurus Demon -> Upper Undead Burg - Hellkite Bridge", self.player), lambda state:state.has("Taurus Demon Defeated", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Hellkite Bridge -> Undead Burg Basement Door", self.player), lambda state: state.has ("Basement Key", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Undead Burg - Taurus Demon -> Upper Undead Burg - Hellkite Bridge", self.player), lambda state: state.has("Taurus Demon Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Upper Undead Burg - Pine Resin Chest", self.player), lambda state: state.has("Master Key", self.player) or state.has("Residence Key", self.player))
         set_rule(self.multiworld.get_entrance("Upper Undead Burg -> Watchtower Basement", self.player), lambda state: state.has("Master Key", self.player) or state.has("Watchtower Basement Key", self.player))
         
@@ -683,10 +683,10 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Upper New Londo Ruins - After Fog -> New Londo Ruins Door to the Seal", self.player), lambda state: state.has("Key to the Seal", self.player))
         set_rule(self.multiworld.get_entrance("Valley of the Drakes -> Valley of the Drakes - After Defeating Four Kings", self.player), lambda state: state.has("Four Kings Defeated", self.player))
                 
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - After First Seath Encounter -> The Duke's Archives - Cell Door", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives - After First Seath Encounter -> The Duke's Archives - After Archive Tower Cell Key", self.player), lambda state: state.has("Archive Tower Cell Key", self.player))
         set_rule(self.multiworld.get_entrance("The Duke's Archives - After First Seath Encounter -> The Duke's Archives - After Archive Prison Extra Key", self.player), lambda state: state.has("Archive Prison Extra Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
-        set_rule(self.multiworld.get_entrance("The Duke's Archives - Getting out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives - Out of Cell -> The Duke's Archives - After Archive Tower Giant Door Key", self.player), lambda state: state.has("Archive Tower Giant Door Key", self.player))
+        set_rule(self.multiworld.get_entrance("The Duke's Archives - Out of Cell -> The Duke's Archives - Giant Cell", self.player), lambda state: state.has("Archive Tower Giant Cell Key", self.player))
         set_rule(self.multiworld.get_location("DA: Broken Pendant", self.player), lambda state: state.has("Dusk Rescued", self.player))
         set_rule(self.multiworld.get_entrance("Crystal Cave -> Crystal Cave - After Seath", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))
         set_rule(self.multiworld.get_entrance("Crystal Cave -> The Duke's Archives - First Arena after Seath's Death", self.player), lambda state: state.has("Seath the Scaleless Defeated", self.player))

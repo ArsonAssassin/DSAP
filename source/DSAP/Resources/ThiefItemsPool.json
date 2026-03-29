@@ -1,0 +1,50 @@
+﻿[
+	{
+		"Quantity": 99,
+		"ItemName": "Throwing Knife"
+	},
+	{
+		"Quantity": 50,
+		"ItemName": "Poison Throwing Knife"
+	},
+	{
+		"Quantity": 10,
+		"ItemName": "Black Firebomb"
+	},
+	{
+		"Quantity": 20,
+		"ItemName": "Firebomb"
+	},
+	{
+		"Quantity": 40,
+		"ItemName": "Dung Pie"
+	},
+	{
+		"Quantity": 10,
+		"ItemName": "Charcoal Pine Resin"
+	},
+	{
+		"Quantity": 10,
+		"ItemName": "Gold Pine Resin"
+	},
+	{
+		"Quantity": 10,
+		"ItemName": "Rotten Pine Resin"
+	},
+	{
+		"Quantity": 30,
+		"ItemName": "Homeward Bone"
+	},
+	{
+		"Quantity": 15,
+		"ItemName": "Green Blossom"
+	},
+	{
+		"Quantity": 10,
+		"ItemName": "Elizabeth's Mushroom"
+	},
+	{
+		"Quantity": 10,
+		"ItemName": "Blooming Purple Moss Clump"
+	}
+]

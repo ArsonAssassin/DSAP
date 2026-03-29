@@ -93,7 +93,7 @@ namespace DSAP.Models
             {
                 int desc_offset = (int)BufferSize;
                 ulong desc_area_loc = BufferLoc + (ulong)desc_offset;
-                Log.Logger.Information($"Reading desc from {desc_area_loc} at offset {desc_offset}");
+                Log.Logger.Debug($"Reading desc from {desc_area_loc:X} at offset {desc_offset}");
                 DescArea = Memory.ReadObject<DescArea>(desc_area_loc);
             }
         }
