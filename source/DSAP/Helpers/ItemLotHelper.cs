@@ -977,7 +977,7 @@ namespace DSAP.Helpers
                     }
                 }
             }
-
+            paramStruct.FinalizeParams();
             return true;
         }
     }
