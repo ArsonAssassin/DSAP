@@ -301,6 +301,27 @@ namespace DSAP.Helpers
             var list = JsonSerializer.Deserialize<List<DarkSoulsItem>>(json, GetJsonOptions());
             return list;
         }
+        public static List<DarkSoulsItem> GetBonfireWarpItems()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Bonfires.json");
+            var list = JsonSerializer.Deserialize<List<BonfireWarp>>(json, GetJsonOptions());
+            List<DarkSoulsItem> newlist = list.Where(x => x.ItemId != 0).Select(x => new DarkSoulsItem()
+            {
+                Name = x.ItemName,
+                Id = x.DsrId, // dsr id of warp unlock item
+                StackSize = 1,
+                UpgradeType = Enums.ItemUpgrade.None,
+                Category = Enums.DSItemCategory.BonfireWarp,
+                ApId = x.ItemId, // ap id of event item
+            }).ToList();
+            return newlist;
+        }
+        public static List<BonfireWarp> GetBonfireWarpInfos()
+        {
+            var json = OpenEmbeddedResource("DSAP.Resources.Bonfires.json");
+            var list = JsonSerializer.Deserialize<List<BonfireWarp>>(json, GetJsonOptions());
+            return list;
+        }
         public static List<DarkSoulsItem> GetDsrEventItems()
         {
             var json = OpenEmbeddedResource("DSAP.Resources.DsrEvents.json");
@@ -420,6 +441,7 @@ namespace DSAP.Helpers
             results = results.Concat(GetArmor()).ToList();
             results = results.Concat(GetTraps()).ToList();
             results = results.Concat(GetDsrEventItems()).ToList();
+            results = results.Concat(GetBonfireWarpItems()).ToList();
 
             return results;
         }
