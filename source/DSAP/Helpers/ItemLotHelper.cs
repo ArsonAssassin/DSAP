@@ -545,22 +545,10 @@ namespace DSAP.Helpers
                                 
                             if (loadout.Name == "Thief") // randomize thief item
                             {
-                                var thief_items = new List<(byte quantity, String item_name)>([
-                                    (99, "Throwing Knife"),
-                                    (50, "Poison Throwing Knife"),
-                                    (10, "Black Firebomb"),
-                                    (20, "Firebomb"),
-                                    (40, "Dung Pie"),
-                                    (10, "Charcoal Pine Resin"),
-                                    (10, "Gold Pine Resin"),
-                                    (10, "Rotten Pine Resin"),
-                                    (30, "Homeward Bone"),
-                                    (15, "Green Blossom"),
-                                    (10, "Elizabeth's Mushroom"),
-                                    (10, "Blooming Purple Moss Clump")]);
+                                var thief_items = MiscHelper.GetThiefItemsPool();
                                 var thief_item_entry = thief_items[random.Next(thief_items.Count)];
-                                thief_item = MiscHelper.GetConsumables().Find(x => x.Name == thief_item_entry.item_name && x.Quantity == 1);
-                                thief_item_quantity = thief_item_entry.quantity;
+                                thief_item = MiscHelper.GetConsumables().Find(x => x.Name == thief_item_entry.ItemName && x.Quantity == 1);
+                                thief_item_quantity = thief_item_entry.Quantity;
                                 // give it in game and display (display doesn't work?)
                                 Array.Copy(BitConverter.GetBytes(thief_item.Id), 0, display_parambytes, CharaInitParam.ITEM_01, sizeof(int));
                                 Array.Copy(BitConverter.GetBytes(thief_item.Id), 0, ingame_parambytes, CharaInitParam.ITEM_01, sizeof(int));

@@ -51,6 +51,7 @@
     <EmbeddedResource Include="Resources\Bosses.json" />
     <EmbeddedResource Include="Resources\BossFlags.json" />
 	<EmbeddedResource Include="Resources\GiftParams.json" />
+	<EmbeddedResource Include="Resources\ThiefItemsPool.json" />
 	<EmbeddedResource Include="Resources\GiftsPool.json" />
     <EmbeddedResource Include="Resources\Loadouts.json" />
     <EmbeddedResource Include="Resources\Consumables.json" />
