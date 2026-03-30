@@ -72,7 +72,7 @@ On Windows, DSR saves can typically be found at `C:\Users\<user>\Documents\nbgi\
 
 ### What gets randomized?
 
-See [the Game Page](./en_Dark%20Souls%Remastered.md).
+See [the Game Page](./en_Dark%20Souls%20Remastered.md).
 
 ### Does this work on Linux?
 
