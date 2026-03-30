@@ -319,7 +319,9 @@ As of v0.0.22.0, using the Seamless Co-op mod may work with DSAP. It has not bee
 * Q: What items aren't shared?
   * A: Unrandomized items (mostly enemy drops), and the "fake" randomized item locations in DSR. The latter means that when 1 player picks up such an item, the 2nd player will still see an "item pickup" in the world, but it will be empty if they go to pick it up. This is because the server will have already sent the actual item to both players, and this is what triggers the item receive notification. Because the server will not re-send the item, there will be no notification on picking up such items on the 2nd+ time.
 
-# Contributors:
+# Contributors
 * ArsonAssassin - Creator and Maintainer
 * tathxo (aka noka) - Contributor
 * Nave - Contributor
+* TheAbysmalKraken - Linux-enabling fix in dependant memory library
+* Edgarra1619 - Logic fix
