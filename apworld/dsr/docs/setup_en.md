@@ -70,6 +70,10 @@ On Windows, DSR saves can typically be found at `C:\Users\<user>\Documents\nbgi\
 
 ## Frequently Asked Questions
 
+### What gets randomized?
+
+See [the Game Page](./en_Dark%20Souls%Remastered.md).
+
 ### Does this work on Linux?
 
 (v0.1.0 upcoming) Linux has preliminary support via Proton with v0.1.0. You should be able to add `PROTON_REMOTE_DEBUG_CMD="/full/path/to/DSAP.client.exe" %command%` to your steam Launch Options (tested with Proton Hotfix branch on 2026-03-27) to run both DSAP and DS:R in the same environment. It has not been thoroughly tested, however, so 1) consider it unstable, 2) let us know how it plays/runs (whether well or badly), and 3) Please report any issues.
