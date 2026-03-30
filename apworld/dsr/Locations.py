@@ -1203,7 +1203,7 @@ location_tables = {
     DSRLocationData(11110778, f"CotA: Manus, father of the Abyss Defeated", f"Manus, Father of the Abyss Defeated", DSRLocationCategory.BOSS),
     DSRLocationData(11110779, f"CotA: Soul of Manus", f"Soul of Manus", DSRLocationCategory.ENEMY_DROP),
     DSRLocationData(11110780, f"CotA: Chasm of the Abyss lit", f"Chasm of the Abyss lit", DSRLocationCategory.BONFIRE),
-    DSRLocationData(11110851, f"OCotA: Chasm of the Abyss Bonfire", f"Bonfire Warp Unlock - Chasm of the Abyss", DSRLocationCategory.BONFIRE_WARP),
+    DSRLocationData(11110851, f"CotA: Chasm of the Abyss Bonfire", f"Bonfire Warp Unlock - Chasm of the Abyss", DSRLocationCategory.BONFIRE_WARP),
 ]}
 
 location_dictionary: Dict[str, DSRLocationData] = {}
