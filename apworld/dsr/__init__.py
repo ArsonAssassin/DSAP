@@ -23,7 +23,7 @@ class DSRWeb(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["ArsonAssassin, dank_santa"]
+        ["noka, ArsonAssassin"]
     )
     option_groups = option_groups
 
