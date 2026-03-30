@@ -2,41 +2,15 @@
 
 ## **This implementation is still considered unstable/in alpha. Expect bugs and issues.**
 
-## Setting up? See the [Setup Guide](/apworld/dsr/docs/setup_en.md) instead.
+## How does it work? See the [Game Page](/apworld/dsr/docs/en_Dark%20Souls%20Remastered.md).
+## Setting up? See the [Setup Guide](/apworld/dsr/docs/setup_en.md).
 
 #### Table of Contents
-[How Randomization Works](#How-Randomization-Works)  
-[How Fogwall Sanity Works (important)](How-Fogwall-Sanity-Works)  
 [Compatibility](#Compatibility)  
 [Known issues](#Known-issues)  
 [Changelog](#Changelog)  
 [Roadmap](#Roadmap)  
-[Location Groups](#Location-Groups)  
-[Item Groups](#Item-Groups)  
-[Artificial Logic Without Fogwall Locking](#Artificial-Logic-Without-Fogwall-Locking)  
-[Co-op Toleration](#Co-op-Toleration)  
 [Contributors](#Contributors)  
-
-# How Randomization Works
-* Every loose item on the ground, and potentially fog walls, are "locations" or "checks". Some guaranteed drops are also locations, in addition to the White Sign Soapstone location from the first Solaire encounter.
-* All items in those locations will be shuffled into the randomized multiworld Item Pool. This means they can be found elsewhere, and that the items at those locations will themselves be replaced by other items in the Item Pool.
-* All keys and progression items (e.g. Lordvessel) will be forced into the Item Pool, unless they drop or are shoppable from non-randomized locations.
-* Undead Asylum is mostly not randomized. This is intended behavior so as to not put the player into BK mode immediately. The only randomized item is the one by the stairs to the exit.
-* Enemy loot and shop items are not yet randomized. Some bosses are exceptions to this.
-* Item Pool is currently constructed as follows:
-    1. First all items in locations which were randomized are added to the pool.
-    2. Then, key items and embers will replace any filler items. This includes any "Fog Wall Keys", if either `fogwall_sanity` option is on. This includes the three living Firekeepers' Souls.
-    3. Then, Guaranteed items are added to the pool.
-    4. If there are any Filler or Junk items left over, they are replaced with Souls of a Proud Knight (2000 souls each).
-* If locations are excluded and excluded_locations_behavior is set to "do_not_randomize", then the items in those locations will not be added to the pool, and those locations will have their vanilla items. Even with `fogwall_sanity` on, fog walls excluded in this manner this will provide no item, as fog walls do not provide items in the base game.
-
-# How Fogwall Sanity Works
-* Fogwalls in DSR will be locked, and will require an item from the Item Pool to unlock them. Passing through them will also count as a location or "check". This is called "fogwall sanity", and it is on by default.
-* This includes the Fog Wall near the beginning of the Upper Undead Burg. If it's blocked - you'll have to go somewhere else! (e.g. check the skeleton courtyard, and part of Upper New Londo Ruins)
-* This does not include the fogwall in the Northern Undead Asylum.
-* This `fogwall_sanity` option can be disabled, but doing so is not recommended. Without this option, about 60% of the locations in your game would be consdiered in logic immediately - this is also considered a big "Sphere 1". With a big Sphere 1, you might need to get to the last check in the immediately available 60% of your game, in order to find an item that unlocks your friend who is stuck at 10% of their game. Because of how large Dark Souls is, it could take a long time to do that many checks - and make your friends have to wait on you, for quite a while.
-* There is an additional `boss_fogwall_sanity` option that can be turned on, which makes most boss' arena fogs be similarly locked.
-* The `Catacombs` and `Lower New Londo Ruins` fogwalls can be bypassed by basic platforming & elevator usage repsecitvely. As a result, they do not logically block access to their other sides.
 
 # Compatibility
 * This version has been tested with Dark Souls: Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.6. Using incorrect versions of Dark Souls: Remastered may result in a crash upon connecting.
@@ -172,93 +146,6 @@
 ## At some point
 * Traps
 * Option to consider certain in-game skips logical.
-
-# Location Groups
-All Boss Fog Walls  
-All DLC regions  
-All Doors  
-All Fog Walls  
-All Item Lots  
-Anor Londo  
-Ash Lake  
-Chasm of the Abyss  
-Crystal Cave  
-Darkroot Basin  
-Darkroot Garden  
-Demon Ruins  
-Depths  
-Firelink Shrine  
-Kiln of the First Flame  
-Lost Izalith  
-Lower Blighttown  
-Lower New Londo Ruins  
-Lower Undead Burg  
-Northern Undead Asylum  
-Northern Undead Asylum Second Visit  
-Oolacile Sanctuary  
-Oolacile Township  
-Painted World of Ariamis  
-Royal Wood  
-Sanctuary Garden  
-Sen's Fortress  
-The Abyss  
-The Catacombs  
-The Duke's Archives  
-The Great Hollow  
-Tomb of the Giants  
-Undead Asylum Cell  
-Undead Parish  
-Upper Blighttown Depths Side  
-Upper Blighttown VotD Side  
-Upper New Londo Ruins  
-Upper Undead Burg  
-Valley of the Drakes  
-Watchtower Basement  
-
-# Item Groups
-Ammunition  
-Armor  
-Boss Fog Wall Keys  
-Boss Souls  
-Carvings  
-Catalysts  
-Consumables  
-Covenant Items  
-Embers  
-Fire Keeper Souls  
-Fog Wall Keys  
-Junk  
-Key items  
-Lord Souls  
-Melee Weapons  
-Multiplayer Items  
-Progression Items  
-Ranged Weapons  
-Rings  
-Shields  
-Souls  
-Spell Tools  
-Spells  
-Talismans  
-Traps  
-Upgrade Materials  
-Weapons  
-
-# Artificial Logic Without Fogwall Locking
-* If you disable the options for fogwall or boss fogwall locking, some artificial "logic" is introduced to limit the number of items that are "in logic" extremely early. This does not affect actual access, but affects what the randomizer considers "logically possible" to access at any point. Such rules are listed below:
-* Access to the Great Hollow is behind Blighttown access + Lordvessel item.
-* Access to New Londo Ruins Door to the Seal + Lower New Londo Ruins from Upper New Londo Ruins requires access to being able to defeat Ornstein and Smough (in addition to having the Key to the Seal - the default rule).
-
-# Co-op Toleration
-As of v0.0.22.0, using the Seamless Co-op mod may work with DSAP. It has not been very thoroughly tested, and if there are any crashes or instability caused by the Seamless Co-op mod itself, we cannot do much about it. Please read the information below.
-* Q: How to set it up?
-  * A: **Both players should always connect with the DSAP client to the same slot** once they load into the game after creating their characters.
-        This must be done before doing any checks, so it is recommended to do so **before hosting or joining** the host's session.
-        On first connect, you will need to head to the Undead Asylum bonfire and get your co-op items before joining the other's session.
-* Q: What items are shared?
-  * A: Any items sent by other slots will be sent to both players. Any items found in your own world should also be immediately sent to both players. Any items found in your world for other worlds will be sent to the server as a check only once (even if it appears to send multiple times).
-* Q: What items aren't shared?
-  * A: Unrandomized items (mostly enemy drops), and the "fake" randomized item locations in DSR. The latter means that when 1 player picks up such an item, the 2nd player will still see an "item pickup" in the world, but it will be empty if they go to pick it up. This is because the server will have already sent the actual item to both players, and this is what triggers the item receive notification. Because the server will not re-send the item, there will be no notification on picking up such items on the 2nd+ time.
 
 # Contributors
 * ArsonAssassin - Creator and Maintainer
