@@ -5,6 +5,14 @@ from Options import OptionGroup
 
 
 
+class CanWarpWithoutLordvessel(DefaultOnToggle):
+    """Gain the ability to warp as soon as you have rested at any warpable bonfire.
+    You will still need to actually rest at the warpable points to be able to warp to them.
+
+    Warpable bonfires are synced between all saves on the slot, regardless of your choice.
+    Warning: If you start a new save, don't warp out of the Asylum without getting your Estus Flask."""
+    display_name = "Can Warp Without Lordvessel"
+
 class GuaranteedItemsOption(ItemDict):
     """Guarantees that the specified items will be in the item pool"""
     display_name = "Guaranteed Items"
@@ -184,6 +192,9 @@ class EnableDeathlinkOption(Toggle):
 
 # Group relevant options
 option_groups = [
+    OptionGroup("Quality of Life", [
+        CanWarpWithoutLordvessel,
+        ]),
     OptionGroup("Sanity", [
         FogwallSanity,
         BossFogwallSanity,
@@ -217,6 +228,7 @@ option_groups = [
 @dataclass
 class DSROption(PerGameCommonOptions):
     #goal: GoalOption
+    can_warp_without_lordvessel: CanWarpWithoutLordvessel
     guaranteed_items: GuaranteedItemsOption
     excluded_location_behavior: ExcludedLocationBehaviorOption
     fogwall_sanity: FogwallSanity

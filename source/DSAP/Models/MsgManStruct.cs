@@ -11,6 +11,7 @@ namespace DSAP.Models
     public class MsgManStruct
     {
         const int HEADER_SIZE = 0x1c;
+        public const int OFFSET_BANNERS = 0x330;
         public const int OFFSET_SYSTEM_TEXT = 0x3e0;
         public const int OFFSET_ITEM_NAMES = 0x380;
         public const int OFFSET_ITEM_CAPTIONS = 0x378;
@@ -111,6 +112,22 @@ namespace DSAP.Models
             var entryIndex = MsgEntries.FindIndex(x => (uint)x.id == updid);
 
             MsgEntries[entryIndex] = (updid, stringOffset);
+        }
+        //print all fmgs in this msg man structure for research
+        internal void PrintAllFmgs()
+        {
+            foreach (var msgentry in MsgEntries)
+            {
+                if (msgentry.stringOffset >= 0)
+                {
+                    int maxbytes = StringBytes.Length - msgentry.stringOffset;
+                    int readbytes = Math.Min(500, maxbytes);
+                    string s = Encoding.Unicode.GetString(StringBytes, msgentry.stringOffset, readbytes);
+                    if (s.Split("\0").Length > 1)
+                        s = s.Split("\0")[0];
+                    Log.Logger.Warning($"Message id={msgentry.id}:'{s}'");
+                }
+            }
         }
         internal byte[] GenerateWriteArray(out int shortLength)
         {
