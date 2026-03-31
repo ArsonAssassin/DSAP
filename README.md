@@ -45,9 +45,10 @@
 * Feature: Synced "looted" items between saves - Now upon starting a new save on an in-progress slot, you'll get all the items that slot ever looted. For now, "empty" items at those locations will still exist in the world. Possible due to Server-delivered items.
 * Feature: Custom Controls window for client settings. Settings do not yet persist between sessions, but are a lot easier to change. Deathlink can be more easily toggled from here as well.
 * Feature - Item popup options - In the "Custom Controls" window, player can now change the categories of items for which they will get popups. Works for both items from your own game & items sent from others' games.
+* Feature: Yaml option - Can Warp Without Lordvessel - on by default.
 * Feature: Yaml option - Remove weapon stat requirements
 * Feature: Yaml option - Remove spell stat requirements
-* Feature: Yaml option - Remove miracle covenant requirements - some miracles have 
+* Feature: Yaml option - Remove miracle covenant requirements - for those miracles that have them.
 * Feature: Add /lordvessel command - For players to use if placing all 4 souls at the Firelink Altar doesn't open the Kiln door. Intended to catch the case where the client didn't receive the items correctly - both getting diagnostics & making player whole (gives them the missing "received" items). Please provide the output to us in the dark-souls-1 discord channel if you have to use this command to help us debug this issue!
 * QoL: Sanitization on host and slot, remove "/connect " prefix if it's in host string, and trim spaces from both strings.
 * Fix: Logic - Basement Door access no longer requires Taurus Demon defeat
