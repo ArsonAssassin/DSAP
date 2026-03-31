@@ -14,7 +14,7 @@
 
 # Compatibility
 * This version has been tested with Dark Souls: Remastered, Steam version (App ver. 1.03.1 & Regulation ver. 1.04) on Windows 11, with Archipelago Launcher version 0.6.6. Using incorrect versions of Dark Souls: Remastered may result in a crash upon connecting.
-* (v0.1.0 upcoming) Linux has preliminary support via Proton with v0.1.0. You should be able to add `PROTON_REMOTE_DEBUG_CMD="/full/path/to/DSAP.client.exe" %command%` to your steam Launch Options (tested with Proton Hotfix branch on 2026-03-27) to run both DSAP and DS:R in the same environment. It has not been thoroughly tested, however, so 1) consider it unstable, 2) let us know how it plays/runs (whether well or badly), and 3) Please report any issues.
+* Linux has preliminary support via Proton with v0.1.0. You should be able to add `PROTON_REMOTE_DEBUG_CMD="/full/path/to/DSAP.client.exe" %command%` to your steam Launch Options (tested with Proton Hotfix branch on 2026-03-27) to run both DSAP and DS:R in the same environment. It has not been thoroughly tested, however, so 1) consider it unstable, 2) let us know how it plays/runs (whether well or badly), and 3) Please report any issues.
 
 # Known issues
 * Master Key chosen from character creation (whether as a gift or thief starting item) is not considered to be in-logic. Randomized Character creation/gifts replaces the master key from the thief's starting item and the starting gifts respectively.
@@ -37,25 +37,27 @@
 * v0.0.18.2 and lower: Items do not get replaced. Upgrade your client version.
 
 # Changelog
-## Version 0.1.0 (upcoming)
+## Version 0.1.0
 * Version update -> 0.1.0. Both Apworld and Client have updated. **This Client version will NOT be compatible with earlier versions of the apworld.**
 * Feature: Linux support - huge thanks to discord user @theabysmalkraken. From basic tests appears to work, but not tested thoroughly - should be considered somewhat more unstable.
 * Feature: Starting loadout, gifts, and spells randomization - including yaml options for controlling them. See the options for more details.
 * Feature: Server-delivered items - Items will now always be delivered by the server. This may cause a slightly delayed item popup.
 * Feature: Synced "looted" items between saves - Now upon starting a new save on an in-progress slot, you'll get all the items that slot ever looted. For now, "empty" items at those locations will still exist in the world. Possible due to Server-delivered items.
+* Feature: Synced "warp points" between saves/co-op on same slot.
 * Feature: Custom Controls window for client settings. Settings do not yet persist between sessions, but are a lot easier to change. Deathlink can be more easily toggled from here as well.
-* Feature - Item popup options - In the "Custom Controls" window, player can now change the categories of items for which they will get popups. Works for both items from your own game & items sent from others' games.
-* Feature: Yaml option - Can Warp Without Lordvessel - on by default.
-* Feature: Yaml option - Remove weapon stat requirements
-* Feature: Yaml option - Remove spell stat requirements
-* Feature: Yaml option - Remove miracle covenant requirements - for those miracles that have them.
+* Feature - Item popup options - In the "Custom Controls" window, player can now change the categories of items for which they will get popups. Granular - can choose different settings for items that come from your own game & items sent to & from others' games.
+* Feature: Yaml option (QoL) - Can Warp Without Lordvessel - on by default.
+* Feature: Yaml option - Remove weapon stat requirements - off by default.
+* Feature: Yaml option - Remove spell stat requirements - off by default.
+* Feature: Yaml option - Remove miracle covenant requirements - for those miracles that have them - on by default.
 * Feature: Add /lordvessel command - For players to use if placing all 4 souls at the Firelink Altar doesn't open the Kiln door. Intended to catch the case where the client didn't receive the items correctly - both getting diagnostics & making player whole (gives them the missing "received" items). Please provide the output to us in the dark-souls-1 discord channel if you have to use this command to help us debug this issue!
 * QoL: Sanitization on host and slot, remove "/connect " prefix if it's in host string, and trim spaces from both strings.
 * Fix: Logic - Basement Door access no longer requires Taurus Demon defeat
 * Fix: Unreceivable items causing infinite rubbish loop. Now they will just display an error message instead.
-* Code quality: massive refactoring of code which updates DSR item lots, messages, and params
 * Fix: Improved messaging for case where player connects with save from a previous instance of a multiworld (when a 2nd room is created from 1 seed / AP_####.zip).
 * Fix: DLC Boss Fog Walls added to `All DLC regions` location group.
+* Code quality: massive refactoring of code which updates DSR item lots, messages, and params
+* Documentation: Created Setup Guide and Game Page (linked at top of this file).
 
 ## Version 0.0.22.1 (Client Hotfix)
 * Client Version update -> 0.0.22.1. Fully compatible with 0.0.22.0 worlds, but not compatible with apworlds at or below v0.0.21.
