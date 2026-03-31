@@ -453,19 +453,7 @@ namespace DSAP.Helpers
                 //return false;
             }
 
-            //print all fmgs in SYSTEM TEXT for research
-            //foreach (var msgentry in msgManStruct.MsgEntries)
-            //{
-            //    if (msgentry.stringOffset >= 0)
-            //    {
-            //        int maxbytes = msgManStruct.StringBytes.Length - msgentry.stringOffset;
-            //        int readbytes = Math.Min(500, maxbytes);
-            //        string s = Encoding.Unicode.GetString(msgManStruct.StringBytes, msgentry.stringOffset, readbytes);
-            //        if (s.Split("\0").Length > 1)
-            //            s = s.Split("\0")[0];
-            //        Log.Logger.Warning($"Message id={msgentry.id}={s}");
-            //    }
-            //}
+            //msgManStruct.PrintAllFmgs();
 
             // if we are here, we are updating the params.
 

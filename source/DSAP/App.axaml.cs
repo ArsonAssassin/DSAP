@@ -1600,8 +1600,27 @@ public partial class App : Application
             var baseAddress2 = (ulong)Memory.ReadInt(baseAddress);
 
             var address = bonfire.Offset + baseAddress2;
-            Memory.WriteBit(address, bit, true);
+            if (!Memory.ReadBit(address, bit)) // if the bonfire flag isn't already true
+                Memory.WriteBit(address, bit, true); // mark it as true
             Log.Logger.Debug($"Marked {bonfire.Name} flag as true at {address:X}[{bit}]");
+
+            // Then, if player has the option to always have warping available turned on, and hasn't unlocked warping, unlock it with a cheeky message change
+            if (DSOptions.CanWarpWithoutLordvessel)
+            { 
+                var canwarp_bit = 1;
+                var canwarp_address = 0x5b + baseAddress2;
+                if (!Memory.ReadBit(canwarp_address, canwarp_bit)) // if it's not already set
+                {
+                    // change "By the power of the Lordvessel, [etc]" -> "By the power of Archipelago"
+                    MsgManHelper.ReadMsgManStruct(out var msgManStruct, MsgManStruct.OFFSET_BANNERS, x => false);
+                    msgManStruct.UpdateMsg(10010620, "By the power of the multiworld, you may now warp between bonfires");
+                    MsgManHelper.WriteFromMsgManStruct(msgManStruct, MsgManStruct.OFFSET_BANNERS);
+
+                    // unlock warping
+                    Memory.WriteBit(canwarp_address, canwarp_bit, true);
+                }
+
+            }
         }
         else
         {

@@ -14,6 +14,8 @@ namespace DSAP.Models
         public uint apiver_minor;
         public uint apiver_revision;
         public uint apiver_build;
+        // QoL
+        public bool CanWarpWithoutLordvessel {  get; set; }
         // equipment
         public bool RandomizeStartingLoadouts { get; set; }
         public bool RandomizeStartingGifts { get; set; }
@@ -95,6 +97,8 @@ namespace DSAP.Models
                 apiver_build    = 1;
                 outofdate = true;
             }
+            // warp option
+            CanWarpWithoutLordvessel = GetBool("can_warp_without_lordvessel");
 
             // Equipment options group start
             RandomizeStartingLoadouts = GetBool("randomize_starting_loadouts");

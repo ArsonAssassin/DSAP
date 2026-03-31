@@ -754,7 +754,7 @@ class DSRWorld(World):
         set_rule(self.multiworld.get_entrance("Oolacile Township -> Oolacile Township - Behind Light-Dispelled Walls", self.player), lambda state: state.has("Skull Lantern", self.player))
     
         # artificial logic - don't require jumping around BT fog wall without a "real" way to return
-        set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown", self.player), lambda state: state.has("Lordvessel", self.player))
+        set_rule(self.multiworld.get_entrance("Upper Blighttown Depths Side -> Lower Blighttown", self.player), lambda state: state.has("Lordvessel", self.player) or (self.options.can_warp_without_lordvessel == True))
 
         # artificial logic
         if (self.options.fogwall_sanity == False and self.options.boss_fogwall_sanity == False):
@@ -888,6 +888,7 @@ class DSRWorld(World):
 
         slot_data = {
             "options": {
+                "can_warp_without_lordvessel": self.options.can_warp_without_lordvessel.value,
                 "guaranteed_items": self.options.guaranteed_items.value,
                 "fogwall_sanity": self.options.fogwall_sanity.value,
                 "boss_fogwall_sanity": self.options.boss_fogwall_sanity.value,
