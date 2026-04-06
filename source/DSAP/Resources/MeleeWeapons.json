@@ -147,6 +147,7 @@
     "Category": "MeleeWeapons",
     "Strength": 10,
     "Dexterity": 10,
+    "Faith": 14,
     "ApId": 11118013
   },
   {
@@ -551,6 +552,7 @@
     "Category": "MeleeWeapons",
     "Strength": 18,
     "Dexterity": 12,
+    "Faith": 16,
     "ApId": 11118052
   },
   {
