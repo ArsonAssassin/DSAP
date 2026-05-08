@@ -14,6 +14,8 @@ namespace DSAP.Models
         public uint apiver_minor;
         public uint apiver_revision;
         public uint apiver_build;
+        // Game
+        public Enums.DSGoal Goal {  get; set; }
         // QoL
         public bool CanWarpWithoutLordvessel {  get; set; }
         // equipment
@@ -97,6 +99,26 @@ namespace DSAP.Models
                 apiver_build    = 1;
                 outofdate = true;
             }
+
+            if (App.Client.Options.ContainsKey("goal_condition"))
+            {
+                string GoalString = ((JsonElement)App.Client.Options["goal_condition"]).GetString();
+                switch (GoalString)
+                {
+                    case "gwyn":
+                        Goal = Enums.DSGoal.Gwyn;
+                        break;
+                    case "all_bosses":
+                        Goal = Enums.DSGoal.AllBosses;
+                        break;
+                    default:
+                        Goal = Enums.DSGoal.Gwyn;
+                        break;
+                }
+            }
+            else
+                Goal = Enums.DSGoal.Gwyn;
+
             // warp option
             CanWarpWithoutLordvessel = GetBool("can_warp_without_lordvessel");
 

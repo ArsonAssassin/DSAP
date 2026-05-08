@@ -477,28 +477,25 @@ public partial class App : Application
     {
         Log.Logger.Warning("Beginning /goalcheck processing");
         bool sendingGoal = false;
-        int.TryParse(Client.Options["goal_condition"]?.ToString() ?? "0", out var goal);
-
 
         // Begin by stating what the goal is.
-        // Later, if there are other options, display the appropriate goal, and update the checks performed.
-        if (goal == (int)DSGoal.Gwyn)
+        if (DSOptions.Goal == DSGoal.Gwyn)
         {
             Log.Logger.Warning("Your goal is to defeat Gwyn, Lord of Cinder.");
         }
-        else if (goal == (int)DSGoal.AllBosses)
+        else if (DSOptions.Goal == DSGoal.AllBosses)
         {
             Log.Logger.Warning("Your goal is to defeat All Bosses.");
         }
-        PrintDiagnosticInfo();
+        else
+        {
+            Log.Logger.Warning("Unknown goal condition detected.");
+        }
 
-        // check if goal is completed
+        // check if that goal is completed
         if (MiscHelper.IsInGame())
         {
-            ulong baseb = AddressHelper.GetBaseBAddress();
-            Log.Logger.Warning($"$Baseb={baseb:X}");
-
-            if (goal == (int)DSGoal.Gwyn)
+            if (DSOptions.Goal == DSGoal.Gwyn)
             {
                 var locs = Client.CurrentSession.Locations.AllLocationsChecked.Where(x => x == 11110499 || x == 11110500);
                 foreach (var loc in locs)
@@ -506,39 +503,21 @@ public partial class App : Application
                     Log.Logger.Warning($"Lord of Cinder location ({loc}) found as completed. Completing goal.");
                     sendingGoal = true;
                 }
-            }
-            else if (goal == (int)DSGoal.AllBosses)
-            {
-                var bosses = Helpers.LocationHelper.GetBossFlagLocations();
-                var locs = Client.CurrentSession.Locations.AllLocations.Where(x => bosses.Any(y => y.Id == x));
-                if (Client.CurrentSession.Locations.AllLocationsChecked.Count(x => locs.Any(y => y == x)) == locs.Count())
+                ulong baseb = AddressHelper.GetBaseBAddress();
+                if (baseb > 0)
                 {
-                    sendingGoal = true;
+                    int ngplus = Memory.ReadByte(baseb + 0x78);
+                    if (ngplus > 0)
+                    {
+                        Log.Logger.Warning($"ng+{ngplus} detected. Completing goal.");
+                        sendingGoal = true;
+                    }
                 }
-            }
-            else
-            {
-                Log.Logger.Warning("Goal condition not detected. If this is unexpected, please report this to the developers.");
-            }
-
-
-            if (baseb > 0)
-            {
-
-                int ngplus = Memory.ReadByte(baseb + 0x78);
-                if (ngplus > 0)
+                else
                 {
-                    Log.Logger.Warning($"ng+{ngplus} detected. Completing goal.");
-                    sendingGoal = true;
+                    Log.Logger.Warning("baseb could not be resolved");
                 }
-            }
-            else
-            {
-                Log.Logger.Warning("baseb could not be resolved");
-            }
 
-            if (goal == (int)DSGoal.Gwyn)
-            {
                 var gwynloc = (Location)LocationHelper.GetBossFlagLocations().Where(x => x.Name == "Gwyn, Lord of Cinder").First();
                 if (gwynloc != null)
                 {
@@ -564,6 +543,43 @@ public partial class App : Application
                     Log.Logger.Warning("No Gwyn location found");
                 }
             }
+            else if (DSOptions.Goal == DSGoal.AllBosses)
+            {
+                var bossLocs = LocationHelper.GetBossFlagLocations();
+                bossLocs.Sort((x, y) => x.Name.CompareTo(y.Name));
+
+                int total_bosses = bossLocs.Count;
+                int completed_bosses = 0;
+                foreach (var boss in bossLocs)
+                {
+                    if (boss.Check())
+                    {
+                        completed_bosses++;
+                    }
+                }
+                if (completed_bosses == total_bosses)
+                {
+                    Log.Logger.Information($"Sending Goal for All Bosses");
+                    sendingGoal = true;
+                }
+                else
+                {
+                    Client.AddOverlayMessage($"You have defeated {completed_bosses}/{total_bosses} bosses.");
+                    Log.Logger.Information($"You have defeated {completed_bosses}/{total_bosses} bosses.");
+                    foreach (var boss in bossLocs)
+                    {
+                        if (boss.Check())
+                            Log.Logger.Information($"[x] {boss.Name}");
+                        else
+                            Log.Logger.Information($"[_] {boss.Name}");
+                    }
+                }
+            }
+            else
+            {
+                Log.Logger.Information("Unknown goal condition detected.");
+            }
+
             if (MiscHelper.IsInGame())
             {
                 if (sendingGoal)
@@ -574,10 +590,6 @@ public partial class App : Application
                 {
                     Log.Logger.Warning("Goal condition not detected. If this is unexpected, please report this to the developers.");
                 }
-
-                Log.Logger.Error("Please help us! Included in these messages are useful diagnostics.");
-                Log.Logger.Error("Please post a screenshot of this log in the AP discord's 'dark-souls' channel.");
-                Client.AddOverlayMessage($"Action required - see log for details.");
             }
             else
             {
@@ -1136,8 +1148,7 @@ public partial class App : Application
     private static void Client_LocationCompleted(object? sender, Archipelago.Core.Models.LocationCompletedEventArgs e)
     {
         var locid = e.CompletedLocation.Id;
-        int.TryParse(Client.Options["goal_condition"]?.ToString() ?? "0", out var goal);
-        if (goal == (int)DSGoal.Gwyn)
+        if (DSOptions.Goal == DSGoal.Gwyn)
         {
             if (e.CompletedLocation.Name.Contains("Lord of Cinder"))
             {
@@ -1150,26 +1161,38 @@ public partial class App : Application
                 SendGoal();
             }
         }
-        else if (goal == (int)DSGoal.AllBosses)
+        else if (DSOptions.Goal == DSGoal.AllBosses)
         {
             var hasGoaledBosses = true;
-            var bossLocs = Helpers.LocationHelper.GetBossFlagLocations();
-            if(bossLocs.Any(x => x.Name == e.CompletedLocation.Name))
+            var bossLocs = LocationHelper.GetBossFlagLocations();
+            bossLocs.Sort((x, y) => x.Name.CompareTo(y.Name));
+
+            if (bossLocs.Any(x => x.Name == e.CompletedLocation.Name)) // only bother doing all the checks if current location is in the list
             {
+                int total_bosses = bossLocs.Count;
+                int completed_bosses = 0;
                 foreach (var boss in bossLocs) 
                 {
-                    if (!boss.Check())
+                    if (boss.Check())
                     {
-                        hasGoaledBosses = false;
+                        completed_bosses++;
                     }
                 }
-                if(hasGoaledBosses)
+                Log.Logger.Information($"Boss defeated: {e.CompletedLocation.Name}");
+                Client.AddOverlayMessage($"Boss defeated: {e.CompletedLocation.Name}");
+                if (completed_bosses == total_bosses)
                 {
                     Log.Logger.Information($"Sending Goal for All Bosses");
                     SendGoal();
                 }
+                else
+                {
+                    Client.AddOverlayMessage($"You have defeated {completed_bosses}/{total_bosses} bosses.");
+                    Log.Logger.Information($"You have defeated {completed_bosses}/{total_bosses} bosses.");
+                }
             }
         }
+
         // if it's in our scouted locs & not in our own game,
         if (scoutedLocationInfo.TryGetValue(e.CompletedLocation.Id, out var value) && value.Player.Slot != Client.CurrentSession.ConnectionInfo.Slot)
         {

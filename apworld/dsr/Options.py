@@ -193,10 +193,10 @@ class GoalConditionOption(Choice):
     """Set the goal condition
     
     - **Gwyn:** Default option -Beat Gwyn, Lord of Cinder
-    - **Bosses:** Beat all bosses"""
+    - **Bosses:** Defeat all bosses"""
     display_name = "Goal Condition"
     option_gwyn = 0
-    option_bosses = 1
+    option_all_bosses = 1
     default = 0
     
 # Group relevant options

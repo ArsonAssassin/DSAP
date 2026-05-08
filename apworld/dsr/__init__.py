@@ -10,7 +10,7 @@ from worlds.generic.Rules import set_rule, add_rule, add_item_rule
 from .Items import DSRItem, DSRItemCategory, item_dictionary, key_item_names, item_descriptions, BuildRequiredItemPool, BuildGuaranteedItemPool, UpgradeEquipment
 from .Locations import DSRLocation, DSRLocationCategory, location_tables, location_dictionary, location_skip_categories, location_locked_categories
 from .Groups import location_name_groups, item_name_groups
-from .Options import DSROption, option_groups, LogicToAccessCatacombs
+from .Options import DSROption, option_groups, LogicToAccessCatacombs, GoalConditionOption
 
 from settings import Group, FilePath
 
@@ -637,18 +637,19 @@ class DSRWorld(World):
         for region in self.multiworld.get_regions(self.player):
             for location in region.locations:
                     set_rule(location, lambda state: True)       
-        if self.options.goal_condition.value == 0:
-            self.multiworld.completion_condition[self.player] = lambda state: state.has("Gwyn, Lord of Cinder Defeated", self.player)
-        elif self.options.goal_condition.value == 1:
-            boss_defeated_items = [
-                item.name
-                for item in item_dictionary.values()
-                if item.category == DSRItemCategory.EVENT and "Defeated" in item.name
-            ]
+        match self.options.goal_condition:
+            case GoalConditionOption.option_gwyn:
+                self.multiworld.completion_condition[self.player] = lambda state: state.has("Gwyn, Lord of Cinder Defeated", self.player)
+            case GoalConditionOption.option_all_bosses:
+                boss_defeated_items = [
+                    item.name
+                    for item in item_dictionary.values()
+                    if item.category == DSRItemCategory.EVENT and "Defeated" in item.name
+                ]
             
-            self.multiworld.completion_condition[self.player] = lambda state, items=boss_defeated_items: all(
-                state.has(item, self.player) for item in items
-            )
+                self.multiworld.completion_condition[self.player] = lambda state, items=boss_defeated_items: all(
+                    state.has(item, self.player) for item in items
+                )
             
 
         set_rule(self.multiworld.get_entrance("Undead Asylum Cell -> Undead Asylum Cell Door", self.player), lambda state: state.has("Dungeon Cell Key", self.player))   
@@ -901,11 +902,12 @@ class DSRWorld(World):
 
         slot_data = {
             "options": {
+                "goal_condition": self.options.goal_condition.current_key, # text of the option
                 "can_warp_without_lordvessel": self.options.can_warp_without_lordvessel.value,
                 "guaranteed_items": self.options.guaranteed_items.value,
                 "fogwall_sanity": self.options.fogwall_sanity.value,
                 "boss_fogwall_sanity": self.options.boss_fogwall_sanity.value,
-                "logic_to_access_catacombs": self.options.logic_to_access_catacombs.current_key,
+                "logic_to_access_catacombs": self.options.logic_to_access_catacombs.current_key, # text of the option
                 "randomize_starting_loadouts": self.options.randomize_starting_loadouts.value,
                 "randomize_starting_gifts": self.options.randomize_starting_gifts.value,
                 "require_one_handed_starting_weapons": self.options.require_one_handed_starting_weapons.value,
@@ -930,7 +932,7 @@ class DSRWorld(World):
             "itemsId": items_id,
             "itemsUpgrades": items_upgrades,
             "itemsAddress": items_address,
-            "apworld_api_version" : "0.1.0.0" # Manually set our apworld api level, for detecting compatibility with client
+            "apworld_api_version" : "0.1.0.3" # Manually set our apworld api level, for detecting compatibility with client
         }
 
         self.items_id = items_id
