@@ -1,6 +1,6 @@
 # Archipelago implementation for Dark Souls Remastered
 
-## **This implementation is still considered unstable/in alpha. Expect bugs and issues.**
+## **This implementation is no longer maintained. Please use https://github.com/tathxo/DSAP/releases for further updates**
 
 ## How does it work? See the [Game Page](/apworld/dsr/docs/en_Dark%20Souls%20Remastered.md).
 ## Setting up? See the [Setup Guide](/apworld/dsr/docs/setup_en.md).
